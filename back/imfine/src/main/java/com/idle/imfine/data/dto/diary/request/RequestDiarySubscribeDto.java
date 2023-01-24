@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RequestDiarySubscribeDto {
     private int userId;
-    private int diaryId;
+    private long diaryId;
 }

@@ -94,7 +94,7 @@ public class DiaryController {
     }
 
     @GetMapping("/{diary-id}")
-    public ResponseEntity<ResponseDiaryDetailDto> getDiaryDetail(@PathVariable(value = "diary-id") int diaryId) {
+    public ResponseEntity<ResponseDiaryDetailDto> getDiaryDetail(@PathVariable(value = "diary-id") long diaryId) {
         if (true) {
             LOGGER.info("일기장 상세조회 api들어옴 {}", diaryId);
 
@@ -109,7 +109,7 @@ public class DiaryController {
     }
 
     @GetMapping("/{diary-id}/symptoms")
-    public ResponseEntity<List<ResponseSymptomChartRecordDto>> getDiaryDetailSymptomRecords(@PathVariable(value = "diary-id") int diaryId) {
+    public ResponseEntity<List<ResponseSymptomChartRecordDto>> getDiaryDetailSymptomRecords(@PathVariable(value = "diary-id") long diaryId) {
         if (true) {
             LOGGER.info("일기장 상세조회 증상 기록 찾기 api들어옴 {}", diaryId);
             List<ResponseSymptomChartRecordDto> responseSymptomChartRecordDtos = new ArrayList<>();
@@ -135,7 +135,7 @@ public class DiaryController {
     }
 
     @GetMapping("/{diary-id}/paper/{date}")
-    public ResponseEntity<ResponsePaperDto> getPaper(@PathVariable(value = "diary-id") int diaryId
+    public ResponseEntity<ResponsePaperDto> getPaper(@PathVariable(value = "diary-id") long diaryId
                                                     ,@PathVariable(value = "date") String date){
         if (true) {
             LOGGER.info("일기장 특정일 일기 조회 api. diaryid : {}, date : {}", diaryId, date);
@@ -152,14 +152,14 @@ public class DiaryController {
     }
 
     @PostMapping("/subscribe")
-    public ResponseEntity<String> postDiarySubscribe(@RequestBody int diaryId) {
+    public ResponseEntity<String> postDiarySubscribe(@RequestBody long diaryId) {
         LOGGER.info("일기장 구독 등록 api들어옴 {}", diaryId);
         RequestDiarySubscribeDto requestDiarySubscribeDto = new RequestDiarySubscribeDto(1, diaryId);
         return new ResponseEntity<>("구독 등록", HttpStatus.OK);
     }
     
     @DeleteMapping("/{diary-id}/subscribe")
-    public ResponseEntity<String> deleteDiarySubscribe(@PathVariable(value = "diary-id") int diaryId) {
+    public ResponseEntity<String> deleteDiarySubscribe(@PathVariable(value = "diary-id") long diaryId) {
         LOGGER.info("일기장 구독 삭제 api들어옴 {}", diaryId);
         RequestDiarySubscribeDto requestDiarySubscribeDto = new RequestDiarySubscribeDto(1, diaryId);
         return new ResponseEntity<>("구독 삭제", HttpStatus.OK);
@@ -173,7 +173,7 @@ public class DiaryController {
     }
 
     @DeleteMapping("/{diary-id}")
-    public ResponseEntity<String> deleteDiary(@PathVariable(value = "diary-id") int diaryId) {
+    public ResponseEntity<String> deleteDiary(@PathVariable(value = "diary-id") long diaryId) {
         LOGGER.info("일기장 삭제 api들어옴 {}", diaryId);
         return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
     }
@@ -185,7 +185,7 @@ public class DiaryController {
     }
 
     @DeleteMapping("/{diary-id}/symptom/{symptom-id}")
-    public ResponseEntity<String> deleteDiarySymptom(@PathVariable(value = "diary-id") int diaryId, @PathVariable(value = "symptom-id") int symptomId) {
+    public ResponseEntity<String> deleteDiarySymptom(@PathVariable(value = "diary-id") long diaryId, @PathVariable(value = "symptom-id") int symptomId) {
         LOGGER.info("일기장 증상 삭제 api들어옴 diaryid : {}, symptomid : {}", diaryId, symptomId);
         return new ResponseEntity<>("증상 삭제 완료", HttpStatus.OK);
     }
