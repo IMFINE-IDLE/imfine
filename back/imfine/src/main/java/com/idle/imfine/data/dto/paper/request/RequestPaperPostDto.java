@@ -19,5 +19,5 @@ public class RequestPaperPostDto {
     private String date;
     private boolean open;
     private List<String> images;
-    private List<RequestSymptomPaperDto> requestSymptomPaperDtos;
+    private List<RequestSymptomPaperDto> symptoms;
 }

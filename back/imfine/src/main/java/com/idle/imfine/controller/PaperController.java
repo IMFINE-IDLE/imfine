@@ -5,6 +5,7 @@ import com.idle.imfine.data.dto.like.request.RequestLikeDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
+import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,7 +33,7 @@ public class PaperController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
     @PostMapping
     public ResponseEntity<String> postPaper(@RequestBody RequestPaperPostDto requestPaperPostDto){
-        LOGGER.info("일기 생성 api 도착 {} {}", requestPaperPostDto, requestPaperPostDto.getRequestSymptomPaperDtos().get(0));
+        LOGGER.info("일기 생성 api 도착 {} {}", requestPaperPostDto, requestPaperPostDto.getSymptoms().get(0));
         return new ResponseEntity<>("일기 생성 완료", HttpStatus.OK);
     }
 
@@ -55,7 +56,7 @@ public class PaperController {
         }
     }
 
-    @DeleteMapping("{paper-id}")
+    @DeleteMapping("/{paper-id}")
     public ResponseEntity<String> deletePaper(@PathVariable("paper-id") long paperId) {
         LOGGER.info("일기장 삭제 {}", paperId);
         return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
@@ -68,21 +69,22 @@ public class PaperController {
         return new ResponseEntity<>("일기 수정 완료", HttpStatus.OK);
     }
 
-//    @GetMapping("/list")
-//    public ResponseEntity<List<ResponsePaperDto>> getPaperList() {
-//        if (true) {
-//            LOGGER.info("일기장 특정일 일기 조회 api. : {}", );
-//            List<String> images = new ArrayList<>();
-//            images.add("일기 사진 url");
-//            List<ResponseSymptomRecordDto> records = new ArrayList<>();
-//            records.add(new ResponseSymptomRecordDto(1, "어지러움", 10));
-//            ResponsePaperDto responsePaperDto = new ResponsePaperDto(1, 10, 10, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "행복함 경로", true, images, records);
-//
-//            return new ResponseEntity<>(responsePaperDto, HttpStatus.OK);
-//        } else {
-//            return null;
-//        }
-//    }
+    @GetMapping("/list")
+    public ResponseEntity<List<ResponsePaperDto>> getPaperList() {
+        if (true) {
+            LOGGER.info("일기장 특정일 일기 조회 api.");
+            List<String> images = new ArrayList<>();
+            images.add("일기 사진 url");
+            List<ResponseSymptomRecordDto> records = new ArrayList<>();
+            records.add(new ResponseSymptomRecordDto(1, "어지러움", 10));
+            List<ResponsePaperDto> responsePaperDtos = new ArrayList<>();
+            ResponsePaperDto responsePaperDto = new ResponsePaperDto(1, 10, 10, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "행복함 경로", true, images, records);
+            responsePaperDtos.add(responsePaperDto);
+            return new ResponseEntity<>(responsePaperDtos, HttpStatus.OK);
+        } else {
+            return null;
+        }
+    }
 
     @PostMapping("/like")
     public ResponseEntity<String> postPaperLike(@RequestBody RequestLikeDto requestLikeDto) {

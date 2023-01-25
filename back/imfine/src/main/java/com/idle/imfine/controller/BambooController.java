@@ -101,6 +101,4 @@ public class BambooController {
         LOGGER.info("대나무 좋아요 삭제 {}", rl );
         return new ResponseEntity<String>("대나무 좋아요 삭제 성공", HttpStatus.OK);
     }
-
-
 }
