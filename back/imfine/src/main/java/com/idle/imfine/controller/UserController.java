@@ -1,30 +1,18 @@
 package com.idle.imfine.controller;
 
 import com.idle.imfine.common.CommonResponseMessage;
-import com.idle.imfine.data.dto.user.request.ChangePasswordRequestDto;
-import com.idle.imfine.data.dto.user.request.CheckIdAndEmailRequestDto;
-import com.idle.imfine.data.dto.user.request.ConditionRequestDto;
-import com.idle.imfine.data.dto.user.request.SignInRequestDto;
-import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
-import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
-import com.idle.imfine.data.dto.user.response.FollowListResponseDto;
-import com.idle.imfine.data.dto.user.response.GetUserInfoResponseDto;
-import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
-import com.idle.imfine.data.dto.user.response.SearchConditionResponseDto;
-import com.idle.imfine.data.dto.user.response.SignInResponseDto;
-import java.util.Arrays;
-import javax.servlet.http.HttpServletRequest;
+import com.idle.imfine.common.LoginUser;
+import com.idle.imfine.data.dto.user.request.*;
+import com.idle.imfine.data.dto.user.response.*;
+import com.idle.imfine.service.user.SignService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/user")
@@ -32,28 +20,26 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BambooController.class);
 
+    @Autowired
+    private SignService signService;
+
     // Dummy
     private static final String ACCESS_TOKEN =
             "eyJhbGciOiJIUzI1NiJ9"
             + ".eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjc0NTE3ODExLCJleHAiOjE2NzQ1MTk2MTF9"
             + ".AKqswXsa0S2JsJDBmiuC6dtwuwlEVSICsi899lFd2Yo";
+
     private static final String REFRESH_TOKEN =
             "eyJhbGciOiJIUzI1NiJ9"
             + ".eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbIlJPTEVfQURNSU4iXSwiaWF0IjoxNjc0NTE3ODEyLCJleHAiOjE2NzUxMjI2MTJ9"
             + ".3_xxYrLsuI1PCTMHSA-73iyFdWuFFhbR2VgB3Kw3qwI";
-
     private static final String UID = "admin";
     private static final String[] medicalList = {"라식", "라섹"};
 
+
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto requestDto) {
-        SignInResponseDto responseDto = SignInResponseDto.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 로그인되었습니다.")
-                .accessToken(ACCESS_TOKEN)
-                .refreshToken(REFRESH_TOKEN)
-                .build();
+        SignInResponseDto responseDto = signService.signIn(requestDto);
 
         return ResponseEntity.ok()
                 .body(responseDto);
@@ -61,11 +47,7 @@ public class UserController {
 
     @PostMapping("/sign-out")
     public ResponseEntity<?> signOut(String uid) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 로그아웃되었습니다.")
-                .build();
+        CommonResponseMessage responseDto = signService.signOut(uid);
 
         return ResponseEntity.ok()
                 .body(responseDto);
@@ -73,13 +55,7 @@ public class UserController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request) {
-        RefreshResponseDto responseDto = RefreshResponseDto.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 토큰을 갱신했습니다.")
-                .accessToken(ACCESS_TOKEN)
-                .refreshToken(REFRESH_TOKEN)
-                .build();
+        RefreshResponseDto responseDto = signService.refresh(request);
 
         return ResponseEntity.ok()
                 .body(responseDto);
@@ -87,11 +63,7 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto requestDto) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 회원가입되었습니다.")
-                .build();
+        CommonResponseMessage responseDto = signService.signUp(requestDto);
 
         return ResponseEntity.ok()
                 .body(responseDto);
@@ -110,7 +82,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<?> searchUserInfo(String uid) {
+    public ResponseEntity<?> searchUserInfo(@LoginUser String uid) {
         GetUserInfoResponseDto responseDto = GetUserInfoResponseDto.builder()
                 .success(true)
                 .status(200)
@@ -299,21 +271,5 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(responseDto);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
