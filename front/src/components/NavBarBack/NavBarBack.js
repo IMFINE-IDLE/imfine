@@ -11,10 +11,12 @@ const NavBar = styled.div`
   bottom: 0%;
 `;
 
-const Logo = styled.img`
+const Back = styled.img`
   position: absolute;
-  left: 2em;
-  top: 1.5em;
+  left: 1em;
+  width: 24px;
+  height: 24px;
+  top: 1.7em;
   bottom: 1.5em;
   width: 118px;
   object-fit: contain;
@@ -36,14 +38,14 @@ const Bell = styled.img`
   top: 1.7em;
 `;
 
-function NavBarBasic() {
+function NavBarBack() {
   return (
     <NavBar>
-      <Logo src="/assets/images/logo.svg" alt="logo-img" />
+      <Back src="/assets/icons/chevron-left.svg" alt="chevron-left-img" />
       <Search src="/assets/icons/search.svg" alt="search-img" />
       <Bell src="/assets/icons/bell.svg" alt="bell-img" />
     </NavBar>
   );
 }
 
-export default NavBarBasic;
+export default NavBarBack;
