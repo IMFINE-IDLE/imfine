@@ -1,14 +1,5 @@
 import styled from 'styled-components';
 
-const StyledOptionItem = styled.li`
-  box-sizing: border-box;
-  padding: 0.8rem 1rem 0.8rem 1rem;
-  transition: 0.3s;
-  &:hover {
-    background: ${darken(0.1, '#ffffff')};
-  }
-`;
-
 const activeExist = ({ active = true }) => {
   return `max-height: ${active ? '300px' : '0'}`;
 };
@@ -32,7 +23,7 @@ const StyledOptionList = styled.ul`
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 1rem;
-    background: ${darken(0.1, 'transparent')};
+    background: #ffffff};
   }
   &::-webkit-scrollbar-button {
     width: 0;
@@ -40,25 +31,43 @@ const StyledOptionList = styled.ul`
   }
 `;
 
+const StyledOptionItem = styled.li`
+  border-radius: 25px;
+  box-sizing: border-box;
+  padding: 20px 20px 20px 0;
+  transition: 0.3s;
+  background-color: #f8faf9;
+  &:hover {
+    background: #f8faf9;
+  }
+`;
+
 const StyledSelectedLabel = styled.button`
   display: flex;
   align-items: center;
   border: none;
+  border-radius: 25px;
   box-sizing: border-box;
   width: inherit;
   height: inherit;
-  justify-content: right;
-  padding-right: 2.5rem;
-  font-size: 1rem;
-  background: url('assets/icons/chevron-down.png') calc(100% - 0.5rem) center
-    no-repeat;
+  justify-content: left;
+  padding-left: 2.5rem;
+  font-size: 16px;
+  background-color: #f8faf9;
   background-size: 2rem;
   cursor: pointer;
 `;
 
+const Dropdown = styled.img`
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  right: 1.5em;
+`;
+
 const StyledSelectbox = styled.div`
   position: relative;
-  width: 8rem;
+  width: ${(props) => props.width || '1em'};
   height: 2.6rem;
   border-radius: 8px;
   background: #ffffff;
@@ -71,4 +80,5 @@ export {
   StyledOptionList,
   StyledSelectedLabel,
   StyledSelectbox,
+  Dropdown,
 };
