@@ -28,7 +28,7 @@ const Search = styled.img`
   width: 24px;
   height: 24px;
   right: 5em;
-  top: 1.5em;
+  top: 1.7em;
 `;
 
 const Bell = styled.img`
@@ -36,7 +36,7 @@ const Bell = styled.img`
   width: 24px;
   height: 24px;
   right: 1.5em;
-  top: 1.5em;
+  top: 1.7em;
 `;
 
 function NavBarBasic() {
