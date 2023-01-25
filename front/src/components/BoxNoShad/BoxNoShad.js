@@ -1,9 +1,13 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const BoxNoShad = styled.div`
-  background-color: ${(props) => props.color || '#F8FAF9'};
-  border-radius: ${(props) => props.radius || '25px'};
-  border: none;
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  ${({ color, radius, width, height, padding, margin }) =>
+    css`
+      background-color: ${color || 'var(--gray-color)'};
+      border-radius: ${radius || '50px'};
+      width: ${width || '100%'};
+      height: ${height || '100%'};
+      padding: ${padding || '1.5em'};
+      margin: ${margin || '1.5em'};
+    `}
 `;

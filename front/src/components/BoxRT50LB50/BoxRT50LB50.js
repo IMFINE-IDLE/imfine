@@ -1,9 +1,9 @@
 import styled, { css } from 'styled-components';
 
-export const BoxLT50R25 = styled.div`
+export const BoxRT50LB50 = styled.div`
   ${({ color, width, height, padding, margin }) => css`
-    background-color: ${color || 'var(--gray-color)'};
-    border-radius: 50px 25px 25px 25px;
+    background-color: ${color || 'var(--light-color)'};
+    border-radius: 0px 50px 0px 50px;
     width: ${width || '100%'};
     height: ${height || '100%'};
     padding: ${padding || '1.5em'};
