@@ -7,18 +7,23 @@ const BoxModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--gray-color);
+  opacity: 0.8;
 `;
 
 const BoxInnerModal = styled.div`
   position: relative;
-  width: 300px;
+  width: 350px;
   height: 350px;
   border-radius: 25px;
-  border: 1px solid gray;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1em;
+  /* border: 1px solid gray; */
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+  z-index: 1;
+  background-color: white;
 `;
 
 const ModalClose = styled.span`
@@ -26,10 +31,7 @@ const ModalClose = styled.span`
   top: 1.2em;
   right: 1.5em;
   cursor: pointer;
-  z-index: 1;
-  /* img {
-    cursor: pointer;
-  } */
+  z-index: 2;
 `;
 
 const ModalContent = styled.div`
@@ -103,7 +105,7 @@ const BtnWrap = styled.div`
 const BtnCircle = styled.div`
   position: absolute;
   content: '';
-  right: 30%;
+  right: 35%;
   display: inline-block;
   width: 30px;
   height: 30px;
