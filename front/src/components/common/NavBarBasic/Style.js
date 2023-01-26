@@ -10,12 +10,13 @@ const NavBar = styled.div`
   bottom: 0%;
 `;
 
-const Logo = styled.img`
+const LeftItem = styled.img`
   position: absolute;
   left: 2em;
   top: 1.5em;
   bottom: 1.5em;
-  width: 118px;
+  width: ${(props) => props.width || '118px'};
+  height: ${(props) => props.height || '50%'};
   object-fit: contain;
 `;
 
@@ -35,4 +36,4 @@ const Bell = styled.img`
   top: 1.7em;
 `;
 
-export { NavBar, Logo, Search, Bell };
+export { NavBar, LeftItem, Search, Bell };
