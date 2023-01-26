@@ -1,15 +1,18 @@
 package com.idle.imfine.controller;
 
+import com.idle.imfine.common.LoginUser;
 import com.idle.imfine.data.dto.bamboo.request.RequestBambooDto;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
 import com.idle.imfine.data.dto.like.request.RequestLikeDto;
+import com.idle.imfine.service.BambooService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +31,12 @@ import java.util.List;
 @Slf4j
 public class BambooController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BambooController.class);
+    private final BambooService bambooService;
 
+    @Autowired
+    public BambooController(BambooService bambooService) {
+        this.bambooService = bambooService;
+    }
     @GetMapping("/list")
     public ResponseEntity<List<ResponseBamboo>> getList(@RequestParam("filter") String filter){
         LOGGER.info("list api에 들어옴  {}", filter);
@@ -46,7 +54,7 @@ public class BambooController {
 
     @GetMapping("/myactive")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<List<ResponseBamboo>> getMyActiveList(@RequestParam("filter") String filter){
+    public ResponseEntity<List<ResponseBamboo>> getMyActiveList(@LoginUser String uid, @RequestParam("filter") String filter){
         LOGGER.info("myactivelist api에 들어옴  {}", filter);
         List<ResponseBamboo> rbl = new ArrayList<ResponseBamboo>();
         if (true){
@@ -76,10 +84,11 @@ public class BambooController {
     }
     @PostMapping
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<String> postBamboo(@RequestBody String content) {
+    public ResponseEntity<String> postBamboo(@RequestBody String content, @LoginUser String uid) {
         LOGGER.info("대나무 등록 api에 들어왔습니다. {}", content);
-        RequestBambooDto rbd = new RequestBambooDto(content, 1);
-        LOGGER.info("대나무 등록 api에 들어왔습니다. {}", rbd);
+//        RequestBambooDto rbd = new RequestBambooDto(content, 1);
+        bambooService.save(content, uid);
+//        LOGGER.info("대나무 등록 api에 들어왔습니다. {}", rbd);
 
         return new ResponseEntity<String>("대나무 등록 성공", HttpStatus.OK);
     }
