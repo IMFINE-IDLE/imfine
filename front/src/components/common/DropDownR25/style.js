@@ -68,7 +68,7 @@ const Dropdown = styled.img`
 const StyledSelectbox = styled.div`
   position: relative;
   width: ${(props) => props.width || '1em'};
-  height: 2.6rem;
+  height: 3rem;
   border-radius: 8px;
   background: #ffffff;
   cursor: pointer;
