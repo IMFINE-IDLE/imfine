@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
+import Login from './pages/Login/Login';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
 import BambooCreate from './pages/BambooCreate/BambooCreate';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
@@ -20,9 +21,6 @@ import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 //     background: none;
 //   }
 // `;
-
-
-
 
 function App() {
   return (
