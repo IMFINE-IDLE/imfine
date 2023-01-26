@@ -18,7 +18,7 @@ public class ResponsePaperDetailDto {
     private int userStatus;
     private String userName;
     private String content;
-    private List<ResponseSymptomRecordDto> symptoms;
+    private List<ResponsePaperSymptomRecordDto> symptoms;
     private List<String> images;
     private List<ResponseCommentDto> comments;
 }

@@ -6,12 +6,11 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
-import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
+import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/paper")
-@Slf4j
 public class PaperController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
@@ -40,15 +38,15 @@ public class PaperController {
     @GetMapping("/{paper-id}")
     public ResponseEntity<ResponsePaperDetailDto> getPaperDetail(@PathVariable(value = "paper-id") long paperId){
         if (true) {
-            List<ResponseSymptomRecordDto> symptoms = new ArrayList<>();
+            List<ResponsePaperSymptomRecordDto> symptoms = new ArrayList<>();
             List<String> images = new ArrayList<>();
             List<ResponseCommentDto> comments = new ArrayList<>();
 
-            symptoms.add(new ResponseSymptomRecordDto(1, "어지러움", 5));
+            symptoms.add(new ResponsePaperSymptomRecordDto(1, "어지러움", 5));
             images.add("이미지url");
             comments.add(new ResponseCommentDto(1, 1, 1, 1, "유제제혁", "힘내세요!", LocalDateTime.now().format(
                 DateTimeFormatter.ofPattern("yyyyMMddHHmmss")), 0));
-            ResponsePaperDetailDto responsePaperDetailDto = new ResponsePaperDetailDto(1, 1, 1, "유제혁", "일기 내용",symptoms, images, comments);
+            ResponsePaperDetailDto responsePaperDetailDto = new ResponsePaperDetailDto(1, 1, 1, "유제혁", "일기 내용", symptoms, images, comments);
             LOGGER.info("일기장 상세 조회 {}", responsePaperDetailDto);
             return new ResponseEntity<>(responsePaperDetailDto, HttpStatus.OK);
         } else {
@@ -75,8 +73,8 @@ public class PaperController {
             LOGGER.info("일기장 특정일 일기 조회 api.");
             List<String> images = new ArrayList<>();
             images.add("일기 사진 url");
-            List<ResponseSymptomRecordDto> records = new ArrayList<>();
-            records.add(new ResponseSymptomRecordDto(1, "어지러움", 10));
+            List<ResponsePaperSymptomRecordDto> records = new ArrayList<>();
+            records.add(new ResponsePaperSymptomRecordDto(1, "어지러움", 10));
             List<ResponsePaperDto> responsePaperDtos = new ArrayList<>();
             ResponsePaperDto responsePaperDto = new ResponsePaperDto(1, 10, 10, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "행복함 경로", true, images, records);
             responsePaperDtos.add(responsePaperDto);

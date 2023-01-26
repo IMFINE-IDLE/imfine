@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class User implements UserDetails {
 

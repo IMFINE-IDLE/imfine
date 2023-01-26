@@ -2,15 +2,17 @@ package com.idle.imfine.data.dto.diary.request;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
 @Getter
 @AllArgsConstructor
 @ToString
+@Builder
 public class RequestDiaryPostDto {
     private int medicalId;
-    private int userId;
+    private long userId;
     private boolean open;
     private String title;
     private String description;

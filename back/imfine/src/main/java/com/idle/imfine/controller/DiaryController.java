@@ -1,5 +1,6 @@
 package com.idle.imfine.controller;
 
+import com.idle.imfine.common.LoginUser;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryModifyDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryFilterDto;
@@ -8,15 +9,18 @@ import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
+import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseDateScoreDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
+import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.service.diary.DiaryService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -33,16 +37,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/diary")
-@Slf4j
+@RequiredArgsConstructor
 public class DiaryController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DiaryController.class);
+    private final DiaryService diaryService;
 
     @PostMapping
     //userid필요함
-    public ResponseEntity<String> postDiary(@RequestBody RequestDiaryPostDto requestDiaryPostDto){
-        LOGGER.info("일기장 생성 api에 들어왔습니다. {}", requestDiaryPostDto);
-        requestDiaryPostDto.setUserId(1);
+    public ResponseEntity<String> postDiary(@RequestBody RequestDiaryPostDto requestDiaryPostDto, @LoginUser String uid){
+        long savedId = diaryService.save(requestDiaryPostDto, uid);
+        LOGGER.info("일기장 생성 api에 들어왔습니다. {}", savedId);
         return new ResponseEntity<>("일기장 생성 완료", HttpStatus.OK);
     }
 
@@ -94,14 +99,22 @@ public class DiaryController {
     }
 
     @GetMapping("/{diary-id}")
-    public ResponseEntity<ResponseDiaryDetailDto> getDiaryDetail(@PathVariable(value = "diary-id") long diaryId) {
+    public ResponseEntity<ResponseDiaryDetailDto> getDiaryDetail(@PathVariable(value = "diary-id") long diaryId, @LoginUser String uid) {
         if (true) {
             LOGGER.info("일기장 상세조회 api들어옴 {}", diaryId);
-
             List<ResponseSymptomRecordDto> responseSymptomRecordDtos = new ArrayList<>();
-            responseSymptomRecordDtos.add(new ResponseSymptomRecordDto(1, "어지러움", 8));
-            responseSymptomRecordDtos.add(new ResponseSymptomRecordDto(2, "구토", 6));
-            ResponseDiaryDetailDto responseDiaryDetailDto = new ResponseDiaryDetailDto(1, 1, "이원영", "일기장제목", "귀 성형", LocalDateTime.now(), LocalDateTime.now(), responseSymptomRecordDtos);
+            responseSymptomRecordDtos.add(new ResponseSymptomRecordDto(1, "어지러움"));
+            responseSymptomRecordDtos.add(new ResponseSymptomRecordDto(2, "구토"));
+            ResponseDiaryDetailDto responseDiaryDetailDto = ResponseDiaryDetailDto.builder()
+                    .userId(1)
+                    .userStatus(1)
+                    .title("안녕")
+                    .description("설명")
+                    .userName("이름")
+                    .medicalName("귀성형")
+                    .beginDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                    .endedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                    .build();
             return new ResponseEntity<>(responseDiaryDetailDto, HttpStatus.OK);
         } else {
             return null;
@@ -141,8 +154,12 @@ public class DiaryController {
             LOGGER.info("일기장 특정일 일기 조회 api. diaryid : {}, date : {}", diaryId, date);
             List<String> images = new ArrayList<>();
             images.add("일기 사진 url");
-            List<ResponseSymptomRecordDto> records = new ArrayList<>();
-            records.add(new ResponseSymptomRecordDto(1, "어지러움", 10));
+            List<ResponsePaperSymptomRecordDto> records = new ArrayList<>();
+            records.add(ResponsePaperSymptomRecordDto.builder()
+                            .symptomId(1)
+                            .symptomName("어지러움")
+                            .score(10)
+                            .build());
             ResponsePaperDto responsePaperDto = new ResponsePaperDto(1, 10, 10, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")), "행복함 경로", true, images, records);
 
             return new ResponseEntity<>(responsePaperDto, HttpStatus.OK);

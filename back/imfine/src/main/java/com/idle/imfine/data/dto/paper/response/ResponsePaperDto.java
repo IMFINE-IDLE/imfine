@@ -17,5 +17,5 @@ public class ResponsePaperDto {
     private String condition;
     private boolean open;
     List<String> images;
-    List<ResponseSymptomRecordDto> responseSymptomRecordDtos;
+    List<ResponsePaperSymptomRecordDto> responseSymptomRecordDtos;
 }

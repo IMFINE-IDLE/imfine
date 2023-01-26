@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class ResponseSymptomRecordDto {
     private int symptomId;
     private String symptomName;
-    private int score;
 }
