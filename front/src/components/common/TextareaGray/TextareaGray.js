@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-export const InputGray = styled.input`
+export const TextareaGray = styled.textarea`
   ${({ width, height, margin }) => css`
     border: 0;
     background-color: #f8faf9;
@@ -10,5 +10,6 @@ export const InputGray = styled.input`
     width: ${width || '100%'};
     height: ${height || '100%'};
     margin: ${margin || '0'};
+    resize: none;
   `}
 `;
