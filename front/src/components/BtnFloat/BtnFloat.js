@@ -16,6 +16,7 @@ function BtnFloat() {
               color={'light'}
               margin={'0'}
               padding={'1em 0.8em'}
+              radius={'50px'}
               fontSize={'1em'}
             >
               저장된 일기장에 이어쓰기

@@ -9,6 +9,7 @@ export const Btn = ({
   height,
   padding,
   margin,
+  radius,
 }) => css`
   background-color: ${color
     ? 'var(--' + color + '-color)'
@@ -16,7 +17,7 @@ export const Btn = ({
   color: ${color === 'light' || color === 'gray'
     ? fontColor || 'var(--icon-color)'
     : fontColor || '#ffffff'};
-  border-radius: 50px;
+  border-radius: ${radius || '25px'};
   width: ${width || '100%'};
   height: ${height || '100%'};
   padding: ${padding || '1.5em'};
