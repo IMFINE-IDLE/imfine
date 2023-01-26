@@ -10,13 +10,24 @@ const NavBar = styled.div`
   bottom: 0%;
 `;
 
-const Logo = styled.img`
+const LeftItem = styled.img`
   position: absolute;
   left: 2em;
   top: 1.5em;
   bottom: 1.5em;
-  width: 118px;
+  width: ${(props) => props.width || '118px'};
+  height: ${(props) => props.height || '50%'};
   object-fit: contain;
+`;
+
+const Title = styled.div`
+  font-size: 1em;
+  position: absolute;
+  margin-left: auto;
+  top: 1.5em;
+  bottom: 0.5em;
+  margin: auto;
+  display: inline-block;
 `;
 
 const Search = styled.img`
@@ -35,4 +46,4 @@ const Bell = styled.img`
   top: 1.7em;
 `;
 
-export { NavBar, Logo, Search, Bell };
+export { NavBar, LeftItem, Title, Search, Bell };

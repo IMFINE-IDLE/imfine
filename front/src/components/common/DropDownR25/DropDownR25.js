@@ -7,10 +7,21 @@ import {
   Dropdown,
 } from './style';
 
-import { useState } from 'react';
-function DropDownR25({ items, width }) {
-  const [active, setActive] = useState(true); // 리스트가 열려있는지 확인
-  const [selected, setSelected] = useState(items[0]); // 선택된 값을 selected에 담아 컴포넌트 간에 공유
+/*
+  상위컴포넌트에서 useState 설정해주어야..
+  const [active, setActive] = useState(true); 
+  // 리스트가 열려있는지 확인
+  const [selected, setSelected] = useState(items[0]); 
+  // 선택된 값을 selected에 담아 컴포넌트 간에 공유
+*/
+function DropDownR25({
+  items,
+  width,
+  active,
+  setActive,
+  selected,
+  setSelected,
+}) {
   // <DropDownR25 items={arr2} />
   // App.js에서 prop값을 list형태로 넘기면 dropdown 내용 설정가능
   // 드롭다운 아이템 속성값들은 list로 구성될테니까..
