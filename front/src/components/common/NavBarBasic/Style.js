@@ -20,6 +20,16 @@ const LeftItem = styled.img`
   object-fit: contain;
 `;
 
+const Title = styled.div`
+  font-size: 1em;
+  position: absolute;
+  margin-left: auto;
+  top: 1.5em;
+  bottom: 0.5em;
+  margin: auto;
+  display: inline-block;
+`;
+
 const Search = styled.img`
   position: absolute;
   width: 24px;
@@ -36,4 +46,4 @@ const Bell = styled.img`
   top: 1.7em;
 `;
 
-export { NavBar, LeftItem, Search, Bell };
+export { NavBar, LeftItem, Title, Search, Bell };
