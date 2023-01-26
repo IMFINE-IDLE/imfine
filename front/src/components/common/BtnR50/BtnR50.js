@@ -2,7 +2,9 @@ import styled, { css } from 'styled-components';
 
 export const BtnR50 = styled.button`
   ${({ color, fontColor, fontSize, width, height, padding, margin }) => css`
-    background-color: ${color || 'var(--main-color)'};
+    background-color: ${color
+      ? 'var(--' + color + '-color)'
+      : 'var(--main-color)'};
     color: ${fontColor || '#ffffff'};
     border-radius: 50px;
     width: ${width || '100%'};
