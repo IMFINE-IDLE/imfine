@@ -5,6 +5,7 @@ import com.idle.imfine.common.LoginUser;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.*;
 import com.idle.imfine.service.user.SignService;
+import com.idle.imfine.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 
 @RestController
 @RequestMapping("/user")
@@ -22,6 +22,9 @@ public class UserController {
 
     @Autowired
     private SignService signService;
+
+    @Autowired
+    private UserService userService;
 
     // Dummy
     private static final String ACCESS_TOKEN =
@@ -70,12 +73,8 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> withdrawal(String uid) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 회원탈퇴되었습니다.")
-                .build();
+    public ResponseEntity<?> withdrawal(@LoginUser String uid) {
+        CommonResponseMessage responseDto = userService.withdrawal(uid);
 
         return ResponseEntity.ok()
                 .body(responseDto);
@@ -83,82 +82,54 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> searchUserInfo(@LoginUser String uid) {
-        GetUserInfoResponseDto responseDto = GetUserInfoResponseDto.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 회원정보를 조회했습니다.")
-                .name("건배하는라이언")
-                .open(false)
-                .followingCount(231)
-                .followerCount(299)
-                .medicalList(Arrays.asList(medicalList))
-                .build();
+        GetUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
 
         return ResponseEntity.ok()
                 .body(responseDto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> searchUserInfo(String uid, @PathVariable String id) {
-        GetUserInfoResponseDto responseDto = GetUserInfoResponseDto.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 회원정보를 조회했습니다.")
-                .name("졸린무지")
-                .open(false)
-                .followingCount(311)
-                .followerCount(327)
-                .medicalList(Arrays.asList(medicalList))
-                .build();
+    @GetMapping("/{uid}")
+    public ResponseEntity<?> searchOtherUserInfo(@PathVariable String uid) {
+        GetUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
 
         return ResponseEntity.ok()
                 .body(responseDto);
     }
 
-    @PutMapping
-    public ResponseEntity<?> modifyUserInfo(String uid) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 회원정보를 변경했습니다.")
-                .build();
+    @PutMapping("/name")
+    public ResponseEntity<?> modifyUserName(@LoginUser String uid, @RequestBody ModifyUserNameRequestDto requestDto) {
+        CommonResponseMessage responseDto = userService.modifyUserName(uid, requestDto);
+
+        return ResponseEntity.ok()
+                .body(responseDto);
+    }
+
+    @PutMapping("/open")
+    public ResponseEntity<?> modifyUserOpen(@LoginUser String uid, @RequestBody ModifyUserOepnRequestDto requestDto) {
+        CommonResponseMessage responseDto = userService.modifyUserOpen(uid, requestDto);
 
         return ResponseEntity.ok()
                 .body(responseDto);
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<?> changePassword(String uid, @RequestBody String password) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 비밀번호를 변경했습니다.")
-                .build();
+    public ResponseEntity<?> changePassword(@LoginUser String uid, @RequestBody ChangePasswordRequestDto requestDto) {
+        CommonResponseMessage responseDto = userService.changePassword(uid, requestDto);
 
         return ResponseEntity.ok()
                 .body(responseDto);
     }
 
-    @PostMapping("/find-id")
-    public ResponseEntity<?> findId(@RequestBody String email) {
-        FindIdResponseDto responseDto = FindIdResponseDto.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 아이디를 찾았습니다.")
-                .uid(UID)
-                .build();
-
+    @GetMapping("/find-id/{email}")
+    public ResponseEntity<?> findId(@PathVariable String email) {
+        FindIdResponseDto responseDto = userService.findId(email);
         return ResponseEntity.ok()
                 .body(responseDto);
     }
 
-    @PostMapping("/find-password")
-    public ResponseEntity<?> checkIdAndEmail(@RequestBody CheckIdAndEmailRequestDto requestDto) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("아이디와 이메일가 일치합니다.")
-                .build();
+    @GetMapping("/find-password/{uid}/{email}")
+    public ResponseEntity<?> checkIdAndEmail(@PathVariable String uid, @PathVariable String email) {
+        CommonResponseMessage responseDto = userService.checkIdAndEmail(uid, email);
 
         return ResponseEntity.ok()
                 .body(responseDto);
@@ -166,15 +137,12 @@ public class UserController {
 
     @PutMapping("/find-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequestDto requestDto) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 비밀번호가 변경되었습니다.")
-                .build();
+        CommonResponseMessage responseDto = userService.changePassword(requestDto);
 
         return ResponseEntity.ok()
                 .body(responseDto);
     }
+
 
     @GetMapping("/condition/{id}/{date}")
     public ResponseEntity<?> searchCondition(@PathVariable String id, @PathVariable String date) {

@@ -46,7 +46,7 @@ public class SignServiceImpl implements SignService {
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .name(requestDto.getName())
                 .email(requestDto.getEmail())
-                .open(requestDto.getOpen())
+                .open(requestDto.isOpen())
                 .createdDate(LocalDateTime.now())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
