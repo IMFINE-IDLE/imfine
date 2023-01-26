@@ -1,10 +1,11 @@
-import GlobalStyle from './styles/globalStyle';
+import { Route, Routes } from 'react-router-dom';
+import PaperFeed from './pages/PaperFeed/PaperFeed';
 
 function App() {
   return (
-    <>
-      <GlobalStyle />
-    </>
+    <Routes>
+      <Route index element={<PaperFeed />} />
+    </Routes>
   );
 }
 

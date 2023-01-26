@@ -1,6 +1,13 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
+// react icons 스타일
+const iconStyle = {
+  verticalAlign: 'middle',
+  color: 'var(--icon-color)',
+  fontSize: '1.5rem',
+};
+
 const GlobalStyle = createGlobalStyle`
   ${reset}
   @font-face {
@@ -27,10 +34,10 @@ const GlobalStyle = createGlobalStyle`
 
   *, *::before, *::after {
     box-sizing: border-box;
-    color: var(--default-font-color);
   }
-
+  
   html, body {
+    color: var(--default-font-color);
     width: 100%;
     height: 100%;
   }
@@ -56,4 +63,4 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-export default GlobalStyle;
+export { iconStyle, GlobalStyle };
