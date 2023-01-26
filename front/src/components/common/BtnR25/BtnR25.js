@@ -5,7 +5,9 @@ export const BtnR25 = styled.button`
     background-color: ${color
       ? 'var(--' + color + '-color)'
       : 'var(--main-color)'};
-    color: ${fontColor || '#ffffff'};
+    color: ${color === 'light' || color === 'gray'
+      ? fontColor || 'var(--icon-color)'
+      : fontColor || '#ffffff'};
     border-radius: 25px;
     width: ${width || '100%'};
     height: ${height || '100%'};
