@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { BoxBtnFloat, CircleFloat } from './style';
+import { BoxBtnFloat, BtnLink, CircleFloat } from './style';
 import { FiEdit3 } from 'react-icons/fi';
-import { BtnR50 } from '../common/BtnR50/BtnR50';
 
 function BtnFloat() {
   const [isClicked, setIsClicked] = useState(false);
@@ -11,22 +10,26 @@ function BtnFloat() {
       <BoxBtnFloat onClick={() => setIsClicked((prev) => !prev)}>
         {isClicked && (
           <>
-            <BtnR50
+            <BtnLink
+              to="/paper/create"
+              style={{ width: '100%' }}
               color={'light'}
-              margin={'1em 0 0 1em'}
-              padding={'1em 0'}
+              margin={'0'}
+              padding={'1em 0.8em'}
               fontSize={'1em'}
             >
               저장된 일기장에 이어쓰기
-            </BtnR50>
-            <BtnR50
+            </BtnLink>
+            <BtnLink
+              to="/diary/create"
+              style={{ width: '100%' }}
               color={'light'}
-              margin={'1em 0 1em 1em'}
-              padding={'1em'}
+              margin={'1em 0'}
+              padding={'1em 0.8em'}
               fontSize={'1em'}
             >
               새로 일기장 생성하기
-            </BtnR50>
+            </BtnLink>
           </>
         )}
         <CircleFloat>

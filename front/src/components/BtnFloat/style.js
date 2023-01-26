@@ -1,8 +1,11 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Btn } from '../common/Btn/Btn';
 
 const BoxBtnFloat = styled.div`
   position: fixed;
   width: 60%;
+  min-width: 200px;
   max-width: 320px;
   bottom: 90px;
   right: 30px;
@@ -23,4 +26,8 @@ const CircleFloat = styled.div`
   cursor: pointer;
 `;
 
-export { BoxBtnFloat, CircleFloat };
+const BtnLink = styled(Link)`
+  ${Btn}
+`;
+
+export { BoxBtnFloat, CircleFloat, BtnLink };
