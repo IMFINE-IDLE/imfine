@@ -19,7 +19,7 @@ public class SignUpRequestDto {
     private String rePassword;
     private String name;
     private String email;
-    private Boolean open;
+    private boolean open;
     private List<String> medicalIdList;
 
 }
