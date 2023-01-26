@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { BiHome } from 'react-icons/bi';
+import { GiNotebook } from 'react-icons/gi';
+import { CgProfile } from 'react-icons/cg';
+
 import CloverModal from './CloverModal';
 import {
   TabContainer,
   Tab,
   TabCenter,
-  TabImg,
   Clover,
   CloverStatusContainer,
 } from './style';
@@ -42,10 +46,24 @@ const TabBar = () => {
 
       <TabContainer>
         <Tab>
-          <TabImg onClick={handleTabClick} src="/assets/icons/home.svg" />
+          <NavLink
+            to="/"
+            style={({ isActive }) => ({
+              color: isActive ? 'var(--dark-color)' : 'var(--main-color)',
+            })}
+          >
+            <BiHome />
+          </NavLink>
         </Tab>
         <Tab>
-          <TabImg onClick={handleTabClick} src="/assets/icons/home.svg" />
+          <NavLink
+            to="/"
+            style={({ isActive }) => ({
+              color: isActive ? 'var(--dark-color)' : 'var(--main-color)',
+            })}
+          >
+            <GiNotebook />
+          </NavLink>
         </Tab>
         <TabCenter>
           <Clover
@@ -57,10 +75,24 @@ const TabBar = () => {
           />
         </TabCenter>
         <Tab>
-          <TabImg onClick={handleTabClick} src="/assets/icons/home.svg" />
+          <NavLink
+            to="/"
+            style={({ isActive }) => ({
+              color: isActive ? 'var(--dark-color)' : 'var(--main-color)',
+            })}
+          >
+            <CgProfile />
+          </NavLink>
         </Tab>
         <Tab>
-          <TabImg onClick={handleTabClick} src="/assets/icons/home.svg" />
+          <NavLink
+            to="/"
+            style={({ isActive }) => ({
+              color: isActive ? 'var(--dark-color)' : 'var(--main-color)',
+            })}
+          >
+            <CgProfile />
+          </NavLink>
         </Tab>
       </TabContainer>
     </div>
