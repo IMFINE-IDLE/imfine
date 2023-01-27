@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clover, CloverWrap } from './style';
 
-const CloverModal = ({ setCurrentClover }) => {
+const CloverModal = ({ setCurrentClover, setCloversOpen }) => {
   const statusList = [
     ['pink', '두근'],
     ['main', '평온'],
@@ -18,7 +18,10 @@ const CloverModal = ({ setCurrentClover }) => {
   const cloverList = statusList.map((status, idx) => (
     <li key={idx}>
       <Clover
-        onClick={() => setCurrentClover(status[0])}
+        onClick={() => {
+          setCurrentClover(status[0]);
+          setCloversOpen((prev) => !prev);
+        }}
         src={`/assets/clovers/clover-${status[0]}.svg`}
       />
       <span>{status[1]}</span>
