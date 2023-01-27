@@ -2,10 +2,12 @@ package com.idle.imfine.data.dto.user.response;
 
 import com.idle.imfine.common.CommonResponseMessage;
 import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
+@ToString
 public class SignInResponseDto extends CommonResponseMessage {
 
     private String accessToken;

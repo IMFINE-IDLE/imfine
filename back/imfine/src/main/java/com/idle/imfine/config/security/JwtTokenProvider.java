@@ -9,10 +9,8 @@
 
 package com.idle.imfine.config.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.idle.imfine.exception.token.TokenNotFoundException;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +37,7 @@ public class JwtTokenProvider {
 
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
-    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 30; // 30분 토큰 유효
+    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 12; // 30분 토큰 유효
     private final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7; // 1주 토큰 유효
 
     // SecretKey 에 대해 인코딩 수행
@@ -75,9 +73,9 @@ public class JwtTokenProvider {
 
         Date now = new Date();
         String token = Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME))
+                .setClaims(claims) // 저장 정보
+                .setIssuedAt(now) // 토큰 발행 시간 정보
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPIRE_TIME)) // 만료 시간
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret 값 세팅
                 .compact();
 
@@ -115,12 +113,20 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         LOGGER.info("[validateToken] 토큰 유효 체크 시작");
         try {
+            if(token == null || token.isEmpty()) throw new TokenNotFoundException();
+
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             LOGGER.info("[validateToken] 토큰 유효 체크 완료");
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
+        } catch (TokenNotFoundException e){
             LOGGER.info("[validateToken] 토큰 유효 체크 예외 발생");
-            return false;
+            throw new TokenNotFoundException();
+        } catch (ExpiredJwtException e){
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), e.getMessage());
+        } catch (SignatureException e){
+            throw new SignatureException(e.getMessage());
+        } catch (MalformedJwtException e){
+            throw new MalformedJwtException(e.getMessage());
         }
     }
 }
