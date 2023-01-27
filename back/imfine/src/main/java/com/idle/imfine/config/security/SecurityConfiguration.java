@@ -1,10 +1,9 @@
 package com.idle.imfine.config.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -14,14 +13,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 // 어플리케이션의 보안 설정
 @Configuration
 @EnableWebSecurity // Spring Security에 대한 디버깅 모드를 사용하기 위한 어노테이션 (default : false)
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    public SecurityConfiguration(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -41,9 +38,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest().hasRole("ADMIN") // 나머지 요청은 인증된 ADMIN만 접근 가능
 
             .and()
-            .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
+            .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler)
             .and()
-            .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint)
 
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

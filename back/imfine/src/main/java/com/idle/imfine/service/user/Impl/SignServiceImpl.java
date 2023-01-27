@@ -1,6 +1,7 @@
 package com.idle.imfine.service.user.Impl;
 
 import com.idle.imfine.common.CommonResponseMessage;
+import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.config.security.JwtTokenProvider;
 import com.idle.imfine.data.dto.user.request.SignInRequestDto;
 import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
@@ -28,6 +29,7 @@ public class SignServiceImpl implements SignService {
     public UserRepository userRepository;
     public JwtTokenProvider jwtTokenProvider;
     public PasswordEncoder passwordEncoder;
+
 
     @Autowired
     public SignServiceImpl(UserRepository userRepository, JwtTokenProvider jwtTokenProvider,
@@ -101,9 +103,13 @@ public class SignServiceImpl implements SignService {
 
     @Override
     public CommonResponseMessage signOut(String uid) {
-        LOGGER.info("[SignService.signOut] refresh token 제거");
+        LOGGER.info("[SignService.signOut] refresh token 제거 uid: {}", uid);
         User user = userRepository.getByUid(uid);
+        LOGGER.info("[SignService.signOut] 유저 정보 가져오기 {}", user.getUid());
+
         user.updateRefreshToken(null);
+        LOGGER.info("[SignService.signOut] refresh token 제거");
+
         userRepository.save(user);
 
         LOGGER.info("[SignService.signOut] ResponseMessage 생성");
