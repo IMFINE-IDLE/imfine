@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useInput from '../../hooks/useInput';
+import api from '../../api/api';
+// import useInput from '../../hooks/useInput';
 import {
   BoxSignUp,
   TitleSignUp,
@@ -11,7 +13,7 @@ import {
   BtnSignup,
 } from './style';
 
-function SignUp() {
+function SignUpPage() {
   const navigate = useNavigate();
 
   const [errorMsg, setErrorMsg] = useState(null);
@@ -27,7 +29,9 @@ function SignUp() {
         isOpen,
         medicalIdList,
       } = { ...prev, ...next };
-
+      if (id === 'test') {
+        alert('잘됨');
+      }
       return { ...prev, ...next };
     },
     {
@@ -43,6 +47,22 @@ function SignUp() {
   const { id, name, email, password, confirmPassword, isOpen, medicalIdList } =
     inputValue;
 
+  const signUp = async (userData) => {
+    console.log(userData);
+    try {
+      const res = axios({
+        url: api.user.signUp(),
+        method: 'post',
+        data: userData,
+      });
+      console.log(res.data);
+      // 리덕스에 토큰 저장
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div>
       <BoxSignUp>
@@ -53,7 +73,6 @@ function SignUp() {
         <form action="">
           <Label htmlFor="idInput">아이디</Label>
           <InputSignUp
-            label="아이디"
             value={id}
             id="idInput"
             type="text"
@@ -84,6 +103,7 @@ function SignUp() {
             value={password}
             id="passwordInput"
             type="password"
+            autoComplete="off"
             required
             onChange={(e) => inputEvent({ password: e.target.value })}
           />
@@ -92,6 +112,7 @@ function SignUp() {
             value={confirmPassword}
             id="confirmPasswordInput"
             type="password"
+            autoComplete="off"
             required
             onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
           />
@@ -100,6 +121,7 @@ function SignUp() {
             padding={'1em'}
             fontSize={'1em'}
             type="submit"
+            onClick={() => signUp(inputValue)}
           >
             회원 가입
             {/* 다음 단계 */}
@@ -110,4 +132,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignUpPage;

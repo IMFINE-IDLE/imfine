@@ -21,10 +21,6 @@ const CloverImg = styled.img.attrs({
 `;
 
 const BoxInnerSignup = styled(BoxGrad)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   padding: 3em 4em 0;
   margin: 0;
 `;
