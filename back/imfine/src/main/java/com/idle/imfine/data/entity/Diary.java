@@ -2,22 +2,25 @@ package com.idle.imfine.data.entity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.idle.imfine.data.entity.medical.MedicalCode;
+import com.idle.imfine.data.entity.paper.Paper;
+import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Data
@@ -26,18 +29,19 @@ import org.springframework.data.annotation.CreatedDate;
 @Builder
 @Table
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Diary {
+public class Diary extends BaseCreatedEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "writer_id")
     private User writer;
 
-    @Column(nullable = false)
-    private int medicalId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "medical_id")
+    private MedicalCode medicalCode;
 
     @Column(length = 20, nullable = false)
     private String title;
@@ -60,8 +64,11 @@ public class Diary {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean open;
 
-    @Column(nullable = false)
-    private LocalDateTime startedDate;
+    private LocalDateTime endedAt;
 
-    private LocalDateTime endedDate;
+    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
+    private List<Paper> papers;
+
+    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
+    private List<DiaryHasSymptom> diaryHasSymptoms;
 }
