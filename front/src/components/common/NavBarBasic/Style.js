@@ -8,26 +8,30 @@ const NavBar = styled.div`
   right: 0%;
   top: 0%;
   bottom: 0%;
+  display: grid;
+  grid-template-columns: 2fr 4fr 1fr 1fr;
 `;
 
-const LeftItem = styled.img`
-  position: absolute;
-  left: 2em;
-  top: 1.5em;
-  bottom: 1.5em;
-  width: ${(props) => props.width || '118px'};
-  height: ${(props) => props.height || '50%'};
-  object-fit: contain;
+const NavItem = styled.div`
+  margin-left: 1em;
+  margin-right: ${(props) => props.right || '0px'};
+  display: flex;
+  justify-content: ${(props) => props.justify || 'center'};
+  align-items: center;
+`;
+
+const Logo = styled.img`
+  width: ${(props) => props.width || '100px'};
+  height: ${(props) => props.height || '50px'};
+  display: ${(props) => props.display || 'inline'};
 `;
 
 const Title = styled.div`
   font-size: 1em;
-  position: absolute;
-  margin-left: auto;
   top: 1.5em;
   bottom: 0.5em;
-  margin: auto;
-  display: inline-block;
+  display: ${(props) => props.display || 'flex'};
+  right: 12em;
 `;
 
 const Search = styled.img`
@@ -46,4 +50,4 @@ const Bell = styled.img`
   top: 1.7em;
 `;
 
-export { NavBar, LeftItem, Title, Search, Bell };
+export { NavBar, NavItem, Logo, Title, Search, Bell };
