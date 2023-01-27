@@ -1,6 +1,7 @@
 package com.idle.imfine.data.dto.diary.response;
 
 
+import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,5 @@ public class ResponseDiaryDetailDto {
     private String beginDate;
     private String endedDate;
 
-    List<ResponseSymptomRecordDto> symptomRecords;
-
-
+    List<ResponseSymptomDto> diaryHasSymptoms;
 }

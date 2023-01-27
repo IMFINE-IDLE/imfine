@@ -9,5 +9,4 @@ public class ImfineApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ImfineApplication.class, args);
 	}
-
 }

@@ -44,7 +44,6 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @PostMapping
-    //userid필요함
     public ResponseEntity<String> postDiary(@RequestBody RequestDiaryPostDto requestDiaryPostDto, @LoginUser String uid){
         long savedId = diaryService.save(requestDiaryPostDto, uid);
         LOGGER.info("일기장 생성 api에 들어왔습니다. {}", savedId);
@@ -52,7 +51,6 @@ public class DiaryController {
     }
 
     @GetMapping("/list")
-    //userid필요함
     public ResponseEntity<?> getDiaryList(@RequestParam(value = "tab") String tab
         , @RequestParam(value = "medical-id") List<Integer> medicalId
         , @RequestParam(value = "symptom-id") List<Integer> symptomId){
@@ -100,51 +98,15 @@ public class DiaryController {
 
     @GetMapping("/{diary-id}")
     public ResponseEntity<ResponseDiaryDetailDto> getDiaryDetail(@PathVariable(value = "diary-id") long diaryId, @LoginUser String uid) {
-        if (true) {
-            LOGGER.info("일기장 상세조회 api들어옴 {}", diaryId);
-            List<ResponseSymptomRecordDto> responseSymptomRecordDtos = new ArrayList<>();
-            responseSymptomRecordDtos.add(new ResponseSymptomRecordDto(1, "어지러움"));
-            responseSymptomRecordDtos.add(new ResponseSymptomRecordDto(2, "구토"));
-            ResponseDiaryDetailDto responseDiaryDetailDto = ResponseDiaryDetailDto.builder()
-                    .userId(1)
-                    .userStatus(1)
-                    .title("안녕")
-                    .description("설명")
-                    .userName("이름")
-                    .medicalName("귀성형")
-                    .beginDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-                    .endedDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-                    .build();
-            return new ResponseEntity<>(responseDiaryDetailDto, HttpStatus.OK);
-        } else {
-            return null;
-        }
+        LOGGER.info("일기장 상세조회 api들어옴 {}", diaryId);
+        ResponseDiaryDetailDto responseDiaryDetailDto = diaryService.getDiaryDetail(diaryId, uid);
+        return new ResponseEntity<>(responseDiaryDetailDto, HttpStatus.OK);
     }
 
     @GetMapping("/{diary-id}/symptoms")
     public ResponseEntity<List<ResponseSymptomChartRecordDto>> getDiaryDetailSymptomRecords(@PathVariable(value = "diary-id") long diaryId) {
-        if (true) {
-            LOGGER.info("일기장 상세조회 증상 기록 찾기 api들어옴 {}", diaryId);
-            List<ResponseSymptomChartRecordDto> responseSymptomChartRecordDtos = new ArrayList<>();
-            List<ResponseDateScoreDto> responseDateScoreDtos = new ArrayList<>();
-
-            responseDateScoreDtos.add(new ResponseDateScoreDto(LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyyMMdd")), 10));
-            responseDateScoreDtos.add(new ResponseDateScoreDto(LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyyMMdd")), 5));
-            responseSymptomChartRecordDtos.add(new ResponseSymptomChartRecordDto("어지러움", responseDateScoreDtos));
-
-            List<ResponseDateScoreDto> responseDateScoreDtoss = new ArrayList<>();
-
-            responseDateScoreDtoss.add(new ResponseDateScoreDto(LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyyMMdd")), 10));
-            responseDateScoreDtoss.add(new ResponseDateScoreDto(LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyyMMdd")), 5));
-            responseSymptomChartRecordDtos.add(new ResponseSymptomChartRecordDto("두통", responseDateScoreDtoss));
-            return new ResponseEntity<>(responseSymptomChartRecordDtos, HttpStatus.OK);
-        } else {
-            return null;
-        }
+        return ResponseEntity.ok()
+                .body(diaryService.getDiarySymptomsAll(diaryId));
     }
 
     @GetMapping("/{diary-id}/paper/{date}")
