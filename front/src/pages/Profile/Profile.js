@@ -1,15 +1,17 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import TabBar from '../../components/TabBar/TabBar';
 
-function PaperFeed() {
+function Profile() {
   return (
     <div>
-      PaperFeed (메인)
+      Profile
+      <Outlet />
       <BtnFloat />
       <TabBar />
     </div>
   );
 }
 
-export default PaperFeed;
+export default Profile;
