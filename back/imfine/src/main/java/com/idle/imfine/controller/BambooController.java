@@ -1,12 +1,10 @@
 package com.idle.imfine.controller;
 
 import com.idle.imfine.common.LoginUser;
-import com.idle.imfine.data.dto.bamboo.request.RequestBambooDto;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
-import com.idle.imfine.data.dto.like.request.RequestLikeDto;
-import com.idle.imfine.service.BambooService;
+import com.idle.imfine.service.bamboo.BambooService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
@@ -40,21 +38,23 @@ public class BambooController {
     @GetMapping("/list")
     public ResponseEntity<List<ResponseBamboo>> getList(@RequestParam("filter") String filter){
         LOGGER.info("list api에 들어옴  {}", filter);
-        List<ResponseBamboo> rbl = new ArrayList<ResponseBamboo>();
-        if (true){
-            rbl.add(new ResponseBamboo(1, "안녕하세요.", LocalDateTime.now(), 10, 10));
-            rbl.add(new ResponseBamboo(2, "반갑습니다.", LocalDateTime.now(), 11, 11));
-            rbl.add(new ResponseBamboo(3, "안녕히 가세요.", LocalDateTime.now(), 12, 12));
-            return new ResponseEntity<List<ResponseBamboo>>(rbl, HttpStatus.OK);
-        } else {
-            return null;
-        }
+//        List<ResponseBamboo> rbl = new ArrayList<ResponseBamboo>();
+//        if (true){
+//            rbl.add(new ResponseBamboo(1, "안녕하세요.", LocalDateTime.now(), 10, 10));
+//            rbl.add(new ResponseBamboo(2, "반갑습니다.", LocalDateTime.now(), 11, 11));
+//            rbl.add(new ResponseBamboo(3, "안녕히 가세요.", LocalDateTime.now(), 12, 12));
+//            return new ResponseEntity<List<ResponseBamboo>>(rbl, HttpStatus.OK);
+//        } else {
+//            return null;
+//        }
+        List<ResponseBamboo> responseBamboos = bambooService.showList(filter);
+        return new ResponseEntity<List<ResponseBamboo>>(responseBamboos, HttpStatus.OK);
     }
 
 
     @GetMapping("/myactive")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<List<ResponseBamboo>> getMyActiveList(@LoginUser String uid, @RequestParam("filter") String filter){
+    public ResponseEntity<List<ResponseBamboo>> getMyActiveList(@RequestParam("filter") String filter, @LoginUser String uid){
         LOGGER.info("myactivelist api에 들어옴  {}", filter);
         List<ResponseBamboo> rbl = new ArrayList<ResponseBamboo>();
         if (true){
@@ -94,20 +94,22 @@ public class BambooController {
     }
     @PostMapping("/like")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<String> postBambooLike(@RequestBody int bambooId) {
+    public ResponseEntity<String> postBambooLike(@RequestBody int bambooId, @LoginUser String uid) {
         LOGGER.info("대나무 좋아요 api에 들어왔습니다. {}", bambooId);
-        RequestLikeDto rl = new RequestLikeDto(1, 1, bambooId);
-        LOGGER.info("대나무 좋아요 {}", rl );
+//        RequestLikeDto rl = new RequestLikeDto(1, 1, bambooId);
+        bambooService.likeBamboo(bambooId, uid);
+//        LOGGER.info("대나무 좋아요 {}", rl );
         return new ResponseEntity<String>("대나무 좋아요 등록 성공", HttpStatus.OK);
     }
 
     @DeleteMapping("/like/{bamboo-id}")
     // 로그인 구현되면 loginuser 추가하기
     // 검증을 서비스에서 해야하나?
-    public ResponseEntity<String> deleteBambooLike(@PathVariable("bamboo-id") int bambooId) {
+    public ResponseEntity<String> deleteBambooLike(@PathVariable("bamboo-id") int bambooId, @LoginUser String uid) {
         LOGGER.info("대나무 좋아요 삭제 api에 들어왔습니다. {}", bambooId);
-        RequestLikeDto rl = new RequestLikeDto(1, 1, bambooId);
-        LOGGER.info("대나무 좋아요 삭제 {}", rl );
+//        RequestHeartDto rl = new RequestHeartDto(1, 1, bambooId);
+//        LOGGER.info("대나무 좋아요 삭제 {}", rl );
+        bambooService.deleteLikeBamboo(bambooId, uid);
         return new ResponseEntity<String>("대나무 좋아요 삭제 성공", HttpStatus.OK);
     }
 }

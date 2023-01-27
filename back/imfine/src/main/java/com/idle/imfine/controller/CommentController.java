@@ -2,7 +2,7 @@ package com.idle.imfine.controller;
 
 import com.idle.imfine.data.dto.comment.request.RequestContentRegistraitionDto;
 import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
-import com.idle.imfine.data.dto.like.request.RequestLikeDto;
+import com.idle.imfine.data.dto.like.request.RequestHeartDto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class CommentController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity<String> postCommnetLike(@RequestBody RequestLikeDto requestLikeDto) {
+    public ResponseEntity<String> postCommnetLike(@RequestBody RequestHeartDto requestLikeDto) {
         requestLikeDto.setSenderId(1);
         requestLikeDto.setContentCodeId(1);
         LOGGER.info("댓글 등록 들어옴 {}", requestLikeDto);
@@ -59,7 +59,7 @@ public class CommentController {
 
     @DeleteMapping("/like/{comment-id}")
     public ResponseEntity<String> deleteCommentLike(@PathVariable(value = "comment-id") long commentId) {
-        RequestLikeDto requestLikeDto = new RequestLikeDto(1, 3, (int)commentId);
+        RequestHeartDto requestLikeDto = new RequestHeartDto(1, 3, (int)commentId);
         LOGGER.info("좋아요 삭제 {}", requestLikeDto);
         return new ResponseEntity<>("댓글 좋아요 삭제!", HttpStatus.OK);
     }

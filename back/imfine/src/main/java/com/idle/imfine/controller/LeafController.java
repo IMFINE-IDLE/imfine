@@ -1,7 +1,7 @@
 package com.idle.imfine.controller;
 
 import com.idle.imfine.data.dto.leaf.request.RequestLeafDto;
-import com.idle.imfine.data.dto.like.request.RequestLikeDto;
+import com.idle.imfine.data.dto.like.request.RequestHeartDto;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +31,14 @@ public class LeafController {
 
     @PostMapping("/like")
     public ResponseEntity<String> postLeafLike(@RequestBody int leafId) {
-        RequestLikeDto requestLikeDto = new RequestLikeDto(1, leafId, 2);
+        RequestHeartDto requestLikeDto = new RequestHeartDto(1, leafId, 2);
         LOGGER.info("잎 좋아요 등록 api에 들어옴 {}", requestLikeDto);
         return new ResponseEntity<String>("대나무 좋아요 등록 성공", HttpStatus.OK);
     }
 
     @DeleteMapping("/like/{leaf-id}")
     public ResponseEntity<String> deleteLeafLike(@PathVariable("leaf-id") int leafId) {
-        RequestLikeDto requestLikeDto = new RequestLikeDto(1, leafId, 2);
+        RequestHeartDto requestLikeDto = new RequestHeartDto(1, leafId, 2);
         LOGGER.info("잎 좋아요 삭제 api에 들어옴 {}", requestLikeDto);
         return new ResponseEntity<String>("대나무 좋아요 삭제 성공", HttpStatus.OK);
     }
