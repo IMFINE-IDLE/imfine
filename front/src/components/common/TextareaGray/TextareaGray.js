@@ -19,7 +19,7 @@ const Textarea = styled.textarea`
   background-color: #f8faf9;
   border-radius: 25px;
   outline: none;
-  padding: 20px;
+  padding: ${(props) => props.padding || '1em'};
   width: ${(props) => props.width || '100%'};
   min-height: 100px;
   margin: ${(props) => props.margin || '0'};
@@ -27,7 +27,7 @@ const Textarea = styled.textarea`
   resize: none;
 `;
 
-function TextareaGray({ value, setValue, width, margin }) {
+function TextareaGray({ value, setValue, width, margin, padding }) {
   const ref = useRef();
   const onChange = (event) => {
     const v = event.target.value;
@@ -47,6 +47,7 @@ function TextareaGray({ value, setValue, width, margin }) {
       ref={ref}
       value={value}
       onChange={onChange}
+      padding={padding}
     />
   );
 }
