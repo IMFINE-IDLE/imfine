@@ -10,12 +10,18 @@ const iconStyle = {
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
-  @font-face {
+  /* @font-face {
     font-family: 'Noto Sans KR', sans-serif;
     src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
     font-weight: 400;
     font-style: normal;
-  }
+  } */
+  @font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
   
   :root {
     /* Color */
@@ -40,6 +46,8 @@ const GlobalStyle = createGlobalStyle`
     color: var(--default-font-color);
     width: 100%;
     height: 100%;
+    /* font-family: 'Noto Sans KR', sans-serif; */
+    font-family: 'Pretendard-Regular', -apple-system, Helvetica Neue, sans-serif;
   }
 
   button {
