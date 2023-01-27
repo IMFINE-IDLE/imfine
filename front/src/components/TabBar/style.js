@@ -37,12 +37,14 @@ const TabImg = styled.img`
 // 클로버 탭 wrapper
 const TabCenter = styled.div`
   position: relative;
+  display: flex;
+  justify
 `;
 
 // 클로버 상태창 모달 전체 감싸는 컴포넌트
 const CloverStatusContainer = styled(BoxNoShad)`
   position: absolute;
-  left: calc(50% - ${(props) => props.width / 2});
+  left: calc(50% - ${(props) => props.width} / 2);
   bottom: 5.2em;
 `;
 
@@ -62,6 +64,8 @@ const Clover = styled.img`
     height: ${height || '3.125em'};
     position: ${isMain ? 'absolute' : 'static'};
     top: -2em;
+    left: calc(50% - 1.5625em);
+    cursor: pointer;
   `}
 
   &.bounce {

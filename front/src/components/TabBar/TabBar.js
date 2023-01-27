@@ -4,6 +4,7 @@ import { BiHome } from 'react-icons/bi';
 import { GiNotebook } from 'react-icons/gi';
 import { CgProfile } from 'react-icons/cg';
 
+import { ReactComponent as BamBooTabSvg } from './bamboo-copy.svg';
 import CloverModal from './CloverModal';
 import {
   TabContainer,
@@ -14,33 +15,17 @@ import {
 } from './style';
 
 const TabBar = () => {
-  const [currentTabIdx, setCurrentTabIdx] = useState(0);
   const [currentClover, setCurrentClover] = useState('main');
   const [cloversOpen, setCloversOpen] = useState(false);
-
-  const handleTabClick = (e) => {
-    const tab = e.target.closest('div');
-    const tabs = [...tab.parentElement.children];
-    const curIdx = tabs.indexOf(tab);
-
-    setCurrentTabIdx(tabs.indexOf(curIdx));
-
-    console.log('tab', tab);
-    console.log('tabs', tabs);
-    console.log('curIdx', curIdx);
-
-    tabs.forEach((tab, idx) => {
-      tab.className = idx === curIdx ? 'focused' : '';
-    });
-
-    // 라우터링크 추가할 곳
-  };
 
   return (
     <div>
       {cloversOpen && (
         <CloverStatusContainer width="18.75em" height="11em" radius="25px">
-          <CloverModal setCurrentClover={setCurrentClover} />
+          <CloverModal
+            setCurrentClover={setCurrentClover}
+            setCloversOpen={setCloversOpen}
+          />
         </CloverStatusContainer>
       )}
 
@@ -81,7 +66,7 @@ const TabBar = () => {
               color: isActive ? 'var(--dark-color)' : 'var(--main-color)',
             })}
           >
-            <CgProfile />
+            <BamBooTabSvg fill="currentColor" />
           </NavLink>
         </Tab>
         <Tab>
