@@ -8,4 +8,10 @@ const BoxLogin = styled(BoxGrad)`
   flex-direction: column;
 `;
 
-export { BoxLogin };
+const BoxInnerLogin = styled.div`
+  width: 100%;
+  max-width: 280px;
+  margin: 2em 0;
+`;
+
+export { BoxLogin, BoxInnerLogin };
