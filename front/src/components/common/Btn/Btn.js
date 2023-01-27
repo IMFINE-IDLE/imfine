@@ -20,8 +20,8 @@ export const Btn = ({
   border-radius: ${radius || '25px'};
   width: ${width || '100%'};
   height: ${height || '100%'};
-  padding: ${padding || '1.5em'};
-  margin: ${margin || '1.5em'};
+  padding: ${padding || '1em'};
+  margin: ${margin || '0'};
   text-align: center;
-  font-size: ${fontSize || '1.5em'};
+  font-size: ${fontSize || '1em'};
 `;
