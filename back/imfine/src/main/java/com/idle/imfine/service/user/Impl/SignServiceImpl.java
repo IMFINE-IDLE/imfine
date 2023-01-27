@@ -47,7 +47,6 @@ public class SignServiceImpl implements SignService {
                 .name(requestDto.getName())
                 .email(requestDto.getEmail())
                 .open(requestDto.isOpen())
-                .createdDate(LocalDateTime.now())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 

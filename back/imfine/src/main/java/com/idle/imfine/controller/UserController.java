@@ -4,6 +4,7 @@ import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.common.LoginUser;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.*;
+import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.SignService;
 import com.idle.imfine.service.user.UserService;
 import org.slf4j.Logger;
@@ -25,6 +26,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FollowService followService;
 
     // Dummy
     private static final String ACCESS_TOKEN =
@@ -153,7 +157,7 @@ public class UserController {
                 .build();
 
         return ResponseEntity.ok()
-                .body(responseDto);
+                .body(responseDto) ;
     }
 
     @PostMapping("/condition")
@@ -217,24 +221,16 @@ public class UserController {
     }
 
     @PostMapping("/follow")
-    public ResponseEntity<?> followUser(@RequestBody String otherUid) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 팔로우를 맺었습니다.")
-                .build();
+    public ResponseEntity<?> followUser(@LoginUser String uid, @RequestBody UidDto requestDto) {
+        CommonResponseMessage responseDto = followService.followUser(uid, requestDto.getUid());
 
         return ResponseEntity.ok()
                 .body(responseDto);
     }
 
     @DeleteMapping("/follow/{otherUid}")
-    public ResponseEntity<?> unfollowUser(@PathVariable String otherUid) {
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 팔로우를 끊었습니다..")
-                .build();
+    public ResponseEntity<?> unfollowUser(@LoginUser String uid, @PathVariable String otherUid) {
+        CommonResponseMessage responseDto = followService.unfollowUser(uid, otherUid);
 
         return ResponseEntity.ok()
                 .body(responseDto);

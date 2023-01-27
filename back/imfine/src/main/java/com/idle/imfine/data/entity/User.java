@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class User implements UserDetails {
+public class User extends BaseCreatedEntity implements UserDetails {
 
     private static final long serialVersionUID = 6014984039564979072L;
 
@@ -55,9 +55,6 @@ public class User implements UserDetails {
     @ColumnDefault("0")
     @Column(nullable = false)
     private int followerCount;
-
-    @Column(nullable = false)
-    private LocalDateTime createdDate;
 
     private String refreshToken;
 
