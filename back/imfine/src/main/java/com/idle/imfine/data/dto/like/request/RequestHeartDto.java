@@ -1,6 +1,7 @@
 package com.idle.imfine.data.dto.like.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,9 +10,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Setter
-public class RequestLikeDto {
-    private int senderId;
+@Builder
+public class RequestHeartDto {
+    private long senderId;
     private int contentCodeId;
-    private int contentId;
+    private long contentId;
 
 }

@@ -1,7 +1,7 @@
 package com.idle.imfine.controller;
 
 import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
-import com.idle.imfine.data.dto.like.request.RequestLikeDto;
+import com.idle.imfine.data.dto.like.request.RequestHeartDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
@@ -85,7 +85,7 @@ public class PaperController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity<String> postPaperLike(@RequestBody RequestLikeDto requestLikeDto) {
+    public ResponseEntity<String> postPaperLike(@RequestBody RequestHeartDto requestLikeDto) {
         requestLikeDto.setSenderId(1);
         requestLikeDto.setContentCodeId(2);
         LOGGER.info("일기 좋아요 {}", requestLikeDto);
@@ -95,7 +95,7 @@ public class PaperController {
     @DeleteMapping("/{paper-id}/like/{sender-id}")
     public ResponseEntity<String> deletePaperLike(@PathVariable(value = "paper-id") long paperId, @PathVariable(value = "sender-id") int senderId) {
         LOGGER.info("좋아요 취소 paperId {}, senderId {}", paperId, senderId);
-        RequestLikeDto requestLikeDto = new RequestLikeDto(senderId, 1, (int)paperId);
+        RequestHeartDto requestLikeDto = new RequestHeartDto(senderId, 1, (int)paperId);
         return new ResponseEntity("좋아요 취소", HttpStatus.OK);
     }
 }
