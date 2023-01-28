@@ -52,13 +52,4 @@ public class ResponseService {
         result.setMessage(SUCCESS_MSG);
     }
 
-    public Result getFailureResult(int status, String message) {
-        Result result = new Result();
-        result.setSuccess(false);
-        result.setStatus(status);
-        result.setMessage(message);
-
-        return result;
-    }
-
 }

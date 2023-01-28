@@ -1,6 +1,5 @@
 package com.idle.imfine.controller;
 
-import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.common.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
@@ -12,10 +11,8 @@ import com.idle.imfine.data.dto.user.request.SignInRequestDto;
 import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
 import com.idle.imfine.data.dto.user.request.UidDto;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
-import com.idle.imfine.data.dto.user.response.FollowListResponseDto;
 import com.idle.imfine.data.dto.user.response.GetUserInfoResponseDto;
 import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
-import com.idle.imfine.data.dto.user.response.SearchConditionResponseDto;
 import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.SignService;
@@ -24,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -9,7 +9,7 @@
 
 package com.idle.imfine.config.security;
 
-import com.idle.imfine.exception.token.TokenNotFoundException;
+import com.idle.imfine.errors.token.TokenNotFoundException;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -113,20 +113,29 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         LOGGER.info("[validateToken] 토큰 유효 체크 시작");
         try {
-            if(token == null || token.isEmpty()) throw new TokenNotFoundException();
+//            if(token == null || token.isEmpty()) throw new TokenNotFoundException();
 
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             LOGGER.info("[validateToken] 토큰 유효 체크 완료");
             return !claims.getBody().getExpiration().before(new Date());
+        } catch (SignatureException e){
+            throw new SignatureException(e.getMessage());
+//        try {
+//            if(token == null || token.isEmpty()) throw new TokenNotFoundException();
+//
+//            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+//            LOGGER.info("[validateToken] 토큰 유효 체크 완료");
+//            return !claims.getBody().getExpiration().before(new Date());
         } catch (TokenNotFoundException e){
             LOGGER.info("[validateToken] 토큰 유효 체크 예외 발생");
             throw new TokenNotFoundException();
         } catch (ExpiredJwtException e){
             throw new ExpiredJwtException(e.getHeader(), e.getClaims(), e.getMessage());
-        } catch (SignatureException e){
-            throw new SignatureException(e.getMessage());
         } catch (MalformedJwtException e){
             throw new MalformedJwtException(e.getMessage());
+        } catch (Exception e) {
+            LOGGER.info("[validateToken] 토큰 유효 체크 예외 발생");
+            return false;
         }
     }
 }

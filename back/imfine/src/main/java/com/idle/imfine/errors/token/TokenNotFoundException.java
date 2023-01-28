@@ -1,4 +1,4 @@
-package com.idle.imfine.exception.token;
+package com.idle.imfine.errors.token;
 
 public class TokenNotFoundException extends IllegalArgumentException {
 

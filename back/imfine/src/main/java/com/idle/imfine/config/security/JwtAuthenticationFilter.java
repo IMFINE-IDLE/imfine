@@ -1,23 +1,24 @@
 package com.idle.imfine.config.security;
 
-import com.idle.imfine.data.entity.User;
-import com.idle.imfine.exception.token.TokenNotFoundException;
-import com.idle.imfine.exception.user.UserNotFoundException;
+import com.idle.imfine.errors.errorcode.TokenErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
+import com.idle.imfine.errors.token.TokenNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import java.io.IOException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
@@ -28,38 +29,43 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // 헤더에서 JWT 토큰 가져오기
+        String token = jwtTokenProvider.resolveToken(request);
+        LOGGER.info("[doFilterInternal] token 값 추출 완료. token : {}", token);
 
         try{
-            // 헤더에서 JWT 토큰 가져오기
-            String token = jwtTokenProvider.resolveToken(servletRequest);
-            LOGGER.info("[doFilterInternal] token 값 추출 완료. token : {}", token);
-
+            if(token == null || token.isEmpty()) throw new TokenNotFoundException();
             LOGGER.info("[doFilterInternal] token 값 유효성 체크 시작");
+//            if (jwtTokenProvider.validateToken())
             if (token != null && jwtTokenProvider.validateToken(token)) {
-                // 토크으로부터 유저 정보 가져오기
+                // 토큰으로부터 유저 정보 가져오기
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 // SecurityContext에 Authentication 객체 저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
             }
-        }catch (UserNotFoundException e){
-            LOGGER.info("[doFilterInternal] UserNotFoundException ");
-            servletRequest.setAttribute("exception", Code.NOT_FOUND_USER.getCode());
-        } catch (TokenNotFoundException e){
-            LOGGER.info("[doFilterInternal] TokenNotFoundException ");
-            servletRequest.setAttribute("exception", Code.UNKNOWN_ERROR.getCode());
+            LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
+        } catch (SecurityException | MalformedJwtException e){
+            request.setAttribute("exception", TokenErrorCode.WRONG_TYPE_TOKEN.name());
         } catch (ExpiredJwtException e){
-            LOGGER.info("[doFilterInternal] ExpiredJwtException ");
-            servletRequest.setAttribute("exception", Code.EXPIRED_TOKEN.getCode());
-        } catch (SignatureException | MalformedJwtException e){
-            LOGGER.info("[doFilterInternal] SignatureException | MalformedJwtException ");
-            servletRequest.setAttribute("exception", Code.WRONG_TYPE_TOKEN.getCode());
+            request.setAttribute("exception", TokenErrorCode.EXPIRED_TOKEN.name());
+        } catch (UnsupportedJwtException e) {
+            request.setAttribute("exception", TokenErrorCode.UNSUPPORTED_TOKEN.name());
+        } catch (IllegalStateException | TokenNotFoundException e) {
+            request.setAttribute("exception", TokenErrorCode.TOKEN_NOT_FOUND.name());
+        } catch (Exception e) {
+            log.error("================================================");
+            log.error("JwtFilter - doFilterInternal() 오류발생");
+            log.error("token : {}", token);
+            log.error("Exception Message : {}", e.getMessage());
+            log.error("Exception StackTrace : {");
+            e.printStackTrace();
+            log.error("}");
+            log.error("================================================");
+            request.setAttribute("exception", TokenErrorCode.UNKNOWN_ERROR.name());
         }
 
         LOGGER.info("[doFilterInternal] doFilter ");
-
-        filterChain.doFilter(servletRequest, servletResponse);
+        filterChain.doFilter(request, response);
     }
 }

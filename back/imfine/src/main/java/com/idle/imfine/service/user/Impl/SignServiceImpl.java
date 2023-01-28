@@ -8,16 +8,16 @@ import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
 import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.UserRepository;
-import com.idle.imfine.exception.user.UserInfoDuplicationException;
+import com.idle.imfine.errors.errorcode.UserErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.user.SignService;
+import java.util.Collections;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 
 
 @Service
@@ -45,7 +45,8 @@ public class SignServiceImpl implements SignService {
         LOGGER.info("[SignService.signUp] 회원 가입 정보 전달");
 
         if (checkEmailDuplication(requestDto.getEmail())) {
-            throw new UserInfoDuplicationException("이미 회원가입된 이메일 입니다.");
+//            throw new UserInfoDuplicationException("이미 회원가입된 이메일 입니다.");
+            throw new ErrorException(UserErrorCode.USER_DUPLICATE_EMAIL);
         }
 
         User user = User.builder()
