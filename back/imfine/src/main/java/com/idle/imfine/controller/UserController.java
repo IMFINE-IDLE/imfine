@@ -50,14 +50,14 @@ public class UserController {
     @PostMapping("/sign-in")
     public ResponseEntity<Result> signIn(@RequestBody SignInRequestDto requestDto) {
         SignInResponseDto responseDto = signService.signIn(requestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @PostMapping("/sign-out")
     public ResponseEntity<Result> signOut(@LoginUser String uid) {
         signService.signOut(uid);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
@@ -65,14 +65,14 @@ public class UserController {
     public ResponseEntity<Result> refresh(HttpServletRequest request) {
         RefreshResponseDto responseDto = signService.refresh(request);
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Result> signUp(@RequestBody SignUpRequestDto requestDto) {
         signService.signUp(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
@@ -80,21 +80,21 @@ public class UserController {
     public ResponseEntity<Result> withdrawal(@LoginUser String uid) {
         userService.withdrawal(uid);
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @GetMapping
     public ResponseEntity<Result> searchUserInfo(@LoginUser String uid) {
         GetUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @GetMapping("/{uid}")
     public ResponseEntity<Result> searchOtherUserInfo(@PathVariable String uid) {
         GetUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
@@ -102,42 +102,42 @@ public class UserController {
     public ResponseEntity<Result> modifyUserName(@LoginUser String uid, @RequestBody ModifyUserNameRequestDto requestDto) {
         userService.modifyUserName(uid, requestDto);
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/open")
     public ResponseEntity<Result> modifyUserOpen(@LoginUser String uid, @RequestBody ModifyUserOepnRequestDto requestDto) {
         userService.modifyUserOpen(uid, requestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/change-password")
     public ResponseEntity<Result> changePassword(@LoginUser String uid, @RequestBody ChangePasswordRequestDto requestDto) {
         userService.changePassword(uid, requestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @GetMapping("/find-id/{email}")
     public ResponseEntity<Result> findId(@PathVariable String email) {
         FindIdResponseDto responseDto = userService.findId(email);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @GetMapping("/find-password/{uid}/{email}")
     public ResponseEntity<Result> checkIdAndEmail(@PathVariable String uid, @PathVariable String email) {
         userService.checkIdAndEmail(uid, email);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/find-password")
     public ResponseEntity<Result> changePassword(@RequestBody ChangePasswordRequestDto requestDto) {
         userService.changePassword(requestDto);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
@@ -145,42 +145,42 @@ public class UserController {
     @GetMapping("/condition/{id}/{date}")
     public ResponseEntity<Result> searchCondition(@PathVariable String id, @PathVariable String date) {
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult()) ;
     }
 
     @PostMapping("/condition")
     public ResponseEntity<Result> createCondition(@RequestBody ConditionRequestDto requestDto) {
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/condition")
     public ResponseEntity<Result> modifyCondition(@RequestBody ConditionRequestDto requestDto) {
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @DeleteMapping("/condition/{date}")
     public ResponseEntity<Result> removeCondition(@PathVariable String date) {
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @GetMapping("/{uid}/following")
     public ResponseEntity<Result> searchFollowingList(@PathVariable String uid) {
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @GetMapping("/{uid}/follower")
     public ResponseEntity<Result> searchFollowerList(@PathVariable String uid) {
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
@@ -188,7 +188,7 @@ public class UserController {
     public ResponseEntity<Result> followUser(@LoginUser String uid, @RequestBody UidDto requestDto) {
         followService.followUser(uid, requestDto.getUid());
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
@@ -196,7 +196,7 @@ public class UserController {
     public ResponseEntity<Result> unfollowUser(@LoginUser String uid, @PathVariable String otherUid) {
         followService.unfollowUser(uid, otherUid);
 
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
