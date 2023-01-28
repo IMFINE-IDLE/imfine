@@ -1,6 +1,6 @@
 package com.idle.imfine.errors.exception;
 
-import com.idle.imfine.errors.errorcode.ErrorCode;
+import com.idle.imfine.errors.code.ErrorCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

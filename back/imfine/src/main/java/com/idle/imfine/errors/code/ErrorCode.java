@@ -1,4 +1,4 @@
-package com.idle.imfine.errors.errorcode;
+package com.idle.imfine.errors.code;
 
 import org.springframework.http.HttpStatus;
 

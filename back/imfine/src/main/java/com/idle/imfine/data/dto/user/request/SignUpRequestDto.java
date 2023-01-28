@@ -16,7 +16,6 @@ public class SignUpRequestDto {
 
     private String uid;
     private String password;
-    private String rePassword;
     private String name;
     private String email;
     private boolean open;

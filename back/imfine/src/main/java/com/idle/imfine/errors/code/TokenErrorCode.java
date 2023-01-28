@@ -1,4 +1,4 @@
-package com.idle.imfine.errors.errorcode;
+package com.idle.imfine.errors.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum TokenErrorCode implements ErrorCode {
 
-    UNKNOWN_ERROR(HttpStatus.NOT_FOUND, "존재하지 않은 회원입니다."),
+    UNKNOWN_ERROR(HttpStatus.NOT_FOUND, "알려지지않은 에러입니다."),
     WRONG_TYPE_TOKEN(HttpStatus.BAD_REQUEST, "변조된 토큰입니다."),
 
     WRONG_TOKEN(HttpStatus.NOT_FOUND, "잘못된 토큰입니다."),

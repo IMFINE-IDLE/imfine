@@ -1,7 +1,7 @@
 package com.idle.imfine.errors.handler;
 
-import com.idle.imfine.errors.errorcode.CommonErrorCode;
-import com.idle.imfine.errors.errorcode.ErrorCode;
+import com.idle.imfine.errors.code.CommonErrorCode;
+import com.idle.imfine.errors.code.ErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.errors.response.ErrorResponseService;
 import lombok.RequiredArgsConstructor;

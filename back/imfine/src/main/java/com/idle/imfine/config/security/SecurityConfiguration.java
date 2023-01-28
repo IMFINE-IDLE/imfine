@@ -1,5 +1,6 @@
 package com.idle.imfine.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -32,15 +33,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             .and()
             .authorizeRequests() // 리퀘스트에 대한 사용권한 체크
-            .antMatchers("/**").permitAll() // 가입 및 로그인 주소는 허용
+            .antMatchers("/user/sign-up", "/user/sign-in", "/user/refresh").permitAll() // 가입 및 로그인 주소는 허용
             .antMatchers("**exception**").permitAll()
 
-            .anyRequest().hasRole("ADMIN") // 나머지 요청은 인증된 ADMIN만 접근 가능
+            .anyRequest().hasAnyRole("USER", "ADMIN") // 나머지 요청은 인증된 USER, ADMIN만 접근 가능
 
             .and()
-            .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler)
-            .and()
             .exceptionHandling().authenticationEntryPoint(customAuthenticationEntryPoint)
+            .and()
+            .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler)
 
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

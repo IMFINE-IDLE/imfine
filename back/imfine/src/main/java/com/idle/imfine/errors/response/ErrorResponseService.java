@@ -1,6 +1,6 @@
 package com.idle.imfine.errors.response;
 
-import com.idle.imfine.errors.errorcode.ErrorCode;
+import com.idle.imfine.errors.code.ErrorCode;
 import com.idle.imfine.errors.response.ErrorResponse.ValidationError;
 import java.util.List;
 import java.util.stream.Collectors;

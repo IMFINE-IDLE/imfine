@@ -1,4 +1,4 @@
-package com.idle.imfine.errors.errorcode;
+package com.idle.imfine.errors.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

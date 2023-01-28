@@ -1,20 +1,18 @@
 package com.idle.imfine.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idle.imfine.errors.errorcode.ErrorCode;
-import com.idle.imfine.errors.errorcode.TokenErrorCode;
+import com.idle.imfine.errors.code.ErrorCode;
+import com.idle.imfine.errors.code.TokenErrorCode;
+import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.response.ErrorResponse;
-import com.idle.imfine.errors.token.TokenNotFoundException;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -36,15 +34,22 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         if (exception == null) {
             setResponse(response, TokenErrorCode.UNKNOWN_ERROR);
         }
-        else if (exception.equals(TokenErrorCode.WRONG_TYPE_TOKEN.name())) {
-            setResponse(response, TokenErrorCode.WRONG_TYPE_TOKEN);
+        else if (exception.equals(UserErrorCode.USER_NOT_FOUND.name())) {
+            setResponse(response, UserErrorCode.USER_NOT_FOUND);
+        }
+        else if (exception.equals(TokenErrorCode.TOKEN_NOT_FOUND.name())) {
+            setResponse(response, TokenErrorCode.TOKEN_NOT_FOUND);
         }
         else if (exception.equals(TokenErrorCode.EXPIRED_TOKEN.name())) {
             setResponse(response, TokenErrorCode.EXPIRED_TOKEN);
         }
         else if (exception.equals(TokenErrorCode.UNSUPPORTED_TOKEN.name())) {
             setResponse(response, TokenErrorCode.UNSUPPORTED_TOKEN);
-        } else {
+        }
+        else if (exception.equals(TokenErrorCode.WRONG_TYPE_TOKEN.name())) {
+            setResponse(response, TokenErrorCode.WRONG_TYPE_TOKEN);
+        }
+        else {
             setResponse(response, TokenErrorCode.ACCESS_DENIED);
         }
     }

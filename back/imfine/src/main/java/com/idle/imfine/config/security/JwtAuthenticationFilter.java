@@ -1,10 +1,12 @@
 package com.idle.imfine.config.security;
 
-import com.idle.imfine.errors.errorcode.TokenErrorCode;
-import com.idle.imfine.errors.exception.ErrorException;
+import com.idle.imfine.errors.code.TokenErrorCode;
+import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.token.TokenNotFoundException;
+import com.idle.imfine.errors.token.UserNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -34,25 +36,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = jwtTokenProvider.resolveToken(request);
         LOGGER.info("[doFilterInternal] token 값 추출 완료. token : {}", token);
 
-        try{
-            if(token == null || token.isEmpty()) throw new TokenNotFoundException();
+        try {
             LOGGER.info("[doFilterInternal] token 값 유효성 체크 시작");
-//            if (jwtTokenProvider.validateToken())
-            if (token != null && jwtTokenProvider.validateToken(token)) {
+            if (jwtTokenProvider.validateToken(token)) {
                 // 토큰으로부터 유저 정보 가져오기
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 // SecurityContext에 Authentication 객체 저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
-        } catch (SecurityException | MalformedJwtException e){
-            request.setAttribute("exception", TokenErrorCode.WRONG_TYPE_TOKEN.name());
+        } catch (UserNotFoundException e) {
+            request.setAttribute("exception", UserErrorCode.USER_NOT_FOUND.name());
+        } catch (TokenNotFoundException e) {
+            request.setAttribute("exception", TokenErrorCode.TOKEN_NOT_FOUND.name());
         } catch (ExpiredJwtException e){
             request.setAttribute("exception", TokenErrorCode.EXPIRED_TOKEN.name());
         } catch (UnsupportedJwtException e) {
             request.setAttribute("exception", TokenErrorCode.UNSUPPORTED_TOKEN.name());
-        } catch (IllegalStateException | TokenNotFoundException e) {
-            request.setAttribute("exception", TokenErrorCode.TOKEN_NOT_FOUND.name());
+        } catch (SignatureException | MalformedJwtException e){
+            request.setAttribute("exception", TokenErrorCode.WRONG_TYPE_TOKEN.name());
         } catch (Exception e) {
             log.error("================================================");
             log.error("JwtFilter - doFilterInternal() 오류발생");
