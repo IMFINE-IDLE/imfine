@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface SignService {
 
-    CommonResponseMessage signUp(SignUpRequestDto requestDto);
+    void signUp(SignUpRequestDto requestDto);
 
     SignInResponseDto signIn(SignInRequestDto requestDto) throws RuntimeException;
 
-    CommonResponseMessage signOut(String uid);
+    void signOut(String uid);
 
     RefreshResponseDto refresh(HttpServletRequest request);
 

@@ -12,7 +12,7 @@ import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import com.idle.imfine.data.entity.symptom.Symptom;
-import com.idle.imfine.data.repository.UserRepository;
+import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
@@ -28,7 +28,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

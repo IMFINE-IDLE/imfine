@@ -1,47 +1,52 @@
 package com.idle.imfine.service.user.Impl;
 
 import com.idle.imfine.common.CommonResponseMessage;
-import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.config.security.JwtTokenProvider;
 import com.idle.imfine.data.dto.user.request.SignInRequestDto;
 import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
 import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
 import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 import com.idle.imfine.data.entity.User;
-import com.idle.imfine.data.repository.UserRepository;
+import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.exception.user.UserInfoDuplicationException;
 import com.idle.imfine.service.user.SignService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 
 @Service
+@RequiredArgsConstructor
 public class SignServiceImpl implements SignService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(SignServiceImpl.class);
 
-    public UserRepository userRepository;
-    public JwtTokenProvider jwtTokenProvider;
-    public PasswordEncoder passwordEncoder;
+    private final  UserRepository userRepository;
+    private final  JwtTokenProvider jwtTokenProvider;
+    private final  PasswordEncoder passwordEncoder;
 
-
-    @Autowired
-    public SignServiceImpl(UserRepository userRepository, JwtTokenProvider jwtTokenProvider,
-                           PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
+    public boolean checkUidDuplication(String uid) {
+        return userRepository.existsByUid(uid);
+    }
+    public boolean checkNameDuplication(String name) {
+        return userRepository.existsByName(name);
+    }
+    public boolean checkEmailDuplication(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override
-    public CommonResponseMessage signUp(SignUpRequestDto requestDto) {
+    public void signUp(SignUpRequestDto requestDto) {
         LOGGER.info("[SignService.signUp] 회원 가입 정보 전달");
+
+        if (checkEmailDuplication(requestDto.getEmail())) {
+            throw new UserInfoDuplicationException("이미 회원가입된 이메일 입니다.");
+        }
 
         User user = User.builder()
                 .uid(requestDto.getUid())
@@ -71,7 +76,6 @@ public class SignServiceImpl implements SignService {
                     .build();
             LOGGER.info("[SignService.signUp] 실패 처리 완료");
         }
-        return responseDto;
     }
 
     @Override
@@ -88,9 +92,6 @@ public class SignServiceImpl implements SignService {
 
         LOGGER.info("[SignService.signIn] ResponseDto 객체 생성");
         SignInResponseDto responseDto = SignInResponseDto.builder()
-                .success(true)
-                .status(200)
-                .message("로그인에 성공했습니다.")
                 .accessToken(jwtTokenProvider.createAccessToken(String.valueOf(user.getUid()), user.getRoles()))
                 .refreshToken(jwtTokenProvider.createRefreshToken(String.valueOf(user.getUid()), user.getRoles()))
                 .build();
@@ -102,7 +103,7 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public CommonResponseMessage signOut(String uid) {
+    public void signOut(String uid) {
         LOGGER.info("[SignService.signOut] refresh token 제거 uid: {}", uid);
         User user = userRepository.getByUid(uid);
         LOGGER.info("[SignService.signOut] 유저 정보 가져오기 {}", user.getUid());
@@ -119,7 +120,6 @@ public class SignServiceImpl implements SignService {
                 .message("로그아웃에 성공했습니다.")
                 .build();
 
-        return signOutResultDto;
     }
 
     @Override
@@ -169,9 +169,6 @@ public class SignServiceImpl implements SignService {
 
         LOGGER.info("[SignService.refresh] ResponseDto 객체 생성");
         RefreshResponseDto responseDto = RefreshResponseDto.builder()
-                .success(true)
-                .status(200)
-                .message("토큰 갱신에 성공했습니다.")
                 .accessToken(newAccessToken)
                 .refreshToken(newRefreshToken)
                 .build();

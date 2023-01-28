@@ -10,22 +10,22 @@ import com.idle.imfine.data.dto.user.response.GetUserInfoResponseDto;
 
 public interface UserService {
 
-    CommonResponseMessage withdrawal(String uid);
+    void withdrawal(String uid);
 
     GetUserInfoResponseDto searchUserInfo(String uid);
 
-    CommonResponseMessage modifyUserName(String uid, ModifyUserNameRequestDto requestDto);
+    void modifyUserName(String uid, ModifyUserNameRequestDto requestDto);
 
-    CommonResponseMessage modifyUserOpen(String uid, ModifyUserOepnRequestDto requestDto);
+    void modifyUserOpen(String uid, ModifyUserOepnRequestDto requestDto);
 
 //    CommonResponseMessage modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto);
 
-    CommonResponseMessage changePassword(ChangePasswordRequestDto requestDto);
+    void changePassword(ChangePasswordRequestDto requestDto);
 
     FindIdResponseDto findId(String email);
 
-    CommonResponseMessage checkIdAndEmail(String uid, String email);
+    void checkIdAndEmail(String uid, String email);
 
-    CommonResponseMessage changePassword(String uid, ChangePasswordRequestDto requestDto);
+    void changePassword(String uid, ChangePasswordRequestDto requestDto);
 
 }

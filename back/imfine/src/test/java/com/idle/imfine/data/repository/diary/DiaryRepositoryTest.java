@@ -4,7 +4,7 @@
 //
 //import com.idle.imfine.data.entity.Diary;
 //import com.idle.imfine.data.entity.User;
-//import com.idle.imfine.data.repository.UserRepository;
+//import com.idle.imfine.data.repository.user.UserRepository;
 //import java.time.LocalDateTime;
 //import javax.transaction.Transactional;
 //import org.assertj.core.api.Assertions;

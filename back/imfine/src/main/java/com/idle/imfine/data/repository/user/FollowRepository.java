@@ -1,4 +1,4 @@
-package com.idle.imfine.data.repository;
+package com.idle.imfine.data.repository.user;
 
 import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.User;

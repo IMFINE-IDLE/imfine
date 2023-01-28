@@ -6,7 +6,7 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.paper.Paper;
-import com.idle.imfine.data.repository.UserRepository;
+import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.service.paper.PaperService;

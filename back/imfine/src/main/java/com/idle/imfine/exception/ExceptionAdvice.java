@@ -5,6 +5,7 @@ import com.idle.imfine.common.result.Result;
 import com.idle.imfine.exception.token.ExpiredRefreshTokenException;
 import com.idle.imfine.exception.token.InvalidRefreshTokenException;
 import com.idle.imfine.exception.token.TokenNotFoundException;
+import com.idle.imfine.exception.user.UserInfoDuplicationException;
 import com.idle.imfine.exception.user.UserNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -20,6 +21,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ExceptionAdvice {
 
     private final ResponseService responseService;
+
+    @ExceptionHandler(UserInfoDuplicationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Result userInfoDuplicationException() {
+        return responseService.getFailureResult(-100, "이미 등록된 회원 정보입니다.");
+    }
     
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

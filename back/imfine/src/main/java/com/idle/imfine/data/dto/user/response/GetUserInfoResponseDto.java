@@ -2,12 +2,13 @@ package com.idle.imfine.data.dto.user.response;
 
 import com.idle.imfine.common.CommonResponseMessage;
 import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 @Getter
-@SuperBuilder
-public class GetUserInfoResponseDto extends CommonResponseMessage {
+@Builder
+public class GetUserInfoResponseDto {
 
     private String name;
     private Boolean open;

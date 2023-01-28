@@ -4,7 +4,7 @@ import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.bamboo.Bamboo;
-import com.idle.imfine.data.repository.UserRepository;
+import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.data.repository.bamboo.BambooRepository;
 import com.idle.imfine.data.repository.like.HeartRepository;
 import com.idle.imfine.service.bamboo.BambooService;
