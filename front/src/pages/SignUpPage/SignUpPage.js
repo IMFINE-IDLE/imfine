@@ -15,21 +15,21 @@ import {
 
 function SignUpPage() {
   const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [isValid, setIsValid] = useState(false);
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
-      const {
-        id,
-        name,
-        email,
-        password,
-        confirmPassword,
-        isOpen,
-        medicalIdList,
-      } = { ...prev, ...next };
-      if (id === 'test') {
-        alert('잘됨');
+      const currInput = { ...prev, ...next };
+
+      if (currInput.id.length < 1) {
+        alert('아이디를 입력해주세요.');
       }
-      return { ...prev, ...next };
+      if (currInput.id.length > 12) {
+        currInput.id = currInput.id.substring(0, 12);
+        alert('아이디는 최대 12자까지 가능합니다.');
+        // setErrorMsg('아이디는 최대 12자까지 가능합니다.');
+      }
+      return currInput;
     },
     {
       id: '',
@@ -43,9 +43,6 @@ function SignUpPage() {
   );
   const { id, name, email, password, confirmPassword, isOpen, medicalIdList } =
     inputValue;
-
-  const [errorMsg, setErrorMsg] = useState(null);
-  const [isValid, setIsValid] = useState(false);
 
   const signUp = async (userData) => {
     console.log(userData);
@@ -78,7 +75,7 @@ function SignUpPage() {
             type="text"
             required
             autoFocus
-            maxLength="12"
+            // maxLength="12"
             onChange={(e) => inputEvent({ id: e.target.value })}
           />
           <Label htmlFor="nameInput">닉네임</Label>
