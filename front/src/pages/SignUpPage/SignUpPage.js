@@ -9,26 +9,54 @@ import {
   CloverImg,
   BoxInnerSignup,
   Label,
+  InfoSpan,
   InputSignUp,
   BtnSignup,
+  ErrorMsg,
 } from './style';
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const [errorMsg, setErrorMsg] = useState(null);
   const [isValid, setIsValid] = useState(false);
+
+  const [idErrorMsg, setIdErrorMsg] = useState(null);
+  const [nameErrorMsg, setNameErrorMsg] = useState(null);
+  const [emailErrorMsg, setEmailErrorMsg] = useState(null);
+  const [pwErrorMsg, setPwErrorMsg] = useState(null);
+  const [confirmPwErrorMsg, setConfirmPwErrorMsg] = useState(null);
+
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
       const currInput = { ...prev, ...next };
+      // 아이디 유효성 검사
+      if (currInput.id) {
+        if (currInput.id.length > 12) {
+          setIdErrorMsg('아이디는 최대 12자까지 가능합니다.');
+          currInput.id = currInput.id.substring(0, 12);
+          // 2초뒤 에러 메시지 지움
+          setTimeout(() => {
+            setIdErrorMsg(null);
+          }, 2000);
+        }
 
-      if (currInput.id.length < 1) {
-        alert('아이디를 입력해주세요.');
+        // 아이디 중복체크 로직
       }
-      if (currInput.id.length > 12) {
-        currInput.id = currInput.id.substring(0, 12);
-        alert('아이디는 최대 12자까지 가능합니다.');
-        // setErrorMsg('아이디는 최대 12자까지 가능합니다.');
+
+      if (currInput.name) {
+        if (currInput.id.length < 1) {
+          setIdErrorMsg('아이디를 입력해주세요');
+        } else {
+          setIdErrorMsg(null);
+        }
+        if (currInput.name.length > 10) {
+          currInput.name = currInput.name.substring(0, 10);
+          setNameErrorMsg('닉네임은 최대 10자까지 가능합니다.');
+          setTimeout(() => {
+            setNameErrorMsg(null);
+          }, 2000);
+        }
       }
+
       return currInput;
     },
     {
@@ -69,6 +97,7 @@ function SignUpPage() {
       <BoxInnerSignup>
         <form action="">
           <Label htmlFor="idInput">아이디</Label>
+          <InfoSpan>&nbsp;최대 12자</InfoSpan>
           <InputSignUp
             value={id}
             id="idInput"
@@ -77,16 +106,24 @@ function SignUpPage() {
             autoFocus
             // maxLength="12"
             onChange={(e) => inputEvent({ id: e.target.value })}
+            style={idErrorMsg ? { border: '1px solid var(--red-color)' } : null}
           />
+          {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
+
           <Label htmlFor="nameInput">닉네임</Label>
           <InputSignUp
             value={name}
             id="nameInput"
             type="text"
             required
-            maxLength="12"
+            // maxLength="10"
             onChange={(e) => inputEvent({ name: e.target.value })}
+            style={
+              nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
+            }
           />
+          {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
+
           <Label htmlFor="emailInput">이메일</Label>
           <InputSignUp
             value={email}
