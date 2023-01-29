@@ -8,11 +8,13 @@ import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
 import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.UserRepository;
-import com.idle.imfine.errors.errorcode.UserErrorCode;
+import com.idle.imfine.errors.code.TokenErrorCode;
+import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
+import com.idle.imfine.errors.token.TokenNotFoundException;
 import com.idle.imfine.service.user.SignService;
+import io.jsonwebtoken.ExpiredJwtException;
 import java.util.Collections;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,57 +126,39 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public RefreshResponseDto refresh(HttpServletRequest request) throws RuntimeException {
-        LOGGER.info("[SignService.refresh] token 값 추출 시작");
-        String requestToken = jwtTokenProvider.resolveToken(request);
-        LOGGER.info("[SignService.refresh] token 값 추출 완료");
+    public RefreshResponseDto refresh(String refreshToken) throws RuntimeException {
+        try {
+            jwtTokenProvider.validateToken(refreshToken);
 
-        LOGGER.info("[SignService.refresh] token 값 유효성 체크 시작");
-        if (requestToken == null || !jwtTokenProvider.validateToken(requestToken)) {
-            LOGGER.info("[SignService.refresh] token 값 유효성 체크 실패");
-            throw new RuntimeException();
-        }
-        LOGGER.info("[SignService.refresh] 요청으로 받은 token 값 유효성 체크 완료");
+            String uid = jwtTokenProvider.getUsername(refreshToken);
+            User user = userRepository.findByUid(uid)
+                    .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
 
-        String uid = jwtTokenProvider.getUsername(requestToken);
-        User user = userRepository.getByUid(uid);
-        LOGGER.info("[SignService.refresh] 요청으로 받은 token에서 사용자 정보 추출 완료");
+            String savedRefreshToken = user.getRefreshToken();
 
-        if (user == null) {
-            throw new RuntimeException();
-        }
+            if (!savedRefreshToken.equals(refreshToken)) {
+                throw new ErrorException(TokenErrorCode.NOT_MATCH_REFRESH_TOKEN);
+            }
 
-        String refreshToken = user.getRefreshToken();
+            String newAccessToken = jwtTokenProvider.createAccessToken(
+                    String.valueOf(user.getUid()), user.getRoles());
+            String newRefreshToken = jwtTokenProvider.createRefreshToken(
+                    String.valueOf(user.getUid()), user.getRoles());
 
-        LOGGER.info("[SignService.refresh] DB 저장된 token 값 유효성 체크 시작");
-        if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
-            LOGGER.info("[SignService.refresh] DB 저장된 token 값 유효성 체크 실패");
-            user.updateRefreshToken(null);
+            user.updateRefreshToken(newRefreshToken);
             userRepository.save(user);
-            throw new RuntimeException();
+
+            return RefreshResponseDto.builder()
+                    .accessToken(newAccessToken)
+                    .refreshToken(newRefreshToken)
+                    .build();
+        } catch (TokenNotFoundException e) {
+            throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        } catch (ExpiredJwtException e){
+            throw new ErrorException(TokenErrorCode.EXPIRED_REFRESH_TOKEN);
+        } catch (Exception e) {
+            throw new ErrorException(TokenErrorCode.INVALID_REFRESH_TOKEN);
         }
-        LOGGER.info("[SignService.refresh] DB에 저장된 token 값 유효성 체크 완료");
-
-        LOGGER.info("[SignService.refresh] 요청으로 받은 토큰과 DB에 저장된 토큰 값 일치 여부 체크 시작");
-        if (!requestToken.equals(user.getRefreshToken())) {
-            LOGGER.info("[SignService.refresh] 요청으로 받은 토큰과 DB에 저장된 토큰 값 불일치");
-            throw new RuntimeException();
-        }
-        LOGGER.info("[SignService.refresh] 요청으로 받은 토큰과 DB에 저장된 토큰 값 일치");
-
-        String newAccessToken = jwtTokenProvider.createAccessToken(String.valueOf(user.getUid()), user.getRoles());
-        String newRefreshToken = jwtTokenProvider.createRefreshToken(String.valueOf(user.getUid()), user.getRoles());
-
-        user.updateRefreshToken(newRefreshToken);
-        userRepository.save(user);
-
-        LOGGER.info("[SignService.refresh] ResponseDto 객체 생성");
-        RefreshResponseDto responseDto = RefreshResponseDto.builder()
-                .accessToken(newAccessToken)
-                .refreshToken(newRefreshToken)
-                .build();
-
-        return responseDto;
     }
 
 }

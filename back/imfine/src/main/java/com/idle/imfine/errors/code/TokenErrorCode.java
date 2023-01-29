@@ -17,9 +17,10 @@ public enum TokenErrorCode implements ErrorCode {
     TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "토큰이 존재하지 않습니다."),
     ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "접근이 거부되었습니다"),
 
-
-    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "refreshToken이 만료되었습니다."),
-    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "refreshToken이 일치하지 않습니다."),
+    REFRESH_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "리프레시 토큰이 존재하지 않습니다."),
+    NOT_MATCH_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "리프레시 토큰이 일치하지 않습니다."),
+    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 만료되었습니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "리프레시 토큰이 유효하지 않습니다."),
     ;
 
     private final HttpStatus httpStatus;

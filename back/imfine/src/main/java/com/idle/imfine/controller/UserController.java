@@ -17,7 +17,6 @@ import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.SignService;
 import com.idle.imfine.service.user.UserService;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -58,10 +58,10 @@ public class UserController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Result> refresh(HttpServletRequest request) {
-        RefreshResponseDto responseDto = signService.refresh(request);
-
+    public ResponseEntity<Result> refresh(@RequestHeader(name = "X-AUTH-TOKEN") String refreshToken) {
+        RefreshResponseDto responseDto = signService.refresh(refreshToken);
         return ResponseEntity.ok()
+//                .body(responseService.getSuccessResult());
                 .body(responseService.getSingleResult(responseDto));
     }
 
