@@ -36,6 +36,11 @@ const InfoSpan = styled.span`
   color: var(--icon-color);
 `;
 
+const Span = styled.span`
+  font-size: 12px;
+  color: var(--icon-color);
+`;
+
 const InputSignUp = styled(InputGray)`
   height: 3em;
   padding: 1em;
