@@ -15,9 +15,6 @@ import {
 
 function SignUpPage() {
   const navigate = useNavigate();
-
-  const [errorMsg, setErrorMsg] = useState(null);
-
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
       const {
@@ -47,6 +44,9 @@ function SignUpPage() {
   const { id, name, email, password, confirmPassword, isOpen, medicalIdList } =
     inputValue;
 
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [isValid, setIsValid] = useState(false);
+
   const signUp = async (userData) => {
     console.log(userData);
     try {
@@ -57,7 +57,7 @@ function SignUpPage() {
       });
       console.log(res.data);
       // 리덕스에 토큰 저장
-      navigate('/');
+      navigate('/home');
     } catch (err) {
       console.log(err);
     }
@@ -116,16 +116,29 @@ function SignUpPage() {
             required
             onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
           />
-          <BtnSignup
-            margin={'0'}
-            padding={'1em'}
-            fontSize={'1em'}
-            type="submit"
-            onClick={() => signUp(inputValue)}
-          >
-            회원 가입
-            {/* 다음 단계 */}
-          </BtnSignup>
+          {isValid ? (
+            <BtnSignup
+              margin={'0'}
+              padding={'1em'}
+              fontSize={'1em'}
+              type="submit"
+              onClick={() => signUp(inputValue)}
+            >
+              다음 단계
+            </BtnSignup>
+          ) : (
+            <BtnSignup
+              margin={'0'}
+              padding={'1em'}
+              fontSize={'1em'}
+              type="submit"
+              color={'gray700'}
+              disabled
+              style={{ cursor: 'not-allowed' }}
+            >
+              다음 단계
+            </BtnSignup>
+          )}
         </form>
       </BoxInnerSignup>
     </div>
