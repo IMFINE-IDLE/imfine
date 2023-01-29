@@ -7,16 +7,16 @@ import { IconContext } from 'react-icons';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <GlobalStyle />
-      <IconContext.Provider
-        value={{
-          style: iconStyle,
-        }}
-      >
-        <App />
-      </IconContext.Provider>
-    </BrowserRouter>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <BrowserRouter>
+    <GlobalStyle />
+    <IconContext.Provider
+      value={{
+        style: iconStyle,
+      }}
+    >
+      <App />
+    </IconContext.Provider>
+  </BrowserRouter>,
+  // </React.StrictMode>,
 );
