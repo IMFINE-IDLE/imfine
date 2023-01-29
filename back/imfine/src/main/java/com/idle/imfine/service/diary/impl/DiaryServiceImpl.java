@@ -1,17 +1,25 @@
 package com.idle.imfine.service.diary.impl;
 
+import com.idle.imfine.data.dto.diary.request.RequestDiaryFilterDto;
+import com.idle.imfine.data.dto.diary.request.RequestDiaryModifyDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryPostDto;
+import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
+import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
+import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
+import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseDateScoreDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.Subscribe;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.medical.MedicalCode;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import com.idle.imfine.data.entity.symptom.Symptom;
+import com.idle.imfine.data.repository.SubscribeRepository;
 import com.idle.imfine.data.repository.UserRepository;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
@@ -20,15 +28,19 @@ import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.symptom.DiaryHasSymptomRepository;
 import com.idle.imfine.data.repository.symptom.SymptomRepository;
 import com.idle.imfine.service.diary.DiaryService;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.parameters.P;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +54,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final MedicalCodeRepository medicalCodeRepository;
     private final PaperHasSymptomRepository paperHasSymptomRepository;
     private final PaperRepository paperRepository;
+    private final SubscribeRepository subscribeRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(DiaryService.class);
 
     @Override
@@ -78,6 +91,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ResponseDiaryDetailDto getDiaryDetail(long diaryId, String uid) {
         // 다이어리 찾기
         Diary foundDiary = diaryRepository
@@ -124,13 +138,12 @@ public class DiaryServiceImpl implements DiaryService {
         }
 
         for (Paper paper : papers) {
-            String recordDate = paper.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             for (PaperHasSymptom paperHasSymptom : paper.getPaperHasSymptoms()){
                 for (ResponseSymptomChartRecordDto recordList : recordDtos) {
                     if (symptomIdByName.get(recordList.getSymptomName()) == paperHasSymptom.getSymptomId()) {
                         recordList.getResponseDateScoreDtos().add(ResponseDateScoreDto.builder()
                                 .score(paperHasSymptom.getScore())
-                                .date(recordDate)
+                                .date(paper.getDate())
                                 .build());
                         break;
                     }
@@ -140,5 +153,122 @@ public class DiaryServiceImpl implements DiaryService {
         return recordDtos;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ResponsePaperDto getPaper(long diaryId, String date) {
+        Diary diary = diaryRepository.getById(diaryId);
+        Paper paper = paperRepository.findByDiaryAndDate(diary, date);
+        ResponsePaperDto responsePaperDto = ResponsePaperDto.builder()
+            .paperId(paper.getId())
+            .commentCount(paper.getCommentCount())
+            .likeCount(paper.getLikeCount())
+            .date(paper.getDate())
+            .condition("기쁨")
+            .open(paper.isOpen())
+            .images(new ArrayList<>())
+            .responseSymptomRecordDtos(paper.getPaperHasSymptoms().stream().map(
+                symtom ->
+                    ResponsePaperSymptomRecordDto.builder()
+                        .symptomId(symtom.getSymptomId())
+                        .score(symtom.getScore())
+                        .symptomName(symptomRepository.getById(symtom.getSymptomId()).getName())
+                        .build()
+            ).collect(Collectors.toList()))
+            .build();
 
+        return responsePaperDto;
+    }
+
+    @Override
+    @Transactional
+    public void saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto) {
+        Diary diary = diaryRepository.getById(requestDiarySubscribeDto.getDiaryId());
+        long userId = userRepository.getByUid(requestDiarySubscribeDto.getUid()).getId();
+
+        if (!subscribeRepository.existsByDiaryAndUserId(diary, userId)) {
+            subscribeRepository.save(Subscribe.builder()
+                .diary(diary)
+                .userId(userId)
+                .build());
+                diary.setSubscribeCount(diary.getSubscribeCount() + 1);
+                diaryRepository.save(diary);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto) {
+        Diary diary = diaryRepository.getById(requestDiarySubscribeDto.getDiaryId());
+        long userId = userRepository.getByUid(requestDiarySubscribeDto.getUid()).getId();
+
+        if (subscribeRepository.existsByDiaryAndUserId(diary, userId)) {
+            diary.setSubscribeCount(diary.getSubscribeCount() - 1);
+            diaryRepository.save(diary);
+            subscribeRepository.deleteByDiaryAndUserId(diary, userId);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ResponseDiaryListDto> getDiaryList(RequestDiaryFilterDto requestDiaryFilterDto, Pageable pageable) {
+        List<Symptom> symptoms = symptomRepository.findByIdIn(requestDiaryFilterDto.getSymptomId());
+        List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.getDiaryHasSymptomBySymptomIn(symptoms);
+        List<MedicalCode> medicalCodes = medicalCodeRepository.findByIdIn(requestDiaryFilterDto.getMedicalId());
+
+        Page<Diary> diaryPage;
+        if (requestDiaryFilterDto.getMedicalId().size() == 0 && requestDiaryFilterDto.getSymptomId().size() == 0){
+            diaryPage = diaryRepository.findAll(pageable);
+        } else if (requestDiaryFilterDto.getMedicalId().size() == 0) {
+            diaryPage = diaryRepository.findByDiaryHasSymptomsIn(diaryHasSymptoms, pageable);
+        } else if (requestDiaryFilterDto.getSymptomId().size() == 0) {
+            diaryPage = diaryRepository.findByMedicalCodeIn(medicalCodes, pageable);
+        } else {
+            diaryPage = diaryRepository.findByMedicalCodeInOrDiaryHasSymptomsIn(medicalCodes, diaryHasSymptoms, pageable);
+        }
+
+        List<ResponseDiaryListDto> responseDiaryListDtos = new ArrayList<>();
+        for (Diary diary: diaryPage) {
+            responseDiaryListDtos.add(ResponseDiaryListDto.builder()
+                    .diaryId(diary.getId())
+                    .title(diary.getTitle())
+                    .name(diary.getWriter().getName())
+                    .image(diary.getImage())
+                    .subscribeCount(diary.getSubscribeCount())
+                    .paperCount(diary.getPaperCount())
+                    .build());
+        }
+        return responseDiaryListDtos;
+    }
+
+    @Override
+    @Transactional
+    public void modifyDiary(RequestDiaryModifyDto requestDiaryModifyDto, String uid) {
+        User user = userRepository.getByUid(uid);
+        Diary diary = diaryRepository.getById(requestDiaryModifyDto.getDiaryId());
+
+        if (user.getId() == diary.getWriter().getId()) {
+            diary.setTitle(requestDiaryModifyDto.getTitle());
+            diary.setDescription(requestDiaryModifyDto.getDescription());
+            diary.setOpen(requestDiaryModifyDto.isOpen());
+            diary.setActive(requestDiaryModifyDto.isActive());
+            if (!diary.isActive()) {
+                diary.setEndedAt(LocalDateTime.now());
+            }
+            diaryRepository.save(diary);
+        } else {
+            /// 예외처리
+        }
+    }
+
+    @Override
+    public void deleteDiary(long diaryId, String uid) {
+        User user = userRepository.getByUid(uid);
+        Optional<Diary> diary = diaryRepository.findByIdAndWriter(diaryId, user);
+
+        if (diary.isPresent()) {
+            diaryRepository.delete(diary.get());
+        } else {
+            /// 잘못된 결과 에러처리
+        }
+    }
 }

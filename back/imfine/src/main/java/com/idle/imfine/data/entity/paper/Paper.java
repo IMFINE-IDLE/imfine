@@ -2,6 +2,7 @@ package com.idle.imfine.data.entity.paper;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.Diary;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,15 +29,14 @@ import org.springframework.data.annotation.CreatedDate;
 @Builder
 @Table
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Paper {
+public class Paper extends BaseCreatedEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    @CreatedDate
-    private LocalDateTime date;
+    private String date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
