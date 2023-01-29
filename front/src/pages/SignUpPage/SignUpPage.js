@@ -29,6 +29,23 @@ function SignUpPage() {
     (prev, next) => {
       const currInput = { ...prev, ...next };
       // 기본적으로 다음 단계로 넘어갔는데 이전 단계 완료 안한 경우에만 입력해달라고 뜸 (초기 진입시 전부다 입력해달라고 에러띄우는것 방지)
+      const checkStage = (stage) => {
+        if (stage >= 2) {
+          if (currInput.id.length < 1) {
+            setIdErrorMsg('아이디를 입력해주세요');
+          }
+        }
+        if (stage >= 3) {
+          if (currInput.name.length < 1) {
+            setNameErrorMsg('닉네임을 입력해주세요');
+          }
+        }
+        if (stage >= 4) {
+          if (currInput.email.length < 1) {
+            setEmailErrorMsg('이메일을 입력해주세요');
+          }
+        }
+      };
 
       // 1. 아이디 유효성 검사
       if (currInput.id) {
@@ -49,10 +66,7 @@ function SignUpPage() {
       // 2. 닉네임 유효성 검사
       if (currInput.name) {
         setNameErrorMsg(null);
-
-        if (currInput.id.length < 1) {
-          setIdErrorMsg('아이디를 입력해주세요');
-        }
+        checkStage(2);
         if (currInput.name.length > 10) {
           currInput.name = currInput.name.substring(0, 10);
           setNameErrorMsg('닉네임은 최대 10자까지 가능합니다.');
@@ -66,14 +80,7 @@ function SignUpPage() {
       // 3. 이메일 유효성 검사
       if (currInput.email) {
         setEmailErrorMsg(null);
-
-        if (currInput.id.length < 1) {
-          setIdErrorMsg('아이디를 입력해주세요');
-        }
-        if (currInput.name.length < 1) {
-          setNameErrorMsg('닉네임을 입력해주세요');
-        }
-
+        checkStage(3);
         let emailRegex = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}');
         console.log(emailRegex.test(currInput.email));
         if (emailRegex.test(currInput.email)) {
