@@ -11,8 +11,10 @@ import {
   BoxInnerSignup,
   Label,
   InfoSpan,
+  InfoSpan,
   InputSignUp,
   BtnSignup,
+  ErrorMsg,
   ErrorMsg,
 } from './style';
 
