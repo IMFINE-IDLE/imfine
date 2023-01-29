@@ -21,15 +21,17 @@ const CloverImg = styled.img.attrs({
 `;
 
 const BoxInnerSignup = styled(BoxGrad)`
-  padding: 3em 4em 0;
+  padding: 1em 4em 0;
   margin: 0;
 `;
 
 const Label = styled.label`
   font-weight: 700;
+  display: inline-block;
+  margin-top: 1.5em;
 `;
 
-const Span = styled.span`
+const InfoSpan = styled.span`
   font-size: 12px;
   color: var(--icon-color);
 `;
@@ -37,11 +39,18 @@ const Span = styled.span`
 const InputSignUp = styled(InputGray)`
   height: 3em;
   padding: 1em;
-  margin: 1em 0 2em;
+  margin-top: 1em;
 `;
 
 const BtnSignup = styled.button`
   ${Btn}
+  margin-top: 2em;
+`;
+
+const ErrorMsg = styled.p`
+  font-size: 12px;
+  color: var(--red-color);
+  margin: 0.5em 0 0;
 `;
 
 export {
@@ -50,7 +59,8 @@ export {
   CloverImg,
   BoxInnerSignup,
   Label,
-  Span,
+  InfoSpan,
   InputSignUp,
   BtnSignup,
+  ErrorMsg,
 };
