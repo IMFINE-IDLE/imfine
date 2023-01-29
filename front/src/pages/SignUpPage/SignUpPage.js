@@ -28,25 +28,30 @@ function SignUpPage() {
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
       const currInput = { ...prev, ...next };
-      // 아이디 유효성 검사
+      // 기본적으로 다음 단계로 넘어갔는데 이전 단계 완료 안한 경우에만 입력해달라고 뜸 (초기 진입시 전부다 입력해달라고 에러띄우는것 방지)
+
+      // 1. 아이디 유효성 검사
       if (currInput.id) {
+        setIdErrorMsg(null);
+
         if (currInput.id.length > 12) {
+          console.log('12');
           setIdErrorMsg('아이디는 최대 12자까지 가능합니다.');
           currInput.id = currInput.id.substring(0, 12);
-          // 2초뒤 에러 메시지 지움
           setTimeout(() => {
             setIdErrorMsg(null);
-          }, 2000);
+          }, 2000); // 2초뒤 에러 메시지 지움
         }
 
         // 아이디 중복체크 로직
       }
 
+      // 2. 닉네임 유효성 검사
       if (currInput.name) {
+        setNameErrorMsg(null);
+
         if (currInput.id.length < 1) {
           setIdErrorMsg('아이디를 입력해주세요');
-        } else {
-          setIdErrorMsg(null);
         }
         if (currInput.name.length > 10) {
           currInput.name = currInput.name.substring(0, 10);
@@ -55,6 +60,29 @@ function SignUpPage() {
             setNameErrorMsg(null);
           }, 2000);
         }
+        // 닉네임 중복체크 로직
+      }
+
+      // 3. 이메일 유효성 검사
+      if (currInput.email) {
+        setEmailErrorMsg(null);
+
+        if (currInput.id.length < 1) {
+          setIdErrorMsg('아이디를 입력해주세요');
+        }
+        if (currInput.name.length < 1) {
+          setNameErrorMsg('닉네임을 입력해주세요');
+        }
+
+        let emailRegex = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}');
+        console.log(emailRegex.test(currInput.email));
+        if (emailRegex.test(currInput.email)) {
+          setEmailErrorMsg(null);
+        } else {
+          setEmailErrorMsg('유효한 이메일 형식이 아닙니다.');
+        }
+
+        // 이메일 중복체크 로직
       }
 
       return currInput;
@@ -111,6 +139,7 @@ function SignUpPage() {
           {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
 
           <Label htmlFor="nameInput">닉네임</Label>
+          <InfoSpan>&nbsp;최대 10자</InfoSpan>
           <InputSignUp
             value={name}
             id="nameInput"
@@ -131,7 +160,12 @@ function SignUpPage() {
             type="email"
             required
             onChange={(e) => inputEvent({ email: e.target.value })}
+            style={
+              emailErrorMsg ? { border: '1px solid var(--red-color)' } : null
+            }
           />
+          {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
+
           <Label htmlFor="passwordInput">비밀번호</Label>
           <InputSignUp
             value={password}
