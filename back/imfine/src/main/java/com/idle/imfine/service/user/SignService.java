@@ -7,7 +7,7 @@ import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 
 public interface SignService {
 
-    void signUp(SignUpRequestDto requestDto);
+    SignInResponseDto signUp(SignUpRequestDto requestDto);
 
     SignInResponseDto signIn(SignInRequestDto requestDto) throws RuntimeException;
 

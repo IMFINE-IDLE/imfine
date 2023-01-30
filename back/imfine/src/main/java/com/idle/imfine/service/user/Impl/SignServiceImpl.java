@@ -12,6 +12,7 @@ import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.errors.token.TokenNotFoundException;
 import com.idle.imfine.service.user.SignService;
+import com.idle.imfine.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -27,29 +28,23 @@ public class SignServiceImpl implements SignService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(SignServiceImpl.class);
 
+    private final UserService userService;
     private final  UserRepository userRepository;
     private final  JwtTokenProvider jwtTokenProvider;
     private final  PasswordEncoder passwordEncoder;
 
-    public boolean checkUidDuplication(String uid) {
-        return userRepository.existsByUid(uid);
-    }
-    public boolean checkNameDuplication(String name) {
-        return userRepository.existsByName(name);
-    }
-    public boolean checkEmailDuplication(String email) {
-        return userRepository.existsByEmail(email);
-    }
-
     @Override
-    public void signUp(SignUpRequestDto requestDto) {
+    public SignInResponseDto signUp(SignUpRequestDto requestDto) {
         LOGGER.info("[SignService.signUp] 회원 가입 정보 전달");
 
-        if (checkEmailDuplication(requestDto.getEmail())) {
-//            throw new UserInfoDuplicationException("이미 회원가입된 이메일 입니다.");
-            throw new ErrorException(UserErrorCode.USER_DUPLICATE_EMAIL);
-        }
+        LOGGER.info("[SignService.signUp] 회원 uid 중복 검사");
+        userService.checkUidDuplicate(requestDto.getUid());
+        LOGGER.info("[SignService.signUp] 회원 name 중복 검사");
+        userService.checkNameDuplicate(requestDto.getName());
+        LOGGER.info("[SignService.signUp] 회원 email 중복 검사");
+        userService.checkEmailDuplicate(requestDto.getEmail());
 
+        // 회원가입 정보
         User user = User.builder()
                 .uid(requestDto.getUid())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
@@ -60,36 +55,28 @@ public class SignServiceImpl implements SignService {
                 .build();
 
         User savedUser = userRepository.save(user);
-//        CommonResponseMessage responseDto;
 
-        LOGGER.info("[SignService.signUp] userEntity 값이 들어왔는지 확인 후 결과값 주입");
-        if (!savedUser.getName().isEmpty()) {
-//            responseDto = CommonResponseMessage.builder()
-//                    .success(true)
-//                    .status(200)
-//                    .message("회원가입에 성공했습니다.")
-//                    .build();
-            LOGGER.info("[SignService.signUp] 정상 처리 완료");
-        } else {
-//            responseDto = CommonResponseMessage.builder()
-//                    .success(false)
-//                    .status(-1)
-//                    .message("회원가입에 실패했습니다.")
-//                    .build();
-            LOGGER.info("[SignService.signUp] 실패 처리 완료");
-        }
+        // 로그인
+        SignInResponseDto responseDto = SignInResponseDto.builder()
+                .accessToken(jwtTokenProvider.createAccessToken(String.valueOf(user.getUid()), user.getRoles()))
+                .refreshToken(jwtTokenProvider.createRefreshToken(String.valueOf(user.getUid()), user.getRoles()))
+                .build();
+
+        savedUser.updateRefreshToken(responseDto.getRefreshToken());
+        userRepository.save(savedUser);
+
+        return responseDto;
     }
 
     @Override
     public SignInResponseDto signIn(SignInRequestDto requestDto) throws RuntimeException {
         LOGGER.info("[SignService.signIn] 회원 정보 요청");
-        User user = userRepository.getByUid(requestDto.getId());
+        User user = userService.getUserByUid(requestDto.getId());
 
         LOGGER.info("[SignService.signIn] 패스워드 비교 수행");
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
-            throw new RuntimeException();
+            throw new ErrorException(UserErrorCode.USER_WRONG_PASSWORD);
         }
-
         LOGGER.info("[SignService.signIn] 패스워드 일치");
 
         LOGGER.info("[SignService.signIn] ResponseDto 객체 생성");
@@ -107,21 +94,13 @@ public class SignServiceImpl implements SignService {
     @Override
     public void signOut(String uid) {
         LOGGER.info("[SignService.signOut] refresh token 제거 uid: {}", uid);
-        User user = userRepository.getByUid(uid);
+        User user = userService.getUserByUid(uid);
         LOGGER.info("[SignService.signOut] 유저 정보 가져오기 {}", user.getUid());
 
         user.updateRefreshToken(null);
         LOGGER.info("[SignService.signOut] refresh token 제거");
 
         userRepository.save(user);
-
-        LOGGER.info("[SignService.signOut] ResponseMessage 생성");
-//        CommonResponseMessage signOutResultDto = CommonResponseMessage.builder()
-//                .success(true)
-//                .status(200)
-//                .message("로그아웃에 성공했습니다.")
-//                .build();
-
     }
 
     @Override
@@ -130,8 +109,7 @@ public class SignServiceImpl implements SignService {
             jwtTokenProvider.validateToken(refreshToken);
 
             String uid = jwtTokenProvider.getUsername(refreshToken);
-            User user = userRepository.findByUid(uid)
-                    .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
+            User user = userService.getUserByUid(uid);
 
             String savedRefreshToken = user.getRefreshToken();
 

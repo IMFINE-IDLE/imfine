@@ -13,6 +13,7 @@ import com.idle.imfine.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,26 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private User getUserByUid(String uid) {
-        return userRepository.findByUid(uid).orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
+    @Override
+    public User getUserByUid(String uid) {
+        return userRepository.findByUid(uid)
+                .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
+    }
+
+    public void checkUidDuplicate(String uid) {
+        if (userRepository.existsByUid(uid)) {
+            throw new ErrorException(UserErrorCode.USER_DUPLICATE_UID);
+        }
+    }
+    public void checkNameDuplicate(String name) {
+        if (userRepository.existsByName(name)) {
+            throw new ErrorException(UserErrorCode.USER_DUPLICATE_NAME);
+        }
+    }
+    public void checkEmailDuplicate(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new ErrorException(UserErrorCode.USER_DUPLICATE_EMAIL);
+        }
     }
 
     @Override
@@ -38,6 +57,7 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(user.getId());
         LOGGER.info("[UserService.withdrawal] 회뤈탈퇴 성공");
     }
+
     @Override
     public GetUserInfoResponseDto searchUserInfo(String uid) {
         User user = getUserByUid(uid);
@@ -90,69 +110,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(ChangePasswordRequestDto requestDto) {
-        User user = userRepository.getByUid(requestDto.getUid());
-
+        User user = getUserByUid(requestDto.getUid());
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-
         userRepository.save(user);
-
-//        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-//                .success(true)
-//                .status(200)
-//                .message("비밀번호 변경에 성공했습니다.")
-//                .build();
-
     }
 
     @Override
     public FindIdResponseDto findId(String email) {
-        User user = userRepository.getByEmail(email);
-
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
         LOGGER.info("[findId] user {}", user.getUid());
 
-        FindIdResponseDto responseDto = FindIdResponseDto.builder()
+        return FindIdResponseDto.builder()
                 .uid(user.getUid())
                 .build();
-
-        return responseDto;
     }
     @Override
     public void checkIdAndEmail(String uid, String email) {
-        User user = userRepository.getByUid(uid);
-
-//        CommonResponseMessage responseDto;
-
-//        if (user.getEmail().equals(email)) {
-//            responseDto = CommonResponseMessage.builder()
-//                    .success(true)
-//                    .status(200)
-//                    .message("아이디와 이메일이 일치합니다.")
-//                    .build();
-//        } else {
-//            responseDto = CommonResponseMessage.builder()
-//                    .success(false)
-//                    .status(-1)
-//                    .message("아이디와 이메일이 일치하지 않습니다.")
-//                    .build();
-//        }
-
+        userRepository.findByUidAndEmail(uid, email)
+                .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
     }
 
     @Override
     public void changePassword(String uid, ChangePasswordRequestDto requestDto) {
-        User user = userRepository.getByUid(uid);
-
+        User user = getUserByUid(uid);
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-
         userRepository.save(user);
-
-//        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-//                .success(true)
-//                .status(200)
-//                .message("비밀번호 변경에 성공했습니다.")
-//                .build();
     }
-
-
 
 }
