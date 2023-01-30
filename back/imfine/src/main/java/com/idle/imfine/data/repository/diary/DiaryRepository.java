@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
-//    @Query("select d from Diary d where ")
     Page<Diary> findByMedicalCodeInOrDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
         List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
     Page<Diary> findByDiaryHasSymptomsIn(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);

@@ -8,6 +8,7 @@ import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
+import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseDateScoreDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
@@ -47,6 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class DiaryServiceImpl implements DiaryService {
+
     private final DiaryRepository diaryRepository;
     private final DiaryHasSymptomRepository diaryHasSymptomRepository;
     private final SymptomRepository symptomRepository;
@@ -77,10 +79,11 @@ public class DiaryServiceImpl implements DiaryService {
         Diary savedDiary = diaryRepository.save(diary);
         LOGGER.info("diary Save ...............symptom Id : {}", symptoms);
         if (symptoms.size() != 0) {
-            for (Integer s: symptoms) {
+            for (Integer s : symptoms) {
                 Symptom symptom = symptomRepository.findById(s)
                         .orElseThrow(RuntimeException::new);
-                LOGGER.info("diaryId {}, symptom Id {}, {}", savedDiary.getId(), symptom.getId(), symptom.getName());
+                LOGGER.info("diaryId {}, symptom Id {}, {}", savedDiary.getId(), symptom.getId(),
+                        symptom.getName());
                 diaryHasSymptomRepository.save(DiaryHasSymptom.builder()
                         .symptom(symptom)
                         .diary(savedDiary)
@@ -101,10 +104,10 @@ public class DiaryServiceImpl implements DiaryService {
         List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.getAllByDiaryId(diaryId);
         List<ResponseSymptomDto> responseSymptomDtos = new ArrayList<>();
 
-        for (DiaryHasSymptom forEachHasSyomptom:diaryHasSymptoms) {
+        for (DiaryHasSymptom forEachHasSyomptom : diaryHasSymptoms) {
             responseSymptomDtos.add(ResponseSymptomDto.builder()
-                            .symptomId(forEachHasSyomptom.getId())
-                            .symptomName(forEachHasSyomptom.getSymptom().getName())
+                    .symptomId(forEachHasSyomptom.getId())
+                    .symptomName(forEachHasSyomptom.getSymptom().getName())
                     .build());
         }
 
@@ -115,8 +118,10 @@ public class DiaryServiceImpl implements DiaryService {
                 .description(foundDiary.getDescription())
                 .userName(foundDiary.getWriter().getName())
                 .medicalName(foundDiary.getMedicalCode().getName())
-                .beginDate(foundDiary.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                .endedDate(foundDiary.getEndedAt() != null ? foundDiary.getEndedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null)
+                .beginDate(
+                        foundDiary.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .endedDate(foundDiary.getEndedAt() != null ? foundDiary.getEndedAt()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null)
                 .diaryHasSymptoms(responseSymptomDtos)
                 .build();
     }
@@ -138,9 +143,10 @@ public class DiaryServiceImpl implements DiaryService {
         }
 
         for (Paper paper : papers) {
-            for (PaperHasSymptom paperHasSymptom : paper.getPaperHasSymptoms()){
+            for (PaperHasSymptom paperHasSymptom : paper.getPaperHasSymptoms()) {
                 for (ResponseSymptomChartRecordDto recordList : recordDtos) {
-                    if (symptomIdByName.get(recordList.getSymptomName()) == paperHasSymptom.getSymptomId()) {
+                    if (symptomIdByName.get(recordList.getSymptomName())
+                            == paperHasSymptom.getSymptomId()) {
                         recordList.getResponseDateScoreDtos().add(ResponseDateScoreDto.builder()
                                 .score(paperHasSymptom.getScore())
                                 .date(paper.getDate())
@@ -159,22 +165,24 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = diaryRepository.getById(diaryId);
         Paper paper = paperRepository.findByDiaryAndDate(diary, date);
         ResponsePaperDto responsePaperDto = ResponsePaperDto.builder()
-            .paperId(paper.getId())
-            .commentCount(paper.getCommentCount())
-            .likeCount(paper.getLikeCount())
-            .date(paper.getDate())
-            .condition("기쁨")
-            .open(paper.isOpen())
-            .images(new ArrayList<>())
-            .responseSymptomRecordDtos(paper.getPaperHasSymptoms().stream().map(
-                symtom ->
-                    ResponsePaperSymptomRecordDto.builder()
-                        .symptomId(symtom.getSymptomId())
-                        .score(symtom.getScore())
-                        .symptomName(symptomRepository.getById(symtom.getSymptomId()).getName())
-                        .build()
-            ).collect(Collectors.toList()))
-            .build();
+                .paperId(paper.getId())
+                .commentCount(paper.getCommentCount())
+                .likeCount(paper.getLikeCount())
+                .date(paper.getDate())
+                .condition("기쁨")
+                .open(paper.isOpen())
+                .images(new ArrayList<>())
+                .responseSymptomRecordDtos(paper.getPaperHasSymptoms().stream().map(
+                        symtom ->
+                                ResponsePaperSymptomRecordDto.builder()
+                                        .symptomId(symtom.getSymptomId())
+                                        .score(symtom.getScore())
+                                        .symptomName(
+                                                symptomRepository.getById(symtom.getSymptomId())
+                                                        .getName())
+                                        .build()
+                ).collect(Collectors.toList()))
+                .build();
 
         return responsePaperDto;
     }
@@ -187,11 +195,11 @@ public class DiaryServiceImpl implements DiaryService {
 
         if (!subscribeRepository.existsByDiaryAndUserId(diary, userId)) {
             subscribeRepository.save(Subscribe.builder()
-                .diary(diary)
-                .userId(userId)
-                .build());
-                diary.setSubscribeCount(diary.getSubscribeCount() + 1);
-                diaryRepository.save(diary);
+                    .diary(diary)
+                    .userId(userId)
+                    .build());
+            diary.setSubscribeCount(diary.getSubscribeCount() + 1);
+            diaryRepository.save(diary);
         }
     }
 
@@ -210,24 +218,29 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseDiaryListDto> getDiaryList(RequestDiaryFilterDto requestDiaryFilterDto, Pageable pageable) {
+    public List<ResponseDiaryListDto> getDiaryList(RequestDiaryFilterDto requestDiaryFilterDto,
+            Pageable pageable) {
         List<Symptom> symptoms = symptomRepository.findByIdIn(requestDiaryFilterDto.getSymptomId());
-        List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.getDiaryHasSymptomBySymptomIn(symptoms);
-        List<MedicalCode> medicalCodes = medicalCodeRepository.findByIdIn(requestDiaryFilterDto.getMedicalId());
+        List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.getDiaryHasSymptomBySymptomIn(
+                symptoms);
+        List<MedicalCode> medicalCodes = medicalCodeRepository.findByIdIn(
+                requestDiaryFilterDto.getMedicalId());
 
         Page<Diary> diaryPage;
-        if (requestDiaryFilterDto.getMedicalId().size() == 0 && requestDiaryFilterDto.getSymptomId().size() == 0){
+        if (requestDiaryFilterDto.getMedicalId().size() == 0
+                && requestDiaryFilterDto.getSymptomId().size() == 0) {
             diaryPage = diaryRepository.findAll(pageable);
         } else if (requestDiaryFilterDto.getMedicalId().size() == 0) {
             diaryPage = diaryRepository.findByDiaryHasSymptomsIn(diaryHasSymptoms, pageable);
         } else if (requestDiaryFilterDto.getSymptomId().size() == 0) {
             diaryPage = diaryRepository.findByMedicalCodeIn(medicalCodes, pageable);
         } else {
-            diaryPage = diaryRepository.findByMedicalCodeInOrDiaryHasSymptomsIn(medicalCodes, diaryHasSymptoms, pageable);
+            diaryPage = diaryRepository.findByMedicalCodeInOrDiaryHasSymptomsIn(medicalCodes,
+                    diaryHasSymptoms, pageable);
         }
 
         List<ResponseDiaryListDto> responseDiaryListDtos = new ArrayList<>();
-        for (Diary diary: diaryPage) {
+        for (Diary diary : diaryPage) {
             responseDiaryListDtos.add(ResponseDiaryListDto.builder()
                     .diaryId(diary.getId())
                     .title(diary.getTitle())
@@ -261,6 +274,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Transactional
     public void deleteDiary(long diaryId, String uid) {
         User user = userRepository.getByUid(uid);
         Optional<Diary> diary = diaryRepository.findByIdAndWriter(diaryId, user);
@@ -269,6 +283,41 @@ public class DiaryServiceImpl implements DiaryService {
             diaryRepository.delete(diary.get());
         } else {
             /// 잘못된 결과 에러처리
+        }
+    }
+
+    @Override
+    @Transactional
+    public void addDairyHasSymptom(RequestSymptomRegistrationDto requestSymptomRegistrationDto,
+            String uid) {
+        User user = userRepository.getByUid(uid);
+        Diary diary = diaryRepository.getById(requestSymptomRegistrationDto.getDiaryId());
+        Optional<DiaryHasSymptom> foundDiaryHasSymptom = diaryHasSymptomRepository.findDiaryHasSymptomByDiary_IdAndSymptom_Id(
+                requestSymptomRegistrationDto.getDiaryId(),
+                requestSymptomRegistrationDto.getSymptomId());
+        if (user.getId() != diary.getWriter().getId()) {
+            // 요청이 유저와 다른경우
+        } else if (foundDiaryHasSymptom.isPresent()) {
+            // 이미 일기장이 증상을 가지고 있을 때
+        } else {
+            // 올바른 경우
+            Symptom symptom = symptomRepository.getById(
+                    requestSymptomRegistrationDto.getSymptomId());
+            diaryHasSymptomRepository.save(DiaryHasSymptom.builder()
+                    .diary(diary)
+                    .symptom(symptom)
+                    .build());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteDiaryHasSymptom(int diaryHasSymptomId, String uid) {
+        DiaryHasSymptom diaryHasSymptom = diaryHasSymptomRepository.findById(diaryHasSymptomId)
+                .orElseThrow(RuntimeException::new);
+        if (diaryHasSymptom.getDiary().getWriter().getName().equals(uid)) {
+            paperHasSymptomRepository.deleteBySymptomId(diaryHasSymptom.getSymptom().getId());
+            diaryHasSymptomRepository.delete(diaryHasSymptom);
         }
     }
 }

@@ -52,7 +52,6 @@ public class DiaryController {
         , @RequestParam(value = "size") int size){
         String sort = tab.equals("popular") ? "subscribeCount" : "postedAt";
         Pageable pageable = PageRequest.of(page, size, Direction.DESC, sort);
-//        pageable.getSort()(Sort.by(Sort.Direction.DESC, tab));
         LOGGER.info("왜 안되는 거지{}", pageable);
         return ResponseEntity.ok().body(diaryService.getDiaryList(RequestDiaryFilterDto.builder()
             .tab(tab)
@@ -60,45 +59,6 @@ public class DiaryController {
             .symptomId(symptomId)
             .build(),
             pageable));
-
-//        if (requestDiaryFilterDto == null){
-//            LOGGER.info("일기장 목록 조회 api에 들어왔습니다. {}", requestDiaryFilterDto);
-//
-//            List<ResponseDiaryListDto> li = new ArrayList<>();
-//            List<ResponseMedicalListDto> mLi = new ArrayList<>();
-//            mLi.add(new ResponseMedicalListDto(1, "백혈병"));
-//            mLi.add(new ResponseMedicalListDto(2, "라식"));
-//            mLi.add(new ResponseMedicalListDto(3, "라섹"));
-//            li.add(new ResponseDiaryListDto(1, 10, 100,"나는유저", "나는일기",  mLi));
-//
-//            List<ResponseMedicalListDto> mLi2 = new ArrayList<>();
-//            mLi2.add(new ResponseMedicalListDto(4, "폐암"));
-//            li.add(new ResponseDiaryListDto(2, 5, 50,"유제혁", "암일기",  mLi2));
-//
-//            List<ResponseMedicalListDto> mLi3 = new ArrayList<>();
-//            mLi3.add(new ResponseMedicalListDto(5, "감기"));
-//            li.add(new ResponseDiaryListDto(3, 1, 1,"제혁", "감기일기",  mLi3));
-//            return new ResponseEntity<>(li, HttpStatus.OK);
-//        } else if (true) {
-//            LOGGER.info("일기장 목록 조회 api에 들어왔습니다. 필터링 입니다. \n{}", requestDiaryFilterDto);
-//            List<ResponseDiaryListDto> li = new ArrayList<>();
-//            List<ResponseMedicalListDto> mLi = new ArrayList<>();
-//            mLi.add(new ResponseMedicalListDto(1, "백혈병"));
-//            mLi.add(new ResponseMedicalListDto(2, "라식"));
-//            mLi.add(new ResponseMedicalListDto(3, "라섹"));
-//            li.add(new ResponseDiaryListDto(1, 10, 100,"나는유저", "나는일기",  mLi));
-//
-//            List<ResponseMedicalListDto> mLi2 = new ArrayList<>();
-//            mLi2.add(new ResponseMedicalListDto(4, "폐암"));
-//            li.add(new ResponseDiaryListDto(2, 5, 50,"유제혁", "암일기",  mLi2));
-//
-//            List<ResponseMedicalListDto> mLi3 = new ArrayList<>();
-//            mLi3.add(new ResponseMedicalListDto(5, "감기"));
-//            li.add(new ResponseDiaryListDto(3, 1, 1,"제혁", "감기일기",  mLi3));
-//            return new ResponseEntity<>(li, HttpStatus.OK);
-//        } else{
-//            return null;
-//        }
     }
 
     @GetMapping("/{diary-id}")
@@ -157,14 +117,16 @@ public class DiaryController {
     }
 
     @PostMapping("/symptom")
-    public ResponseEntity<String> postSymptom(@RequestBody RequestSymptomRegistrationDto requestSymptomRegistrationDto) {
+    public ResponseEntity<String> postSymptom(@RequestBody RequestSymptomRegistrationDto requestSymptomRegistrationDto, @LoginUser String uid) {
+        diaryService.addDairyHasSymptom(requestSymptomRegistrationDto, uid);
         LOGGER.info("일기장 증상 추가 api들어옴 {}", requestSymptomRegistrationDto);
         return new ResponseEntity<>("증상 추가 완료", HttpStatus.OK);
     }
 
-    @DeleteMapping("/{diary-id}/symptom/{symptom-id}")
-    public ResponseEntity<String> deleteDiarySymptom(@PathVariable(value = "diary-id") long diaryId, @PathVariable(value = "symptom-id") int symptomId) {
-        LOGGER.info("일기장 증상 삭제 api들어옴 diaryid : {}, symptomid : {}", diaryId, symptomId);
+    @DeleteMapping("/symptom/{symptom-id}")
+    public ResponseEntity<String> deleteDiarySymptom(@PathVariable(value = "symptom-id") int diaryHasSymptomId, @LoginUser String uid) {
+        LOGGER.info("일기장 증상 삭제 api들어옴 symptomid : {}", diaryHasSymptomId);
+        diaryService.deleteDiaryHasSymptom(diaryHasSymptomId, uid);
         return new ResponseEntity<>("증상 삭제 완료", HttpStatus.OK);
     }
 }

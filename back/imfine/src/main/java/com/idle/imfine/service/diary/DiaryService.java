@@ -7,6 +7,7 @@ import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
+import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +26,8 @@ public interface DiaryService {
     void modifyDiary(RequestDiaryModifyDto requestDiaryModifyDto, String uid);
 
     void deleteDiary(long diaryId, String uid);
+
+    void addDairyHasSymptom(RequestSymptomRegistrationDto requestSymptomRegistrationDto, String uid);
+
+    void deleteDiaryHasSymptom(int build, String uid);
 }

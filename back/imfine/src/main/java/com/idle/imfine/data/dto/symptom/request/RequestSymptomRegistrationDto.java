@@ -1,6 +1,7 @@
 package com.idle.imfine.data.dto.symptom.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -8,8 +9,8 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@Builder
 public class RequestSymptomRegistrationDto {
-    private int diaryId;
+    private long diaryId;
     private int symptomId;
 }
