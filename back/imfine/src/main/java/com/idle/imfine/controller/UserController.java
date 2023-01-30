@@ -4,10 +4,8 @@ import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.user.request.*;
-import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
-import com.idle.imfine.data.dto.user.response.GetUserInfoResponseDto;
-import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
-import com.idle.imfine.data.dto.user.response.SignInResponseDto;
+import com.idle.imfine.data.dto.user.response.*;
+import com.idle.imfine.service.user.ConditionService;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.SignService;
 import com.idle.imfine.service.user.UserService;
@@ -16,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -27,6 +28,7 @@ public class UserController {
     private final SignService signService;
     private final UserService userService;
     private final FollowService followService;
+    private final ConditionService conditionService;
     private final ResponseService responseService;
 
     @PostMapping("/sign-in")
@@ -143,30 +145,30 @@ public class UserController {
     }
 
 
-    @GetMapping("/condition/{id}/{date}")
-    public ResponseEntity<Result> searchCondition(@PathVariable String id, @PathVariable String date) {
-
+    @GetMapping("/condition/{uid}/day/{day}")
+    public ResponseEntity<Result> getConditionByDay(@PathVariable String uid, @PathVariable String day) {
+        ConditionResponseDto responseDto = conditionService.getConditionByDay(uid, day);
         return ResponseEntity.ok()
-                .body(responseService.getSuccessResult()) ;
+                .body(responseService.getSingleResult(responseDto)) ;
+    }
+
+    @GetMapping("/condition/{uid}/month/{month}")
+    public ResponseEntity<Result> getAllConditionByMonth(@PathVariable String uid, @PathVariable String month) {
+        Map<LocalDate, Integer> responseDto = conditionService.getAllCondtionByMonth(uid, month);
+        return ResponseEntity.ok()
+                .body(responseService.getSingleResult(responseDto)) ;
     }
 
     @PostMapping("/condition")
-    public ResponseEntity<Result> createCondition(@RequestBody ConditionRequestDto requestDto) {
-
+    public ResponseEntity<Result> createCondition(@LoginUser String uid, @RequestBody ConditionRequestDto requestDto) {
+        conditionService.createCondition(uid, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/condition")
-    public ResponseEntity<Result> modifyCondition(@RequestBody ConditionRequestDto requestDto) {
-
-        return ResponseEntity.ok()
-                .body(responseService.getSuccessResult());
-    }
-
-    @DeleteMapping("/condition/{date}")
-    public ResponseEntity<Result> removeCondition(@PathVariable String date) {
-
+    public ResponseEntity<Result> modifyCondition(@LoginUser String uid, @RequestBody ConditionRequestDto requestDto) {
+        conditionService.modifyCondition(uid, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }

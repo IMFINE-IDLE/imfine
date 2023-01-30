@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,7 +15,7 @@ import lombok.Setter;
 @Builder
 public class ConditionRequestDto {
 
-    private String data;
-    private String condition;
+    private  int condition;
+    private String date;
 
 }
