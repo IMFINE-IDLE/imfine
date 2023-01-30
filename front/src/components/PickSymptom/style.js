@@ -24,7 +24,6 @@ const ToggleWrapper = styled.div`
   display: inline-block;
   /* ::before {
     content(${(prop) => (prop.isOpen ? '공개' : '비공개')})
-
   } */
 `;
 const ToggleLabel = styled.label`
@@ -69,14 +68,19 @@ const Toggle = styled.input`
   }
 `;
 
-const BoxPickMenu = styled.div`
-  padding: 1.5em;
-  background-color: var(--gray-color);
-`;
-
 const BtnLeftTap = styled(BoxRT25)`
   width: 50%;
   text-align: center;
+`;
+
+const BoxPickMenu = styled.div`
+  padding: 0 1em 1em;
+  background-color: var(--gray-color);
+  display: grid;
+  /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  /* align-items: center; */
 `;
 
 export {

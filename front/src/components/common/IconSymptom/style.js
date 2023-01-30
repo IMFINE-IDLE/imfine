@@ -3,16 +3,17 @@ import { Btn } from '../Btn/Btn';
 
 const BoxIcon = styled.div`
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   width: 70px;
-  height: 70px;
   cursor: pointer;
+  margin: 0.5em auto;
 `;
 
 const BoxImg = styled.div`
   ${Btn}
+  height: 70px;
 `;
 
 const TextImg = styled.p`

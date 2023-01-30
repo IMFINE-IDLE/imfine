@@ -29,6 +29,10 @@ function SignUpPage() {
     confirmPwErrorMsg: '',
   });
   const [isNext, setIsNext] = useState(false);
+  const [optionalInfo, setOptionalInfo] = useState({
+    isOpen: true,
+    medicalIdList: [],
+  });
 
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
@@ -213,8 +217,8 @@ function SignUpPage() {
       email: '',
       password: '',
       confirmPassword: '',
-      isOpen: true,
-      medicalIdList: [],
+      // isOpen: true,
+      // medicalIdList: [],
     }
   );
   const { id, name, email, password, confirmPassword, isOpen, medicalIdList } =
@@ -367,7 +371,12 @@ function SignUpPage() {
           </BoxInnerSignup>
         </div>
       ) : (
-        <PickSymptom />
+        <>
+          <PickSymptom setOptionalInfo={setOptionalInfo} />
+          <div style={{ width: '80%', margin: '0 auto' }}>
+            <BtnSignup onClick={() => signUp()}>다음 단계</BtnSignup>
+          </div>
+        </>
       )}
     </>
   );
