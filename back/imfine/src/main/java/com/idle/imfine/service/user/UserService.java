@@ -5,8 +5,15 @@ import com.idle.imfine.data.dto.user.request.ModifyUserNameRequestDto;
 import com.idle.imfine.data.dto.user.request.ModifyUserOepnRequestDto;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.GetUserInfoResponseDto;
+import com.idle.imfine.data.entity.User;
 
 public interface UserService {
+
+    User getUserByUid(String uid);
+
+    void checkUidDuplicate(String uid);
+    void checkNameDuplicate(String name);
+    void checkEmailDuplicate(String email);
 
     void withdrawal(String uid);
 

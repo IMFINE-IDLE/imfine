@@ -47,13 +47,33 @@ public class UserController {
     public ResponseEntity<Result> refresh(@RequestHeader(name = "X-AUTH-TOKEN") String refreshToken) {
         RefreshResponseDto responseDto = signService.refresh(refreshToken);
         return ResponseEntity.ok()
-//                .body(responseService.getSuccessResult());
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Result> signUp(@RequestBody SignUpRequestDto requestDto) {
-        signService.signUp(requestDto);
+        SignInResponseDto responseDto = signService.signUp(requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSingleResult(responseDto));
+    }
+
+    @GetMapping("/check/uid/{uid}")
+    public ResponseEntity<Result> checkUidDuplicate(@PathVariable String uid) {
+        userService.checkUidDuplicate(uid);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
+    @GetMapping("/check/name/{name}")
+    public ResponseEntity<Result> checkNameDuplicate(@PathVariable String name) {
+        userService.checkNameDuplicate(name);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
+    @GetMapping("/check/email/{email}")
+    public ResponseEntity<Result> checkEmailDuplicate(@PathVariable String email) {
+        userService.checkEmailDuplicate(email);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -61,7 +81,6 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<Result> withdrawal(@LoginUser String uid) {
         userService.withdrawal(uid);
-
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -74,8 +93,8 @@ public class UserController {
     }
 
     @GetMapping("/{uid}")
-    public ResponseEntity<Result> searchOtherUserInfo(@PathVariable String uid) {
-        GetUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
+    public ResponseEntity<Result> searchOtherUserInfo(@PathVariable String otherUid) {
+        GetUserInfoResponseDto responseDto = userService.searchUserInfo(otherUid);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
