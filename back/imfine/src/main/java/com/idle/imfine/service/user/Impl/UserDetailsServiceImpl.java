@@ -1,7 +1,8 @@
 package com.idle.imfine.service.user.Impl;
 
-import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.errors.code.UserErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.errors.token.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LOGGER.info("[loadUserByUsername] loadUserByUsername 수행. username : {}", username);
 
         return userRepository.findByUid(username)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
     }
 
 }
