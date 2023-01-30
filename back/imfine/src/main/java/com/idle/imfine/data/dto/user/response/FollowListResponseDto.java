@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @SuperBuilder
-public class FollowListResponseDto extends CommonResponseMessage {
+public class FollowListResponseDto {
 
     private List<Object> userList;
 

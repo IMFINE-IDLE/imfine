@@ -9,8 +9,20 @@
 
 package com.idle.imfine.config.security;
 
-import com.idle.imfine.exception.token.TokenNotFoundException;
-import io.jsonwebtoken.*;
+import com.idle.imfine.errors.token.TokenNotFoundException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +33,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
@@ -37,7 +42,7 @@ public class JwtTokenProvider {
 
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
-    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 12; // 30분 토큰 유효
+    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 30; // 30분 토큰 유효
     private final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7; // 1주 토큰 유효
 
     // SecretKey 에 대해 인코딩 수행
@@ -111,15 +116,13 @@ public class JwtTokenProvider {
 
     // JWT 토큰의 유효성 + 만료일 체크
     public boolean validateToken(String token) {
-        LOGGER.info("[validateToken] 토큰 유효 체크 시작");
         try {
+            LOGGER.info("[validateToken] 토큰 유효 체크 시작");
             if(token == null || token.isEmpty()) throw new TokenNotFoundException();
-
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             LOGGER.info("[validateToken] 토큰 유효 체크 완료");
             return !claims.getBody().getExpiration().before(new Date());
         } catch (TokenNotFoundException e){
-            LOGGER.info("[validateToken] 토큰 유효 체크 예외 발생");
             throw new TokenNotFoundException();
         } catch (ExpiredJwtException e){
             throw new ExpiredJwtException(e.getHeader(), e.getClaims(), e.getMessage());

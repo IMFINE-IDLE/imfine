@@ -1,4 +1,4 @@
-package com.idle.imfine.config;
+package com.idle.imfine.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

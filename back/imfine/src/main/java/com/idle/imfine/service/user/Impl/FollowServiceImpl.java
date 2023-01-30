@@ -3,8 +3,8 @@ package com.idle.imfine.service.user.Impl;
 import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.User;
-import com.idle.imfine.data.repository.FollowRepository;
-import com.idle.imfine.data.repository.UserRepository;
+import com.idle.imfine.data.repository.user.FollowRepository;
+import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.user.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class FollowServiceImpl implements FollowService {
     private final FollowRepository followRepository;
 
     @Override
-    public CommonResponseMessage followUser(String uid, String otherUid) {
+    public void followUser(String uid, String otherUid) {
         LOGGER.info("팔로우 신청");
         User user = userRepository.getByUid(uid);
         User other = userRepository.getByUid(otherUid);
@@ -41,7 +41,6 @@ public class FollowServiceImpl implements FollowService {
                     .message(String.format("%s님은 %s님을 이미 팔로우하고 있습니다.", uid, otherUid))
                     .build();
 
-            return responseDto;
         }
 
         if (other.isOpen() || followRepository.findByFollowingUserAndFollowedUser(other, user) != null) {
@@ -67,17 +66,15 @@ public class FollowServiceImpl implements FollowService {
                     .message(String.format("%s님이 %s님을 팔로우 성공했습니다.", uid, otherUid))
                     .build();
 
-            return responseDto;
         } else {
             LOGGER.info("상대방이 비공개이므로 팔로우 신청을 보냈습니다.");
 
         }
 
-        return null;
     }
 
     @Override
-    public CommonResponseMessage unfollowUser(String uid, String otherUid) {
+    public void unfollowUser(String uid, String otherUid) {
         LOGGER.info("언팔로우");
         User user = userRepository.getByUid(uid);
         User other = userRepository.getByUid(otherUid);
@@ -93,7 +90,6 @@ public class FollowServiceImpl implements FollowService {
                 .message(String.format("%s님이 %s님을 언팔로우 성공했습니다.", uid, otherUid))
                 .build();
 
-        return responseDto;
     }
 
 }

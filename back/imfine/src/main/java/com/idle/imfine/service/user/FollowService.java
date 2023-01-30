@@ -5,8 +5,8 @@ import com.idle.imfine.data.dto.user.request.UidDto;
 
 public interface FollowService {
 
-    CommonResponseMessage followUser(String uid, String otherUid);
+    void followUser(String uid, String otherUid);
 
-    CommonResponseMessage unfollowUser(String uid, String otherUid);
+    void unfollowUser(String uid, String otherUid);
 
 }
