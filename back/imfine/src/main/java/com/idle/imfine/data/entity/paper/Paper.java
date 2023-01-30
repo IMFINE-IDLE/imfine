@@ -6,6 +6,7 @@ import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.Diary;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,20 +15,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Paper extends BaseCreatedEntity {
 
@@ -54,7 +57,7 @@ public class Paper extends BaseCreatedEntity {
     @Column(nullable = false)
     private int likeCount;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "paper_id")
     private List<PaperHasSymptom> paperHasSymptoms;
 }

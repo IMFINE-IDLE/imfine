@@ -1,35 +1,28 @@
-package com.idle.imfine.data.entity.paper;
+package com.idle.imfine.data.entity.image;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
-@Getter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
 @Builder
 @Entity
-public class PaperHasSymptom {
+public class Image {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @ManyToOne
-    @JoinColumn(name = "paper_id")
-    private Paper paper;
+    private long Id;
 
     @Column(nullable = false)
-    private Integer symptomId;
+    private String path;
 
-    @Column(nullable = false)
-    private int score;
+    private long paperId;
 }

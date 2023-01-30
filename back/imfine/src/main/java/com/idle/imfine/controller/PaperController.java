@@ -1,6 +1,8 @@
 package com.idle.imfine.controller;
 
 import com.idle.imfine.common.annotation.LoginUser;
+import com.idle.imfine.common.response.ResponseService;
+import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
@@ -27,12 +29,13 @@ import java.util.List;
 public class PaperController {
 
     private final PaperService paperService;
+    private final ResponseService responseService;
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
     @PostMapping
-    public ResponseEntity<String> postPaper(@RequestBody RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
+    public ResponseEntity<Result> postPaper(@RequestBody RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
         LOGGER.info("일기 생성 api 도착 {} {}", requestPaperPostDto, requestPaperPostDto.getSymptoms().get(0));
         paperService.save(requestPaperPostDto, uid);
-        return new ResponseEntity<>("일기 생성 완료", HttpStatus.OK);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @GetMapping("/{paper-id}")
@@ -55,16 +58,17 @@ public class PaperController {
     }
 
     @DeleteMapping("/{paper-id}")
-    public ResponseEntity<String> deletePaper(@PathVariable("paper-id") long paperId) {
+    public ResponseEntity<Result> deletePaper(@PathVariable("paper-id") long paperId, @LoginUser String uid) {
         LOGGER.info("일기장 삭제 {}", paperId);
-        return new ResponseEntity<>("삭제 완료", HttpStatus.OK);
+        paperService.delete(paperId, uid);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @PutMapping
-    public ResponseEntity<String> putPaper(@RequestBody RequestPaperPutDto requestPaperPutDto){
-        requestPaperPutDto.setUserId(1);
+    public ResponseEntity<Result> putPaper(@RequestBody RequestPaperPutDto requestPaperPutDto, @LoginUser String uid){
+        paperService.modifyPaper(requestPaperPutDto, uid);
         LOGGER.info("일기 수정 {}, {}", requestPaperPutDto, requestPaperPutDto.getSymptoms().get(0).getSymptomName());
-        return new ResponseEntity<>("일기 수정 완료", HttpStatus.OK);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @GetMapping("/list")

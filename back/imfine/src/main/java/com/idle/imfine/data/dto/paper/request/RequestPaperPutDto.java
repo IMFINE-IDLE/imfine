@@ -13,13 +13,8 @@ import lombok.ToString;
 @ToString
 public class RequestPaperPutDto {
     private long paperId;
-    private int userId;
     private String contents;
     private boolean open;
     private List<ResponseSymptomRecordDto> symptoms;
     private List<String> images;
-
-    public void setUserId(int userId){
-        this.userId = userId;
-    }
 }
