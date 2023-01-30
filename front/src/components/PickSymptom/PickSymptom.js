@@ -11,14 +11,41 @@ import {
   ToggleLabel,
 } from './style';
 
-function PickSymptom() {
+function PickSymptom({ inputEvent }) {
   const [isOpen, setIsOpen] = useState(true);
   const symptoms = [
     {
+      id: 1,
       name: '가정의학과 & 내과',
       imgSrc: '/assets/icons/가정의학과.png',
     },
+    {
+      id: 2,
+      name: '가정의학과',
+      imgSrc: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 3,
+      name: '내과',
+      imgSrc: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 4,
+      name: '가정의학과 & 내과',
+      imgSrc: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 5,
+      name: '가정의학과',
+      imgSrc: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 6,
+      name: '내과',
+      imgSrc: '/assets/icons/가정의학과.png',
+    },
   ];
+
   return (
     <div>
       <Title>계정 기본 설정</Title>
@@ -48,7 +75,11 @@ function PickSymptom() {
         <BtnLeftTap>질병/수술 선택</BtnLeftTap>
         <BoxPickMenu>
           {symptoms.map((symptom) => (
-            <IconSymptom name={symptom.name} imgSrc={symptom.imgSrc} />
+            <IconSymptom
+              key={symptom.id}
+              name={symptom.name}
+              imgSrc={symptom.imgSrc}
+            />
           ))}
         </BoxPickMenu>
       </div>

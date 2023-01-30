@@ -45,6 +45,7 @@ const InputSignUp = styled(InputGray)`
 const BtnSignup = styled.button`
   ${Btn}
   margin-top: 2em;
+  display: inline-block;
 `;
 
 const ErrorMsg = styled.p`
