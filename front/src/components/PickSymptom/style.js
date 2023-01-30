@@ -21,8 +21,11 @@ const BoxToggle = styled.div`
 
 const ToggleWrapper = styled.div`
   position: relative;
-  display: flex;
-  align-items: center;
+  display: inline-block;
+  /* ::before {
+    content(${(prop) => (prop.isOpen ? '공개' : '비공개')})
+
+  } */
 `;
 const ToggleLabel = styled.label`
   position: absolute;
@@ -45,6 +48,7 @@ const ToggleLabel = styled.label`
     transition: 0.2s;
   }
 `;
+
 const Toggle = styled.input`
   opacity: 0;
   z-index: 1;
@@ -66,7 +70,8 @@ const Toggle = styled.input`
 `;
 
 const BoxPickMenu = styled.div`
-  /* width: ; */
+  padding: 1em;
+  background-color: aliceblue;
 `;
 
 const BtnLeftTap = styled(BoxRT25)`
