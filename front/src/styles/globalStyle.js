@@ -54,6 +54,7 @@ const GlobalStyle = createGlobalStyle`
     border: none;
     cursor: pointer;
     background-color: transparent;
+    padding: 0;
   }
 
   input {
@@ -68,6 +69,10 @@ const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
     color: inherit;
+  }
+
+  abbr {
+    text-decoration: none;
   }
 `;
 
