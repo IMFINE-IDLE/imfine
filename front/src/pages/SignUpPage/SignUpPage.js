@@ -27,10 +27,7 @@ function SignUpPage() {
     confirmPwErrorMsg: '',
   });
   const [isNext, setIsNext] = useState(false);
-  const [optionalInfo, setOptionalInfo] = useState({
-    isOpen: true,
-    medicalIdList: [],
-  });
+  const [medicalIdList, setMedicalIdList] = useState([]);
 
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
@@ -201,7 +198,6 @@ function SignUpPage() {
       ) {
         console.log('TRUE');
         setIsValid(true);
-        setIsNext(true);
       } else {
         setIsValid(false);
         setIsNext(false);
@@ -219,8 +215,7 @@ function SignUpPage() {
       // medicalIdList: [],
     }
   );
-  const { id, name, email, password, confirmPassword, isOpen, medicalIdList } =
-    inputValue;
+  const { id, name, email, password, confirmPassword } = inputValue;
   const {
     idErrorMsg,
     nameErrorMsg,
@@ -249,7 +244,7 @@ function SignUpPage() {
       const res = axios.post(api.user.signUp(), userData);
       console.log(res.data);
       // 리덕스에 토큰 저장
-      navigate('/home');
+      setIsNext(true);
     } catch (err) {
       console.log(err);
     }
@@ -370,9 +365,9 @@ function SignUpPage() {
         </div>
       ) : (
         <>
-          <PickSymptom setOptionalInfo={setOptionalInfo} />
+          <PickSymptom setMedicalIdList={setMedicalIdList} />
           <div style={{ width: '80%', margin: '0 auto' }}>
-            <BtnSignup onClick={() => signUp()}>다음 단계</BtnSignup>
+            <BtnSignup onClick={() => signUp()}>건강해지러 가기!</BtnSignup>
           </div>
         </>
       )}

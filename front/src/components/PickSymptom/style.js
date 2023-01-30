@@ -8,7 +8,13 @@ const BoxTopArea = styled.div`
 const Title = styled.div`
   margin: 1.5em 0;
   text-align: center;
-  font-weight: ${(props) => (props.small ? 500 : 600)};
+  font-size: 1.2em;
+  font-weight: 600;
+`;
+
+const TitleSmall = styled.div`
+  font-weight: 600;
+  color: var(--gray800-color);
 `;
 
 const BoxToggle = styled.div`
@@ -92,4 +98,5 @@ export {
   Toggle,
   BoxPickMenu,
   BtnLeftTap,
+  TitleSmall,
 };
