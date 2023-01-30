@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useReducer, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
+import PickSymptom from '../../components/PickSymptom/PickSymptom';
 // import useInput from '../../hooks/useInput';
 import {
   BoxSignUp,
@@ -25,6 +26,7 @@ function SignUpPage() {
     pwErrorMsg: '',
     confirmPwErrorMsg: '',
   });
+  const [isNext, setIsNext] = useState(false);
 
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
@@ -181,7 +183,7 @@ function SignUpPage() {
 
       // 전체 유효 여부 확인
       const isError = !Object.values(errorMsg).every(
-        (x) => x === '' || x === null,
+        (x) => x === '' || x === null
       );
       console.log(isError);
       if (
@@ -195,8 +197,10 @@ function SignUpPage() {
       ) {
         console.log('TRUE');
         setIsValid(true);
+        setIsNext(true);
       } else {
         setIsValid(false);
+        setIsNext(false);
       }
 
       return currInput;
@@ -209,7 +213,7 @@ function SignUpPage() {
       confirmPassword: '',
       isOpen: true,
       medicalIdList: [],
-    },
+    }
   );
   const { id, name, email, password, confirmPassword, isOpen, medicalIdList } =
     inputValue;
@@ -248,108 +252,122 @@ function SignUpPage() {
   };
 
   return (
-    <div>
-      <BoxSignUp>
-        <CloverImg />
-        <TitleSignUp>회원가입</TitleSignUp>
-      </BoxSignUp>
-      <BoxInnerSignup>
-        <form action="">
-          <Label htmlFor="idInput">아이디</Label>
-          <InfoSpan>&nbsp;최대 12자</InfoSpan>
-          <InputSignUp
-            value={id}
-            id="idInput"
-            type="text"
-            required
-            autoFocus
-            // maxLength="12"
-            onChange={(e) => inputEvent({ id: e.target.value })}
-            style={idErrorMsg ? { border: '1px solid var(--red-color)' } : null}
-          />
-          {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
+    <>
+      {isNext ? (
+        <div>
+          <BoxSignUp>
+            <CloverImg />
+            <TitleSignUp>회원가입</TitleSignUp>
+          </BoxSignUp>
+          <BoxInnerSignup>
+            <form action="">
+              <Label htmlFor="idInput">아이디</Label>
+              <InfoSpan>&nbsp;최대 12자</InfoSpan>
+              <InputSignUp
+                value={id}
+                id="idInput"
+                type="text"
+                required
+                autoFocus
+                // maxLength="12"
+                onChange={(e) => inputEvent({ id: e.target.value })}
+                style={
+                  idErrorMsg ? { border: '1px solid var(--red-color)' } : null
+                }
+              />
+              {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
 
-          <Label htmlFor="nameInput">닉네임</Label>
-          <InfoSpan>&nbsp;최대 10자</InfoSpan>
-          <InputSignUp
-            value={name}
-            id="nameInput"
-            type="text"
-            required
-            // maxLength="10"
-            onChange={(e) => inputEvent({ name: e.target.value })}
-            style={
-              nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
-            }
-          />
-          {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
+              <Label htmlFor="nameInput">닉네임</Label>
+              <InfoSpan>&nbsp;최대 10자</InfoSpan>
+              <InputSignUp
+                value={name}
+                id="nameInput"
+                type="text"
+                required
+                // maxLength="10"
+                onChange={(e) => inputEvent({ name: e.target.value })}
+                style={
+                  nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
+                }
+              />
+              {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
 
-          <Label htmlFor="emailInput">이메일</Label>
-          <InputSignUp
-            value={email}
-            id="emailInput"
-            type="email"
-            required
-            onChange={(e) => inputEvent({ email: e.target.value })}
-            style={
-              emailErrorMsg ? { border: '1px solid var(--red-color)' } : null
-            }
-          />
-          {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
+              <Label htmlFor="emailInput">이메일</Label>
+              <InputSignUp
+                value={email}
+                id="emailInput"
+                type="email"
+                required
+                onChange={(e) => inputEvent({ email: e.target.value })}
+                style={
+                  emailErrorMsg
+                    ? { border: '1px solid var(--red-color)' }
+                    : null
+                }
+              />
+              {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
 
-          <Label htmlFor="passwordInput">비밀번호</Label>
-          <InputSignUp
-            value={password}
-            id="passwordInput"
-            type="password"
-            autoComplete="off"
-            required
-            onChange={(e) => inputEvent({ password: e.target.value })}
-            style={pwErrorMsg ? { border: '1px solid var(--red-color)' } : null}
-          />
-          {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
+              <Label htmlFor="passwordInput">비밀번호</Label>
+              <InputSignUp
+                value={password}
+                id="passwordInput"
+                type="password"
+                autoComplete="off"
+                required
+                onChange={(e) => inputEvent({ password: e.target.value })}
+                style={
+                  pwErrorMsg ? { border: '1px solid var(--red-color)' } : null
+                }
+              />
+              {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
 
-          <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
-          <InputSignUp
-            value={confirmPassword}
-            id="confirmPasswordInput"
-            type="password"
-            autoComplete="off"
-            required
-            onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
-            style={
-              confirmPwErrorMsg
-                ? { border: '1px solid var(--red-color)' }
-                : null
-            }
-          />
-          {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
-          {isValid ? (
-            <BtnSignup
-              margin={'0'}
-              padding={'1em'}
-              fontSize={'1em'}
-              type="submit"
-              onClick={() => signUp()}
-            >
-              다음 단계
-            </BtnSignup>
-          ) : (
-            <BtnSignup
-              margin={'0'}
-              padding={'1em'}
-              fontSize={'1em'}
-              type="button"
-              color={'gray700'}
-              disabled
-              style={{ cursor: 'not-allowed' }}
-            >
-              다음 단계
-            </BtnSignup>
-          )}
-        </form>
-      </BoxInnerSignup>
-    </div>
+              <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
+              <InputSignUp
+                value={confirmPassword}
+                id="confirmPasswordInput"
+                type="password"
+                autoComplete="off"
+                required
+                onChange={(e) =>
+                  inputEvent({ confirmPassword: e.target.value })
+                }
+                style={
+                  confirmPwErrorMsg
+                    ? { border: '1px solid var(--red-color)' }
+                    : null
+                }
+              />
+              {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
+              {isValid ? (
+                <BtnSignup
+                  margin={'0'}
+                  padding={'1em'}
+                  fontSize={'1em'}
+                  type="submit"
+                  onClick={() => signUp()}
+                >
+                  다음 단계
+                </BtnSignup>
+              ) : (
+                <BtnSignup
+                  margin={'0'}
+                  padding={'1em'}
+                  fontSize={'1em'}
+                  type="button"
+                  color={'gray700'}
+                  disabled
+                  style={{ cursor: 'not-allowed' }}
+                >
+                  다음 단계
+                </BtnSignup>
+              )}
+            </form>
+          </BoxInnerSignup>
+        </div>
+      ) : (
+        <PickSymptom />
+      )}
+    </>
   );
 }
 
