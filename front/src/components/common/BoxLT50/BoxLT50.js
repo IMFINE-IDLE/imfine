@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-export const BoxRT25 = styled.div`
+export const BoxLT50 = styled.div`
   ${({ color, width, height, padding, margin, shad }) => css`
     background-color: ${color
       ? 'var(--' + color + '-color)'
@@ -10,6 +10,6 @@ export const BoxRT25 = styled.div`
     height: ${height || '100%'};
     padding: ${padding || '1em'};
     margin: ${margin || '0'};
-    box-shadow: ${shad ? '2px 2px 4px rgba(0, 0, 0, 0.05)' : ''};
+    box-shadow: ${shad ? ' -5px -1px 4px rgba(0, 0, 0, 0.1)' : ''};
   `}
 `;
