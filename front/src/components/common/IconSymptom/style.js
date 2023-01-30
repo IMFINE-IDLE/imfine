@@ -15,17 +15,11 @@ const BoxImg = styled.div`
   ${Btn}
 `;
 
-const ImgIcon = styled.img.attrs({
-  src: '/assets/images/clover.png',
-})`
-  width: 100%;
-  height: 100%;
-`;
-
 const TextImg = styled.p`
   font-size: 12px;
   color: var(--icon-color);
   margin-top: 0.5em;
+  text-align: center;
 `;
 
-export { BoxIcon, BoxImg, ImgIcon, TextImg };
+export { BoxIcon, BoxImg, TextImg };

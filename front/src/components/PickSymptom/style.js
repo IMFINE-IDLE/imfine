@@ -70,8 +70,8 @@ const Toggle = styled.input`
 `;
 
 const BoxPickMenu = styled.div`
-  padding: 1em 1.5em;
-  background-color: aliceblue;
+  padding: 1.5em;
+  background-color: var(--gray-color);
 `;
 
 const BtnLeftTap = styled(BoxRT25)`

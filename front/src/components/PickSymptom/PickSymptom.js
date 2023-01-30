@@ -13,6 +13,12 @@ import {
 
 function PickSymptom() {
   const [isOpen, setIsOpen] = useState(true);
+  const symptoms = [
+    {
+      name: '가정의학과 & 내과',
+      imgSrc: '/assets/icons/가정의학과.png',
+    },
+  ];
   return (
     <div>
       <Title>계정 기본 설정</Title>
@@ -41,7 +47,9 @@ function PickSymptom() {
       <div>
         <BtnLeftTap>질병/수술 선택</BtnLeftTap>
         <BoxPickMenu>
-          <IconSymptom text={'질병이름'} />
+          {symptoms.map((symptom) => (
+            <IconSymptom name={symptom.name} imgSrc={symptom.imgSrc} />
+          ))}
         </BoxPickMenu>
       </div>
     </div>
