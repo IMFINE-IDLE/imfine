@@ -1,13 +1,13 @@
 import React from 'react';
-import { BoxIcon, BoxImg, ImgIcon, TextImg } from './style';
+import { BoxIcon, BoxImg, TextImg } from './style';
 
-function IconSymptom({ imgSrc, text }) {
+function IconSymptom({ imgSrc, name }) {
   return (
     <BoxIcon>
       <BoxImg color={'gray'}>
-        <ImgIcon />
+        <img src={imgSrc} style={{ width: '100%', height: '100%' }} />
       </BoxImg>
-      <TextImg>{text}</TextImg>
+      <TextImg>{name}</TextImg>
     </BoxIcon>
   );
 }
