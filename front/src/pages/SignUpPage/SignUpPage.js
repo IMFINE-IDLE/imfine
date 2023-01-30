@@ -253,7 +253,7 @@ function SignUpPage() {
 
   return (
     <>
-      {isNext ? (
+      {!isNext ? (
         <div>
           <BoxSignUp>
             <CloverImg />
