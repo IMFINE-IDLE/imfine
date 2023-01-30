@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { BoxNoShad } from '../common/BoxNoShad/BoxNoShad';
 
@@ -23,15 +24,31 @@ const Tab = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
-// 대나무 탭 이미지
-const TabImg = styled.img`
-  ${({ src, width, height }) => css`
-    src: ${src};
-    width: ${width || '1em'};
-    height: ${height || '1em'};
-  `}
+const TabNavLink = styled(NavLink)`
+  & div {
+    display: none;
+  }
+
+  &.active {
+    color: var(--dark-color);
+  }
+  &.active div {
+    display: block;
+  }
+`;
+
+// 메인, 일기장, 대나무, 프로필 탭 상단 액티브 표시
+const ActiveBar = styled.div`
+  width: 2.125em;
+  height: 0.3em;
+  background-color: var(--dark-color);
+  position: absolute;
+  top: 0;
+  left: calc(50% - 1.0625em);
+  border-radius: 0 0 0.2em 0.2em;
 `;
 
 // 클로버 탭 wrapper
@@ -64,7 +81,7 @@ const Clover = styled.img`
     height: ${height || '3.125em'};
     position: ${isMain ? 'absolute' : 'static'};
     top: -2em;
-    left: calc(50% - 1.5625em);
+    left: calc(50% - ${width || '1.5625em'} / 2);
     cursor: pointer;
   `}
 
@@ -76,8 +93,9 @@ const Clover = styled.img`
 export {
   TabContainer,
   Tab,
+  TabNavLink,
+  ActiveBar,
   TabCenter,
-  TabImg,
   Clover,
   CloverStatusContainer,
   CloverWrap,

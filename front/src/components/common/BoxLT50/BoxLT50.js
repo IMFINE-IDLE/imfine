@@ -5,7 +5,7 @@ export const BoxRT25 = styled.div`
     background-color: ${color
       ? 'var(--' + color + '-color)'
       : 'var(--main-color)'};
-    border-radius: 0px 25px 0px 0px;
+    border-radius: 50px 0px 0px 0px;
     width: ${width || '100%'};
     height: ${height || '100%'};
     padding: ${padding || '1em'};
