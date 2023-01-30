@@ -18,12 +18,13 @@ import {
 function SignUpPage() {
   const navigate = useNavigate();
   const [isValid, setIsValid] = useState(false);
-
-  const [idErrorMsg, setIdErrorMsg] = useState(null);
-  const [nameErrorMsg, setNameErrorMsg] = useState(null);
-  const [emailErrorMsg, setEmailErrorMsg] = useState(null);
-  const [pwErrorMsg, setPwErrorMsg] = useState(null);
-  const [confirmPwErrorMsg, setConfirmPwErrorMsg] = useState(null);
+  const [errorMsg, setErrMsg] = useState({
+    idErrorMsg: '',
+    nameErrorMsg: '',
+    emailErrorMsg: '',
+    pwErrorMsg: '',
+    confirmPwErrorMsg: '',
+  });
 
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
@@ -32,36 +33,53 @@ function SignUpPage() {
       const checkStage = (stage) => {
         if (stage >= 2) {
           if (currInput.id.length < 1) {
-            setIdErrorMsg('아이디를 입력해주세요');
+            setErrMsg((prev) => {
+              return { ...prev, idErrorMsg: '아이디를 입력해주세요' };
+            });
           }
         }
         if (stage >= 3) {
           if (currInput.name.length < 1) {
-            setNameErrorMsg('닉네임을 입력해주세요');
+            setErrMsg((prev) => {
+              return { ...prev, nameErrorMsg: '닉네임을 입력해주세요' };
+            });
           }
         }
         if (stage >= 4) {
           if (currInput.email.length < 1) {
-            setEmailErrorMsg('이메일을 입력해주세요');
+            setErrMsg((prev) => {
+              return { ...prev, emailErrorMsg: '이메일을 입력해주세요' };
+            });
           }
         }
         if (stage >= 5) {
           if (currInput.password.length < 1) {
-            setPwErrorMsg('비밀번호를 입력해주세요');
+            setErrMsg((prev) => {
+              return { ...prev, pwErrorMsg: '비밀번호를 입력해주세요' };
+            });
           }
         }
       };
 
       // 1. 아이디 유효성 검사
       if (currInput.id) {
-        setIdErrorMsg(null);
+        setErrMsg((prev) => {
+          return { ...prev, idErrorMsg: '' };
+        });
 
         if (currInput.id.length > 12) {
           console.log('12');
-          setIdErrorMsg('아이디는 최대 12자까지 가능합니다.');
+          setErrMsg((prev) => {
+            return {
+              ...prev,
+              idErrorMsg: '아이디는 최대 12자까지 가능합니다.',
+            };
+          });
           currInput.id = currInput.id.substring(0, 12);
           setTimeout(() => {
-            setIdErrorMsg(null);
+            setErrMsg((prev) => {
+              return { ...prev, idErrorMsg: '' };
+            });
           }, 2000); // 2초뒤 에러 메시지 지움
         }
 
@@ -70,13 +88,28 @@ function SignUpPage() {
 
       // 2. 닉네임 유효성 검사
       if (currInput.name) {
-        setNameErrorMsg(null);
+        setErrMsg((prev) => {
+          return {
+            ...prev,
+            nameErrorMsg: '',
+          };
+        });
         checkStage(2);
         if (currInput.name.length > 10) {
           currInput.name = currInput.name.substring(0, 10);
-          setNameErrorMsg('닉네임은 최대 10자까지 가능합니다.');
+          setErrMsg((prev) => {
+            return {
+              ...prev,
+              nameErrorMsg: '닉네임은 최대 10자까지 가능합니다',
+            };
+          });
           setTimeout(() => {
-            setNameErrorMsg(null);
+            setErrMsg((prev) => {
+              return {
+                ...prev,
+                nameErrorMsg: '닉네임은 최대 10자까지 가능합니다',
+              };
+            });
           }, 2000);
         }
         // 닉네임 중복체크 로직
@@ -84,19 +117,33 @@ function SignUpPage() {
 
       // 3. 이메일 유효성 검사
       if (currInput.email) {
-        setEmailErrorMsg(null);
+        setErrMsg((prev) => {
+          return {
+            ...prev,
+            emailErrorMsg: '',
+          };
+        });
         checkStage(3);
-        // let emailRegex = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}');
         const isEmailValid = (email) => {
           const emailRegex =
-            /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+            /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
 
           return emailRegex.test(email);
         };
         if (isEmailValid(currInput.email)) {
-          setEmailErrorMsg(null);
+          setErrMsg((prev) => {
+            return {
+              ...prev,
+              emailErrorMsg: '',
+            };
+          });
         } else {
-          setEmailErrorMsg('유효한 이메일 형식이 아닙니다.');
+          setErrMsg((prev) => {
+            return {
+              ...prev,
+              emailErrorMsg: '유효한 이메일 형식이 아닙니다.',
+            };
+          });
         }
 
         // 이메일 중복체크 로직
@@ -104,17 +151,52 @@ function SignUpPage() {
 
       // 4. 비밀번호 유효성 검사
       if (currInput.password) {
-        setPwErrorMsg(null);
+        setErrMsg((prev) => {
+          return {
+            ...prev,
+            pwErrorMsg: '',
+          };
+        });
         checkStage(4);
       }
 
       // 5. 비밀번호 확인 유효성 검사
       if (currInput.confirmPassword) {
-        setConfirmPwErrorMsg(null);
+        setErrMsg((prev) => {
+          return {
+            ...prev,
+            confirmPwErrorMsg: '비밀번호가 일치하지 않습니다.',
+          };
+        });
         checkStage(5);
-        if (currInput.confirmPassword !== currInput.password) {
-          setConfirmPwErrorMsg('비밀번호가 일치하지 않습니다.');
+        if (currInput.confirmPassword === currInput.password) {
+          setErrMsg((prev) => {
+            return {
+              ...prev,
+              confirmPwErrorMsg: '',
+            };
+          });
         }
+      }
+
+      // 전체 유효 여부 확인
+      const isError = !Object.values(errorMsg).every(
+        (x) => x === '' || x === null,
+      );
+      console.log(isError);
+      if (
+        isError &&
+        currInput.id.length > 0 &&
+        currInput.name.length > 0 &&
+        currInput.email.length > 0 &&
+        currInput.password.length > 0 &&
+        currInput.confirmPassword.length > 0 &&
+        currInput.password === currInput.confirmPassword
+      ) {
+        console.log('TRUE');
+        setIsValid(true);
+      } else {
+        setIsValid(false);
       }
 
       return currInput;
@@ -131,6 +213,13 @@ function SignUpPage() {
   );
   const { id, name, email, password, confirmPassword, isOpen, medicalIdList } =
     inputValue;
+  const {
+    idErrorMsg,
+    nameErrorMsg,
+    emailErrorMsg,
+    pwErrorMsg,
+    confirmPwErrorMsg,
+  } = errorMsg;
 
   const signUp = async (userData) => {
     console.log(userData);
