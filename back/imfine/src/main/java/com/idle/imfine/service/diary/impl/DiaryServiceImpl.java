@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,12 +55,13 @@ public class DiaryServiceImpl implements DiaryService {
     private final PaperHasSymptomRepository paperHasSymptomRepository;
     private final PaperRepository paperRepository;
     private final SubscribeRepository subscribeRepository;
+    private final UserDetailsService userDetailsService;
     private final Logger LOGGER = LoggerFactory.getLogger(DiaryService.class);
 
     @Override
     @Transactional
-    public long save(RequestDiaryPostDto saveDiary, String uId) {
-        User user = userRepository.getByUid(uId);
+    public void save(RequestDiaryPostDto saveDiary, String uId) {
+        User user = (User) userDetailsService.loadUserByUsername(uId);
         MedicalCode medicalCode = medicalCodeRepository.getById(saveDiary.getMedicalId());
 
         Diary diary = Diary.builder()
@@ -74,20 +76,16 @@ public class DiaryServiceImpl implements DiaryService {
 
         List<Integer> symptoms = saveDiary.getSymptom();
         Diary savedDiary = diaryRepository.save(diary);
-        LOGGER.info("diary Save ...............symptom Id : {}", symptoms);
         if (symptoms.size() != 0) {
             for (Integer s : symptoms) {
                 Symptom symptom = symptomRepository.findById(s)
                         .orElseThrow(RuntimeException::new);
-                LOGGER.info("diaryId {}, symptom Id {}, {}", savedDiary.getId(), symptom.getId(),
-                        symptom.getName());
                 diaryHasSymptomRepository.save(DiaryHasSymptom.builder()
                         .symptom(symptom)
                         .diary(savedDiary)
                         .build());
             }
         }
-        return savedDiary.getId();
     }
 
     @Override
