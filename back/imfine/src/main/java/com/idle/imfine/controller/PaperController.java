@@ -2,7 +2,7 @@ package com.idle.imfine.controller;
 
 import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
-import com.idle.imfine.data.dto.like.request.RequestHeartDto;
+import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;

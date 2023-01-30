@@ -1,4 +1,4 @@
-package com.idle.imfine.data.repository.like;
+package com.idle.imfine.data.repository.heart;
 
 import com.idle.imfine.data.entity.Heart;
 import org.springframework.data.jpa.repository.JpaRepository;

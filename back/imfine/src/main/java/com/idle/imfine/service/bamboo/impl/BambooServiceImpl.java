@@ -9,7 +9,7 @@ import com.idle.imfine.data.entity.bamboo.Bamboo;
 import com.idle.imfine.data.entity.leaf.Leaf;
 import com.idle.imfine.data.repository.bamboo.BambooRepository;
 import com.idle.imfine.data.repository.leaf.LeafRepository;
-import com.idle.imfine.data.repository.like.HeartRepository;
+import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.bamboo.BambooService;
 import lombok.RequiredArgsConstructor;
