@@ -5,7 +5,12 @@ import { BoxLT50 } from '../../components/common/BoxLT50/BoxLT50';
 import { BoxShad } from '../../components/common/BoxShad/BoxShad';
 
 const BoxOuter = styled.div`
-  padding: 0;
+  padding: ${(props) => props.padding || '0px'};
+`;
+
+const BtnOuter = styled.div`
+  padding: 0px;
+  display: flex;
 `;
 const BoxHeader = styled.div`
   height: 15em;
@@ -39,8 +44,6 @@ const BtnFilter = styled.button`
 const BoxContainer = styled(BoxLT50)`
   box-shadow: -5px -1px 4px rgba(0, 0, 0, 0.1);
   background-color: var(--gray-color);
-  margin: -1.5em 2em 2em 2em;
-  height: 60%;
 `;
 
 const BoxBamboo = styled(BoxShad)`
@@ -96,4 +99,5 @@ export {
   BoxBtnFilter,
   BtnLink,
   BoxOuter,
+  BtnOuter,
 };

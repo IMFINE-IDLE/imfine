@@ -9,10 +9,11 @@ import {
   BoxContainer,
   BtnFilter,
   BoxOuter,
+  BtnOuter,
 } from './Style';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 
-function BambooFeedPage() {
+function BambooPage() {
   return (
     <div>
       <BoxOuter>
@@ -25,12 +26,20 @@ function BambooFeedPage() {
           </SubTitleHeader>
         </BoxHeader>
       </BoxOuter>
-      <BoxOuter>
-        <BtnFilter></BtnFilter>
-        <BoxContainer />
+      <BoxOuter padding="2em 0 0 0">
+        <BtnOuter>
+          <BtnFilter padding={'1em'} margin={'0 1em '}>
+            모두보기
+          </BtnFilter>
+          <BtnFilter padding={'1em'} margin={'0 1em '}>
+            나의활동
+          </BtnFilter>
+        </BtnOuter>
+
+        <BoxContainer padding="20em" margin="-1em 0"></BoxContainer>
       </BoxOuter>
     </div>
   );
 }
 
-export default BambooFeedPage;
+export default BambooPage;
