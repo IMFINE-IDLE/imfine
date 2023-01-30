@@ -70,7 +70,7 @@ const Toggle = styled.input`
 `;
 
 const BoxPickMenu = styled.div`
-  padding: 1em;
+  padding: 1em 1.5em;
   background-color: aliceblue;
 `;
 

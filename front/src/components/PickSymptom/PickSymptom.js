@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
+import IconSymptom from '../common/IconSymptom/IconSymptom';
 import {
   Title,
   BoxTopArea,
@@ -39,7 +40,9 @@ function PickSymptom() {
       </BoxTopArea>
       <div>
         <BtnLeftTap>질병/수술 선택</BtnLeftTap>
-        <BoxPickMenu></BoxPickMenu>
+        <BoxPickMenu>
+          <IconSymptom text={'질병이름'} />
+        </BoxPickMenu>
       </div>
     </div>
   );
