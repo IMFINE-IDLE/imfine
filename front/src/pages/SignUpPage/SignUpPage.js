@@ -81,9 +81,14 @@ function SignUpPage() {
       if (currInput.email) {
         setEmailErrorMsg(null);
         checkStage(3);
-        let emailRegex = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}');
-        console.log(emailRegex.test(currInput.email));
-        if (emailRegex.test(currInput.email)) {
+        // let emailRegex = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}');
+        const isEmailValid = (email) => {
+          const emailRegex =
+            /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+
+          return emailRegex.test(email);
+        };
+        if (isEmailValid(currInput.email)) {
           setEmailErrorMsg(null);
         } else {
           setEmailErrorMsg('유효한 이메일 형식이 아닙니다.');
