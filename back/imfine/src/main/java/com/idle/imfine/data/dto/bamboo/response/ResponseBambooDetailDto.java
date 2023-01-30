@@ -4,10 +4,14 @@ import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ResponseBambooDetailDto {
     private int bambooId;
     private String content;
