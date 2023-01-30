@@ -2,6 +2,7 @@ package com.idle.imfine.data.entity.leaf;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.bamboo.Bamboo;
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import lombok.Setter;
 @Builder
 @Table(name = "leaf")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Leaf {
+public class Leaf extends BaseCreatedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

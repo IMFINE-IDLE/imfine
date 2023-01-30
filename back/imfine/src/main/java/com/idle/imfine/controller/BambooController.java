@@ -5,12 +5,14 @@ import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
 import com.idle.imfine.service.bamboo.BambooService;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +38,7 @@ public class BambooController {
         this.bambooService = bambooService;
     }
     @GetMapping("/list")
-    public ResponseEntity<List<ResponseBamboo>> getList(@RequestParam("filter") String filter){
+    public ResponseEntity<List<ResponseBamboo>> getList(@RequestParam("filter") String filter, @PageableDefault(size=20) Pageable pageable){
         LOGGER.info("list api에 들어옴  {}", filter);
 //        List<ResponseBamboo> rbl = new ArrayList<ResponseBamboo>();
 //        if (true){
@@ -47,15 +49,16 @@ public class BambooController {
 //        } else {
 //            return null;
 //        }
-        List<ResponseBamboo> responseBamboos = bambooService.showList(filter);
+        List<ResponseBamboo> responseBamboos = bambooService.showList(filter, pageable);
         return new ResponseEntity<List<ResponseBamboo>>(responseBamboos, HttpStatus.OK);
     }
 
 
     @GetMapping("/myactive")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<List<ResponseBamboo>> getMyActiveList(@RequestParam("filter") String filter, @LoginUser String uid){
+    public ResponseEntity<List<ResponseBamboo>> getMyActiveList(@RequestParam("filter") String filter, @LoginUser String uid, Pageable pageable){
         LOGGER.info("myactivelist api에 들어옴  {}", filter);
+        /*
         List<ResponseBamboo> rbl = new ArrayList<ResponseBamboo>();
         if (true){
             rbl.add(new ResponseBamboo(1, "안녕하세요.", LocalDateTime.now(), 10, 10));
@@ -65,12 +68,16 @@ public class BambooController {
         } else {
             return null;
         }
+         */
+        List<ResponseBamboo> responseBamboos = bambooService.showMyList(filter, uid, pageable);
+        return new ResponseEntity<List<ResponseBamboo>>(responseBamboos, HttpStatus.OK);
     }
 
     @GetMapping("/detail/{bamboo-id}")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<ResponseBambooDetailDto> getBambooDetail(@PathVariable("bamboo-id") int bambooId){
+    public ResponseEntity<ResponseBambooDetailDto> getBambooDetail(@PathVariable("bamboo-id") int bambooId, @LoginUser String uid){
         LOGGER.info("getBamboodetail api에 들어옴  {}", bambooId);
+        /*
         if (true){
             List<ResponseLeafDto> rl = new ArrayList<>();
             rl.add(new ResponseLeafDto(1, "나는 댓글 1번 입니다.", 10, 10, LocalDateTime.now()));
@@ -80,6 +87,9 @@ public class BambooController {
         } else {
             return null;
         }
+        */
+        ResponseBambooDetailDto responseBambooDetailDto = bambooService.showBambooDetail(bambooId, uid);
+        return new ResponseEntity<ResponseBambooDetailDto>(responseBambooDetailDto, HttpStatus.OK);
 
     }
     @PostMapping
