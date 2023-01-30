@@ -16,7 +16,8 @@ import lombok.ToString;
 public class ResponseBamboo {
     private int bambooId;
     private String content;
-    private LocalDateTime createdDate;
+    private long remainTime;
+//    private LocalDateTime createdDate;
     private int likeCount;
     private int leafCount;
 

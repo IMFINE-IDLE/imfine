@@ -12,10 +12,12 @@ import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.bamboo.BambooService;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,50 +62,28 @@ public class BambooServiceImpl implements BambooService {
         LocalDateTime end = LocalDateTime.now();
 
         List<ResponseBamboo> responseBambooList = new ArrayList<>();
+        Page<Bamboo> all = null;
 
         if (filter.equals("popular")) {
-
-            Page<Bamboo> all = bambooRepository.findByCreatedAtBetweenOrderByLikeCountDesc(start, end, pageable);
-
-            for(Bamboo b : all) {
-                ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                        .bambooId(b.getId())
-                        .content(b.getContent())
-                        .createdDate(b.getCreatedAt())
-                        .likeCount(b.getLikeCount())
-                        .leafCount(b.getLeafCount())
-                        .build();
-                responseBambooList.add(responseBamboo);
-            }
+            all = bambooRepository.findByCreatedAtBetweenOrderByLikeCountDesc(start, end, pageable);
         } else if (filter.equals("oldest")) {
-
-            Page<Bamboo> all = bambooRepository.findByCreatedAtBetweenOrderByCreatedAtAsc(start, end, pageable);
-
-            for(Bamboo b : all) {
-                ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                        .bambooId(b.getId())
-                        .content(b.getContent())
-                        .createdDate(b.getCreatedAt())
-                        .likeCount(b.getLikeCount())
-                        .leafCount(b.getLeafCount())
-                        .build();
-                responseBambooList.add(responseBamboo);
-            }
+            all = bambooRepository.findByCreatedAtBetweenOrderByCreatedAtAsc(start, end, pageable);
         } else {
-
-            Page<Bamboo> all = bambooRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(start, end, pageable);
-
-            for(Bamboo b : all) {
-                ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                        .bambooId(b.getId())
-                        .content(b.getContent())
-                        .createdDate(b.getCreatedAt())
-                        .likeCount(b.getLikeCount())
-                        .leafCount(b.getLeafCount())
-                        .build();
-                responseBambooList.add(responseBamboo);
-            }
+            all = bambooRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(start, end, pageable);
         }
+
+        for(Bamboo b : all) {
+            Duration duration = Duration.between(b.getCreatedAt(), end);
+            ResponseBamboo responseBamboo = ResponseBamboo.builder()
+                    .bambooId(b.getId())
+                    .content(b.getContent())
+                    .remainTime(24 - duration.toHours())
+                    .likeCount(b.getLikeCount())
+                    .leafCount(b.getLeafCount())
+                    .build();
+            responseBambooList.add(responseBamboo);
+        }
+
         return responseBambooList;
     }
 
@@ -113,34 +93,55 @@ public class BambooServiceImpl implements BambooService {
         User user = userRepository.getByUid(uid);
         List<ResponseBamboo> responseBambooList = new ArrayList<>();
 
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now();
+
         if(filter.equals("write")) {
-            Page<Bamboo> all = bambooRepository.findByWriter_Id(user.getId(), pageable);
+            Page<Bamboo> all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
+
             for(Bamboo b : all) {
+                Duration duration = Duration.between(b.getCreatedAt(), end);
+
                 ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                    .bambooId(b.getId())
-                    .content(b.getContent())
-                    .createdDate(b.getCreatedAt())
-                    .likeCount(b.getLikeCount())
-                    .leafCount(b.getLeafCount())
-                    .build();
+                        .bambooId(b.getId())
+                        .content(b.getContent())
+                        .remainTime(24 - duration.toHours())
+                        .likeCount(b.getLikeCount())
+                        .leafCount(b.getLeafCount())
+                        .build();
                 responseBambooList.add(responseBamboo);
             }
         } else if(filter.equals("comment")) {
             Set<Integer> bambooSet = new HashSet<>();
-            Page<Leaf> all = leafRepository.getByWriter_Id(user.getId(),pageable);
+            Page<Leaf> all = leafRepository.getByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
 
             for(Leaf b : all) {
                 if (bambooSet.contains(b.getBamboo().getId())) {
                     continue;
                 }
                 bambooSet.add(b.getBamboo().getId());
+                Duration duration = Duration.between(b.getCreatedAt(), end);
                 ResponseBamboo responseBamboo = ResponseBamboo.builder()
                     .bambooId(b.getBamboo().getId())
                     .content(b.getBamboo().getContent())
-                    .createdDate(b.getBamboo().getCreatedAt())
+                    .remainTime(24 - duration.toHours())
                     .likeCount(b.getBamboo().getLikeCount())
                     .leafCount(b.getBamboo().getLeafCount())
                     .build();
+                responseBambooList.add(responseBamboo);
+            }
+        } else if(filter.equals("like")) {
+            Page<Bamboo> all = bambooRepository.findByHeart(user.getId(), start, end, pageable);
+            for(Bamboo b : all) {
+                Duration duration = Duration.between(b.getCreatedAt(), end);
+
+                ResponseBamboo responseBamboo = ResponseBamboo.builder()
+                        .bambooId(b.getId())
+                        .content(b.getContent())
+                        .remainTime(24 - duration.toHours())
+                        .likeCount(b.getLikeCount())
+                        .leafCount(b.getLeafCount())
+                        .build();
                 responseBambooList.add(responseBamboo);
             }
         }
