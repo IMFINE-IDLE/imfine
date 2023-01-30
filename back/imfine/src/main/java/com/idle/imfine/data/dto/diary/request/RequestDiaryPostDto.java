@@ -1,5 +1,6 @@
 package com.idle.imfine.data.dto.diary.request;
 
+import com.idle.imfine.data.entity.Diary;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -13,15 +13,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class RequestDiaryModifyDto {
-    private int diaryId;
-    private int userId;
+    private long diaryId;
     private String title;
     private String description;
     private String image;
     private boolean open;
     private boolean active;
-
-    public void setUserId(int userId){
-        this.userId = userId;
-    }
 }

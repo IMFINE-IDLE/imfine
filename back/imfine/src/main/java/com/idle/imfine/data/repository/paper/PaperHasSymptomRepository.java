@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom, Long> {
     List<PaperHasSymptom> findByPaper(Paper paper);
+
+    void deleteBySymptomId(int symptomId);
 }
