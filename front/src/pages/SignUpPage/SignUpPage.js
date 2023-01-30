@@ -45,6 +45,11 @@ function SignUpPage() {
             setEmailErrorMsg('이메일을 입력해주세요');
           }
         }
+        if (stage >= 5) {
+          if (currInput.password.length < 1) {
+            setPwErrorMsg('비밀번호를 입력해주세요');
+          }
+        }
       };
 
       // 1. 아이디 유효성 검사
@@ -95,6 +100,21 @@ function SignUpPage() {
         }
 
         // 이메일 중복체크 로직
+      }
+
+      // 4. 비밀번호 유효성 검사
+      if (currInput.password) {
+        setPwErrorMsg(null);
+        checkStage(4);
+      }
+
+      // 5. 비밀번호 확인 유효성 검사
+      if (currInput.confirmPassword) {
+        setConfirmPwErrorMsg(null);
+        checkStage(5);
+        if (currInput.confirmPassword !== currInput.password) {
+          setConfirmPwErrorMsg('비밀번호가 일치하지 않습니다.');
+        }
       }
 
       return currInput;
@@ -186,7 +206,10 @@ function SignUpPage() {
             autoComplete="off"
             required
             onChange={(e) => inputEvent({ password: e.target.value })}
+            style={pwErrorMsg ? { border: '1px solid var(--red-color)' } : null}
           />
+          {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
+
           <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
           <InputSignUp
             value={confirmPassword}
@@ -195,7 +218,13 @@ function SignUpPage() {
             autoComplete="off"
             required
             onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
+            style={
+              confirmPwErrorMsg
+                ? { border: '1px solid var(--red-color)' }
+                : null
+            }
           />
+          {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
           {isValid ? (
             <BtnSignup
               margin={'0'}
