@@ -8,6 +8,9 @@ const BoxOuter = styled.div`
   padding: ${(props) => props.padding || '0px'};
 `;
 
+const BoxBambooOuter = styled.div`
+  padding: ${(props) => props.padding || '0px'};
+`;
 const BtnOuter = styled.div`
   padding: 0px;
   display: flex;
@@ -23,8 +26,8 @@ const TitleHeader = styled.h1`
   color: var(--default-font-color);
   font-weight: 700;
   font-size: 1.5em;
-  padding-top: 2em;
-  padding-left: 2em;
+  padding-top: 2.8em;
+  padding-left: 1em;
 `;
 
 const SubTitleHeader = styled.h1`
@@ -32,7 +35,7 @@ const SubTitleHeader = styled.h1`
   font-weight: 700;
   font-size: 1em;
   padding-top: 2em;
-  padding-left: 3em;
+  padding-left: 1.5em;
   line-height: 1.5em;
 `;
 
@@ -43,21 +46,39 @@ const BtnFilter = styled.button`
 
 const BoxContainer = styled(BoxLT50)`
   box-shadow: -5px -1px 4px rgba(0, 0, 0, 0.1);
-  background-color: var(--gray-color);
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
 `;
 
 const BoxBamboo = styled(BoxShad)`
+  height: 9em;
+  padding: 1em;
   border-radius: 25px;
+  margin: 1em 0;
+  display: flex;
+  flex-direction: column;
 `;
 
-const TextContent = styled.text`
+const TextContent = styled.label`
+  position: relative;
   font-weight: 400;
   font-size: 1em;
+  margin: ${(props) => props.margin || '1em'};
 `;
 
-const LabelStatus = styled.text`
+const LabelOuter = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+`;
+const LabelStatus = styled.label`
   font-weight: 400;
   font-size: 1em;
+
+  padding: ${(props) => props.margin || '1em'};
 `;
 
 const BoxBtnFloat = styled.div`
@@ -74,12 +95,16 @@ const BoxBtnFloat = styled.div`
 
 const BoxBtnFilter = styled.div`
   width: 45px;
+  height: 30px;
   background-color: var(--gray-color);
   border-radius: 5px;
   padding: 0.3em;
+  margin-top: 1em;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  right: 30px;
+  position: absolute;
 `;
 
 const BtnLink = styled(Link)`
@@ -100,4 +125,6 @@ export {
   BtnLink,
   BoxOuter,
   BtnOuter,
+  BoxBambooOuter,
+  LabelOuter,
 };
