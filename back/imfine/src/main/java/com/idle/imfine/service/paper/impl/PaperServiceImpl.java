@@ -1,7 +1,6 @@
 package com.idle.imfine.service.paper.impl;
 
 
-import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.User;
@@ -23,17 +22,17 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public CommonResponseMessage save(RequestPaperPostDto requestPaperPostDto, String uid) {
+    public void save(RequestPaperPostDto requestPaperPostDto, String uid) {
         User user = userRepository.getByUid(uid);
         Diary diary = diaryRepository.getById(requestPaperPostDto.getDiaryId());
 
-        if (diary.getWriter().getId() != user.getId()){
-            return CommonResponseMessage.builder()
-                    .success(false)
-                    .status(-1)
-                    .message("잘못된 유저 접근입니다.")
-                    .build();
-        }
+//        if (diary.getWriter().getId() != user.getId()){
+//            return CommonResponseMessage.builder()
+//                    .success(false)
+//                    .status(-1)
+//                    .message("잘못된 유저 접근입니다.")
+//                    .build();
+//        }
 
         paperRepository.save(Paper.builder()
                 .diary(diary)
@@ -41,10 +40,5 @@ public class PaperServiceImpl implements PaperService {
                 .open(requestPaperPostDto.isOpen())
                 .build());
 
-        return CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("성공적으로 등록되었습니다.")
-                .build();
     }
 }

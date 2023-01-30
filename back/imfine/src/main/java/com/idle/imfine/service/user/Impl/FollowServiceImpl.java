@@ -1,6 +1,5 @@
 package com.idle.imfine.service.user.Impl;
 
-import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.FollowRepository;
@@ -30,16 +29,16 @@ public class FollowServiceImpl implements FollowService {
         User other = userRepository.getByUid(otherUid);
         LOGGER.info("유저 정보 조회 완료");
 
-        CommonResponseMessage responseDto;
+//        CommonResponseMessage responseDto;
 
 
         if (followRepository.findByFollowingUserAndFollowedUser(user, other) != null) {
             LOGGER.info("이미 팔로우하고 있습니다.");
-            responseDto = CommonResponseMessage.builder()
-                    .success(false)
-                    .status(-1)
-                    .message(String.format("%s님은 %s님을 이미 팔로우하고 있습니다.", uid, otherUid))
-                    .build();
+//            responseDto = CommonResponseMessage.builder()
+//                    .success(false)
+//                    .status(-1)
+//                    .message(String.format("%s님은 %s님을 이미 팔로우하고 있습니다.", uid, otherUid))
+//                    .build();
 
         }
 
@@ -60,11 +59,11 @@ public class FollowServiceImpl implements FollowService {
             userRepository.save(other);
             followRepository.save(follow);
 
-            responseDto = CommonResponseMessage.builder()
-                    .success(true)
-                    .status(200)
-                    .message(String.format("%s님이 %s님을 팔로우 성공했습니다.", uid, otherUid))
-                    .build();
+//            responseDto = CommonResponseMessage.builder()
+//                    .success(true)
+//                    .status(200)
+//                    .message(String.format("%s님이 %s님을 팔로우 성공했습니다.", uid, otherUid))
+//                    .build();
 
         } else {
             LOGGER.info("상대방이 비공개이므로 팔로우 신청을 보냈습니다.");
@@ -80,15 +79,15 @@ public class FollowServiceImpl implements FollowService {
         User other = userRepository.getByUid(otherUid);
         LOGGER.info("유저 정보 조회 완료");
 
-        CommonResponseMessage responseDto;
+//        CommonResponseMessage responseDto;
 
         followRepository.deleteAllByFollowingUserAndFollowedUser(user, other);
 
-        responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message(String.format("%s님이 %s님을 언팔로우 성공했습니다.", uid, otherUid))
-                .build();
+//        responseDto = CommonResponseMessage.builder()
+//                .success(true)
+//                .status(200)
+//                .message(String.format("%s님이 %s님을 언팔로우 성공했습니다.", uid, otherUid))
+//                .build();
 
     }
 

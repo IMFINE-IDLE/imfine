@@ -1,6 +1,5 @@
 package com.idle.imfine.service.user.Impl;
 
-import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.config.security.JwtTokenProvider;
 import com.idle.imfine.data.dto.user.request.SignInRequestDto;
 import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
@@ -61,22 +60,22 @@ public class SignServiceImpl implements SignService {
                 .build();
 
         User savedUser = userRepository.save(user);
-        CommonResponseMessage responseDto;
+//        CommonResponseMessage responseDto;
 
         LOGGER.info("[SignService.signUp] userEntity 값이 들어왔는지 확인 후 결과값 주입");
         if (!savedUser.getName().isEmpty()) {
-            responseDto = CommonResponseMessage.builder()
-                    .success(true)
-                    .status(200)
-                    .message("회원가입에 성공했습니다.")
-                    .build();
+//            responseDto = CommonResponseMessage.builder()
+//                    .success(true)
+//                    .status(200)
+//                    .message("회원가입에 성공했습니다.")
+//                    .build();
             LOGGER.info("[SignService.signUp] 정상 처리 완료");
         } else {
-            responseDto = CommonResponseMessage.builder()
-                    .success(false)
-                    .status(-1)
-                    .message("회원가입에 실패했습니다.")
-                    .build();
+//            responseDto = CommonResponseMessage.builder()
+//                    .success(false)
+//                    .status(-1)
+//                    .message("회원가입에 실패했습니다.")
+//                    .build();
             LOGGER.info("[SignService.signUp] 실패 처리 완료");
         }
     }
@@ -117,11 +116,11 @@ public class SignServiceImpl implements SignService {
         userRepository.save(user);
 
         LOGGER.info("[SignService.signOut] ResponseMessage 생성");
-        CommonResponseMessage signOutResultDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("로그아웃에 성공했습니다.")
-                .build();
+//        CommonResponseMessage signOutResultDto = CommonResponseMessage.builder()
+//                .success(true)
+//                .status(200)
+//                .message("로그아웃에 성공했습니다.")
+//                .build();
 
     }
 

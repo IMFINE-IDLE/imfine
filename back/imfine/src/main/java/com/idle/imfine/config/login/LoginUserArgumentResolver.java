@@ -1,6 +1,6 @@
 package com.idle.imfine.config.login;
 
-import com.idle.imfine.common.LoginUser;
+import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.config.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;

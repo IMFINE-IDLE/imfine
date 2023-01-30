@@ -1,6 +1,5 @@
 package com.idle.imfine.service.user.Impl;
 
-import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.data.dto.user.request.ChangePasswordRequestDto;
 import com.idle.imfine.data.dto.user.request.ModifyUserNameRequestDto;
 import com.idle.imfine.data.dto.user.request.ModifyUserOepnRequestDto;
@@ -16,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -99,11 +96,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("비밀번호 변경에 성공했습니다.")
-                .build();
+//        CommonResponseMessage responseDto = CommonResponseMessage.builder()
+//                .success(true)
+//                .status(200)
+//                .message("비밀번호 변경에 성공했습니다.")
+//                .build();
 
     }
 
@@ -123,21 +120,21 @@ public class UserServiceImpl implements UserService {
     public void checkIdAndEmail(String uid, String email) {
         User user = userRepository.getByUid(uid);
 
-        CommonResponseMessage responseDto;
+//        CommonResponseMessage responseDto;
 
-        if (user.getEmail().equals(email)) {
-            responseDto = CommonResponseMessage.builder()
-                    .success(true)
-                    .status(200)
-                    .message("아이디와 이메일이 일치합니다.")
-                    .build();
-        } else {
-            responseDto = CommonResponseMessage.builder()
-                    .success(false)
-                    .status(-1)
-                    .message("아이디와 이메일이 일치하지 않습니다.")
-                    .build();
-        }
+//        if (user.getEmail().equals(email)) {
+//            responseDto = CommonResponseMessage.builder()
+//                    .success(true)
+//                    .status(200)
+//                    .message("아이디와 이메일이 일치합니다.")
+//                    .build();
+//        } else {
+//            responseDto = CommonResponseMessage.builder()
+//                    .success(false)
+//                    .status(-1)
+//                    .message("아이디와 이메일이 일치하지 않습니다.")
+//                    .build();
+//        }
 
     }
 
@@ -149,11 +146,11 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-                .success(true)
-                .status(200)
-                .message("비밀번호 변경에 성공했습니다.")
-                .build();
+//        CommonResponseMessage responseDto = CommonResponseMessage.builder()
+//                .success(true)
+//                .status(200)
+//                .message("비밀번호 변경에 성공했습니다.")
+//                .build();
     }
 
 

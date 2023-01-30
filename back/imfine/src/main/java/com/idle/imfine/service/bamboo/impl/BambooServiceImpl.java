@@ -7,24 +7,24 @@ import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.bamboo.Bamboo;
 import com.idle.imfine.data.entity.leaf.Leaf;
-import com.idle.imfine.data.repository.UserRepository;
 import com.idle.imfine.data.repository.bamboo.BambooRepository;
 import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.like.HeartRepository;
+import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.bamboo.BambooService;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import org.springframework.data.domain.Pageable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Transactional

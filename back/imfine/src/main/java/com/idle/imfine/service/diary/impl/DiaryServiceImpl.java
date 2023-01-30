@@ -20,23 +20,15 @@ import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import com.idle.imfine.data.entity.symptom.Symptom;
-import com.idle.imfine.data.repository.SubscribeRepository;
-import com.idle.imfine.data.repository.UserRepository;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
+import com.idle.imfine.data.repository.diary.SubscribeRepository;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.symptom.DiaryHasSymptomRepository;
 import com.idle.imfine.data.repository.symptom.SymptomRepository;
+import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.diary.DiaryService;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +36,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service

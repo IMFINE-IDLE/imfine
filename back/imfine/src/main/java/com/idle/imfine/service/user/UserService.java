@@ -1,8 +1,6 @@
 package com.idle.imfine.service.user;
 
-import com.idle.imfine.common.CommonResponseMessage;
 import com.idle.imfine.data.dto.user.request.ChangePasswordRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserMedicalListRequestDto;
 import com.idle.imfine.data.dto.user.request.ModifyUserNameRequestDto;
 import com.idle.imfine.data.dto.user.request.ModifyUserOepnRequestDto;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
