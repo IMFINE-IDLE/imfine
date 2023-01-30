@@ -4,10 +4,11 @@ import { Btn } from '../../components/common/Btn/Btn';
 import { BoxLT50 } from '../../components/common/BoxLT50/BoxLT50';
 import { BoxShad } from '../../components/common/BoxShad/BoxShad';
 
+const BoxOuter = styled.div`
+  padding: 0;
+`;
 const BoxHeader = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 40%;
+  height: 15em;
   border-radius: 0px 0px 50px 50px;
   background-color: var(--light-color);
   outline: none;
@@ -17,28 +18,29 @@ const TitleHeader = styled.h1`
   color: var(--default-font-color);
   font-weight: 700;
   font-size: 1.5em;
-  margin-top: 3.5em;
-  margin-left: 1.5em;
+  padding-top: 2em;
+  padding-left: 2em;
 `;
 
 const SubTitleHeader = styled.h1`
   color: var(--icon-color);
   font-weight: 700;
   font-size: 1em;
-  margin-top: 3.5em;
-  margin-left: 2.3em;
-  line-height: 20px;
+  padding-top: 2em;
+  padding-left: 3em;
+  line-height: 1.5em;
 `;
 
 // 대나무 게시글 정렬 버튼
-const BtnFilter = styled(Btn)`
-  height: 3em;
-  width: 45%;
+const BtnFilter = styled.button`
+  ${Btn}
 `;
 
 const BoxContainer = styled(BoxLT50)`
+  box-shadow: -5px -1px 4px rgba(0, 0, 0, 0.1);
   background-color: var(--gray-color);
-  margin: 0;
+  margin: -1.5em 2em 2em 2em;
+  height: 60%;
 `;
 
 const BoxBamboo = styled(BoxShad)`
@@ -93,4 +95,5 @@ export {
   BoxBtnFloat,
   BoxBtnFilter,
   BtnLink,
+  BoxOuter,
 };
