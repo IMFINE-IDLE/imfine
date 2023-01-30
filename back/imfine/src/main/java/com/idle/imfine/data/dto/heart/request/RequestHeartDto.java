@@ -1,4 +1,4 @@
-package com.idle.imfine.data.dto.like.request;
+package com.idle.imfine.data.dto.heart.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
