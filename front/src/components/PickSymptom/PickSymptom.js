@@ -9,9 +9,10 @@ import {
   ToggleWrapper,
   Toggle,
   ToggleLabel,
+  TitleSmall,
 } from './style';
 
-function PickSymptom({ inputEvent }) {
+function PickSymptom({ setMedicalIdList }) {
   const [isOpen, setIsOpen] = useState(true);
   const symptoms = [
     {
@@ -51,15 +52,14 @@ function PickSymptom({ inputEvent }) {
       <Title>계정 기본 설정</Title>
       <BoxTopArea>
         <BoxToggle>
-          <h3>계정 공개 여부</h3>
+          <TitleSmall style={{ fontWeight: '600' }}>계정 공개 여부</TitleSmall>
           <div style={{ display: 'inline-block' }}>
             {/* <span>{isOpen ? '공개' : '비공개'}</span> */}
             <ToggleWrapper isOpen={isOpen}>
               <Toggle
                 id="toggle"
                 type="checkbox"
-                defaultChecked
-                onClick={() => {
+                onChange={() => {
                   setIsOpen((prev) => !prev);
                   // console.log(isOpen);
                 }}
@@ -69,7 +69,7 @@ function PickSymptom({ inputEvent }) {
             </ToggleWrapper>
           </div>
         </BoxToggle>
-        <h3>관심 질병/수술 &nbsp; |</h3>
+        <TitleSmall>관심 질병/수술 &nbsp; |</TitleSmall>
       </BoxTopArea>
       <div>
         <BtnLeftTap>질병/수술 선택</BtnLeftTap>
@@ -77,8 +77,10 @@ function PickSymptom({ inputEvent }) {
           {symptoms.map((symptom) => (
             <IconSymptom
               key={symptom.id}
+              id={symptom.id}
               name={symptom.name}
               imgSrc={symptom.imgSrc}
+              setMedicalIdList={setMedicalIdList}
             />
           ))}
         </BoxPickMenu>
