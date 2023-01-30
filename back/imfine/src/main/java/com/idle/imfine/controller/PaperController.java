@@ -1,5 +1,6 @@
 package com.idle.imfine.controller;
 
+import com.idle.imfine.common.LoginUser;
 import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
 import com.idle.imfine.data.dto.like.request.RequestHeartDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
@@ -7,10 +8,12 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
+import com.idle.imfine.service.paper.PaperService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,14 +27,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/paper")
 public class PaperController {
 
+    private final PaperService paperService;
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
     @PostMapping
-    public ResponseEntity<String> postPaper(@RequestBody RequestPaperPostDto requestPaperPostDto){
+    public ResponseEntity<String> postPaper(@RequestBody RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
         LOGGER.info("일기 생성 api 도착 {} {}", requestPaperPostDto, requestPaperPostDto.getSymptoms().get(0));
+        paperService.save(requestPaperPostDto, uid);
         return new ResponseEntity<>("일기 생성 완료", HttpStatus.OK);
     }
 

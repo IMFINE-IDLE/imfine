@@ -7,6 +7,7 @@ import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Data
@@ -64,11 +66,15 @@ public class Diary extends BaseCreatedEntity{
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean open;
 
+    @Column(nullable = false)
+    @CreatedDate
+    private LocalDateTime postedAt;
+
     private LocalDateTime endedAt;
 
     @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
     private List<Paper> papers;
 
-    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<DiaryHasSymptom> diaryHasSymptoms;
 }
