@@ -17,7 +17,7 @@ function BambooPage() {
     <div>
       <BoxOuter>
         <BoxHeader>
-          <TitleHeader> 텍스트입니다</TitleHeader>
+          <TitleHeader> 대나무숲 메인</TitleHeader>
           <SubTitleHeader>
             서브텍스트입니다.
             <br />

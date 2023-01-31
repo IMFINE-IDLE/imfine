@@ -6,7 +6,7 @@ function BambooCreate() {
     <div>
       <BoxOuter>
         <BoxHeader>
-          <TitleHeader> 텍스트입니다</TitleHeader>
+          <TitleHeader> 대나무심기</TitleHeader>
           <SubTitleHeader>
             서브텍스트입니다.
             <br />

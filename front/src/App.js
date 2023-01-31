@@ -19,6 +19,7 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 // `;
 import ProfileContent from './components/ProfileContent/ProfileContent';
 import ProfileFollows from './components/ProfileFollows/ProfileFollows';
+import BambooCreate from './pages/BambooCreate/BambooCreate';
 
 function App() {
   return (
@@ -34,14 +35,13 @@ function App() {
         <Route path="/paper/create" element={<PaperCreate />} />
       </Route>
       <Route path="/bamboo" element={<BambooPage />}></Route>
-
+      <Route path="/bamboo/create" element={<BambooCreate />}></Route>
       <Route path="/profile" element={<ProfilePage />}>
         {/* <Route index path=":user" element={<ProfileContent />} />
         <Route path=":user/follows" element={<ProfileFollows />} /> */}
         <Route index element={<ProfileContent />} />
         <Route path="follows" element={<ProfileFollows />} />
       </Route>
-
     </Routes>
     // </Wrapper>
   );
