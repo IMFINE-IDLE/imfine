@@ -1,17 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 
+import useTabs from '../../hooks/useTabs';
 import StatusCalendar from '../StatusCalendar/StatusCalendar';
 import { ProfileContentContainer, ProfileContentTabBtn } from './style';
 
 const ProfileContent = () => {
-  const useTabs = (initialTabIdx, allTabList) => {
-    const [contentIdx, setContentIdx] = useState(initialTabIdx);
-    return {
-      currentTab: allTabList[contentIdx],
-      setCurrentTab: setContentIdx,
-    };
-  };
-
   const tabArr = [
     { tabName: '달력', tabContent: <StatusCalendar /> },
     { tabName: '일기장', tabContent: <span>일기장</span> },
@@ -19,15 +12,16 @@ const ProfileContent = () => {
   ];
   const { currentTab, setCurrentTab } = useTabs(0, tabArr);
 
-  console.log('cur', currentTab);
-
   return (
     <div>
       <ProfileContentContainer>
         <div style={{ display: 'flex' }}>
-          {tabArr.map((section, idx) => (
-            <ProfileContentTabBtn onClick={() => setCurrentTab(idx)}>
-              {section.tabName}
+          {tabArr.map((tab, idx) => (
+            <ProfileContentTabBtn
+              onClick={() => setCurrentTab(idx)}
+              key={tab.tabName}
+            >
+              {tab.tabName}
             </ProfileContentTabBtn>
           ))}
         </div>
