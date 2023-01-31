@@ -1,6 +1,7 @@
 package com.idle.imfine.data.dto.symptom.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseSymptomRecordDto {
-    private int symptomId;
-    private String symptomName;
+    protected int symptomId;
+    protected int score;
 }
