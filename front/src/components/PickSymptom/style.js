@@ -76,13 +76,19 @@ const Toggle = styled.input`
   }
 `;
 
-const BoxSymptom = styled.span`
+const BoxSymptom = styled.div`
+  line-heigt: 25px;
+`;
+
+const BtnSymptom = styled.span`
   ${Btn}
   display: inline-block;
   font-size: 12px;
   color: var(--icon-color);
   padding: 0.5em;
   cursor: pointer;
+  width: auto;
+  margin: 0 0.3em;
 `;
 
 const BtnLeftTap = styled(BoxRT25)`
@@ -108,6 +114,7 @@ export {
   ToggleLabel,
   Toggle,
   BoxSymptom,
+  BtnSymptom,
   BoxPickMenu,
   BtnLeftTap,
   TitleSmall,

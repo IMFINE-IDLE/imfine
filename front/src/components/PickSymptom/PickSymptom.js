@@ -12,6 +12,7 @@ import {
   ToggleLabel,
   TitleSmall,
   BoxSymptom,
+  BtnSymptom,
 } from './style';
 
 function PickSymptom() {
@@ -53,17 +54,17 @@ function PickSymptom() {
             </ToggleWrapper>
           </div>
         </BoxToggle>
-        <div>
-          <TitleSmall>관심 질병/수술 &nbsp; |</TitleSmall>
+        <BoxSymptom>
+          <TitleSmall>관심 질병/수술 &nbsp; | &nbsp;</TitleSmall>
           {medicalIdList.map((medical) => (
-            <BoxSymptom
+            <BtnSymptom
               onClick={() => ToggleSymptom(medical.id, medical.name)}
               key={medical.id}
             >
               {medical.name}
-            </BoxSymptom>
+            </BtnSymptom>
           ))}
-        </div>
+        </BoxSymptom>
       </BoxTopArea>
       <div>
         <BtnLeftTap>질병/수술 선택</BtnLeftTap>
