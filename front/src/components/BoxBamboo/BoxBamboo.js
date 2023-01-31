@@ -6,13 +6,25 @@ import {
   TextContent,
   LabelOuter,
   LabelStatus,
+  BoxTimer,
+  BasicBambooImg,
+  LTBambooImg,
+  LBBambooImg,
 } from './style';
 
 function BoxBamboo({ context, heartCount, replyCount }) {
   return (
     <BoxBambooOuter>
       <BoxShadBamboo>
-        <TextContent margin={'1em 1em 0 1em'}>{context}</TextContent>
+        <BoxTimer>
+          <BasicBambooImg />
+          <LTBambooImg />
+          <LBBambooImg />
+          <BasicBambooImg />
+          <LTBambooImg />
+          <LBBambooImg />
+        </BoxTimer>
+        <TextContent>{context}</TextContent>
         <LabelOuter>
           <BsHeartFill />
           <LabelStatus>{heartCount}</LabelStatus>

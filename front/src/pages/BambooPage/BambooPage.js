@@ -39,6 +39,9 @@ function BambooPage() {
           <BoxBamboo context={'aaa'} heartCount={'1'} replyCount={'2'}>
             aaaaaaa
           </BoxBamboo>
+          <BoxBamboo context={'aaa'} heartCount={'1'} replyCount={'2'}>
+            aaaaaaa
+          </BoxBamboo>
         </BoxContainer>
       </BoxOuter>
     </div>

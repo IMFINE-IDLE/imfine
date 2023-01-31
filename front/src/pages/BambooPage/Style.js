@@ -46,6 +46,7 @@ const BoxContainer = styled(BoxLT50)`
   display: flex;
   flex-direction: column;
   min-height: 500px;
+  padding-top: 2em;
 `;
 
 const BoxBtnFloat = styled.div`

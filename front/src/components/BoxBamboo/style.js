@@ -10,7 +10,7 @@ const BoxShadBamboo = styled(BoxShad)`
   height: 9em;
   padding: 1em;
   border-radius: 25px;
-  margin: 1em 0;
+  margin: 2em 0;
   display: flex;
   flex-direction: column;
 `;
@@ -19,7 +19,7 @@ const TextContent = styled.label`
   position: relative;
   font-weight: 400;
   font-size: 1em;
-  margin: ${(props) => props.margin || '1em'};
+  margin: ${(props) => props.margin || '2em 1em 1em 1em'};
 `;
 
 const LabelOuter = styled.div`
@@ -35,4 +35,47 @@ const LabelStatus = styled.label`
   padding: ${(props) => props.margin || '1em'};
 `;
 
-export { BoxBambooOuter, BoxShadBamboo, TextContent, LabelOuter, LabelStatus };
+const BoxTimer = styled.div`
+  padding: ${(props) => props.padding || '0px'};
+  display: flex;
+  height: 2em;
+  flex-direction: row;
+  position: relative;
+  margin-top: -2.9em;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+`;
+
+const BasicBambooImg = styled.img.attrs({
+  src: '/assets/images/BasicBamboo.png',
+})`
+  height: 1.5em;
+  margin-top: 1.5em;
+`;
+
+const LBBambooImg = styled.img.attrs({
+  src: '/assets/images/LBBamboo.png',
+})`
+  height: 3em;
+  margin-top: 1.5em;
+  margin-right: 0.4em;
+`;
+
+const LTBambooImg = styled.img.attrs({
+  src: '/assets/images/LTBamboo.png',
+})`
+  height: 3em;
+  margin-right: 0.2em;
+`;
+
+export {
+  BoxBambooOuter,
+  BoxShadBamboo,
+  TextContent,
+  LabelOuter,
+  LabelStatus,
+  BoxTimer,
+  BasicBambooImg,
+  LTBambooImg,
+  LBBambooImg,
+};
