@@ -2,15 +2,11 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Btn } from '../../components/common/Btn/Btn';
 import { BoxLT50 } from '../../components/common/BoxLT50/BoxLT50';
-import { BoxShad } from '../../components/common/BoxShad/BoxShad';
 
 const BoxOuter = styled.div`
   padding: ${(props) => props.padding || '0px'};
 `;
 
-const BoxBambooOuter = styled.div`
-  padding: ${(props) => props.padding || '0px'};
-`;
 const BtnOuter = styled.div`
   padding: 0px;
   display: flex;
@@ -52,35 +48,6 @@ const BoxContainer = styled(BoxLT50)`
   min-height: 500px;
 `;
 
-const BoxBamboo = styled(BoxShad)`
-  height: 9em;
-  padding: 1em;
-  border-radius: 25px;
-  margin: 1em 0;
-  display: flex;
-  flex-direction: column;
-`;
-
-const TextContent = styled.label`
-  position: relative;
-  font-weight: 400;
-  font-size: 1em;
-  margin: ${(props) => props.margin || '1em'};
-`;
-
-const LabelOuter = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-`;
-const LabelStatus = styled.label`
-  font-weight: 400;
-  font-size: 1em;
-
-  padding: ${(props) => props.margin || '1em'};
-`;
-
 const BoxBtnFloat = styled.div`
   position: fixed;
   width: 30%;
@@ -117,14 +84,9 @@ export {
   SubTitleHeader,
   BtnFilter,
   BoxContainer,
-  BoxBamboo,
-  TextContent,
-  LabelStatus,
   BoxBtnFloat,
   BoxBtnFilter,
   BtnLink,
   BoxOuter,
   BtnOuter,
-  BoxBambooOuter,
-  LabelOuter,
 };
