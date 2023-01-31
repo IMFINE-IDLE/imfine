@@ -226,7 +226,7 @@ function SignUpPage() {
 
   const signUp = async () => {
     const userData = {
-      id: id,
+      uid: id,
       name: name,
       email: email,
       password: password,

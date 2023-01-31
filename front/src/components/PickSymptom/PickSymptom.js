@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import IconSymptom from '../common/IconSymptom/IconSymptom';
 import {
   Title,
@@ -14,38 +15,9 @@ import {
 
 function PickSymptom({ setMedicalIdList }) {
   const [isOpen, setIsOpen] = useState(true);
-  const symptoms = [
-    {
-      id: 1,
-      name: '가정의학과 & 내과',
-      imgSrc: '/assets/icons/가정의학과.png',
-    },
-    {
-      id: 2,
-      name: '가정의학과',
-      imgSrc: '/assets/icons/가정의학과.png',
-    },
-    {
-      id: 3,
-      name: '내과',
-      imgSrc: '/assets/icons/가정의학과.png',
-    },
-    {
-      id: 4,
-      name: '가정의학과 & 내과',
-      imgSrc: '/assets/icons/가정의학과.png',
-    },
-    {
-      id: 5,
-      name: '가정의학과',
-      imgSrc: '/assets/icons/가정의학과.png',
-    },
-    {
-      id: 6,
-      name: '내과',
-      imgSrc: '/assets/icons/가정의학과.png',
-    },
-  ];
+  const symptoms = useSelector((state) => {
+    return state.medical.medicalList;
+  });
 
   return (
     <div>
