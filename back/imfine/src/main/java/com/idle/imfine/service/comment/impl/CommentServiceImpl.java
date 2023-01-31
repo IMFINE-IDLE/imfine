@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = commentRepository.getById(requestHeartDto.getContentId());
         //에러처리 똑바로
-        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, requestHeartDto.getContentId())) {
+        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, requestHeartDto.getContentId())) {
             throw new RuntimeException();
         }
 
@@ -70,7 +70,7 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = commentRepository.getById(commentId);
         //에러처리 똑바로
-        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, commentId)) {
+        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, commentId)) {
             throw new RuntimeException();
         }
 

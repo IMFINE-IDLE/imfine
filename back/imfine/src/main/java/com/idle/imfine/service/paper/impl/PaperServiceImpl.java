@@ -197,6 +197,7 @@ public class PaperServiceImpl implements PaperService {
                         comment -> ResponseCommentDto.builder()
                                 .commentId(comment.getId())
                                 .userId(comment.getWriter().getId())
+                                .userName(user.getName())
                                 .likeCount(comment.getLikeCount())
                                 .declarationCount(comment.getDeclarationCount())
                                 .content(comment.getContent())
