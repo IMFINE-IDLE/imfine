@@ -1,4 +1,4 @@
-import { NavBar, NavItem, Logo, Title, Search, Bell } from './Style';
+import { NavBar, NavItem, Logo, Title, Search, Bell } from './style';
 import { NavLink } from 'react-router-dom';
 import { BiChevronLeft, BiSearch, BiBell } from 'react-icons/bi';
 import React from 'react';
