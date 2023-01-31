@@ -13,7 +13,7 @@ function BoxBamboo({ context, heartCount, replyCount, remainHour }) {
   return (
     <BoxBambooOuter>
       <BoxShadBamboo>
-        <BambooTimer remainHour={'23'} />
+        <BambooTimer remainHour={remainHour} />
         <TextContent>{context}</TextContent>
         <LabelOuter>
           <BsHeartFill />

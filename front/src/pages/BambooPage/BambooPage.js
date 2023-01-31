@@ -36,10 +36,20 @@ function BambooPage() {
           </BtnFilter>
         </BtnOuter>
         <BoxContainer margin="-1em 0">
-          <BoxBamboo context={'aaa'} heartCount={'1'} replyCount={'2'}>
+          <BoxBamboo
+            context={'aaa'}
+            heartCount={'1'}
+            replyCount={'2'}
+            remainHour={'20'}
+          >
             aaaaaaa
           </BoxBamboo>
-          <BoxBamboo context={'aaa'} heartCount={'1'} replyCount={'2'}>
+          <BoxBamboo
+            context={'aaa'}
+            heartCount={'1'}
+            replyCount={'2'}
+            remainHour={'13'}
+          >
             aaaaaaa
           </BoxBamboo>
         </BoxContainer>

@@ -17,6 +17,9 @@ const BasicBambooImg = styled.img.attrs({
   height: 1.5em;
   margin-top: 1.5em;
   margin-right: 0.2em;
+  flex-basis: 4em;
+  flex-shrink: 1;
+  min-width: 0;
 `;
 
 const LBBambooImg = styled.img.attrs({
@@ -25,6 +28,9 @@ const LBBambooImg = styled.img.attrs({
   height: 3em;
   margin-top: 1.5em;
   margin-right: 0.4em;
+  flex-basis: 4em;
+  flex-shrink: 1;
+  min-width: 0;
 `;
 
 const LTBambooImg = styled.img.attrs({
@@ -32,6 +38,9 @@ const LTBambooImg = styled.img.attrs({
 })`
   height: 3em;
   margin-right: 0.2em;
+  flex-basis: 4em;
+  flex-shrink: 1;
+  min-width: 0;
 `;
 
 export { BoxTimer, BasicBambooImg, LTBambooImg, LBBambooImg };
