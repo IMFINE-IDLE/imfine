@@ -1,13 +1,8 @@
 import styled from 'styled-components';
 
 const NavBar = styled.div`
-  position: absolute;
   width: 100%;
   height: ${(props) => props.height || '71px'};
-  left: 0%;
-  right: 0%;
-  top: 0%;
-  bottom: 0%;
   display: grid;
   grid-template-columns: 2fr 4fr 1fr 1fr;
 `;
