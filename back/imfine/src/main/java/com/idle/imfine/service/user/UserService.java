@@ -11,7 +11,7 @@ public interface UserService {
 
     SignInResponseDto signUp(SignUpRequestDto requestDto);
 
-    SignInResponseDto signIn(SignInRequestDto requestDto) throws RuntimeException;
+    SignInResponseDto signIn(SignInRequestDto requestDto);
 
     void signOut(String uid);
 

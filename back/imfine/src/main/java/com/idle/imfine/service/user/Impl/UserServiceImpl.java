@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SignInResponseDto signIn(SignInRequestDto requestDto) throws RuntimeException {
+    public SignInResponseDto signIn(SignInRequestDto requestDto) {
         LOGGER.info("[SignService.signIn] 회원 정보 요청");
         User user = common.getUserByUid(requestDto.getId());
 
