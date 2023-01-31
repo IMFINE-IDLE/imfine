@@ -1,17 +1,16 @@
 import React from 'react';
-// import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
-import StatusCalendar from '../../components/StatusCalendar/StatusCalendar';
-// import NavBarBasic from '../../components/common/NavBarBasic/NavBarBasic';
+import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import TabBar from '../../components/TabBar/TabBar';
+import ProfileInfo from '../../components/ProfileInfo/ProfileInfo';
 
 function ProfilePage() {
   return (
     <div>
-      {/* <NavBarBasic /> */}
-      Profile
-      {/* <Outlet /> */}
-      <StatusCalendar />
+      <NavBarBasic />
+      <ProfileInfo />
+      <Outlet />
       <BtnFloat />
       <TabBar />
     </div>
