@@ -7,7 +7,7 @@ function BtnFloat() {
 
   return (
     <>
-      <BoxBtnFloat onClick={() => setIsClicked((prev) => !prev)}>
+      <BoxBtnFloat>
         {isClicked && (
           <>
             <BtnLink
@@ -33,7 +33,7 @@ function BtnFloat() {
             </BtnLink>
           </>
         )}
-        <CircleFloat>
+        <CircleFloat onClick={() => setIsClicked((prev) => !prev)}>
           <FiEdit3 />
         </CircleFloat>
       </BoxBtnFloat>
