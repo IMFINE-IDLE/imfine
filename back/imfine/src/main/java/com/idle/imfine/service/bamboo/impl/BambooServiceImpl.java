@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,7 @@ public class BambooServiceImpl implements BambooService {
                 .likeCount(0)
                 .declarationCount(0)
                 .leafCount(0)
+                .deleteAt(LocalDateTime.now().plusWeeks(1))
                 .build();
         Bamboo savedBamboo = bambooRepository.save(bamboo);
         System.out.println(savedBamboo.getId());
@@ -98,6 +100,7 @@ public class BambooServiceImpl implements BambooService {
 
         if(filter.equals("write")) {
             Page<Bamboo> all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
+//            Page<Bamboo> all = bambooRepository.findByWriterAndCreatedAtBetween(user.getId(), start, end, pageable);
 
             for(Bamboo b : all) {
                 Duration duration = Duration.between(b.getCreatedAt(), end);
@@ -112,7 +115,7 @@ public class BambooServiceImpl implements BambooService {
                 responseBambooList.add(responseBamboo);
             }
         } else if(filter.equals("comment")) {
-            Set<Integer> bambooSet = new HashSet<>();
+            Set<Long> bambooSet = new HashSet<>();
             Page<Leaf> all = leafRepository.getByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
 
             for(Leaf b : all) {
@@ -150,7 +153,7 @@ public class BambooServiceImpl implements BambooService {
     }
 
     @Override
-    public ResponseBambooDetailDto showBambooDetail(int bambooId, String uid) {
+    public ResponseBambooDetailDto showBambooDetail(long bambooId, String uid) {
 
         Bamboo bamboo = bambooRepository.getById(bambooId);
         List<ResponseLeafDto> responseLeafDtoList = new ArrayList<>();
@@ -181,7 +184,7 @@ public class BambooServiceImpl implements BambooService {
 
     @Override
     @Transactional
-    public void likeBamboo(int bambooId, String uid) {
+    public void likeBamboo(long bambooId, String uid) {
 
         User user = userRepository.getByUid(uid);
         Bamboo bamboo = bambooRepository.getById(bambooId);
@@ -199,7 +202,7 @@ public class BambooServiceImpl implements BambooService {
     }
 
     @Override
-    public void deleteLikeBamboo(int bambooId, String uid) {
+    public void deleteLikeBamboo(long bambooId, String uid) {
         User user = userRepository.getByUid(uid);
         Bamboo bamboo = bambooRepository.getById(bambooId);
 
@@ -208,5 +211,14 @@ public class BambooServiceImpl implements BambooService {
             bamboo.setLikeCount(bamboo.getLikeCount() - 1);
             bambooRepository.save(bamboo);
         }
+    }
+
+    @Override
+//    @Scheduled(cron="* /5 * * * *")
+    public void deleteBamboo() {
+        LOGGER.info("Delete 수행");
+        List<Bamboo> bamboos = bambooRepository.findByDeleteAtBefore(LocalDateTime.now());
+        leafRepository.deleteLeavesBy(bamboos);
+        bambooRepository.deleteByDeleteAtBefore(LocalDateTime.now());
     }
 }

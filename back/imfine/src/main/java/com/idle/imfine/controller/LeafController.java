@@ -35,7 +35,7 @@ public class LeafController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity<Result> postLeafLike(@RequestBody int leafId, @LoginUser String uid) {
+    public ResponseEntity<Result> postLeafLike(@RequestBody long leafId, @LoginUser String uid) {
 //        RequestHeartDto requestLikeDto = new RequestHeartDto(1, leafId, 2);
         LOGGER.info("잎 좋아요 등록 api에 들어옴 {}", leafId);
         leafService.likeLeaf(leafId, uid);
@@ -44,7 +44,7 @@ public class LeafController {
     }
 
     @DeleteMapping("/like/{leaf-id}")
-    public ResponseEntity<Result> deleteLeafLike(@PathVariable("leaf-id") int leafId, @LoginUser String uid) {
+    public ResponseEntity<Result> deleteLeafLike(@PathVariable("leaf-id") long leafId, @LoginUser String uid) {
 //        RequestHeartDto requestLikeDto = new RequestHeartDto(1, leafId, 2);
         LOGGER.info("잎 좋아요 삭제 api에 들어옴 {}", leafId);
         leafService.deleteLikeLeaf(leafId, uid);

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ResponseBambooDetailDto {
-    private int bambooId;
+    private Long bambooId;
     private String content;
     private LocalDateTime createdDate;
     private int likeCount;
