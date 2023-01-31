@@ -34,7 +34,10 @@ public class Symptom {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "symptom_code_id")
-    private SymptomCode symptomCode;
+    @JoinColumn(name = "symptom_code")
+    @Column(nullable = false)
+    private int symptomCode;
+
+    @Column
+    private String image;
 }

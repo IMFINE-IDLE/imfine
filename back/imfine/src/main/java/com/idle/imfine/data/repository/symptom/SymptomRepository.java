@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SymptomRepository extends JpaRepository<Symptom, Integer> {
     List<Symptom> findByIdIn(List<Integer> symptomIds);
+    List<Symptom> findBySymptomCode(int symptomCode);
 }
