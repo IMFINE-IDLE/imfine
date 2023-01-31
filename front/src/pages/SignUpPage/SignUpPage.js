@@ -231,8 +231,21 @@ function SignUpPage() {
       email: email,
       password: password,
       confirmPassword: confirmPassword,
+<<<<<<< HEAD
     };
     try {
+=======
+      // api 분리되면 수정 필요
+      isOpen: true,
+      medicalIdList: [],
+    };
+    try {
+      // const res = axios.post({
+      //   url: api.user.signUp(),
+      //   method: 'post',
+      //   data: userData,
+      // });
+>>>>>>> b752833e4d431257d5b34795f0ba58f3063cafdb
       const res = axios.post(api.user.signUp(), userData);
       console.log(res.data);
       // 리덕스에 토큰 저장
