@@ -1,12 +1,11 @@
 import React from 'react';
 import { BoxIcon, BoxImg, TextImg } from './style';
 
-function IconSymptom({ id, imgSrc, name, setMedicalIdList }) {
+function IconSymptom({ id, name, imgSrc, ToggleSymptom }) {
   return (
     <BoxIcon
       onClick={() => {
-        console.log(name);
-        setMedicalIdList((prev) => [...new Set([...prev, id])]);
+        ToggleSymptom(id, name);
       }}
     >
       <BoxImg color={'gray'}>

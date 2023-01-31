@@ -11,13 +11,27 @@ import {
   Toggle,
   ToggleLabel,
   TitleSmall,
+  BoxSymptom,
+  BtnSymptom,
 } from './style';
 
-function PickSymptom({ setMedicalIdList }) {
+function PickSymptom() {
   const [isOpen, setIsOpen] = useState(true);
-  const symptoms = useSelector((state) => {
+  const [medicalIdList, setMedicalIdList] = useState([]);
+  const medicalList = useSelector((state) => {
     return state.medical.medicalList;
   });
+
+  const ToggleSymptom = (itemId, itemName) => {
+    const prevMedicalList = [...medicalIdList];
+    let idx = prevMedicalList.findIndex((item) => item.id === itemId);
+    if (idx === -1) {
+      prevMedicalList.push({ id: itemId, name: itemName });
+    } else {
+      prevMedicalList.splice(idx, 1);
+    }
+    setMedicalIdList(prevMedicalList);
+  };
 
   return (
     <div>
@@ -33,7 +47,6 @@ function PickSymptom({ setMedicalIdList }) {
                 type="checkbox"
                 onChange={() => {
                   setIsOpen((prev) => !prev);
-                  // console.log(isOpen);
                 }}
                 checked={isOpen}
               />
@@ -41,18 +54,28 @@ function PickSymptom({ setMedicalIdList }) {
             </ToggleWrapper>
           </div>
         </BoxToggle>
-        <TitleSmall>관심 질병/수술 &nbsp; |</TitleSmall>
+        <BoxSymptom>
+          <TitleSmall>관심 질병/수술 &nbsp; | &nbsp;</TitleSmall>
+          {medicalIdList.map((medical) => (
+            <BtnSymptom
+              onClick={() => ToggleSymptom(medical.id, medical.name)}
+              key={medical.id}
+            >
+              {medical.name}
+            </BtnSymptom>
+          ))}
+        </BoxSymptom>
       </BoxTopArea>
       <div>
         <BtnLeftTap>질병/수술 선택</BtnLeftTap>
         <BoxPickMenu>
-          {symptoms.map((symptom) => (
+          {medicalList.map((medical) => (
             <IconSymptom
-              key={symptom.id}
-              id={symptom.id}
-              name={symptom.name}
-              imgSrc={symptom.imgSrc}
-              setMedicalIdList={setMedicalIdList}
+              key={medical.id}
+              id={medical.id}
+              name={medical.name}
+              imgSrc={medical.imgSrc}
+              ToggleSymptom={ToggleSymptom}
             />
           ))}
         </BoxPickMenu>
