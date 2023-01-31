@@ -7,7 +7,6 @@ import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.*;
 import com.idle.imfine.service.user.ConditionService;
 import com.idle.imfine.service.user.FollowService;
-import com.idle.imfine.service.user.SignService;
 import com.idle.imfine.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,9 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BambooController.class);
-
-    private final SignService signService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final FollowService followService;
     private final ConditionService conditionService;
@@ -34,28 +31,28 @@ public class UserController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<Result> signIn(@RequestBody SignInRequestDto requestDto) {
-        SignInResponseDto responseDto = signService.signIn(requestDto);
+        SignInResponseDto responseDto = userService.signIn(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @PostMapping("/sign-out")
     public ResponseEntity<Result> signOut(@LoginUser String uid) {
-        signService.signOut(uid);
+        userService.signOut(uid);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<Result> refresh(@RequestHeader(name = "X-AUTH-TOKEN") String refreshToken) {
-        RefreshResponseDto responseDto = signService.refresh(refreshToken);
+        RefreshResponseDto responseDto = userService.refresh(refreshToken);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Result> signUp(@RequestBody SignUpRequestDto requestDto) {
-        SignInResponseDto responseDto = signService.signUp(requestDto);
+        SignInResponseDto responseDto = userService.signUp(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
@@ -90,14 +87,14 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Result> searchUserInfo(@LoginUser String uid) {
-        GetUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
+        SearchUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
-    @GetMapping("/{uid}")
-    public ResponseEntity<Result> searchOtherUserInfo(@PathVariable String otherUid) {
-        GetUserInfoResponseDto responseDto = userService.searchUserInfo(otherUid);
+    @GetMapping("/{other}")
+    public ResponseEntity<Result> searchOtherUserInfo(@LoginUser String uid, @PathVariable String other) {
+        SearchUserInfoResponseDto responseDto = userService.searchUserInfo(uid, other);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }

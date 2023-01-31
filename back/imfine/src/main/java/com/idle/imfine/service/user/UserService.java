@@ -1,23 +1,33 @@
 package com.idle.imfine.service.user;
 
-import com.idle.imfine.data.dto.user.request.ChangePasswordRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserNameRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserOepnRequestDto;
+import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
-import com.idle.imfine.data.dto.user.response.GetUserInfoResponseDto;
+import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
+import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
+import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 import com.idle.imfine.data.entity.User;
 
 public interface UserService {
 
-    User getUserByUid(String uid);
+    SignInResponseDto signUp(SignUpRequestDto requestDto);
+
+    SignInResponseDto signIn(SignInRequestDto requestDto) throws RuntimeException;
+
+    void signOut(String uid);
+
+    RefreshResponseDto refresh(String refreshToken);
 
     void checkUidDuplicate(String uid);
+
     void checkNameDuplicate(String name);
+
     void checkEmailDuplicate(String email);
 
     void withdrawal(String uid);
 
-    GetUserInfoResponseDto searchUserInfo(String uid);
+    SearchUserInfoResponseDto searchUserInfo(String uid);
+
+    SearchUserInfoResponseDto searchUserInfo(String uid, String otherUid);
 
     void modifyUserName(String uid, ModifyUserNameRequestDto requestDto);
 

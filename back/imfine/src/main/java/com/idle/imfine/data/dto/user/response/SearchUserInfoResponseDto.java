@@ -6,12 +6,13 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class GetUserInfoResponseDto {
+public class SearchUserInfoResponseDto {
 
     private String name;
     private Boolean open;
     private Integer followingCount;
     private Integer followerCount;
     private List<String> medicalList;
+    private int relation;
 
 }

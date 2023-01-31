@@ -7,8 +7,8 @@ import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.errors.code.ConditionErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
+import com.idle.imfine.service.Common;
 import com.idle.imfine.service.user.ConditionService;
-import com.idle.imfine.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,19 +24,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ConditionServiceImpl implements ConditionService {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(SignServiceImpl.class);
-    private final UserService userService;
+    private final Logger LOGGER = LoggerFactory.getLogger(ConditionServiceImpl.class);
+    private final Common common;
     private final ConditionRepository conditionRepository;
-
-    private LocalDate convertDateType(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(date, formatter);
-    }
 
     @Override
     public void createCondition(String uid, ConditionRequestDto requestDto) {
-        User user = userService.getUserByUid(uid);
-        LocalDate date = convertDateType(requestDto.getDate());
+        User user = common.getUserByUid(uid);
+        LocalDate date = common.convertDateType(requestDto.getDate());
 
         if (conditionRepository.existsByUserAndDate(user, date)) {
             throw new ErrorException(ConditionErrorCode.CONDITION_ALREADY_EXIST);
@@ -53,8 +48,8 @@ public class ConditionServiceImpl implements ConditionService {
 
     @Override
     public void modifyCondition(String uid, ConditionRequestDto requestDto) {
-        User user = userService.getUserByUid(uid);
-        LocalDate date = convertDateType(requestDto.getDate());
+        User user = common.getUserByUid(uid);
+        LocalDate date = common.convertDateType(requestDto.getDate());
 
         Condition condition = conditionRepository.findByUserAndDate(user, date)
                 .orElseThrow(() -> new ErrorException(ConditionErrorCode.CONDITION_NOT_FOUND));
@@ -65,8 +60,8 @@ public class ConditionServiceImpl implements ConditionService {
 
     @Override
     public ConditionResponseDto getConditionByDay(String uid, String day) {
-        User user = userService.getUserByUid(uid);
-        LocalDate date = convertDateType(day);
+        User user = common.getUserByUid(uid);
+        LocalDate date = common.convertDateType(day);
 
         Condition condition = conditionRepository.findByUserAndDate(user, date)
                 .orElse(null);
@@ -78,8 +73,8 @@ public class ConditionServiceImpl implements ConditionService {
 
     @Override
     public Map<LocalDate, Integer> getAllCondtionByMonth(String uid, String month) {
-        User user = userService.getUserByUid(uid);
-        LocalDate startDate = convertDateType(month + "-01");
+        User user = common.getUserByUid(uid);
+        LocalDate startDate = common.convertDateType(month + "-01");
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
         Map<LocalDate, Integer> responseDto = new HashMap<>();

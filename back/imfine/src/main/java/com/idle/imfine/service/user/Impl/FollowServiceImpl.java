@@ -4,20 +4,17 @@ import com.idle.imfine.data.dto.user.response.FollowResponseDto;
 import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.FollowRepository;
-import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.FollowErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
+import com.idle.imfine.service.Common;
 import com.idle.imfine.service.user.FollowService;
-import com.idle.imfine.service.user.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,44 +23,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(SignServiceImpl.class);
-
-    private final UserRepository userRepository;
-    private final UserService userService;
+    private final Logger LOGGER = LoggerFactory.getLogger(FollowServiceImpl.class);
+    private final Common common;
     private final FollowRepository followRepository;
 
-    private void addFollowing(User user) {
-        int count = user.getFollowingCount();
-        user.setFollowingCount(count + 1);
-        userRepository.save(user);
-    }
-
-    private void removeFollowing(User user) {
-        int count = user.getFollowingCount();
-        user.setFollowingCount(count - 1);
-        userRepository.save(user);
-    }
-
-    private void addFollower(User user) {
-        int count = user.getFollowerCount();
-        user.setFollowerCount(count + 1);
-        userRepository.save(user);
-    }
-
-    private void removeFollower(User user) {
-        int count = user.getFollowerCount();
-        user.setFollowerCount(count - 1);
-        userRepository.save(user);
-    }
-
-    private int getRelation(User user, User other) {
-        if (user == other) {
-            return 0;
-        } else if (followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
-            return 1;
-        }
-        return 2;
-    }
 
     @Override
     public void followUser(String uid, String otherUid) {
@@ -75,8 +38,8 @@ public class FollowServiceImpl implements FollowService {
         }
 
         LOGGER.info("유저 정보 조회");
-        User user = userService.getUserByUid(uid);
-        User other = userService.getUserByUid(otherUid);
+        User user = common.getUserByUid(uid);
+        User other = common.getUserByUid(otherUid);
         LOGGER.info("유저 정보 조회 완료");
 
         if (followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
@@ -92,8 +55,8 @@ public class FollowServiceImpl implements FollowService {
                 .followedUser(other)
                 .build();
 
-        addFollowing(user);
-        addFollower(other);
+        common.increaseFollowingCount(user);
+        common.increaseFollwerCount(other);
         followRepository.save(follow);
         LOGGER.info("팔로우가 완료되었습니다.");
     }
@@ -101,8 +64,8 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public void unfollowUser(String uid, String otherUid) {
         LOGGER.info("언팔로우 신청");
-        User user = userService.getUserByUid(uid);
-        User other = userService.getUserByUid(otherUid);
+        User user = common.getUserByUid(uid);
+        User other = common.getUserByUid(otherUid);
         LOGGER.info("유저 정보 조회 완료");
 
         if (!followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
@@ -110,8 +73,8 @@ public class FollowServiceImpl implements FollowService {
             throw new ErrorException(FollowErrorCode.FOLLOW_ERROR_CODE);
         }
 
-        removeFollowing(user);
-        removeFollower(other);
+        common.decreaseFollowingCount(user);
+        common.decreaseFollowerCount(other);
         followRepository.deleteByFollowingUserAndFollowedUser(user, other);
         LOGGER.info("언팔로우가 완료되었습니다.");
     }
@@ -119,15 +82,15 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public List<FollowResponseDto> searchFollowingList(String uid, String targetUid) {
         LOGGER.info("팔로잉 목록 조회");
-        User user = userService.getUserByUid(uid);
-        User target = userService.getUserByUid(targetUid);
+        User user = common.getUserByUid(uid);
+        User target = common.getUserByUid(targetUid);
 
         List<FollowResponseDto> responseDtoList = new ArrayList<>();
         List<Follow> followList = followRepository.findAllByFollowingUser(target);
 
         for (Follow follow : followList) {
             User following = follow.getFollowedUser();
-            int relation = getRelation(user, following);
+            int relation = common.getFollowRelation(user, following);
             FollowResponseDto responseDto = FollowResponseDto.builder()
                     .uid(following.getUid())
                     .name(following.getName())
@@ -144,15 +107,15 @@ public class FollowServiceImpl implements FollowService {
     @Override
     public List<FollowResponseDto> searchFollowerList(String uid, String targetUid) {
         LOGGER.info("팔로워 목록 조회");
-        User user = userService.getUserByUid(uid);
-        User target = userService.getUserByUid(targetUid);
+        User user = common.getUserByUid(uid);
+        User target = common.getUserByUid(targetUid);
 
         List<FollowResponseDto> responseDtoList = new ArrayList<>();
         List<Follow> followList = followRepository.findAllByFollowedUser(target);
 
         for (Follow follow : followList) {
             User follower = follow.getFollowingUser();
-            int relation = getRelation(user, follower);
+            int relation = common.getFollowRelation(user, follower);
             FollowResponseDto responseDto = FollowResponseDto.builder()
                     .uid(follower.getUid())
                     .name(follower.getName())
