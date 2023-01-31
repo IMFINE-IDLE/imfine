@@ -1,15 +1,17 @@
 package com.idle.imfine.data.dto.comment.response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ResponseCommentDto {
     private long commentId;
-    private int userId;
+    private long userId;
     private int likeCount;
     private int declarationCount;
     private String userName;

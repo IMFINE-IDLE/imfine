@@ -4,6 +4,7 @@ import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -11,10 +12,10 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Builder
 public class ResponsePaperDetailDto {
     private long diaryId;
-    private int userId;
+    private long userId;
     private int userStatus;
     private String userName;
     private String content;

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.comment.Comment;
+import com.idle.imfine.data.entity.image.Image;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -57,7 +59,19 @@ public class Paper extends BaseCreatedEntity {
     @Column(nullable = false)
     private int likeCount;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "paper_id")
+    @OneToMany(mappedBy = "paper",fetch = FetchType.LAZY)
     private List<PaperHasSymptom> paperHasSymptoms;
+
+    @OneToMany(mappedBy = "paperId",fetch = FetchType.LAZY)
+    private List<Image> images;
+
+    @OneToMany(mappedBy = "paperId",fetch = FetchType.LAZY)
+    private List<Comment> comments;
+    public void addLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void delLikeCount() {
+        this.likeCount -= 1;
+    }
 }

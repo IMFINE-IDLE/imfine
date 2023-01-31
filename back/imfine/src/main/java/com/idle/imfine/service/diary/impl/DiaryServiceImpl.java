@@ -99,6 +99,7 @@ public class DiaryServiceImpl implements DiaryService {
         List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.getAllByDiaryId(diaryId);
         List<ResponseSymptomDto> responseSymptomDtos = new ArrayList<>();
 
+
         for (DiaryHasSymptom forEachHasSyomptom : diaryHasSymptoms) {
             responseSymptomDtos.add(ResponseSymptomDto.builder()
                     .symptomId(forEachHasSyomptom.getId())
@@ -125,7 +126,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional(readOnly = true)
     public List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(long diaryId) {
         Diary diary = diaryRepository.getById(diaryId);
-        List<Paper> papers = paperRepository.findOneJoinFetch(diary);
+        List<Paper> papers = paperRepository.findAllJoinFetch(diary);
 
         Map<String, Integer> symptomIdByName = new HashMap<>();
         List<ResponseSymptomChartRecordDto> recordDtos = new ArrayList<>();
@@ -308,11 +309,11 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public void deleteDiaryHasSymptom(int diaryHasSymptomId, String uid) {
+        User user = (User) userDetailsService.loadUserByUsername(uid);
         DiaryHasSymptom diaryHasSymptom = diaryHasSymptomRepository.findById(diaryHasSymptomId)
                 .orElseThrow(RuntimeException::new);
-        if (diaryHasSymptom.getDiary().getWriter().getName().equals(uid)) {
-            paperHasSymptomRepository.deleteBySymptomId(diaryHasSymptom.getSymptom().getId());
-            diaryHasSymptomRepository.delete(diaryHasSymptom);
-        }
+        LOGGER.info("삭제하러 들어옴...............{}, {}", diaryHasSymptom.getDiary().getId(), uid);
+        paperHasSymptomRepository.deleteBySymptomId(diaryHasSymptom.getSymptom().getId(), paperRepository.findAllJoinFetch(diaryHasSymptom.getDiary()));
+        diaryHasSymptomRepository.delete(diaryHasSymptom);
     }
 }
