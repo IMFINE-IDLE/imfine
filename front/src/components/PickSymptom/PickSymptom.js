@@ -21,6 +21,17 @@ function PickSymptom() {
     return state.medical.medicalList;
   });
 
+  const ToggleSymptom = (itemId, itemName) => {
+    const prevMedicalList = [...medicalIdList];
+    let idx = prevMedicalList.findIndex((item) => item.id === itemId);
+    if (idx === -1) {
+      prevMedicalList.push({ id: itemId, name: itemName });
+    } else {
+      prevMedicalList.splice(idx, 1);
+    }
+    setMedicalIdList(prevMedicalList);
+  };
+
   return (
     <div>
       <Title>계정 기본 설정</Title>
@@ -35,7 +46,6 @@ function PickSymptom() {
                 type="checkbox"
                 onChange={() => {
                   setIsOpen((prev) => !prev);
-                  // console.log(isOpen);
                 }}
                 checked={isOpen}
               />
@@ -46,7 +56,12 @@ function PickSymptom() {
         <div>
           <TitleSmall>관심 질병/수술 &nbsp; |</TitleSmall>
           {medicalIdList.map((medical) => (
-            <BoxSymptom key={medical.id}>{medical.name}</BoxSymptom>
+            <BoxSymptom
+              onClick={() => ToggleSymptom(medical.id, medical.name)}
+              key={medical.id}
+            >
+              {medical.name}
+            </BoxSymptom>
           ))}
         </div>
       </BoxTopArea>
@@ -59,8 +74,7 @@ function PickSymptom() {
               id={medical.id}
               name={medical.name}
               imgSrc={medical.imgSrc}
-              medicalIdList={medicalIdList}
-              setMedicalIdList={setMedicalIdList}
+              ToggleSymptom={ToggleSymptom}
             />
           ))}
         </BoxPickMenu>
