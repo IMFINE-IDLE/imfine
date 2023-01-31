@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ResponseLeafDto {
-    private int leafId;
+    private Long leafId;
     private String content;
     private int likeCount;
     private int declarationCount;

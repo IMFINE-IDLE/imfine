@@ -14,11 +14,11 @@ import lombok.ToString;
 @ToString
 public class RequestLeafDto {
     private String writerId;
-    private int bambooId;
+    private Long bambooId;
     private String content;
 
     @Builder
-    public RequestLeafDto(int bambooId, String content) {
+    public RequestLeafDto(long bambooId, String content) {
         this.bambooId = bambooId;
         this.content = content;
     }

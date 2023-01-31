@@ -14,9 +14,11 @@ public interface BambooService {
 
     List<ResponseBamboo> showMyList(String filter, String uid, Pageable pageable);
 
-    ResponseBambooDetailDto showBambooDetail(int bambooId, String uid);
+    ResponseBambooDetailDto showBambooDetail(long bambooId, String uid);
 
-    void likeBamboo(int bambooId, String uid);
+    void likeBamboo(long bambooId, String uid);
 
-    void deleteLikeBamboo(int bambooId, String uid);
+    void deleteLikeBamboo(long bambooId, String uid);
+
+    void deleteBamboo();
 }
