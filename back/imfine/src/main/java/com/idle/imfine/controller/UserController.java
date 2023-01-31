@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -173,18 +174,20 @@ public class UserController {
                 .body(responseService.getSuccessResult());
     }
 
-    @GetMapping("/{uid}/following")
-    public ResponseEntity<Result> searchFollowingList(@PathVariable String uid) {
+    @GetMapping("/{other}/following")
+    public ResponseEntity<Result> searchFollowingList(@LoginUser String uid, @PathVariable String other) {
+        List<FollowResponseDto> responseDtoList = followService.searchFollowingList(uid, other);
 
         return ResponseEntity.ok()
-                .body(responseService.getSuccessResult());
+                .body(responseService.getListResult(responseDtoList));
     }
 
-    @GetMapping("/{uid}/follower")
-    public ResponseEntity<Result> searchFollowerList(@PathVariable String uid) {
+    @GetMapping("/{other}/follower")
+    public ResponseEntity<Result> searchFollowerList(@LoginUser String uid, @PathVariable String other) {
+        List<FollowResponseDto> responseDtoList = followService.searchFollowerList(uid, other);
 
         return ResponseEntity.ok()
-                .body(responseService.getSuccessResult());
+                .body(responseService.getListResult(responseDtoList));
     }
 
     @PostMapping("/follow")
