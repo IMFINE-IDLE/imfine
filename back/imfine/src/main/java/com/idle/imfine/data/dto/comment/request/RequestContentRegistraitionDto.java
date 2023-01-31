@@ -11,10 +11,5 @@ import lombok.ToString;
 @ToString
 public class RequestContentRegistraitionDto {
     private Long paperId;
-    private int userId;
     private String content;
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 }
