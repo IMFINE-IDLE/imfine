@@ -57,7 +57,7 @@ public class BambooController {
 
     @GetMapping("/detail/{bamboo-id}")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<Result> getBambooDetail(@PathVariable("bamboo-id") int bambooId, @LoginUser String uid){
+    public ResponseEntity<Result> getBambooDetail(@PathVariable("bamboo-id") long bambooId, @LoginUser String uid){
         LOGGER.info("getBamboodetail api에 들어옴  {}", bambooId);
         /*
         if (true){
@@ -86,7 +86,7 @@ public class BambooController {
     }
     @PostMapping("/like")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<Result> postBambooLike(@RequestBody int bambooId, @LoginUser String uid) {
+    public ResponseEntity<Result> postBambooLike(@RequestBody long bambooId, @LoginUser String uid) {
         LOGGER.info("대나무 좋아요 api에 들어왔습니다. {}", bambooId);
 //        RequestLikeDto rl = new RequestLikeDto(1, 1, bambooId);
         bambooService.likeBamboo(bambooId, uid);
@@ -98,7 +98,7 @@ public class BambooController {
     @DeleteMapping("/like/{bamboo-id}")
     // 로그인 구현되면 loginuser 추가하기
     // 검증을 서비스에서 해야하나?
-    public ResponseEntity<Result> deleteBambooLike(@PathVariable("bamboo-id") int bambooId, @LoginUser String uid) {
+    public ResponseEntity<Result> deleteBambooLike(@PathVariable("bamboo-id") long bambooId, @LoginUser String uid) {
         LOGGER.info("대나무 좋아요 삭제 api에 들어왔습니다. {}", bambooId);
 //        RequestHeartDto rl = new RequestHeartDto(1, 1, bambooId);
 //        LOGGER.info("대나무 좋아요 삭제 {}", rl );
@@ -106,5 +106,15 @@ public class BambooController {
 
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
+    }
+
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Result> deleteBamboo() {
+        bambooService.deleteBamboo();
+
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+
     }
 }

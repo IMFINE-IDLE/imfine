@@ -30,7 +30,7 @@ import lombok.Setter;
 public class Leaf extends BaseCreatedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     @Column(length = 100)
     private String content;
     @Column

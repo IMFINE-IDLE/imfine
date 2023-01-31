@@ -35,7 +35,6 @@ public class LeafServiceImpl implements LeafService {
         Bamboo bamboo = bambooRepository.getById(requestLeafDto.getBambooId());
 
         Leaf leaf = Leaf.builder()
-            .writer(user)
             .bamboo(bamboo)
             .content(requestLeafDto.getContent())
             .likeCount(0)
@@ -50,7 +49,7 @@ public class LeafServiceImpl implements LeafService {
     }
 
     @Override
-    public void likeLeaf(int leafId, String uid) {
+    public void likeLeaf(long leafId, String uid) {
 
         User user = userRepository.getByUid(uid);
         Leaf leaf = leafRepository.getById(leafId);
@@ -69,7 +68,7 @@ public class LeafServiceImpl implements LeafService {
     }
 
     @Override
-    public void deleteLikeLeaf(int leafId, String uid) {
+    public void deleteLikeLeaf(long leafId, String uid) {
         User user = userRepository.getByUid(uid);
         Leaf leaf = leafRepository.getById(leafId);
 

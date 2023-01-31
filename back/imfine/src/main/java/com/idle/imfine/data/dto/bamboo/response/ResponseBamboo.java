@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ResponseBamboo {
-    private int bambooId;
+    private long bambooId;
     private String content;
     private long remainTime;
 //    private LocalDateTime createdDate;

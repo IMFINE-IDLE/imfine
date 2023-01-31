@@ -6,7 +6,7 @@ public interface LeafService {
 
     void save(RequestLeafDto requestLeafDto);
 
-    void likeLeaf(int leafId, String uid);
+    void likeLeaf(long leafId, String uid);
 
-    void deleteLikeLeaf(int leafId, String uid);
+    void deleteLikeLeaf(long leafId, String uid);
 }
