@@ -31,7 +31,7 @@ public class User extends BaseCreatedEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(columnDefinition = "INT UNSIGNED")
+//    @Column(columnDefinition = "INT UNSIGNED")
     private long id;
 
     @Column(nullable = false, unique = true)
