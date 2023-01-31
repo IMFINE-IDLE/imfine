@@ -11,10 +11,8 @@ import {
   BoxInnerSignup,
   Label,
   InfoSpan,
-  InfoSpan,
   InputSignUp,
   BtnSignup,
-  ErrorMsg,
   ErrorMsg,
 } from './style';
 
@@ -233,16 +231,8 @@ function SignUpPage() {
       email: email,
       password: password,
       confirmPassword: confirmPassword,
-      // api 분리되면 수정 필요
-      isOpen: true,
-      medicalIdList: [],
     };
     try {
-      // const res = axios.post({
-      //   url: api.user.signUp(),
-      //   method: 'post',
-      //   data: userData,
-      // });
       const res = axios.post(api.user.signUp(), userData);
       console.log(res.data);
       // 리덕스에 토큰 저장

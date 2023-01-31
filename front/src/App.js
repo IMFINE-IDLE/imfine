@@ -4,7 +4,7 @@ import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
 import PaperFeed from './pages/PaperFeed/PaperFeed';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
-import SignUpPagePage from './pages/SignUpPagePage/SignUpPagePage';
+import SignUpPage from './pages/SignUpPage/SignUpPage';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
