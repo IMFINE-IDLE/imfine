@@ -4,11 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { iconStyle, GlobalStyle } from './styles/globalStyle';
 import { IconContext } from 'react-icons';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <BrowserRouter>
+  // <React.StrictMode>
+  <BrowserRouter>
+    <Provider store={store}>
       <GlobalStyle />
       <IconContext.Provider
         value={{
@@ -17,6 +20,7 @@ root.render(
       >
         <App />
       </IconContext.Provider>
-    </BrowserRouter>
-  </React.StrictMode>,
+    </Provider>
+  </BrowserRouter>
+  // </React.StrictMode>,
 );
