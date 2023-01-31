@@ -11,11 +11,13 @@ import {
   Toggle,
   ToggleLabel,
   TitleSmall,
+  BoxSymptom,
 } from './style';
 
-function PickSymptom({ setMedicalIdList }) {
+function PickSymptom() {
   const [isOpen, setIsOpen] = useState(true);
-  const symptoms = useSelector((state) => {
+  const [medicalIdList, setMedicalIdList] = useState([]);
+  const medicalList = useSelector((state) => {
     return state.medical.medicalList;
   });
 
@@ -41,17 +43,23 @@ function PickSymptom({ setMedicalIdList }) {
             </ToggleWrapper>
           </div>
         </BoxToggle>
-        <TitleSmall>관심 질병/수술 &nbsp; |</TitleSmall>
+        <div>
+          <TitleSmall>관심 질병/수술 &nbsp; |</TitleSmall>
+          {medicalIdList.map((medical) => (
+            <BoxSymptom key={medical.id}>{medical.name}</BoxSymptom>
+          ))}
+        </div>
       </BoxTopArea>
       <div>
         <BtnLeftTap>질병/수술 선택</BtnLeftTap>
         <BoxPickMenu>
-          {symptoms.map((symptom) => (
+          {medicalList.map((medical) => (
             <IconSymptom
-              key={symptom.id}
-              id={symptom.id}
-              name={symptom.name}
-              imgSrc={symptom.imgSrc}
+              key={medical.id}
+              id={medical.id}
+              name={medical.name}
+              imgSrc={medical.imgSrc}
+              medicalIdList={medicalIdList}
               setMedicalIdList={setMedicalIdList}
             />
           ))}

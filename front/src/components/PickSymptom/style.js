@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { BoxRT25 } from '../common/BoxRT25/BoxRT25';
+import { Btn } from '../common/Btn/Btn';
 
 const BoxTopArea = styled.div`
   padding: 2em;
@@ -12,9 +13,10 @@ const Title = styled.div`
   font-weight: 600;
 `;
 
-const TitleSmall = styled.div`
+const TitleSmall = styled.span`
   font-weight: 600;
   color: var(--gray800-color);
+  display: inline;
 `;
 
 const BoxToggle = styled.div`
@@ -74,6 +76,15 @@ const Toggle = styled.input`
   }
 `;
 
+const BoxSymptom = styled.span`
+  ${Btn}
+  display: inline-block;
+  font-size: 12px;
+  color: var(--icon-color);
+  padding: 0.5em;
+  cursor: pointer;
+`;
+
 const BtnLeftTap = styled(BoxRT25)`
   width: 50%;
   text-align: center;
@@ -96,6 +107,7 @@ export {
   ToggleWrapper,
   ToggleLabel,
   Toggle,
+  BoxSymptom,
   BoxPickMenu,
   BtnLeftTap,
   TitleSmall,

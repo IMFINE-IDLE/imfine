@@ -27,7 +27,6 @@ function SignUpPage() {
     confirmPwErrorMsg: '',
   });
   const [isNext, setIsNext] = useState(false);
-  const [medicalIdList, setMedicalIdList] = useState([]);
 
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
@@ -211,8 +210,6 @@ function SignUpPage() {
       email: '',
       password: '',
       confirmPassword: '',
-      // isOpen: true,
-      // medicalIdList: [],
     }
   );
   const { id, name, email, password, confirmPassword } = inputValue;
@@ -357,9 +354,11 @@ function SignUpPage() {
         </div>
       ) : (
         <>
-          <PickSymptom setMedicalIdList={setMedicalIdList} />
+          <PickSymptom />
           <div style={{ width: '80%', margin: '0 auto' }}>
-            <BtnSignup onClick={() => signUp()}>건강해지러 가기!</BtnSignup>
+            <BtnSignup onClick={() => navigate('/home')}>
+              건강해지러 가기!
+            </BtnSignup>
           </div>
         </>
       )}
