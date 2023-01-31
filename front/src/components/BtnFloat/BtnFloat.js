@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BoxBtnFloat, BtnLink, CircleFloat } from './style';
+import { BoxBtnFloat, BtnLink, CircleFloat } from './Style';
 import { FiEdit3 } from 'react-icons/fi';
 
 function BtnFloat() {

@@ -6,21 +6,14 @@ import {
   TextContent,
   LabelOuter,
   LabelStatus,
-  BoxTimer,
-  BasicBambooImg,
-  LTBambooImg,
-  LBBambooImg,
 } from './style';
 
-function BoxBamboo({ context, heartCount, replyCount }) {
+import BambooTimer from '../BambooTimer/BambooTimer';
+function BoxBamboo({ context, heartCount, replyCount, remainHour }) {
   return (
     <BoxBambooOuter>
       <BoxShadBamboo>
-        <BoxTimer>
-          <BasicBambooImg />
-          <LTBambooImg />
-          <LBBambooImg />
-        </BoxTimer>
+        <BambooTimer remainHour={'23'} />
         <TextContent>{context}</TextContent>
         <LabelOuter>
           <BsHeartFill />

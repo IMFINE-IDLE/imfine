@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { BoxLT50 } from '../../components/common/BoxLT50/BoxLT50';
 import { BoxShad } from '../../components/common/BoxShad/BoxShad';
 
 const BoxBambooOuter = styled.div`
@@ -12,6 +11,7 @@ const BoxShadBamboo = styled(BoxShad)`
   border-radius: 25px;
   margin: 2em 0;
   display: flex;
+  min-width: 20em;
   flex-direction: column;
 `;
 
