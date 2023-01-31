@@ -38,12 +38,12 @@ const LabelStatus = styled.label`
 const BoxTimer = styled.div`
   padding: ${(props) => props.padding || '0px'};
   display: flex;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
   height: 2em;
   flex-direction: row;
   position: relative;
   margin-top: -2.9em;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
 `;
 
 const BasicBambooImg = styled.img.attrs({
@@ -51,6 +51,7 @@ const BasicBambooImg = styled.img.attrs({
 })`
   height: 1.5em;
   margin-top: 1.5em;
+  margin-right: 0.2em;
 `;
 
 const LBBambooImg = styled.img.attrs({

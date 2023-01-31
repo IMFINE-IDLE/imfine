@@ -20,9 +20,6 @@ function BoxBamboo({ context, heartCount, replyCount }) {
           <BasicBambooImg />
           <LTBambooImg />
           <LBBambooImg />
-          <BasicBambooImg />
-          <LTBambooImg />
-          <LBBambooImg />
         </BoxTimer>
         <TextContent>{context}</TextContent>
         <LabelOuter>
