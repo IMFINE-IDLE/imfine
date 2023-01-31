@@ -1,61 +1,62 @@
 package com.idle.imfine.controller;
 
+import com.idle.imfine.common.annotation.LoginUser;
+import com.idle.imfine.common.response.ResponseService;
+import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.comment.request.RequestContentRegistraitionDto;
-import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
-import lombok.extern.slf4j.Slf4j;
+import com.idle.imfine.service.comment.CommentService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
-@RestController
+
+@RequiredArgsConstructor
 @RequestMapping("/comment")
-@Slf4j
+@RestController
 public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
-
+    private final CommentService commentService;
+    private final ResponseService responseService;
     @PostMapping
-    public ResponseEntity<String> postComment(@RequestBody RequestContentRegistraitionDto requestContentRegistraitionDto) {
-        requestContentRegistraitionDto.setUserId(1);
+    public ResponseEntity<Result> postComment(@RequestBody RequestContentRegistraitionDto requestContentRegistraitionDto, @LoginUser String uid) {
+        commentService.save(requestContentRegistraitionDto, uid);
         LOGGER.info("댓글 생성 {}", requestContentRegistraitionDto);
-        return new ResponseEntity<>("댓글 생성 완료", HttpStatus.OK);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
-    @GetMapping("/{paper-id}")
-    public ResponseEntity<List<ResponseCommentDto>> getCommentListDto(@PathVariable(value = "paper-id") long paperId) {
-        List<ResponseCommentDto> comments = new ArrayList<>();
-        comments.add(new ResponseCommentDto(1, 1, 1, 1, "유제제혁", "힘내세요!", LocalDateTime.now().format(
-            DateTimeFormatter.ofPattern("yyyyMMddHHmmss")), 0));
-        comments.add(new ResponseCommentDto(2, 2, 2, 2, "유제제혁", "힘내내세요!", LocalDateTime.now().format(
-            DateTimeFormatter.ofPattern("yyyyMMddHHmmss")), 1));
-        return new ResponseEntity<>(comments, HttpStatus.OK);
-    }
+//    @GetMapping("/{paper-id}")
+//    public ResponseEntity<List<ResponseCommentDto>> getCommentListDto(@PathVariable(value = "paper-id") long paperId) {
+//        List<ResponseCommentDto> comments = new ArrayList<>();
+//        comments.add(new ResponseCommentDto(1, 1, 1, 1, "유제제혁", "힘내세요!", LocalDateTime.now().format(
+//            DateTimeFormatter.ofPattern("yyyyMMddHHmmss")), 0));
+//        comments.add(new ResponseCommentDto(2, 2, 2, 2, "유제제혁", "힘내내세요!", LocalDateTime.now().format(
+//            DateTimeFormatter.ofPattern("yyyyMMddHHmmss")), 1));
+//        return new ResponseEntity<>(comments, HttpStatus.OK);
+//    }
 
     @DeleteMapping("/{comment-id}")
-    public ResponseEntity<String> deleteComment(@PathVariable("comment-id") long commentId){
+    public ResponseEntity<Result> deleteComment(@PathVariable("comment-id") long commentId, @LoginUser String uid){
+        commentService.delete(commentId, uid);
         LOGGER.info("댓글 삭제들어옴 {}", commentId);
-        return new ResponseEntity<>("삭제완료", HttpStatus.OK);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @PostMapping("/like")
-    public ResponseEntity<String> postCommnetLike(@RequestBody RequestHeartDto requestLikeDto) {
-        requestLikeDto.setSenderId(1);
-        requestLikeDto.setContentCodeId(1);
-        LOGGER.info("댓글 등록 들어옴 {}", requestLikeDto);
-        return new ResponseEntity<>("좋아요 등록 완료", HttpStatus.OK);
+    public ResponseEntity<Result> postCommentLike(@RequestBody RequestHeartDto requestHeartDto, @LoginUser String uid) {
+        commentService.postCommentLike(requestHeartDto, uid);
+        LOGGER.info("댓글 좋아요 등록 들어옴 {}", requestHeartDto);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @DeleteMapping("/like/{comment-id}")
-    public ResponseEntity<String> deleteCommentLike(@PathVariable(value = "comment-id") long commentId) {
-        RequestHeartDto requestLikeDto = new RequestHeartDto(1, 3, (int)commentId);
-        LOGGER.info("좋아요 삭제 {}", requestLikeDto);
-        return new ResponseEntity<>("댓글 좋아요 삭제!", HttpStatus.OK);
+    public ResponseEntity<Result> deleteCommentLike(@PathVariable(value = "comment-id") long commentId, @LoginUser String uid) {
+//        RequestHeartDto requestLikeDto = new RequestHeartDto(1, 3, );
+        commentService.deleteCommentLike(commentId, uid);
+        LOGGER.info("좋아요 삭제 {}", commentService);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 }
