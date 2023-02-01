@@ -3,6 +3,7 @@ package com.idle.imfine.service.paper.impl;
 
 import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
+import com.idle.imfine.data.dto.image.UploadFile;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
@@ -24,7 +25,9 @@ import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.service.Common;
+import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.paper.PaperService;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -32,8 +35,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,10 +52,12 @@ public class PaperServiceImpl implements PaperService {
     private final HeartRepository heartRepository;
     private final FollowRepository followRepository;
     private final SubscribeRepository subscribeRepository;
+    private final FileStore fileStore;
+    static final Logger LOGGER = LoggerFactory.getLogger(PaperServiceImpl.class);
     @Override
     @Transactional
-    public void save(RequestPaperPostDto requestPaperPostDto, String uid) {
-        User user = (User) common.getUserByUid(uid);
+    public void save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException {
+        User user = common.getUserByUid(uid);
 
         ///// 에러처리 똑바로 하기
         Diary diary = diaryRepository.findById(requestPaperPostDto.getDiaryId())
@@ -61,6 +67,7 @@ public class PaperServiceImpl implements PaperService {
         if (exist != null) {
             throw new RuntimeException();
         }
+        LOGGER.info("왜 안되는 거야~~~ paper{}", requestPaperPostDto.getUserId());
 
         Paper savedPaper = paperRepository.save(Paper.builder()
                 .diary(diary)
@@ -68,17 +75,20 @@ public class PaperServiceImpl implements PaperService {
                 .open(requestPaperPostDto.isOpen())
                 .date(requestPaperPostDto.getDate())
                 .build());
-
+        List<UploadFile> storeImageFiles;
+        storeImageFiles = fileStore.storeFiles(requestPaperPostDto.getImages());
         diary.paperAdd();
         diary.setPostedAt(LocalDateTime.now());
-        Stream<Image> saveImage = requestPaperPostDto.getImages().stream().map(
+        LOGGER.info("왜 안되는 거야~~~ image");
+
+        Stream<Image> saveImage = storeImageFiles.stream().map(
                 path ->  Image.builder()
                         .paperId(savedPaper.getId())
-                        .path(path)
+                        .path(path.getStoreFileName())
                         .build()
         );
         imageRepository.saveAll(saveImage.collect(Collectors.toList()));
-
+        LOGGER.info("왜 안되는 거야~~~ paper has{}", requestPaperPostDto.getSymptoms());
         Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
                 symptomRecord -> PaperHasSymptom.builder()
                         .symptomId(symptomRecord.getSymptomId())
@@ -92,7 +102,7 @@ public class PaperServiceImpl implements PaperService {
     @Transactional
     @Override
     public void delete(long paperId, String uid) {
-        User user = (User) common.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
         Paper foundPaper = paperRepository.findById(paperId).orElseThrow(RuntimeException::new);
         paperHasSymptomRepository.deleteByPaper(foundPaper.getId());
         paperRepository.deleteById(paperId);
@@ -101,7 +111,7 @@ public class PaperServiceImpl implements PaperService {
     @Override
     @Transactional
     public void modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) {
-        User user = (User) common.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
 
         Paper paper = paperRepository.getById(requestPaperPutDto.getPaperId());
         paper.setContent(requestPaperPutDto.getContents());
@@ -131,7 +141,7 @@ public class PaperServiceImpl implements PaperService {
     @Transactional
     @Override
     public void postPaperLike(RequestHeartDto requestHeartDto, String uid) {
-        User user = (User) common.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
                 .orElseThrow(RuntimeException::new);
 
@@ -148,7 +158,7 @@ public class PaperServiceImpl implements PaperService {
     @Override
     @Transactional
     public void deletePaperLike(RequestHeartDto requestHeartDto, String uid) {
-        User user = (User) common.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
                 .orElseThrow(RuntimeException::new);
 
@@ -161,7 +171,7 @@ public class PaperServiceImpl implements PaperService {
     @Override
     @Transactional(readOnly = true)
     public ResponsePaperDetailDto getPaperDetail(long paperId, String uid) {
-        User user = (User) common.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
 
         // 에러처리 똑바로 하기
         Paper paper = paperRepository.findById(paperId)
@@ -212,7 +222,7 @@ public class PaperServiceImpl implements PaperService {
     @Override
     @Transactional
     public List<ResponsePaperDto> getPaperList(String uid, Pageable pageable) {
-        User user = (User) common.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
         List<User> users = followRepository.findAllByFollowingUser(user)
                 .stream().map(follow -> follow.getFollowedUser()).collect(Collectors.toList());
         List<Diary> diaries = diaryRepository.findAllByWriterIn(users);

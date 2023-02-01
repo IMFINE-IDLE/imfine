@@ -9,6 +9,7 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.service.paper.PaperService;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,10 +31,13 @@ public class PaperController {
     private final ResponseService responseService;
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
     @PostMapping
-    public ResponseEntity<Result> postPaper(@RequestBody RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
-        LOGGER.info("일기 생성 api 도착 {} {}", requestPaperPostDto, requestPaperPostDto.getSymptoms().get(0));
-        paperService.save(requestPaperPostDto, uid);
-
+    public ResponseEntity<Result> postPaper(@ModelAttribute RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
+        LOGGER.info("일기 생성 api 도착 {} {}", requestPaperPostDto);
+        try {
+            paperService.save(requestPaperPostDto, uid);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 

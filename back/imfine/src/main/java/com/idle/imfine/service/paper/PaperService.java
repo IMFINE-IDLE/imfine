@@ -5,12 +5,12 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface PaperService {
-    void save(RequestPaperPostDto requestPaperPostDto, String uid);
+    void save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException;
     void delete(long paperId, String uid);
 
     void modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid);

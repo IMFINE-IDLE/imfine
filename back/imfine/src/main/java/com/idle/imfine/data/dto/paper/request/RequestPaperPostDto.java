@@ -6,11 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
 @Builder
 public class RequestPaperPostDto {
 
@@ -19,6 +22,6 @@ public class RequestPaperPostDto {
     private String contents;
     private String date;
     private boolean open;
-    private List<String> images;
+    private List<MultipartFile> images;
     private List<RequestSymptomPaperDto> symptoms;
 }
