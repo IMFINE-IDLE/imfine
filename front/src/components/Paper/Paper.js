@@ -1,6 +1,9 @@
 import React from 'react';
+import { FiHeart } from 'react-icons/fi';
+import { FiMessageCircle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { BoxPaper } from './style';
+import { URL } from '../../api/api';
+import { BoxLikeCmt, BoxPaper, SpanLikeCmt } from './style';
 
 function Paper({ paper }) {
   const navigate = useNavigate();
@@ -8,9 +11,11 @@ function Paper({ paper }) {
     paperId,
     condition,
     name,
+    title,
     content,
     likeCount,
     commentCount,
+    date,
     images,
     symptomList,
   } = paper;
@@ -23,9 +28,27 @@ function Paper({ paper }) {
         height={'50px'}
       />
       {name}
+      {symptomList.map((symptom) => {
+        return (
+          <span key={symptom.symptomId}>
+            {symptom.symptomName} {symptom.score}
+          </span>
+        );
+      })}
+      <div>{title}</div>
       <div>{content}</div>
-      <span>좋아요 개수 {likeCount}</span>
-      <span>댓글 개수 {commentCount}</span>
+      {/* {images.map((image) => {
+        return <img src={`${URL}/${image}`} alt="" />;
+      })} */}
+      <BoxLikeCmt>
+        <span>{date}</span>
+        <div>
+          <FiHeart style={{ color: 'var(--red-color)' }} />
+          <SpanLikeCmt>{likeCount}</SpanLikeCmt>
+          <FiMessageCircle />
+          <SpanLikeCmt>{commentCount}</SpanLikeCmt>
+        </div>
+      </BoxLikeCmt>
     </BoxPaper>
   );
 }

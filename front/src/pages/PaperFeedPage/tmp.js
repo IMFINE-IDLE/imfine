@@ -5,15 +5,16 @@ export const res = {
   data: [
     {
       paperId: 9,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
       likeCount: 0,
-      date: '20230126',
+      date: '2023-02-01-16-21-40',
       condition: 0,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -28,6 +29,7 @@ export const res = {
     },
     {
       paperId: 8,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -36,7 +38,7 @@ export const res = {
       condition: 1,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -51,6 +53,7 @@ export const res = {
     },
     {
       paperId: 7,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -59,7 +62,7 @@ export const res = {
       condition: 3,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -74,6 +77,7 @@ export const res = {
     },
     {
       paperId: 6,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -82,7 +86,7 @@ export const res = {
       condition: 4,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -97,6 +101,7 @@ export const res = {
     },
     {
       paperId: 5,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -105,7 +110,7 @@ export const res = {
       condition: 1,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -120,6 +125,7 @@ export const res = {
     },
     {
       paperId: 4,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -128,7 +134,7 @@ export const res = {
       condition: 3,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -143,6 +149,7 @@ export const res = {
     },
     {
       paperId: 3,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -151,7 +158,7 @@ export const res = {
       condition: 4,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -166,6 +173,7 @@ export const res = {
     },
     {
       paperId: 2,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -174,7 +182,7 @@ export const res = {
       condition: 1,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -189,6 +197,7 @@ export const res = {
     },
     {
       paperId: 1,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -197,7 +206,7 @@ export const res = {
       condition: 3,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -212,6 +221,7 @@ export const res = {
     },
     {
       paperId: 0,
+      title: '제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -220,7 +230,7 @@ export const res = {
       condition: 4,
       open: true,
       images: ['url', 'url2'],
-      symtomList: [
+      symptomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
