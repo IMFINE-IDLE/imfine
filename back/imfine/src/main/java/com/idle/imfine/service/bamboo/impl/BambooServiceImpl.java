@@ -11,6 +11,8 @@ import com.idle.imfine.data.repository.bamboo.BambooRepository;
 import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.errors.code.BambooErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.bamboo.BambooService;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -156,9 +158,15 @@ public class BambooServiceImpl implements BambooService {
     public ResponseBambooDetailDto showBambooDetail(long bambooId, String uid) {
 
         Bamboo bamboo = bambooRepository.getById(bambooId);
+        LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+        if (LocalDateTime.now().isBefore(endShowTime)) {
+            LOGGER.info("24시간 지난 밤부-----------------------------------------------------");
+            throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
+        }
+
+        LOGGER.info("대나무 상세조회");
         List<ResponseLeafDto> responseLeafDtoList = new ArrayList<>();
         List<Leaf> leafList = leafRepository.getByBamboo_Id(bambooId);
-
         for (Leaf l : leafList) {
             ResponseLeafDto responseLeafDto = ResponseLeafDto.builder()
                 .leafId(l.getId())
@@ -188,6 +196,12 @@ public class BambooServiceImpl implements BambooService {
 
         User user = userRepository.getByUid(uid);
         Bamboo bamboo = bambooRepository.getById(bambooId);
+
+        LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+        if (LocalDateTime.now().isBefore(endShowTime)) {
+            throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
+        }
+
         if(!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 4, bambooId)) {
             Heart heart = Heart.builder()
                     .senderId(user.getId())
@@ -205,6 +219,11 @@ public class BambooServiceImpl implements BambooService {
     public void deleteLikeBamboo(long bambooId, String uid) {
         User user = userRepository.getByUid(uid);
         Bamboo bamboo = bambooRepository.getById(bambooId);
+
+        LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+        if (LocalDateTime.now().isBefore(endShowTime)) {
+            throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
+        }
 
         if(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 4, bambooId)) {
             heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 4, bambooId);

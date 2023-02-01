@@ -9,8 +9,11 @@ import com.idle.imfine.data.repository.bamboo.BambooRepository;
 import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.errors.code.BambooErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.bamboo.impl.BambooServiceImpl;
 import com.idle.imfine.service.leaf.LeafService;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,11 @@ public class LeafServiceImpl implements LeafService {
         User user = userRepository.getByUid(requestLeafDto.getWriterId());
         Bamboo bamboo = bambooRepository.getById(requestLeafDto.getBambooId());
 
+        LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+        if (LocalDateTime.now().isBefore(endShowTime)) {
+            throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
+        }
+
         Leaf leaf = Leaf.builder()
                 .bamboo(bamboo)
                 .content(requestLeafDto.getContent())
@@ -54,6 +62,13 @@ public class LeafServiceImpl implements LeafService {
 
         User user = userRepository.getByUid(uid);
         Leaf leaf = leafRepository.getById(leafId);
+        Bamboo bamboo = bambooRepository.getById(leaf.getBamboo().getId());
+
+        LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+        if (LocalDateTime.now().isBefore(endShowTime)) {
+            throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
+        }
+
         if(!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 5, leafId)) {
             Heart heart = Heart.builder()
                 .senderId(user.getId())
@@ -72,6 +87,12 @@ public class LeafServiceImpl implements LeafService {
     public void deleteLikeLeaf(long leafId, String uid) {
         User user = userRepository.getByUid(uid);
         Leaf leaf = leafRepository.getById(leafId);
+        Bamboo bamboo = bambooRepository.getById(leaf.getBamboo().getId());
+
+        LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+        if (LocalDateTime.now().isBefore(endShowTime)) {
+            throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
+        }
 
         if(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 5, leafId)) {
             heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 5, leafId);
