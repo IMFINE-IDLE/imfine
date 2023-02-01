@@ -6,6 +6,7 @@ import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.bamboo.request.RequestBambooDto;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
+import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.service.bamboo.BambooService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -88,10 +89,9 @@ public class BambooController {
     }
     @PostMapping("/like")
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<Result> postBambooLike(@RequestBody long bambooId, @LoginUser String uid) {
-        LOGGER.info("대나무 좋아요 api에 들어왔습니다. {}", bambooId);
-//        RequestLikeDto rl = new RequestLikeDto(1, 1, bambooId);
-        bambooService.likeBamboo(bambooId, uid);
+    public ResponseEntity<Result> postBambooLike(@RequestBody RequestHeartDto requestHeartDto, @LoginUser String uid) {
+
+        bambooService.likeBamboo(requestHeartDto, uid);
 //        LOGGER.info("대나무 좋아요 {}", rl );
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());

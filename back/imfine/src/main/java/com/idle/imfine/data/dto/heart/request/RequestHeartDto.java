@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @Builder
 public class RequestHeartDto {
-    private long senderId;
+    private String uId;
     private int contentCodeId;
     private long contentId;
 

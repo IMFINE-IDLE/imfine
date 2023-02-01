@@ -3,6 +3,7 @@ package com.idle.imfine.service.bamboo.impl;
 import com.idle.imfine.data.dto.bamboo.request.RequestBambooDto;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
+import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
@@ -194,21 +195,22 @@ public class BambooServiceImpl implements BambooService {
 
     @Override
     @Transactional
-    public void likeBamboo(long bambooId, String uid) {
+    public void likeBamboo(RequestHeartDto requestHeart, String uid) {
 
         User user = userRepository.getByUid(uid);
-        Bamboo bamboo = bambooRepository.getById(bambooId);
+        Bamboo bamboo = bambooRepository.getById(requestHeart.getContentId());
 
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
         if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
-        if(!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 4, bambooId)) {
+        if(!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 4,
+                bamboo.getId())) {
             Heart heart = Heart.builder()
                     .senderId(user.getId())
                     .contentsCodeId(4)
-                    .contentsId(bambooId)
+                    .contentsId(bamboo.getId())
                     .build();
 
             heartRepository.save(heart);
