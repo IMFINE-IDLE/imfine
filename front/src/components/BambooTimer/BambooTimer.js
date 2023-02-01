@@ -1,4 +1,4 @@
-import { BoxTimer, BasicBambooImg, LTBambooImg, LBBambooImg } from './Style';
+import { BoxTimer, BasicBambooImg, LTBambooImg, LBBambooImg } from './style';
 
 function BambooTimer({ remainHour }) {
   if (remainHour <= 24 && remainHour > 20) {

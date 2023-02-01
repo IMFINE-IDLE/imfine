@@ -8,7 +8,7 @@ import {
   BtnOuter,
   BoxBtnFilter,
   BoxContainer,
-} from './Style';
+} from './style';
 
 import BoxBamboo from '../../components/BoxBamboo/BoxBamboo';
 
