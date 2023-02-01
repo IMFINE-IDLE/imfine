@@ -38,7 +38,7 @@ public class LeafServiceImpl implements LeafService {
         Bamboo bamboo = bambooRepository.getById(requestLeafDto.getBambooId());
 
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
-        if (LocalDateTime.now().isBefore(endShowTime)) {
+        if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
@@ -65,7 +65,7 @@ public class LeafServiceImpl implements LeafService {
         Bamboo bamboo = bambooRepository.getById(leaf.getBamboo().getId());
 
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
-        if (LocalDateTime.now().isBefore(endShowTime)) {
+        if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
@@ -90,7 +90,7 @@ public class LeafServiceImpl implements LeafService {
         Bamboo bamboo = bambooRepository.getById(leaf.getBamboo().getId());
 
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
-        if (LocalDateTime.now().isBefore(endShowTime)) {
+        if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 

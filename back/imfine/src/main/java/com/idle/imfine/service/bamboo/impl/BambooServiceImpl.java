@@ -15,6 +15,7 @@ import com.idle.imfine.errors.code.BambooErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.bamboo.BambooService;
 import java.time.Duration;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,7 +160,7 @@ public class BambooServiceImpl implements BambooService {
 
         Bamboo bamboo = bambooRepository.getById(bambooId);
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
-        if (LocalDateTime.now().isBefore(endShowTime)) {
+        if (LocalDateTime.now().isAfter(endShowTime)) {
             LOGGER.info("24시간 지난 밤부-----------------------------------------------------");
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
@@ -198,7 +199,7 @@ public class BambooServiceImpl implements BambooService {
         Bamboo bamboo = bambooRepository.getById(bambooId);
 
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
-        if (LocalDateTime.now().isBefore(endShowTime)) {
+        if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
@@ -221,7 +222,7 @@ public class BambooServiceImpl implements BambooService {
         Bamboo bamboo = bambooRepository.getById(bambooId);
 
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
-        if (LocalDateTime.now().isBefore(endShowTime)) {
+        if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
@@ -233,9 +234,9 @@ public class BambooServiceImpl implements BambooService {
     }
 
     @Override
-//    @Scheduled(cron="* /5 * * * *")
+    @Scheduled(cron="0 0 0/1 * * *")
     public void deleteBamboo() {
-        LOGGER.info("Delete 수행");
+        LOGGER.info("Delete 수행 {}", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
         List<Bamboo> bamboos = bambooRepository.findByDeleteAtBefore(LocalDateTime.now());
         leafRepository.deleteLeavesBy(bamboos);
         bambooRepository.deleteByDeleteAtBefore(LocalDateTime.now());
