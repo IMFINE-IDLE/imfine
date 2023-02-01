@@ -1,6 +1,7 @@
 package com.idle.imfine.service.user;
 
 import com.idle.imfine.data.dto.user.response.FollowResponseDto;
+import com.idle.imfine.data.entity.User;
 
 import java.util.List;
 

@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 public class ModifyUserMedicalListRequestDto {
 
-    private List<String> medicalList;
+    private List<Integer> medicalList;
 
 }
