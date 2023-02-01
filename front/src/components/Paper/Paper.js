@@ -25,7 +25,7 @@ function Paper({ paper }) {
       {name}
       <div>{content}</div>
       <span>좋아요 개수 {likeCount}</span>
-      댓글개수 {commentCount}
+      <span>댓글 개수 {commentCount}</span>
     </BoxPaper>
   );
 }
