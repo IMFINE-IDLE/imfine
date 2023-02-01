@@ -2,11 +2,14 @@ import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
-import PaperFeed from './pages/PaperFeedPage/PaperFeedPage';
-import BambooPage from './pages/BambooPage/BambooPage';
+import BambooCreate from './pages/BambooCreate/BambooCreate';
+import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
+import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 
+import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
+import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -17,9 +20,9 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 //     background: none;
 //   }
 // `;
-import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
-import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
-import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
+
+
+
 
 function App() {
   return (
@@ -34,8 +37,8 @@ function App() {
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreate />} />
       </Route>
-      <Route path="/bamboo" element={<BambooPage />}></Route>
-
+      <Route path="/bamboo" element={<BambooFeedPage />}></Route>
+      <Route path="/bamboo/create" element={<BambooCreate />}></Route>
       <Route path="/profile" element={<ProfilePage />}>
         {/* <Route index path=":user" element={<ProfileContent />} />
         <Route path=":user/follows" element={<ProfileFollows />} /> */}
