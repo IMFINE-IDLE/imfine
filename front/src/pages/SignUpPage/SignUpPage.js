@@ -221,23 +221,23 @@ function SignUpPage() {
     confirmPwErrorMsg,
   } = errorMsg;
 
-  // const signUp = async () => {
-  //   const userData = {
-  //     uid: id,
-  //     name: name,
-  //     email: email,
-  //     password: password,
-  //     confirmPassword: confirmPassword,
-  //   };
-  //   try {
-  //     const res = axios.post(api.user.signUp(), userData);
-  //     console.log(res.data);
-  //     // 리덕스에 토큰 저장
-  //     setIsNext(true);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const signUpByData = async () => {
+    const userData = {
+      uid: id,
+      name: name,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+    };
+    try {
+      const success = await dispatch(signUp(userData)).unwrap();
+      setIsNext(true);
+      console.log(success);
+    } catch (rejectWithValue) {
+      console.log(rejectWithValue);
+      setIsNext(false);
+    }
+  };
 
   return (
     <>
@@ -335,14 +335,7 @@ function SignUpPage() {
                   onClick={(e) => {
                     e.preventDefault();
                     if (isValid) {
-                      const userData = {
-                        uid: id,
-                        name: name,
-                        email: email,
-                        password: password,
-                        confirmPassword: confirmPassword,
-                      };
-                      dispatch(signUp(userData));
+                      signUpByData();
                       setIsNext(true);
                     }
                   }}
