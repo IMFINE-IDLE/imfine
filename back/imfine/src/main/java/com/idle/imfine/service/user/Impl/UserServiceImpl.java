@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .name(requestDto.getName())
                 .email(requestDto.getEmail())
-//                .open(requestDto.isOpen())
+                .open(true)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SignInResponseDto signIn(SignInRequestDto requestDto) {
         LOGGER.info("[SignService.signIn] 회원 정보 요청");
-        User user = common.getUserByUid(requestDto.getId());
+        User user = common.getUserByUid(requestDto.getUid());
 
         LOGGER.info("[SignService.signIn] 패스워드 비교 수행");
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
@@ -98,6 +98,24 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         return responseDto;
+    }
+
+    @Override
+    public void initProfile(String uid, InitProfileRequestDto requestDto) {
+        User user = common.getUserByUid(uid);
+        user.setOpen(requestDto.isOpen());
+
+        // 중복 코드..
+        for (Integer code : requestDto.getMedicalList()) {
+            MedicalCode medicalCode = medicalCodeRepository.findById(code)
+                    .orElseThrow(() -> new ErrorException(MedicalErrorCode.MEDICAL_NOT_FOUND));
+            // 에러처리 생각해보기...
+            UserHasMedical userHasMedical = UserHasMedical.builder()
+                    .user(user)
+                    .medicalCode(medicalCode)
+                    .build();
+            userHasMedicalRepository.save(userHasMedical);
+        }
     }
 
     @Override
@@ -179,6 +197,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SearchUserInfoResponseDto searchUserInfo(String uid) {
         User user = common.getUserByUid(uid);
+        int condition = common.getTodayUserCondition(user);
         List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(user);
         List<String> medicalList = new ArrayList<>();
 
@@ -192,6 +211,7 @@ public class UserServiceImpl implements UserService {
                 .followingCount(user.getFollowingCount())
                 .followerCount(user.getFollowerCount())
                 .medicalList(medicalList)
+                .condition(condition)
                 .relation(0)
                 .build();
     }
@@ -201,7 +221,9 @@ public class UserServiceImpl implements UserService {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
 
+        int condition = common.getTodayUserCondition(other);
         int relation = common.getFollowRelation(user, other);
+
         List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(other);
         List<String> medicalList = new ArrayList<>();
 
@@ -215,6 +237,7 @@ public class UserServiceImpl implements UserService {
                 .followingCount(other.getFollowingCount())
                 .followerCount(other.getFollowerCount())
                 .medicalList(medicalList)
+                .condition(condition)
                 .relation(relation)
                 .build();
     }

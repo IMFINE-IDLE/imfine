@@ -2,13 +2,16 @@ package com.idle.imfine.data.dto.user.request;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UidDto {
+public class InitProfileRequestDto {
 
-    private String uid;
+    private boolean open;
+    private List<Integer> medicalList;
 
 }

@@ -37,8 +37,8 @@ public class UserController {
     }
 
     @PostMapping("/sign-out")
-    public ResponseEntity<Result> signOut(@LoginUser String uid) {
-        userService.signOut(uid);
+    public ResponseEntity<Result> signOut(@LoginUser String loginUid) {
+        userService.signOut(loginUid);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -55,6 +55,13 @@ public class UserController {
         SignInResponseDto responseDto = userService.signUp(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<Result> initProfile(@LoginUser String loginUid, @RequestBody InitProfileRequestDto requestDto) {
+        userService.initProfile(loginUid, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
     }
 
     @GetMapping("/check/uid/{uid}")
@@ -79,51 +86,51 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Result> withdrawal(@LoginUser String uid) {
-        userService.withdrawal(uid);
+    public ResponseEntity<Result> withdrawal(@LoginUser String loginUid) {
+        userService.withdrawal(loginUid);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @GetMapping
-    public ResponseEntity<Result> searchUserInfo(@LoginUser String uid) {
-        SearchUserInfoResponseDto responseDto = userService.searchUserInfo(uid);
+    public ResponseEntity<Result> searchUserInfo(@LoginUser String loginUid) {
+        SearchUserInfoResponseDto responseDto = userService.searchUserInfo(loginUid);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
-    @GetMapping("/{other}")
-    public ResponseEntity<Result> searchOtherUserInfo(@LoginUser String uid, @PathVariable String other) {
-        SearchUserInfoResponseDto responseDto = userService.searchUserInfo(uid, other);
+    @GetMapping("/{uid}")
+    public ResponseEntity<Result> searchOtherUserInfo(@LoginUser String loginUid, @PathVariable String uid) {
+        SearchUserInfoResponseDto responseDto = userService.searchUserInfo(loginUid, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
     }
 
     @PutMapping("/name")
-    public ResponseEntity<Result> modifyUserName(@LoginUser String uid, @RequestBody ModifyUserNameRequestDto requestDto) {
-        userService.modifyUserName(uid, requestDto);
+    public ResponseEntity<Result> modifyUserName(@LoginUser String loginUid, @RequestBody ModifyUserNameRequestDto requestDto) {
+        userService.modifyUserName(loginUid, requestDto);
 
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/open")
-    public ResponseEntity<Result> modifyUserOpen(@LoginUser String uid, @RequestBody ModifyUserOepnRequestDto requestDto) {
-        userService.modifyUserOpen(uid, requestDto);
+    public ResponseEntity<Result> modifyUserOpen(@LoginUser String loginUid, @RequestBody ModifyUserOepnRequestDto requestDto) {
+        userService.modifyUserOpen(loginUid, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/medical")
-    public ResponseEntity<Result> modifyUserMedicalList(@LoginUser String uid, @RequestBody ModifyUserMedicalListRequestDto requestDto) {
-        userService.modifyUserMedicalList(uid, requestDto);
+    public ResponseEntity<Result> modifyUserMedicalList(@LoginUser String loginUid, @RequestBody ModifyUserMedicalListRequestDto requestDto) {
+        userService.modifyUserMedicalList(loginUid, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Result> changePassword(@LoginUser String uid, @RequestBody ChangePasswordRequestDto requestDto) {
-        userService.changePassword(uid, requestDto);
+    public ResponseEntity<Result> changePassword(@LoginUser String loginUid, @RequestBody ChangePasswordRequestDto requestDto) {
+        userService.changePassword(loginUid, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -165,46 +172,46 @@ public class UserController {
     }
 
     @PostMapping("/condition")
-    public ResponseEntity<Result> createCondition(@LoginUser String uid, @RequestBody ConditionRequestDto requestDto) {
-        conditionService.createCondition(uid, requestDto);
+    public ResponseEntity<Result> createCondition(@LoginUser String loginUid, @RequestBody ConditionRequestDto requestDto) {
+        conditionService.createCondition(loginUid, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/condition")
-    public ResponseEntity<Result> modifyCondition(@LoginUser String uid, @RequestBody ConditionRequestDto requestDto) {
-        conditionService.modifyCondition(uid, requestDto);
+    public ResponseEntity<Result> modifyCondition(@LoginUser String loginUid, @RequestBody ConditionRequestDto requestDto) {
+        conditionService.modifyCondition(loginUid, requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
-    @GetMapping("/{other}/following")
-    public ResponseEntity<Result> searchFollowingList(@LoginUser String uid, @PathVariable String other) {
-        List<FollowResponseDto> responseDtoList = followService.searchFollowingList(uid, other);
+    @GetMapping("/{uid}/following")
+    public ResponseEntity<Result> searchFollowingList(@LoginUser String loginUid, @PathVariable String uid) {
+        List<FollowResponseDto> responseDtoList = followService.searchFollowingList(loginUid, uid);
 
         return ResponseEntity.ok()
                 .body(responseService.getListResult(responseDtoList));
     }
 
-    @GetMapping("/{other}/follower")
-    public ResponseEntity<Result> searchFollowerList(@LoginUser String uid, @PathVariable String other) {
-        List<FollowResponseDto> responseDtoList = followService.searchFollowerList(uid, other);
+    @GetMapping("/{uid}/follower")
+    public ResponseEntity<Result> searchFollowerList(@LoginUser String loginUid, @PathVariable String uid) {
+        List<FollowResponseDto> responseDtoList = followService.searchFollowerList(loginUid, uid);
 
         return ResponseEntity.ok()
                 .body(responseService.getListResult(responseDtoList));
     }
 
     @PostMapping("/follow")
-    public ResponseEntity<Result> followUser(@LoginUser String uid, @RequestBody UidDto requestDto) {
-        followService.followUser(uid, requestDto.getUid());
+    public ResponseEntity<Result> followUser(@LoginUser String loginUid, @RequestBody followUserRequestDto requestDto) {
+        followService.followUser(loginUid, requestDto.getUid());
 
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
-    @DeleteMapping("/follow/{otherUid}")
-    public ResponseEntity<Result> unfollowUser(@LoginUser String uid, @PathVariable String otherUid) {
-        followService.unfollowUser(uid, otherUid);
+    @DeleteMapping("/follow/{uid}")
+    public ResponseEntity<Result> unfollowUser(@LoginUser String loginUid, @PathVariable String uid) {
+        followService.unfollowUser(loginUid, uid);
 
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());

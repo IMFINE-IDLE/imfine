@@ -1,6 +1,8 @@
 package com.idle.imfine.service;
 
+import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.UserErrorCode;
@@ -17,11 +19,17 @@ import java.time.format.DateTimeFormatter;
 public class Common {
 
     private final UserRepository userRepository;
+    private final ConditionRepository conditionRepository;
     private final FollowRepository followRepository;
 
     public User getUserByUid(String uid) {
         return userRepository.findByUid(uid)
                 .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
+    }
+
+    public int getTodayUserCondition(User user) {
+        Condition condition = conditionRepository.findByUserAndDate(user, LocalDate.now()).orElse(null);
+        return condition != null ? condition.getCondition() : -1;
     }
 
     public int getFollowRelation(User user, User other) {
