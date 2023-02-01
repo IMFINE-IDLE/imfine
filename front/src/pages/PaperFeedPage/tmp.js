@@ -5,13 +5,15 @@ export const res = {
   data: [
     {
       paperId: 9,
+      name: '닉네임',
+      content: '일기내용블라블라',
       commentCount: 0,
       likeCount: 0,
       date: '20230126',
-      condition: null,
+      condition: 0,
       open: true,
       images: ['url', 'url2'],
-      responseSymptomRecordDtos: [
+      symtomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -26,13 +28,15 @@ export const res = {
     },
     {
       paperId: 8,
+      name: '닉네임',
+      content: '일기내용블라블라',
       commentCount: 0,
       likeCount: 0,
       date: '20230125',
-      condition: null,
+      condition: 1,
       open: true,
       images: ['url', 'url2'],
-      responseSymptomRecordDtos: [
+      symtomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -47,13 +51,15 @@ export const res = {
     },
     {
       paperId: 7,
+      name: '닉네임',
+      content: '일기내용블라블라',
       commentCount: 0,
       likeCount: 0,
       date: '20230124',
-      condition: null,
+      condition: 3,
       open: true,
       images: ['url', 'url2'],
-      responseSymptomRecordDtos: [
+      symtomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',
@@ -68,13 +74,15 @@ export const res = {
     },
     {
       paperId: 2,
+      name: '닉네임',
+      content: '일기내용블라블라',
       commentCount: 0,
       likeCount: 0,
       date: null,
-      condition: null,
+      condition: 4,
       open: true,
       images: ['url', 'url2'],
-      responseSymptomRecordDtos: [
+      symtomList: [
         {
           symptomId: 1,
           symptomName: '어지러움',

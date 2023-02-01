@@ -29,7 +29,7 @@ function PaperFeedPage() {
       <NavBarBasic />
       <BoxPaperFeed>
         {paperList.map((paper) => {
-          <Paper paper={paper} />;
+          return <Paper paper={paper} key={paper.paperId} />;
         })}
         <BtnFloat />
         <TabBar />
