@@ -59,6 +59,9 @@ public class Paper extends BaseCreatedEntity {
     @Column(nullable = false)
     private int likeCount;
 
+    @Column(nullable = false)
+    private int declarationCount;
+
     @OneToMany(mappedBy = "paper",fetch = FetchType.LAZY)
     private List<PaperHasSymptom> paperHasSymptoms;
 
@@ -73,5 +76,9 @@ public class Paper extends BaseCreatedEntity {
 
     public void delLikeCount() {
         this.likeCount -= 1;
+    }
+
+    public void declarationAdd() {
+        this.declarationCount += 1;
     }
 }

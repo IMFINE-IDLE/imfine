@@ -43,4 +43,8 @@ public class Comment extends BaseCreatedEntity {
 
     @Column(nullable = false)
     private int declarationCount;
+
+    public void declarationAdd() {
+        this.declarationCount += 1;
+    }
 }

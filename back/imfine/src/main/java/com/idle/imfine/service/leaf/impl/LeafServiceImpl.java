@@ -35,11 +35,12 @@ public class LeafServiceImpl implements LeafService {
         Bamboo bamboo = bambooRepository.getById(requestLeafDto.getBambooId());
 
         Leaf leaf = Leaf.builder()
-            .bamboo(bamboo)
-            .content(requestLeafDto.getContent())
-            .likeCount(0)
-            .declarationCount(0)
-            .build();
+                .bamboo(bamboo)
+                .content(requestLeafDto.getContent())
+                .writer(user)
+                .likeCount(0)
+                .declarationCount(0)
+                .build();
 
         LOGGER.info("잎 등록 {}", leaf);
         leafRepository.save(leaf);

@@ -45,4 +45,8 @@ public class Leaf extends BaseCreatedEntity {
     @ManyToOne
     @JoinColumn(name = "bamboo_id")
     Bamboo bamboo;
+
+    public void declarationAdd() {
+        this.declarationCount += 1;
+    }
 }
