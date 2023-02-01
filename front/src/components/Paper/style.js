@@ -6,6 +6,7 @@ const BoxPaper = styled(BoxLT50)`
   background-color: var(--gray-color);
   margin-bottom: 1.2em;
   cursor: pointer;
+  z-index: 1;
 `;
 
 export { BoxPaper };
