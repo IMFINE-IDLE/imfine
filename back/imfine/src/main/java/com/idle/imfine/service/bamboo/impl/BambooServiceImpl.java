@@ -1,5 +1,6 @@
 package com.idle.imfine.service.bamboo.impl;
 
+import com.idle.imfine.data.dto.bamboo.request.RequestBambooDto;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
@@ -44,12 +45,12 @@ public class BambooServiceImpl implements BambooService {
     private final LeafRepository leafRepository;
 
     @Override
-    public void save(String content, String uid) {
+    public void save(RequestBambooDto requestBamboo) {
 
-        User user = userRepository.getByUid(uid);
+        User user = userRepository.getByUid(requestBamboo.getWriterId());
 
         Bamboo bamboo = Bamboo.builder()
-                .content(content)
+                .content(requestBamboo.getContent())
                 .writer(user)
                 .likeCount(0)
                 .declarationCount(0)

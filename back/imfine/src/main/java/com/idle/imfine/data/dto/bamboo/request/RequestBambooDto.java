@@ -13,5 +13,9 @@ import lombok.ToString;
 @ToString
 public class RequestBambooDto {
     private String content;
-    private int writerId;
+    private String writerId;
+
+    public void setWriterId(String writerId) {
+        this.writerId = writerId;
+    }
 }

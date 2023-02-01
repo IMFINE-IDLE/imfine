@@ -3,6 +3,7 @@ package com.idle.imfine.controller;
 import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
+import com.idle.imfine.data.dto.bamboo.request.RequestBambooDto;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.service.bamboo.BambooService;
@@ -76,10 +77,11 @@ public class BambooController {
     }
     @PostMapping
     // 로그인 구현되면 loginuser 추가하기
-    public ResponseEntity<Result> postBamboo(@RequestBody String content, @LoginUser String uid) {
-        LOGGER.info("대나무 등록 api에 들어왔습니다. {}", content);
+    public ResponseEntity<Result> postBamboo(@RequestBody RequestBambooDto requestBamboo, @LoginUser String uid) {
+        LOGGER.info("대나무 등록 api에 들어왔습니다.");
 //        RequestBambooDto rbd = new RequestBambooDto(content, 1);
-        bambooService.save(content, uid);
+        requestBamboo.setWriterId(uid);
+        bambooService.save(requestBamboo);
 //        LOGGER.info("대나무 등록 api에 들어왔습니다. {}", rbd);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
