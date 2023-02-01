@@ -1,5 +1,5 @@
 import React from 'react';
-import BambooHeader from '../../components/BambooHeader/BambooHeader';
+import BambooHeader from '../../components/Bamboo/BambooHeader/BambooHeader';
 import Tabs from '../../components/Tabs/Tabs';
 import TabBar from '../../components/TabBar/TabBar';
 import BambooBtnFloat from '../../components/Bamboo/BambooBtnFloat/BambooBtnFloat';

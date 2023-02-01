@@ -1,5 +1,5 @@
 import React from 'react';
-import BambooHeader from '../../components/BambooHeader/BambooHeader';
+import BambooHeader from '../../components/Bamboo/BambooHeader/BambooHeader';
 
 function BambooCreate() {
   return (
