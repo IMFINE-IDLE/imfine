@@ -101,6 +101,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void initProfile(String uid, InitProfileRequestDto requestDto) {
+        User user = common.getUserByUid(uid);
+        user.setOpen(requestDto.isOpen());
+
+        // 중복 코드..
+        for (Integer code : requestDto.getMedicalList()) {
+            MedicalCode medicalCode = medicalCodeRepository.findById(code)
+                    .orElseThrow(() -> new ErrorException(MedicalErrorCode.MEDICAL_NOT_FOUND));
+            // 에러처리 생각해보기...
+            UserHasMedical userHasMedical = UserHasMedical.builder()
+                    .user(user)
+                    .medicalCode(medicalCode)
+                    .build();
+            userHasMedicalRepository.save(userHasMedical);
+        }
+    }
+
+    @Override
     public void signOut(String uid) {
         LOGGER.info("[SignService.signOut] refresh token 제거 uid: {}", uid);
         User user = common.getUserByUid(uid);

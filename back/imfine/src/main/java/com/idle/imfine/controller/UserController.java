@@ -57,6 +57,13 @@ public class UserController {
                 .body(responseService.getSingleResult(responseDto));
     }
 
+    @PutMapping("/profile")
+    public ResponseEntity<Result> initProfile(@LoginUser String loginUid, @RequestBody InitProfileRequestDto requestDto) {
+        userService.initProfile(loginUid, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
     @GetMapping("/check/uid/{uid}")
     public ResponseEntity<Result> checkUidDuplicate(@PathVariable String uid) {
         userService.checkUidDuplicate(uid);

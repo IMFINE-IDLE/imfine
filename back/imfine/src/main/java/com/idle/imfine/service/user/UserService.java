@@ -13,6 +13,8 @@ public interface UserService {
 
     SignInResponseDto signIn(SignInRequestDto requestDto);
 
+    void initProfile(String uid, InitProfileRequestDto requestDto);
+
     void signOut(String uid);
 
     RefreshResponseDto refresh(String refreshToken);
