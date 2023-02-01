@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UidDto {
+public class followUserRequestDto {
 
     private String uid;
 

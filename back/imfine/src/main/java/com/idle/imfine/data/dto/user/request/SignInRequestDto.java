@@ -15,7 +15,7 @@ import lombok.ToString;
 @Builder
 public class SignInRequestDto {
 
-    private String id;
+    private String uid;
     private String password;
 
 }

@@ -13,6 +13,7 @@ public class SearchUserInfoResponseDto {
     private Integer followingCount;
     private Integer followerCount;
     private List<String> medicalList;
+    private int condition;
     private int relation;
 
 }

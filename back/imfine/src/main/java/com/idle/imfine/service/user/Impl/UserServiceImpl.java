@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SignInResponseDto signIn(SignInRequestDto requestDto) {
         LOGGER.info("[SignService.signIn] 회원 정보 요청");
-        User user = common.getUserByUid(requestDto.getId());
+        User user = common.getUserByUid(requestDto.getUid());
 
         LOGGER.info("[SignService.signIn] 패스워드 비교 수행");
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
@@ -179,6 +179,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public SearchUserInfoResponseDto searchUserInfo(String uid) {
         User user = common.getUserByUid(uid);
+        int condition = common.getTodayUserCondition(user);
         List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(user);
         List<String> medicalList = new ArrayList<>();
 
@@ -192,6 +193,7 @@ public class UserServiceImpl implements UserService {
                 .followingCount(user.getFollowingCount())
                 .followerCount(user.getFollowerCount())
                 .medicalList(medicalList)
+                .condition(condition)
                 .relation(0)
                 .build();
     }
@@ -201,7 +203,9 @@ public class UserServiceImpl implements UserService {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
 
+        int condition = common.getTodayUserCondition(other);
         int relation = common.getFollowRelation(user, other);
+
         List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(other);
         List<String> medicalList = new ArrayList<>();
 
@@ -215,6 +219,7 @@ public class UserServiceImpl implements UserService {
                 .followingCount(other.getFollowingCount())
                 .followerCount(other.getFollowerCount())
                 .medicalList(medicalList)
+                .condition(condition)
                 .relation(relation)
                 .build();
     }
