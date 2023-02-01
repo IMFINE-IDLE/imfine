@@ -12,12 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponsePaperDto {
+    private long diaryId;
+    private String title;
     private long paperId;
+    private String uid;
+    private String content;
     private int commentCount;
     private int likeCount;
     private String date;
     private String condition;
     private boolean open;
     List<String> images;
-    List<ResponsePaperSymptomRecordDto> responseSymptomRecordDtos;
+    List<ResponsePaperSymptomRecordDto> symptomList;
 }
