@@ -1,28 +1,30 @@
 import React from 'react';
-import { Clover, CloverWrap } from './style';
+import { CloverWrap } from './style';
+import { Clover } from '../common/Clover/Clover';
 
 const CloverModal = ({ setCurrentClover, setCloversOpen }) => {
   const statusList = [
-    ['pink', '두근'],
-    ['main', '평온'],
-    ['yellow', '활기참'],
-    ['lightgreen', '행복'],
-    ['orange', '호기심'],
-    ['red', '화나요'],
-    ['lightgray', '슬픔'],
-    ['blue', '우울'],
-    ['purple', '언짢음'],
-    ['darkgray', '피곤함'],
+    ['0', '두근'],
+    ['1', '평온'],
+    ['2', '활기참'],
+    ['3', '행복'],
+    ['4', '호기심'],
+    ['5', '화나요'],
+    ['6', '슬픔'],
+    ['7', '우울'],
+    ['8', '언짢음'],
+    ['9', '피곤함'],
   ];
 
   const cloverList = statusList.map((status, idx) => (
     <li key={idx}>
       <Clover
+        code={status[0]}
+        pointer={true}
         onClick={() => {
           setCurrentClover(status[0]);
           setCloversOpen((prev) => !prev);
         }}
-        src={`/assets/clovers/clover-${status[0]}.svg`}
       />
       <span>{status[1]}</span>
     </li>
