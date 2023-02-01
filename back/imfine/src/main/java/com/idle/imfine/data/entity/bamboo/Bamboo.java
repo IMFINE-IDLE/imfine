@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity
 @Data
@@ -35,13 +36,14 @@ public class Bamboo extends BaseCreatedEntity {
     private long id;
     @Column(length = 300)
     private String content;
-    @Column
+    @Column(nullable = false)
     private int likeCount;
-    @Column
+    @Column(nullable = false)
     private int declarationCount;
-    @Column
+    @Column(nullable = false)
     private int leafCount;
     @Column
+    @CreatedDate
     private LocalDateTime deleteAt;
     @ManyToOne
     @JoinColumn(name="writer_id")
