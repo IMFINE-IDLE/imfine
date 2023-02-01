@@ -7,7 +7,7 @@ import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
-
+import BambooDetailPage from './pages/BambooDetailPage/BambooDeatilPage';
 import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
 import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 // 뷰포트 사이즈 결정 필요
@@ -36,6 +36,7 @@ function App() {
       </Route>
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
+      <Route path="/bamboo/detail" element={<BambooDetailPage />}></Route>
       <Route path="/profile" element={<ProfilePage />}>
         {/* <Route index path=":user" element={<ProfileContent />} />
         <Route path=":user/follows" element={<ProfileFollows />} /> */}
