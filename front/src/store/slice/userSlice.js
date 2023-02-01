@@ -8,17 +8,55 @@ export const signUp = createAsyncThunk(
     try {
       const res = await axios.post(api.user.signUp(), userData);
       console.log(res.data);
+      const { accessToken, refreshToken } = res.data.data;
       const saveData = {
         uid: userData.uid,
-        accessToken: res.data.data.accessToken,
-        refreshToken: res.data.data.refreshToken,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       };
+
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
+      // console.log(accessToken);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
+      setInterval(logOut, JWT_EXPIRATION_TIME);
+
       return saveData;
     } catch (err) {
       return rejectWithValue(err);
     }
   }
 );
+
+export const logIn = createAsyncThunk(
+  'user/login',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const resLogin = await axios.post(api.user.login(), userData);
+      // console.log(resLogin.data.data);
+      const { accessToken, refreshToken } = resLogin.data.data;
+      const saveData = {
+        uid: userData.uid,
+        accessToken,
+        refreshToken,
+      };
+
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
+      // console.log(accessToken);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
+      setInterval(logOut, JWT_EXPIRATION_TIME);
+
+      return saveData;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const logOut = createAsyncThunk('user/logOut', async () => {});
 
 const userSlice = createSlice({
   name: 'user',
@@ -38,6 +76,15 @@ const userSlice = createSlice({
         state.uid = action.payload.uid;
       })
       .addCase(signUp.rejected, (state, action) => {
+        console.log(action.payload.response.data);
+      })
+      .addCase(logIn.fulfilled, (state, action) => {
+        state.isLogin = true;
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+        state.uid = action.payload.uid;
+      })
+      .addCase(logIn.rejected, (state, action) => {
         console.log(action.payload.response.data);
       });
   },
