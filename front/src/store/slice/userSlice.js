@@ -8,11 +8,20 @@ export const signUp = createAsyncThunk(
     try {
       const res = await axios.post(api.user.signUp(), userData);
       console.log(res.data);
+      const { accessToken, refreshToken } = res.data.data;
       const saveData = {
         uid: userData.uid,
-        accessToken: res.data.data.accessToken,
-        refreshToken: res.data.data.refreshToken,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       };
+
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
+      // console.log(accessToken);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
+      setInterval(logOut, JWT_EXPIRATION_TIME);
+
       return saveData;
     } catch (err) {
       return rejectWithValue(err);
@@ -38,7 +47,7 @@ export const logIn = createAsyncThunk(
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
       const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
-      setInterval(dispatchLogOut, JWT_EXPIRATION_TIME);
+      setInterval(logOut, JWT_EXPIRATION_TIME);
 
       return saveData;
     } catch (err) {
@@ -47,7 +56,7 @@ export const logIn = createAsyncThunk(
   }
 );
 
-const dispatchLogOut = () => {};
+export const logOut = createAsyncThunk('user/logOut', async () => {});
 
 const userSlice = createSlice({
   name: 'user',
