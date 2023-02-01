@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MedicalCodeRepository extends JpaRepository<MedicalCode, Integer> {
     List<MedicalCode> findByIdIn(List<Integer> medicalId);
+
+    List<MedicalCode> findByMedicalDepartmentCode_Id(int medicalDepartmentId);
 }
