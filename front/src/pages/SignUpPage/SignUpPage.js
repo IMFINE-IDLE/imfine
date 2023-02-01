@@ -131,6 +131,20 @@ function SignUpPage() {
           }, 2000);
         }
         // 닉네임 중복체크 로직
+        const asyncCheckName = async () => {
+          try {
+            const res = await axios.get(api.user.checkName(currInput.name));
+            setErrMsg((prev) => {
+              return { ...prev, nameErrorMsg: '' };
+            });
+          } catch (err) {
+            console.log(err.response.data);
+            setErrMsg((prev) => {
+              return { ...prev, nameErrorMsg: err.response.data.message };
+            });
+          }
+        };
+        asyncCheckName();
       }
 
       // 3. 이메일 유효성 검사
