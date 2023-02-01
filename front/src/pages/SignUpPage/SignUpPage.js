@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { useReducer, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api/api';
 import PickSymptom from '../../components/PickSymptom/PickSymptom';
 import { signUp } from '../../store/slice/userSlice';
 import {
@@ -85,7 +87,21 @@ function SignUpPage() {
           }, 2000); // 2초뒤 에러 메시지 지움
         }
 
-        // 아이디 중복체크 로직
+        // 아이디 중복체크
+        const asyncCheckId = async () => {
+          try {
+            const res = await axios.get(api.user.checkId(currInput.id));
+            setErrMsg((prev) => {
+              return { ...prev, idErrorMsg: '' };
+            });
+          } catch (err) {
+            console.log(err.response.data);
+            setErrMsg((prev) => {
+              return { ...prev, idErrorMsg: err.response.data.message };
+            });
+          }
+        };
+        asyncCheckId();
       }
 
       // 2. 닉네임 유효성 검사
@@ -115,6 +131,20 @@ function SignUpPage() {
           }, 2000);
         }
         // 닉네임 중복체크 로직
+        const asyncCheckName = async () => {
+          try {
+            const resName = await axios.get(api.user.checkName(currInput.name));
+            setErrMsg((prev) => {
+              return { ...prev, nameErrorMsg: '' };
+            });
+          } catch (err) {
+            console.log(err.response.data);
+            setErrMsg((prev) => {
+              return { ...prev, nameErrorMsg: err.response.data.message };
+            });
+          }
+        };
+        asyncCheckName();
       }
 
       // 3. 이메일 유효성 검사
@@ -148,7 +178,23 @@ function SignUpPage() {
           });
         }
 
-        // 이메일 중복체크 로직
+        // 이메일 중복체크
+        const asyncCheckEmail = async () => {
+          try {
+            const resEmail = await axios.get(
+              api.user.checkEmail(currInput.email)
+            );
+            setErrMsg((prev) => {
+              return { ...prev, emailErrorMsg: '' };
+            });
+          } catch (err) {
+            console.log(err.response.data);
+            setErrMsg((prev) => {
+              return { ...prev, emailErrorMsg: err.response.data.message };
+            });
+          }
+        };
+        asyncCheckEmail();
       }
 
       // 4. 비밀번호 유효성 검사
@@ -182,12 +228,13 @@ function SignUpPage() {
       }
 
       // 전체 유효 여부 확인
-      const isError = !Object.values(errorMsg).every(
+      const noErr = Object.values(errorMsg).every(
         (x) => x === '' || x === null
       );
-      console.log(isError);
+      console.log(noErr);
       if (
-        isError &&
+        noErr &&
+        // Object.values(errorMsg).every((x) => x === '' || x === null) &&
         currInput.id.length > 0 &&
         currInput.name.length > 0 &&
         currInput.email.length > 0 &&
@@ -221,23 +268,24 @@ function SignUpPage() {
     confirmPwErrorMsg,
   } = errorMsg;
 
-  // const signUp = async () => {
-  //   const userData = {
-  //     uid: id,
-  //     name: name,
-  //     email: email,
-  //     password: password,
-  //     confirmPassword: confirmPassword,
-  //   };
-  //   try {
-  //     const res = axios.post(api.user.signUp(), userData);
-  //     console.log(res.data);
-  //     // 리덕스에 토큰 저장
-  //     setIsNext(true);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const signUpByData = async () => {
+    const userData = {
+      uid: id,
+      name: name,
+      email: email,
+      password: password,
+      confirmPassword: confirmPassword,
+    };
+    try {
+      const success = await dispatch(signUp(userData)).unwrap();
+      setIsNext(true);
+      console.log(success);
+    } catch (rejectWithValue) {
+      console.log(rejectWithValue);
+      alert(rejectWithValue.response.data.message);
+      setIsNext(false);
+    }
+  };
 
   return (
     <>
@@ -335,19 +383,11 @@ function SignUpPage() {
                   onClick={(e) => {
                     e.preventDefault();
                     if (isValid) {
-                      const userData = {
-                        uid: id,
-                        name: name,
-                        email: email,
-                        password: password,
-                        confirmPassword: confirmPassword,
-                      };
-                      dispatch(signUp(userData));
-                      setIsNext(true);
+                      signUpByData();
                     }
                   }}
                 >
-                  다음 단계
+                  회원가입하기
                 </BtnSignup>
               ) : (
                 <BtnSignup
@@ -359,7 +399,7 @@ function SignUpPage() {
                   disabled
                   style={{ cursor: 'not-allowed' }}
                 >
-                  다음 단계
+                  회원가입하기
                 </BtnSignup>
               )}
             </form>
