@@ -1,22 +1,36 @@
-import React, { useEffect } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import Paper from '../../components/Paper/Paper';
 import TabBar from '../../components/TabBar/TabBar';
 import { BoxPaperFeed } from './style';
+import { res } from './tmp';
 
 function PaperFeedPage() {
+  const [paperList, setPaperList] = useState([]);
   useEffect(() => {
-    // api 통신
+    // const fetchPaperFeed = async () => {
+    //   try {
+    //     const res = await axios.get(api.paper.paperFeed());
+    //     setPaperList(res.data);
+    //   } catch (err) {
+    //     console.log(err);
+    //   }
+    // };
+    // fetchPaperFeed()
 
-    return () => {};
+    setPaperList(res.data);
   }, []);
 
   return (
     <>
       <NavBarBasic />
       <BoxPaperFeed>
-        <Paper />
+        {paperList.map((paper) => {
+          <Paper paper={paper} />;
+        })}
         <BtnFloat />
         <TabBar />
       </BoxPaperFeed>

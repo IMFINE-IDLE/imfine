@@ -1,4 +1,4 @@
-const res = {
+export const res = {
   success: true,
   status: 200,
   message: '요청에 성공하였습니다.',
