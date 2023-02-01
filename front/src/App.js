@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
-import BambooCreate from './pages/BambooCreate/BambooCreate';
+import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
@@ -21,9 +21,6 @@ import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 //   }
 // `;
 
-
-
-
 function App() {
   return (
     // <Wrapper>
@@ -38,7 +35,7 @@ function App() {
         <Route path="/paper/create" element={<PaperCreate />} />
       </Route>
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
-      <Route path="/bamboo/create" element={<BambooCreate />}></Route>
+      <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
       <Route path="/profile" element={<ProfilePage />}>
         {/* <Route index path=":user" element={<ProfileContent />} />
         <Route path=":user/follows" element={<ProfileFollows />} /> */}
