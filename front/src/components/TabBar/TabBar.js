@@ -4,6 +4,7 @@ import { ReactComponent as MainTabSvg } from './icons/home.svg';
 import { ReactComponent as DiaryTabSvg } from './icons/diary.svg';
 import { ReactComponent as BambooTabSvg } from './icons/bamboo.svg';
 import { ReactComponent as ProfileTabSvg } from './icons/profile.svg';
+import { Clover } from '../common/Clover/Clover';
 import CloverModal from './CloverModal';
 import {
   TabContainer,
@@ -11,12 +12,12 @@ import {
   TabNavLink,
   ActiveBar,
   TabCenter,
-  Clover,
+  MainClover,
   CloverStatusContainer,
 } from './style';
 
 const TabBar = () => {
-  const [currentClover, setCurrentClover] = useState('main');
+  const [currentClover, setCurrentClover] = useState('default');
   const [cloversOpen, setCloversOpen] = useState(false);
 
   return (
@@ -44,12 +45,12 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <TabCenter>
-          <Clover
+          <MainClover
             onClick={() => setCloversOpen((prev) => !prev)}
-            src={`/assets/clovers/clover-${currentClover}.svg`}
+            code={currentClover}
             width="6.25em"
             height="6.25em"
-            isMain={true}
+            pointer={true}
           />
         </TabCenter>
         <Tab>
