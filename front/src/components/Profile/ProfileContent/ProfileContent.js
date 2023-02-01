@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Tabs from '../Tabs/Tabs';
-import StatusCalendar from '../StatusCalendar/StatusCalendar';
+import Tabs from '../../Tabs/Tabs';
+import StatusCalendar from '../../StatusCalendar/StatusCalendar';
 
 const ProfileContent = () => {
   const tabArr = [

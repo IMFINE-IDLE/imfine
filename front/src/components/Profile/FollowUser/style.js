@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Btn } from '../common/Btn/Btn';
+import { Btn } from '../../common/Btn/Btn';
 
 const FollowUserContainer = styled.div`
   width: 100%;

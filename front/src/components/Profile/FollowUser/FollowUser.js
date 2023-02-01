@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clover } from '../common/Clover/Clover';
+import { Clover } from '../../common/Clover/Clover';
 import { FollowUserBtn, FollowUserContainer, FollowUserWrapper } from './style';
 
 const FollowUser = ({ cloverCode, name, type, followStatus }) => {

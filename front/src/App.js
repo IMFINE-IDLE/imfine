@@ -17,8 +17,8 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 //     background: none;
 //   }
 // `;
-import ProfileContent from './components/ProfileContent/ProfileContent';
-import ProfileFollows from './components/ProfileFollows/ProfileFollows';
+import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
+import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 
 function App() {

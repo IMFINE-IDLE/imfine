@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import FollowUser from '../FollowUser/FollowUser';
+import FollowUser from '../Profile/FollowUser/FollowUser';
 import { FollowsListContainer } from './style';
 
 const FollowingList = () => {

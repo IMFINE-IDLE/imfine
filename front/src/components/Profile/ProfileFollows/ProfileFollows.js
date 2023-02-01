@@ -1,6 +1,6 @@
 import React from 'react';
-import FollowingList from '../FollowingList/FollowingList';
-import Tabs from '../Tabs/Tabs';
+import FollowingList from '../../FollowingList/FollowingList';
+import Tabs from '../../Tabs/Tabs';
 
 const ProfileFollows = () => {
   const FollowerList = () => {
