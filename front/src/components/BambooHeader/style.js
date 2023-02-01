@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const BoxOuter = styled.div`
   padding: ${(props) => props.padding || '0px'};
+  margin-bottom: 6em;
 `;
 
 const BoxHeader = styled.div`
@@ -34,7 +35,7 @@ const BambooImg = styled.img.attrs({
 })`
   position: relative;
   right: 1em;
-  bottom: 0em;
+  bottom: 0.1em;
   width: 8em;
   height: 9em;
   float: right;

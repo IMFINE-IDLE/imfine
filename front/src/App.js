@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
 import PaperFeed from './pages/PaperFeed/PaperFeed';
-import BambooPage from './pages/BambooPage/BambooPage';
+import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 
@@ -34,7 +34,7 @@ function App() {
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreate />} />
       </Route>
-      <Route path="/bamboo" element={<BambooPage />}></Route>
+      <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreate />}></Route>
       <Route path="/profile" element={<ProfilePage />}>
         {/* <Route index path=":user" element={<ProfileContent />} />

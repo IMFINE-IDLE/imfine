@@ -1,20 +1,13 @@
 import React from 'react';
-import { BoxOuter, BoxHeader, TitleHeader, SubTitleHeader } from './style';
+import BambooHeader from '../../components/BambooHeader/BambooHeader';
 
 function BambooCreate() {
   return (
-    <div>
-      <BoxOuter>
-        <BoxHeader>
-          <TitleHeader> 대나무심기</TitleHeader>
-          <SubTitleHeader>
-            서브텍스트입니다.
-            <br />
-            다음줄로도 넘어갈걸요?
-          </SubTitleHeader>
-        </BoxHeader>
-      </BoxOuter>
-    </div>
+    <BambooHeader
+      title={'대나무작성'}
+      subTitle={'대나무작성페이지입니다.'}
+      secondSubTitle={'둘째줄 설명도이어서'}
+    />
   );
 }
 
