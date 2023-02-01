@@ -168,7 +168,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .condition("기쁨")
                 .open(paper.isOpen())
                 .images(new ArrayList<>())
-                .responseSymptomRecordDtos(paper.getPaperHasSymptoms().stream().map(
+                .symptomList(paper.getPaperHasSymptoms().stream().map(
                         symtom ->
                                 ResponsePaperSymptomRecordDto.builder()
                                         .symptomId(symtom.getSymptomId())

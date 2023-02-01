@@ -5,6 +5,7 @@ import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -60,5 +61,7 @@ public class Common {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return LocalDate.parse(date, formatter);
     }
-
+    public String convertDateAllType(LocalDateTime date) {
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+    }
 }
