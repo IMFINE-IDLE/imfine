@@ -7,6 +7,9 @@ const PAPER = '/paper';
 const api = {
   user: {
     signUp: () => URL + USERS + '/sign-up',
+    checkId: (params) => URL + USERS + `/check/uid/${params}`,
+    // checkName: () => URL + USERS + '/check/uid',
+    // checkEmail: () => URL + USERS + '/check/uid',
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',

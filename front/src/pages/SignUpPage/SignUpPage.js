@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { useReducer, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import api from '../../api/api';
 import PickSymptom from '../../components/PickSymptom/PickSymptom';
 import { signUp } from '../../store/slice/userSlice';
 import {
@@ -85,7 +87,21 @@ function SignUpPage() {
           }, 2000); // 2초뒤 에러 메시지 지움
         }
 
-        // 아이디 중복체크 로직
+        // 아이디 중복체크
+        const asyncCheckId = async () => {
+          try {
+            const res = await axios.get(api.user.checkId(currInput.id));
+            setErrMsg((prev) => {
+              return { ...prev, idErrorMsg: '' };
+            });
+          } catch (err) {
+            console.log(err.response.data);
+            setErrMsg((prev) => {
+              return { ...prev, idErrorMsg: err.response.data.message };
+            });
+          }
+        };
+        asyncCheckId();
       }
 
       // 2. 닉네임 유효성 검사
@@ -182,12 +198,13 @@ function SignUpPage() {
       }
 
       // 전체 유효 여부 확인
-      const isError = !Object.values(errorMsg).every(
+      const noErr = Object.values(errorMsg).every(
         (x) => x === '' || x === null
       );
-      console.log(isError);
+      console.log(noErr);
       if (
-        isError &&
+        noErr &&
+        // Object.values(errorMsg).every((x) => x === '' || x === null) &&
         currInput.id.length > 0 &&
         currInput.name.length > 0 &&
         currInput.email.length > 0 &&
@@ -235,6 +252,7 @@ function SignUpPage() {
       console.log(success);
     } catch (rejectWithValue) {
       console.log(rejectWithValue);
+      alert(rejectWithValue.response.data.message);
       setIsNext(false);
     }
   };
@@ -336,11 +354,10 @@ function SignUpPage() {
                     e.preventDefault();
                     if (isValid) {
                       signUpByData();
-                      setIsNext(true);
                     }
                   }}
                 >
-                  다음 단계
+                  회원가입하기
                 </BtnSignup>
               ) : (
                 <BtnSignup
@@ -352,7 +369,7 @@ function SignUpPage() {
                   disabled
                   style={{ cursor: 'not-allowed' }}
                 >
-                  다음 단계
+                  회원가입하기
                 </BtnSignup>
               )}
             </form>
