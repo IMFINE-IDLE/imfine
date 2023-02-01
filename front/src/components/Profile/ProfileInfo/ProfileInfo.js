@@ -9,7 +9,14 @@ import {
   ProfileNickNameWrapper,
 } from './style';
 
-const ProfileInfo = ({ open, followingCnt, followerCnt, relation }) => {
+const ProfileInfo = ({
+  condition,
+  name,
+  open,
+  followingCount,
+  followerCount,
+  relation,
+}) => {
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
       <ProfileInfoContainer>
@@ -19,7 +26,7 @@ const ProfileInfo = ({ open, followingCnt, followerCnt, relation }) => {
           <ProfileNickNameWrapper>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <ProfileItemSpan style={{ fontSize: '1.5em' }}>
-                {'닉네임'}
+                {name}
               </ProfileItemSpan>
               {open || (
                 <img
@@ -43,17 +50,17 @@ const ProfileInfo = ({ open, followingCnt, followerCnt, relation }) => {
           <div>
             <ProfileItemSpan>팔로잉</ProfileItemSpan>
             <ProfileItemSpan>
-              {followingCnt >= 1000
-                ? parseInt(followingCnt / 1000) + 'k'
-                : followingCnt}
+              {followingCount >= 1000
+                ? parseInt(followingCount / 1000) + 'k'
+                : followingCount}
             </ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
             <ProfileItemSpan>팔로워</ProfileItemSpan>
             <ProfileItemSpan>
-              {followerCnt >= 1000
-                ? parseInt(followerCnt / 1000) + 'k'
-                : followerCnt}
+              {followerCount >= 1000
+                ? parseInt(followerCount / 1000) + 'k'
+                : followerCount}
             </ProfileItemSpan>
           </div>
         </ProfileInfoWrapper>
