@@ -72,6 +72,9 @@ public class Diary extends BaseCreatedEntity{
 
     private LocalDateTime endedAt;
 
+    @Column(nullable = false)
+    private int declarationCount;
+
     @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
     private List<Paper> papers;
 
@@ -86,5 +89,7 @@ public class Diary extends BaseCreatedEntity{
         this.paperCount -= 1;
     }
 
-
+    public void declarationAdd() {
+        this.declarationCount += 1;
+    }
 }
