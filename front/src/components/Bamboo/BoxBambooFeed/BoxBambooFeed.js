@@ -9,21 +9,24 @@ import {
 } from './style';
 
 import BambooTimer from '../BambooTimer/BambooTimer';
-function BoxBamboo({ context, heartCount, replyCount, remainHour }) {
+
+function BoxBambooFeed({ bamboo }) {
+  const { content } = bamboo;
   return (
+    /* box 눌렀을때 navigate 설정필요*/
     <BoxBambooOuter>
       <BoxShadBamboo>
-        <BambooTimer remainHour={remainHour} />
-        <TextContent>{context}</TextContent>
+        <BambooTimer remainHour={20} />
+        <TextContent>{content}</TextContent>
         <LabelOuter>
           <BsHeartFill />
-          <LabelStatus>{heartCount}</LabelStatus>
+          <LabelStatus>{content}</LabelStatus>
           <RiChat3Line />
-          <LabelStatus>{replyCount}</LabelStatus>
+          <LabelStatus>{content}</LabelStatus>
         </LabelOuter>
       </BoxShadBamboo>
     </BoxBambooOuter>
   );
 }
 
-export default BoxBamboo;
+export default BoxBambooFeed;
