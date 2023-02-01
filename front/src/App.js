@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
-import PaperFeed from './pages/PaperFeed/PaperFeed';
+import PaperFeed from './pages/PaperFeedPage/PaperFeedPage';
 import BambooPage from './pages/BambooPage/BambooPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
@@ -19,14 +19,15 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 // `;
 import ProfileContent from './components/ProfileContent/ProfileContent';
 import ProfileFollows from './components/ProfileFollows/ProfileFollows';
+import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 
 function App() {
   return (
     // <Wrapper>
     <Routes>
-      <Route index element={<PaperFeed />} />
+      <Route index element={<PaperFeedPage />} />
       <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/home" element={<PaperFeed />} />
+      <Route path="/home" element={<PaperFeedPage />} />
       <Route path="/diary">
         <Route path="/diary/create" element={<DiaryCreate />} />
       </Route>
@@ -41,7 +42,6 @@ function App() {
         <Route index element={<ProfileContent />} />
         <Route path="follows" element={<ProfileFollows />} />
       </Route>
-
     </Routes>
     // </Wrapper>
   );
