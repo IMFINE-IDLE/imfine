@@ -7,6 +7,7 @@ import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.repository.comment.CommentRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
+import com.idle.imfine.service.Common;
 import com.idle.imfine.service.comment.CommentService;
 import com.idle.imfine.service.user.Impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final UserServiceImpl userService;
+    private final Common common;
     private final HeartRepository heartRepository;
 
     @Override
     @Transactional
     public void save(RequestContentRegistraitionDto requestContentRegistraitionDto, String uid) {
-        User user = userService.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
         commentRepository.save(Comment.builder()
                         .content(requestContentRegistraitionDto.getContent())
                         .writer(user)
@@ -35,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void delete(long commentId, String uid) {
-        User user = userService.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
         Comment comment = commentRepository.getById(commentId);
         if (comment.getWriter().getId() == user.getId()){
             commentRepository.delete(comment);
@@ -46,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void postCommentLike(RequestHeartDto requestHeartDto, String uid) {
-        User user = userService.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
 
         Comment comment = commentRepository.getById(requestHeartDto.getContentId());
         //에러처리 똑바로
@@ -66,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteCommentLike(long commentId, String uid) {
-        User user = userService.getUserByUid(uid);
+        User user = common.getUserByUid(uid);
 
         Comment comment = commentRepository.getById(commentId);
         //에러처리 똑바로
