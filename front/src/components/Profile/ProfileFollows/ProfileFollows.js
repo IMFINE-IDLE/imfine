@@ -1,12 +1,9 @@
 import React from 'react';
-import FollowingList from '../../FollowingList/FollowingList';
+import FollowingList from '../FollowingList/FollowingList';
+import FollowerList from '../FollowerList/FollowerList';
 import Tabs from '../../Tabs/Tabs';
 
 const ProfileFollows = () => {
-  const FollowerList = () => {
-    return <span>팔로워</span>;
-  };
-
   const tabArr = [
     { idx: 0, tabName: '팔로잉', tabContent: <FollowingList /> },
     { idx: 1, tabName: '팔로워', tabContent: <FollowerList /> },

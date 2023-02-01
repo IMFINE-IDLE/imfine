@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import FollowUser from '../FollowUser/FollowUser';
-import { FollowsListContainer } from './style';
+import { FollowsListContainer } from '../FollowingList/style';
 
-const FollowingList = () => {
+const FollowerList = () => {
   const [users, setUsers] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ const FollowingList = () => {
   const token =
     'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMTIiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjc1MjI1MzI3LCJleHAiOjE2NzU4MzAxMjd9.7z-KlM4QvBcfoese5jeH7YvXKkuC3Qg_q73oBEId7OY';
 
-  const fetchFollowings = async () => {
+  const fetchFollowers = async () => {
     try {
       // 요청 시작시 error 와 users 를 초기화하고
       setError(null);
@@ -21,7 +21,7 @@ const FollowingList = () => {
 
       // axios 요청
       const response = await axios.get(
-        `http://i8A809.p.ssafy.io:8080/user/${'user12'}/following`,
+        `http://i8A809.p.ssafy.io:8080/user/${'user12'}/follower`,
         { headers: { 'X-AUTH-TOKEN': token } }
       );
 
@@ -34,7 +34,7 @@ const FollowingList = () => {
   };
 
   useEffect(() => {
-    fetchFollowings();
+    fetchFollowers();
   }, []);
 
   if (loading) return <div>로딩중..</div>;
@@ -50,7 +50,7 @@ const FollowingList = () => {
           <FollowUser
             cloverCode={'0'}
             name={user.name}
-            type={'following'}
+            type={'follower'}
             followStatus={user.relation}
             key={user.uid}
           />
@@ -60,4 +60,4 @@ const FollowingList = () => {
   );
 };
 
-export default FollowingList;
+export default FollowerList;

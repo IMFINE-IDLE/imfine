@@ -26,7 +26,7 @@ const FollowUser = ({ cloverCode, name, type, followStatus }) => {
         </FollowUserWrapper>
         {followStatus === 0 || (
           <FollowUserBtn color={followStatus === 1 ? 'gray' : 'main'}>
-            {followStatus === 1 ? '팔로잉' : '팔로우'}
+            {followStatus === 1 ? '삭제' : ''}
           </FollowUserBtn>
         )}
       </FollowUserContainer>
