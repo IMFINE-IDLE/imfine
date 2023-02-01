@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .name(requestDto.getName())
                 .email(requestDto.getEmail())
-//                .open(requestDto.isOpen())
+                .open(true)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
