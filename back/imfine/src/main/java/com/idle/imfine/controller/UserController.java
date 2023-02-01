@@ -114,6 +114,13 @@ public class UserController {
                 .body(responseService.getSuccessResult());
     }
 
+    @PutMapping("/medical")
+    public ResponseEntity<Result> modifyUserMedicalList(@LoginUser String uid, @RequestBody ModifyUserMedicalListRequestDto requestDto) {
+        userService.modifyUserMedicalList(uid, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
     @PutMapping("/change-password")
     public ResponseEntity<Result> changePassword(@LoginUser String uid, @RequestBody ChangePasswordRequestDto requestDto) {
         userService.changePassword(uid, requestDto);

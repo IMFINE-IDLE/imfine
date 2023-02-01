@@ -7,7 +7,12 @@ import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
 import com.idle.imfine.data.dto.user.response.SignInResponseDto;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.entity.UserHasMedical;
+import com.idle.imfine.data.entity.medical.MedicalCode;
+import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
+import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.errors.code.MedicalErrorCode;
 import com.idle.imfine.errors.code.TokenErrorCode;
 import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
@@ -21,7 +26,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +37,8 @@ public class UserServiceImpl implements UserService {
     private final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private final Common common;
     private final UserRepository userRepository;
+    private final UserHasMedicalRepository userHasMedicalRepository;
+    private final MedicalCodeRepository medicalCodeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -170,13 +179,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public SearchUserInfoResponseDto searchUserInfo(String uid) {
         User user = common.getUserByUid(uid);
+        List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(user);
+        List<String> medicalList = new ArrayList<>();
+
+        for (UserHasMedical userHasMedical : medicalCodeList) {
+            medicalList.add(userHasMedical.getMedicalCode().getName());
+        }
 
         return SearchUserInfoResponseDto.builder()
                 .name(user.getName())
                 .open(user.isOpen())
                 .followingCount(user.getFollowingCount())
                 .followerCount(user.getFollowerCount())
-                // 관심 질병 추기!!
+                .medicalList(medicalList)
                 .relation(0)
                 .build();
     }
@@ -187,13 +202,19 @@ public class UserServiceImpl implements UserService {
         User other = common.getUserByUid(otherUid);
 
         int relation = common.getFollowRelation(user, other);
+        List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(other);
+        List<String> medicalList = new ArrayList<>();
+
+        for (UserHasMedical userHasMedical : medicalCodeList) {
+            medicalList.add(userHasMedical.getMedicalCode().getName());
+        }
 
         return SearchUserInfoResponseDto.builder()
                 .name(other.getName())
                 .open(other.isOpen())
                 .followingCount(other.getFollowingCount())
                 .followerCount(other.getFollowerCount())
-                // 관심 질병 추기!!
+                .medicalList(medicalList)
                 .relation(relation)
                 .build();
     }
@@ -218,22 +239,24 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-//    @Override
-//    public CommonResponseMessage modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto) {
-//        User user = userRepository.getByUid(uid);
-//
-//        user.setMedicalList(requestDto.getMedicalList());
-//
-//        userRepository.save(user);
-//
-//        CommonResponseMessage responseDto = CommonResponseMessage.builder()
-//                .success(true)
-//                .status(200)
-//                .message("회원 닉네임 변경을 성공했습니다.")
-//                .build();
-//
-//        return responseDto;
-//    }
+    @Override
+    public void modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto) {
+        User user = common.getUserByUid(uid);
+
+        LOGGER.info("일단 전부 삭제....");
+        userHasMedicalRepository.deleteAllByUser(user);
+
+        for (Integer code : requestDto.getMedicalList()) {
+            MedicalCode medicalCode = medicalCodeRepository.findById(code)
+                    .orElseThrow(() -> new ErrorException(MedicalErrorCode.MEDICAL_NOT_FOUND));
+            // 에러처리 생각해보기...
+            UserHasMedical userHasMedical = UserHasMedical.builder()
+                    .user(user)
+                    .medicalCode(medicalCode)
+                    .build();
+            userHasMedicalRepository.save(userHasMedical);
+        }
+    }
 
     @Override
     public void changePassword(ChangePasswordRequestDto requestDto) {

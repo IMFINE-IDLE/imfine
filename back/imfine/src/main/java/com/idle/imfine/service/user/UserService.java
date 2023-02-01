@@ -33,7 +33,7 @@ public interface UserService {
 
     void modifyUserOpen(String uid, ModifyUserOepnRequestDto requestDto);
 
-//    CommonResponseMessage modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto);
+    void modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto);
 
     void changePassword(ChangePasswordRequestDto requestDto);
 
