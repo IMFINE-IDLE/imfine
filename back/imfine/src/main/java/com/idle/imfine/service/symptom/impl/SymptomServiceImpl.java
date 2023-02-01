@@ -21,7 +21,7 @@ public class SymptomServiceImpl implements SymptomService {
     @Override
     @Transactional(readOnly = true)
     public List<ResponseSymptomViewDto> getSymptomList(int symptomCode) {
-        return symptomRepository.findBySymptomCode(symptomCode).stream().map(
+        return symptomRepository.findBySymptomCodeId(symptomCode).stream().map(
                 symptom -> ResponseSymptomViewDto.builder()
                         .symptomId(symptom.getId())
                         .symptomName(symptom.getName())
