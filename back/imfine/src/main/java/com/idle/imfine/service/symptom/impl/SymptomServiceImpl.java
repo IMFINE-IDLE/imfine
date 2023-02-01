@@ -25,7 +25,6 @@ public class SymptomServiceImpl implements SymptomService {
                 symptom -> ResponseSymptomViewDto.builder()
                         .symptomId(symptom.getId())
                         .symptomName(symptom.getName())
-                        .image(symptom.getImage())
                         .build()
         ).collect(Collectors.toList());
     }

@@ -28,6 +28,7 @@ public class MedicalCode {
     @Column(nullable = false)
     private String name;
 
+    private String image;
     @ManyToOne
     @JoinColumn(name = "department_id")
     MedicalDepartmentCode medicalDepartmentCode;
