@@ -4,6 +4,11 @@ import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
 const BoxPaperFeed = styled.div`
   position: relative;
   padding: 0 1em 1em;
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; */
+  overflow: hidden;
 `;
 
 const Circle = styled(BoxGrad)`
