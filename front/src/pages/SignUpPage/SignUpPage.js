@@ -1,9 +1,8 @@
-import axios from 'axios';
 import React, { useReducer, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/api';
 import PickSymptom from '../../components/PickSymptom/PickSymptom';
-// import useInput from '../../hooks/useInput';
+import { signUp } from '../../store/slice/userSlice';
 import {
   BoxSignUp,
   TitleSignUp,
@@ -17,6 +16,7 @@ import {
 } from './style';
 
 function SignUpPage() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isValid, setIsValid] = useState(false);
   const [errorMsg, setErrMsg] = useState({
@@ -221,23 +221,23 @@ function SignUpPage() {
     confirmPwErrorMsg,
   } = errorMsg;
 
-  const signUp = async () => {
-    const userData = {
-      uid: id,
-      name: name,
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
-    };
-    try {
-      const res = axios.post(api.user.signUp(), userData);
-      console.log(res.data);
-      // 리덕스에 토큰 저장
-      setIsNext(true);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const signUp = async () => {
+  //   const userData = {
+  //     uid: id,
+  //     name: name,
+  //     email: email,
+  //     password: password,
+  //     confirmPassword: confirmPassword,
+  //   };
+  //   try {
+  //     const res = axios.post(api.user.signUp(), userData);
+  //     console.log(res.data);
+  //     // 리덕스에 토큰 저장
+  //     setIsNext(true);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   return (
     <>
@@ -332,7 +332,20 @@ function SignUpPage() {
                   padding={'1em'}
                   fontSize={'1em'}
                   type="submit"
-                  onClick={() => signUp()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (isValid) {
+                      const userData = {
+                        uid: id,
+                        name: name,
+                        email: email,
+                        password: password,
+                        confirmPassword: confirmPassword,
+                      };
+                      dispatch(signUp(userData));
+                      setIsNext(true);
+                    }
+                  }}
                 >
                   다음 단계
                 </BtnSignup>
@@ -356,7 +369,7 @@ function SignUpPage() {
         <>
           <PickSymptom />
           <div style={{ width: '80%', margin: '0 auto' }}>
-            <BtnSignup onClick={() => navigate('/home')}>
+            <BtnSignup type="button" onClick={() => navigate('/home')}>
               건강해지러 가기!
             </BtnSignup>
           </div>
