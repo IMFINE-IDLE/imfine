@@ -33,9 +33,9 @@ public class Leaf extends BaseCreatedEntity {
     private long id;
     @Column(length = 100)
     private String content;
-    @Column
+    @Column(nullable = false)
     private int likeCount;
-    @Column
+    @Column(nullable = false)
     private int declarationCount;
 
     @ManyToOne
