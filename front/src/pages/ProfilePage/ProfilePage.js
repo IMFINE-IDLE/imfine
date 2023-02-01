@@ -9,7 +9,12 @@ function ProfilePage() {
   return (
     <div>
       <NavBarBasic />
-      <ProfileInfo />
+      <ProfileInfo
+        open={false}
+        followingCnt={'123'}
+        followerCnt={'14523'}
+        relation={1}
+      />
       <Outlet />
       <BtnFloat />
       <TabBar />
