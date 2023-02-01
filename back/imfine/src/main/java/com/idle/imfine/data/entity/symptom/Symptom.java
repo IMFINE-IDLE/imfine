@@ -34,10 +34,7 @@ public class Symptom {
     @Column(nullable = false)
     private String name;
 
-    @JoinColumn(name = "symptom_code")
+    @JoinColumn(name = "symptom_code_id")
     @Column(nullable = false)
     private int symptomCode;
-
-    @Column
-    private String image;
 }
