@@ -9,7 +9,7 @@ const api = {
     signUp: () => URL + USERS + '/sign-up',
     checkId: (params) => URL + USERS + `/check/uid/${params}`,
     checkName: (params) => URL + USERS + `/check/name/${params}`,
-    // checkEmail: () => URL + USERS + '/check/uid',
+    checkEmail: (params) => URL + USERS + `/check/email/${params}`,
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',

@@ -133,7 +133,7 @@ function SignUpPage() {
         // 닉네임 중복체크 로직
         const asyncCheckName = async () => {
           try {
-            const res = await axios.get(api.user.checkName(currInput.name));
+            const resName = await axios.get(api.user.checkName(currInput.name));
             setErrMsg((prev) => {
               return { ...prev, nameErrorMsg: '' };
             });
@@ -178,7 +178,23 @@ function SignUpPage() {
           });
         }
 
-        // 이메일 중복체크 로직
+        // 이메일 중복체크
+        const asyncCheckEmail = async () => {
+          try {
+            const resEmail = await axios.get(
+              api.user.checkEmail(currInput.email)
+            );
+            setErrMsg((prev) => {
+              return { ...prev, emailErrorMsg: '' };
+            });
+          } catch (err) {
+            console.log(err.response.data);
+            setErrMsg((prev) => {
+              return { ...prev, emailErrorMsg: err.response.data.message };
+            });
+          }
+        };
+        asyncCheckEmail();
       }
 
       // 4. 비밀번호 유효성 검사
