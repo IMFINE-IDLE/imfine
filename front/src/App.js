@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
-import Login from './pages/Login/Login';
+import LoginPage from './pages/LoginPage/LoginPage';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
 import BambooCreate from './pages/BambooCreate/BambooCreate';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
@@ -27,6 +27,8 @@ function App() {
     // <Wrapper>
     <Routes>
       <Route index element={<PaperFeedPage />} />
+      {/* <Route index element={<Login />} /> */}
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/home" element={<PaperFeedPage />} />
       <Route path="/diary">

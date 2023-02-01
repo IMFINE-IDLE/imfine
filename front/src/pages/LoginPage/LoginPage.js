@@ -9,23 +9,25 @@ function Login() {
       <BoxInnerLogin>
         <form action="">
           <BoxInput>
-            <label for="loginInput">로그인</label>
+            <label htmlFor="loginInput">로그인</label>
             <InputGray
               id="loginInput"
               type="text"
               required
-              autofocus
+              autoFocus
               maxLength="12"
               padding={'1em'}
+              autoComplete="false"
             />
           </BoxInput>
           <BoxInput>
-            <label for="passwordInput">비밀번호</label>
+            <label htmlFor="passwordInput">비밀번호</label>
             <InputGray
               id="passwordInput"
               type="password"
               required
               padding={'1em'}
+              autoComplete="false"
             />
           </BoxInput>
           <BtnLogin margin={'0'} padding={'1em'} fontSize={'1em'} type="submit">
