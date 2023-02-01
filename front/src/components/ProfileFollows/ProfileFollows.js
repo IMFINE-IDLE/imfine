@@ -1,12 +1,32 @@
 import React from 'react';
 import FollowUser from '../FollowUser/FollowUser';
 import Tabs from '../Tabs/Tabs';
+import { FollowsListContainer } from './style';
 
 const ProfileFollows = () => {
   const FollowingList = () => {
     return (
       <>
-        <FollowUser cloverCode={'1'} name={'nickname'} />
+        <FollowsListContainer>
+          <FollowUser
+            cloverCode={'1'}
+            name={'nickname'}
+            type={'follower'}
+            followStatus={0}
+          />
+          <FollowUser
+            cloverCode={'3'}
+            name={'nickname'}
+            type={'follower'}
+            followStatus={1}
+          />
+          <FollowUser
+            cloverCode={'5'}
+            name={'nickname'}
+            type={'follower'}
+            followStatus={2}
+          />
+        </FollowsListContainer>
       </>
     );
   };

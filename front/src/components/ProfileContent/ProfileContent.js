@@ -12,7 +12,7 @@ const ProfileContent = () => {
 
   return (
     <div>
-      <Tabs tabArr={tabArr}></Tabs>
+      <Tabs tabArr={tabArr} btnWidth="6.25em"></Tabs>
     </div>
   );
 };

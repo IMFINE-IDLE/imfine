@@ -3,16 +3,23 @@ import { Btn } from '../common/Btn/Btn';
 
 const FollowUserContainer = styled.div`
   width: 100%;
-  padding-left: 1em;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+`;
+
+const FollowUserWrapper = styled.div`
+  display: flex;
   align-items: center;
 `;
 
 const FollowUserBtn = styled.button`
   ${Btn}
-  width: 7.7em;
-  height: 3.125em;
+  width: 7.5em;
+  height: 3em;
+  padding: 0;
+  color: var(--icon-color);
 `;
 
-export { FollowUserContainer, FollowUserBtn };
+export { FollowUserContainer, FollowUserWrapper, FollowUserBtn };
