@@ -27,6 +27,6 @@ public class SymptomCode {
 
     private String image;
 
-    @OneToMany(mappedBy = "symptomCode")
+    @OneToMany(mappedBy = "symptomCodeId")
     List<Symptom> symptoms;
 }
