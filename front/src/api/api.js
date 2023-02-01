@@ -10,6 +10,7 @@ const api = {
     checkId: (params) => URL + USERS + `/check/uid/${params}`,
     checkName: (params) => URL + USERS + `/check/name/${params}`,
     checkEmail: (params) => URL + USERS + `/check/email/${params}`,
+    login: () => URL + USERS + '/sign-in',
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
