@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const BoxOuter = styled.div`
   padding: ${(props) => props.padding || '0px'};
-  margin-bottom: 6em;
+  margin-bottom: ${(props) => props.bottom || '6em'};
 `;
 
 const BoxHeader = styled.div`
