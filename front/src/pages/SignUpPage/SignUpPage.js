@@ -279,7 +279,7 @@ function SignUpPage() {
     try {
       const success = await dispatch(signUp(userData)).unwrap();
       setIsNext(true);
-      console.log(success);
+      // console.log(success);
     } catch (rejectWithValue) {
       console.log(rejectWithValue);
       alert(rejectWithValue.response.data.message);
