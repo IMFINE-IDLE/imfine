@@ -26,17 +26,28 @@ export const logIn = createAsyncThunk(
     try {
       const resLogin = await axios.post(api.user.login(), userData);
       // console.log(resLogin.data.data);
+      const { accessToken, refreshToken } = resLogin.data.data;
       const saveData = {
         uid: userData.uid,
-        accessToken: resLogin.data.data.accessToken,
-        refreshToken: resLogin.data.data.refreshToken,
+        accessToken,
+        refreshToken,
       };
+
+      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
+      // console.log(accessToken);
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
+      setInterval(dispatchLogOut, JWT_EXPIRATION_TIME);
+
       return saveData;
     } catch (err) {
       return rejectWithValue(err);
     }
   }
 );
+
+const dispatchLogOut = () => {};
 
 const userSlice = createSlice({
   name: 'user',
