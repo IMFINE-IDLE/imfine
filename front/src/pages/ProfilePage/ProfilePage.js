@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import TabBar from '../../components/TabBar/TabBar';
-import ProfileInfo from '../../components/ProfileInfo/ProfileInfo';
+import ProfileInfo from '../../components/Profile/ProfileInfo/ProfileInfo';
 
 function ProfilePage() {
   return (
