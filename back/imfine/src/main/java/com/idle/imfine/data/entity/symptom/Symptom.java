@@ -36,6 +36,5 @@ public class Symptom {
 
     @JoinColumn(name = "symptom_code_id")
     @Column(nullable = false)
-    private int symptomCodeIdit git
-    gi;
+    private int symptomCodeId;
 }
