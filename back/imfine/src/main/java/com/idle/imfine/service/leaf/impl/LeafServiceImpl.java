@@ -1,5 +1,6 @@
 package com.idle.imfine.service.leaf.impl;
 
+import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.leaf.request.RequestLeafDto;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
@@ -58,10 +59,10 @@ public class LeafServiceImpl implements LeafService {
     }
 
     @Override
-    public void likeLeaf(long leafId, String uid) {
+    public void likeLeaf(RequestHeartDto requestHeart, String uid) {
 
         User user = userRepository.getByUid(uid);
-        Leaf leaf = leafRepository.getById(leafId);
+        Leaf leaf = leafRepository.getById(requestHeart.getContentId());
         Bamboo bamboo = bambooRepository.getById(leaf.getBamboo().getId());
 
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
@@ -69,11 +70,11 @@ public class LeafServiceImpl implements LeafService {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
-        if(!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 5, leafId)) {
+        if(!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 5, leaf.getId())) {
             Heart heart = Heart.builder()
                 .senderId(user.getId())
                 .contentsCodeId(5)
-                .contentsId(leafId)
+                .contentsId(leaf.getId())
                 .build();
 
             heartRepository.save(heart);

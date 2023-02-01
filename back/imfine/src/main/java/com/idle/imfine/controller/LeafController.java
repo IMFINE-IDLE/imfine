@@ -3,6 +3,7 @@ package com.idle.imfine.controller;
 import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
+import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.leaf.request.RequestLeafDto;
 import com.idle.imfine.service.leaf.LeafService;
 import lombok.RequiredArgsConstructor;
@@ -35,10 +36,9 @@ public class LeafController {
     }
 
     @PostMapping("/like")
-    public ResponseEntity<Result> postLeafLike(@RequestBody long leafId, @LoginUser String uid) {
-//        RequestHeartDto requestLikeDto = new RequestHeartDto(1, leafId, 2);
-        LOGGER.info("잎 좋아요 등록 api에 들어옴 {}", leafId);
-        leafService.likeLeaf(leafId, uid);
+    public ResponseEntity<Result> postLeafLike(@RequestBody RequestHeartDto requestHeartDto, @LoginUser String uid) {
+
+        leafService.likeLeaf(requestHeartDto, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
