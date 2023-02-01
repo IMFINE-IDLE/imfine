@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { BoxNoShad } from '../common/BoxNoShad/BoxNoShad';
-import { Btn } from '../common/Btn/Btn';
+import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
+import { Btn } from '../../common/Btn/Btn';
 
 const ProfileInfoContainer = styled(BoxNoShad)`
   display: flex;
