@@ -149,22 +149,27 @@ public class UserController {
                 .body(responseService.getSuccessResult());
     }
 
-
-    @GetMapping("/condition/{uid}/day/{day}")
-    public ResponseEntity<Result> getConditionByDay(@PathVariable String uid, @PathVariable String day) {
-        ConditionResponseDto responseDto = conditionService.getConditionByDay(uid, day);
+    @GetMapping("/{uid}/condition/{date}")
+    public ResponseEntity<Result> getConditionByDay(@PathVariable String uid, @PathVariable String date) {
+        ConditionResponseDto responseDto = conditionService.getConditionByDay(uid, date);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto)) ;
     }
 
-    @GetMapping("/condition/{uid}/month/{month}")
+    @GetMapping("/{uid}/condition/month/{month}")
     public ResponseEntity<Result> getAllConditionByMonth(@PathVariable String uid, @PathVariable String month) {
         Map<LocalDate, Integer> responseDto = conditionService.getAllCondtionByMonth(uid, month);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto)) ;
     }
 
-    @GetMapping("/paper/{uid}")
+    @GetMapping("/{uid}/paper/{date}")
+    public ResponseEntity<Result> getAllPaperByDay(@PathVariable String uid, @PathVariable String date) {
+
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
 
     @PostMapping("/condition")
     public ResponseEntity<Result> createCondition(@LoginUser String loginUid, @RequestBody ConditionRequestDto requestDto) {
