@@ -77,7 +77,7 @@ const Toggle = styled.input`
 `;
 
 const BoxSymptom = styled.div`
-  line-heigt: 25px;
+  line-height: 25px;
 `;
 
 const BtnSymptom = styled.span`
