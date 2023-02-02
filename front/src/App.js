@@ -11,6 +11,7 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
 import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
 import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
+import instance from './api/instance';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -21,6 +22,9 @@ import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 //     background: none;
 //   }s
 // `;
+
+instance.defaults.headers.common['X-AUTH-TOKEN'] =
+  localStorage.getItem('accessToken');
 
 function App() {
   return (
