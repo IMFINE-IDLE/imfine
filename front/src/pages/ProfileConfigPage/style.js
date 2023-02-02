@@ -1,29 +1,14 @@
 import styled from 'styled-components';
-import { BoxRT25 } from '../common/BoxRT25/BoxRT25';
-import { Btn } from '../common/Btn/Btn';
+import { Btn } from '../../components/common/Btn/Btn';
 
-const BoxTopArea = styled.div`
-  padding: 2em;
-`;
-
-const Title = styled.div`
-  margin: 1.5em 0;
-  text-align: center;
-  font-size: 1.2em;
-  font-weight: 600;
-`;
-
-const TitleSmall = styled.span`
-  font-weight: 600;
-  color: var(--gray800-color);
-  display: inline;
-`;
-
-const BoxToggle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  /* align-items: center; */
-  line-height: 25px;
+const ProfileConfigOptionBtn = styled.button`
+  ${Btn}
+  border-radius: 20px;
+  height: 3.375em;
+  background-color: var(--gray-color);
+  color: var(--icon-color);
+  text-align: start;
+  font-weight: 700;
   margin-bottom: 1em;
 `;
 
@@ -86,48 +71,11 @@ const Toggle = styled.input`
   }
 `;
 
-const BoxSymptom = styled.div`
-  line-height: 25px;
-`;
-
-const BtnSymptom = styled.span`
-  ${Btn}
-  display: inline-block;
-  font-size: 12px;
-  color: var(--icon-color);
-  padding: 0.5em;
-  cursor: pointer;
-  width: auto;
-  margin: 0 0.3em;
-`;
-
-const BtnLeftTap = styled(BoxRT25)`
-  width: 50%;
-  text-align: center;
-`;
-
-const BoxPickMenu = styled.div`
-  padding: 0 1em 1em;
-  background-color: var(--gray-color);
-  display: grid;
-  /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
-  grid-template-columns: repeat(4, 1fr);
-  justify-content: center;
-  /* align-items: center; */
-`;
-
 export {
-  Title,
-  BoxTopArea,
-  BoxToggle,
+  ProfileConfigOptionBtn,
   ToggleContainer,
   ToggleText,
   ToggleWrapper,
-  ToggleLabel,
   Toggle,
-  BoxSymptom,
-  BtnSymptom,
-  BoxPickMenu,
-  BtnLeftTap,
-  TitleSmall,
+  ToggleLabel,
 };

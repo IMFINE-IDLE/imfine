@@ -3,6 +3,7 @@ const URL = 'http://localhost:8080';
 
 const USERS = '/user';
 const PAPER = '/paper';
+const REPORT = '/report';
 
 const api = {
   user: {
@@ -12,9 +13,12 @@ const api = {
     checkEmail: (params) => URL + USERS + `/check/email/${params}`,
     login: () => URL + USERS + '/sign-in',
     setCondition: () => URL + USERS + '/condition',
+    updateOpenStatus: () => URL + USERS + '/open',
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
+    paperDetail: (paperId) => URL + PAPER + paperId,
+    paperReport: (paperId) => URL + REPORT + PAPER + paperId,
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
