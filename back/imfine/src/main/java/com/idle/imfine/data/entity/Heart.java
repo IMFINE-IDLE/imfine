@@ -23,13 +23,13 @@ public class Heart extends BaseCreatedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(nullable = false)
     private long senderId;
 
-    @Column
+    @Column(nullable = false)
     private int contentsCodeId;
 
-    @Column
+    @Column(nullable = false)
     private long contentsId;
 
 }

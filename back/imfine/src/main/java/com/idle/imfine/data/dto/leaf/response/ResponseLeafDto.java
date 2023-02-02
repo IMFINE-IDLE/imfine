@@ -15,5 +15,6 @@ public class ResponseLeafDto {
     private String content;
     private int likeCount;
     private int declarationCount;
+    private boolean isHeart = false;
     private LocalDateTime createDate;
 }

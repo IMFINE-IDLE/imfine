@@ -11,7 +11,7 @@ import java.util.List;
 public interface BambooService {
     void save(RequestBambooDto requestBamboo);
 
-    List<ResponseBamboo> showList(String filter, Pageable pageable);
+    List<ResponseBamboo> showList(String filter, String uid, Pageable pageable);
 
     List<ResponseBamboo> showMyList(String filter, String uid, Pageable pageable);
 
