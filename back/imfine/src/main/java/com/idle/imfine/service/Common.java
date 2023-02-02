@@ -70,6 +70,6 @@ public class Common {
         return LocalDate.parse(date, formatter);
     }
     public String convertDateAllType(LocalDateTime date) {
-        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss"));
+        return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 }
