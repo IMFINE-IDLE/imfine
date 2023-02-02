@@ -32,7 +32,7 @@ function Login() {
       <BoxInnerLogin>
         <form action="">
           <BoxInput>
-            <label htmlFor="loginInput">로그인</label>
+            <label htmlFor="loginInput">아이디</label>
             <InputGray
               value={uid}
               onChange={setUid}
