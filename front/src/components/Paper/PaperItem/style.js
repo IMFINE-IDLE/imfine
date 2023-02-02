@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { BoxLT50 } from '../common/BoxLT50/BoxLT50';
-import { BtnSymptom } from '../PickSymptom/style';
+import { BoxLT50 } from '../../common/BoxLT50/BoxLT50';
+import { BtnSymptom } from '../../PickSymptom/style';
 
 const BoxPaper = styled(BoxLT50)`
   border-radius: 50px 25px 25px 25px;

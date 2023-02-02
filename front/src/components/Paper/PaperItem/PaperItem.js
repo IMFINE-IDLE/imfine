@@ -2,7 +2,7 @@ import React from 'react';
 import { FiBook, FiHeart } from 'react-icons/fi';
 import { FiMessageCircle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { URL } from '../../api/api';
+import { URL } from '../../../api/api';
 import {
   BoxLikeCmt,
   BoxPaper,
@@ -16,7 +16,7 @@ import {
   SpanDate,
 } from './style';
 
-function Paper({ paper }) {
+function PaperItem({ paper }) {
   const navigate = useNavigate();
   const {
     paperId,
@@ -105,4 +105,4 @@ function Paper({ paper }) {
   );
 }
 
-export default Paper;
+export default PaperItem;
