@@ -11,6 +11,7 @@ const api = {
     checkName: (params) => URL + USERS + `/check/name/${params}`,
     checkEmail: (params) => URL + USERS + `/check/email/${params}`,
     login: () => URL + USERS + '/sign-in',
+    updateOpenStatus: () => URL + USERS + '/open',
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
