@@ -3,6 +3,7 @@ const URL = 'http://i8A809.p.ssafy.io:8080';
 
 const USERS = '/user';
 const PAPER = '/paper';
+const BAMBOO = '/bamboo';
 
 const api = {
   user: {
@@ -14,6 +15,9 @@ const api = {
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
+  },
+  bamboo: {
+    postBamboo: () => URL + BAMBOO,
   },
 };
 
