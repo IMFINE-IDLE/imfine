@@ -92,15 +92,8 @@ public class UserController {
                 .body(responseService.getSuccessResult());
     }
 
-    @GetMapping
-    public ResponseEntity<Result> searchUserInfo(@LoginUser String loginUid) {
-        SearchUserInfoResponseDto responseDto = userService.searchUserInfo(loginUid);
-        return ResponseEntity.ok()
-                .body(responseService.getSingleResult(responseDto));
-    }
-
     @GetMapping("/{uid}")
-    public ResponseEntity<Result> searchOtherUserInfo(@LoginUser String loginUid, @PathVariable String uid) {
+    public ResponseEntity<Result> searchUserInfo(@LoginUser String loginUid, @PathVariable String uid) {
         SearchUserInfoResponseDto responseDto = userService.searchUserInfo(loginUid, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto));
@@ -170,6 +163,8 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto)) ;
     }
+
+    @GetMapping("/paper/{uid}")
 
     @PostMapping("/condition")
     public ResponseEntity<Result> createCondition(@LoginUser String loginUid, @RequestBody ConditionRequestDto requestDto) {

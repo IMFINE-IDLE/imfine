@@ -195,28 +195,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SearchUserInfoResponseDto searchUserInfo(String uid) {
-        User user = common.getUserByUid(uid);
-        int condition = common.getTodayUserCondition(user);
-        List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(user);
-        List<String> medicalList = new ArrayList<>();
-
-        for (UserHasMedical userHasMedical : medicalCodeList) {
-            medicalList.add(userHasMedical.getMedicalCode().getName());
-        }
-
-        return SearchUserInfoResponseDto.builder()
-                .name(user.getName())
-                .open(user.isOpen())
-                .followingCount(user.getFollowingCount())
-                .followerCount(user.getFollowerCount())
-                .medicalList(medicalList)
-                .condition(condition)
-                .relation(0)
-                .build();
-    }
-
-    @Override
     public SearchUserInfoResponseDto searchUserInfo(String uid, String otherUid) {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
