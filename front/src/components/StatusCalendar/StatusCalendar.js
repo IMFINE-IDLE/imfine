@@ -28,12 +28,12 @@ const StatusCalendar = ({ uid }) => {
       setMonthCondition(null);
       setLoading(true);
 
-      const response = await axios.get(api.profile.getMonthCondition(params), {
+      const res = await axios.get(api.profile.getMonthCondition(params), {
         headers: { 'X-AUTH-TOKEN': state.user.accessToken },
       });
 
-      setMonthCondition({ ...response.data.data });
-      console.log('res', response.data);
+      setMonthCondition({ ...res.data.data });
+      console.log('res', res.data);
       console.log('data', monthCondition);
     } catch (e) {
       setError(e);
