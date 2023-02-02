@@ -1,7 +1,9 @@
 package com.idle.imfine.data.repository.paper;
 
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.paper.Paper;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +18,6 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     boolean existsAllByDiary(Diary diary);
     @Query("select p from Paper p where p.diary in :diaries and p.open=true")
     List<Paper> findAllByDiariesIn(@Param("diaries") List<Diary> diaries, Pageable pageable);
+
+    List<Paper> findAllByDiaryInAndDate(List<Diary> diaries, LocalDate date);
 }

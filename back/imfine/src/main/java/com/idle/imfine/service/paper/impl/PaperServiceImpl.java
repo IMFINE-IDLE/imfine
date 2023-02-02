@@ -271,4 +271,51 @@ public class PaperServiceImpl implements PaperService {
         ).collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ResponsePaperDto> getAllPaperByDate(String uid, String date) {
+        User user = common.getUserByUid(uid);
+        List<Diary> diaries = diaryRepository.findAllByWriter(user);
+
+        List<Paper> papers = paperRepository.findAllByDiaryInAndDate(diaries,
+                common.convertDateType(date));
+        return papers.stream().map(
+                paper -> ResponsePaperDto.builder()
+                        .diaryId(paper.getDiary().getId())
+                        .title(paper.getDiary().getTitle())
+                        .content(paper.getContent())
+                        .paperId(paper.getId())
+                        .uid(paper.getDiary().getWriter().getUid())
+                        .commentCount(paper.getCommentCount())
+                        .likeCount(paper.getLikeCount())
+                        .date(paper.getDate())
+                        .createdAt(common.convertDateAllType(paper.getCreatedAt()))
+                        .open(paper.isOpen())
+                        .condition(conditionRepository.findByUserAndDate(paper.getDiary()
+                                .getWriter(), paper.getDate()).get().getCondition())
+                        .images(paper.getImages().stream().map(
+                                image -> image.getPath()
+                        ).collect(Collectors.toList()))
+                        .symptomList(
+                                paper.getPaperHasSymptoms().stream().map(
+                                        paperHasSymptom -> {
+                                            ResponsePaperSymptomRecordDto element = null;
+                                            for (DiaryHasSymptom diaryHasSymptom: paper.getDiary().getDiaryHasSymptoms()) {
+                                                if (paperHasSymptom.getSymptomId() == diaryHasSymptom.getSymptom().getId()) {
+                                                    element = ResponsePaperSymptomRecordDto.builder()
+                                                            .symptomName(diaryHasSymptom.getSymptom().getName())
+                                                            .score(paperHasSymptom.getScore())
+                                                            .symptomId(
+                                                                    paperHasSymptom.getSymptomId())
+                                                            .build();
+                                                    break;
+                                                }
+                                            }
+                                            return element;
+                                        }
+                                ).collect(Collectors.toList())
+                        )
+                        .build()
+        ).collect(Collectors.toList());
+    }
 }
