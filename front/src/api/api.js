@@ -15,6 +15,11 @@ const api = {
   paper: {
     paperFeed: () => URL + PAPER + '/list',
   },
+  profile: {
+    getUserInfo: (params) => URL + USERS + `/${params}`,
+    getMonthCondition: (params) =>
+      URL + USERS + `/condition/${params.uid}/month/${params.date}`,
+  },
 };
 
 export default api;
