@@ -5,6 +5,9 @@ import BambooDetailHeader from '../../components/Bamboo/BambooDetailHeader/Bambo
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import BoxLeavesFeed from '../../components/Bamboo/BoxLeavesFeed/BoxLeavesFeed';
 
+import { TopDiv, ReplyLabel } from './style';
+import { FiMessageCircle } from 'react-icons/fi';
+
 function BambooDetailPage() {
   const params = useParams();
   const res = {
@@ -17,12 +20,12 @@ function BambooDetailPage() {
         content: 'testtest',
         createdDate: 'xxxxx',
         likeCount: 2,
-        leafCount: 1,
+        leafCount: 2,
         leaf: [
           {
             leafId: 3,
             content: '얍!',
-            likeCount: 0,
+            likeCount: 4,
             declarationCount: 0,
             createDate: '2023-02-02T14:08:26.979635',
           },
@@ -54,10 +57,19 @@ function BambooDetailPage() {
         leafCount={Bamboo.leafCount}
         likeCount={Bamboo.likeCount}
       />
-
+      <TopDiv>
+        <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
+        <ReplyLabel>댓글 {Bamboo.leafCount}개</ReplyLabel>
+      </TopDiv>
       <div>
         {Leaves.map((leaf) => {
-          return <BoxLeavesFeed leaves={leaf} key={leaf.leafId} />;
+          return (
+            <BoxLeavesFeed
+              likeCount={leaf.likeCount}
+              content={leaf.content}
+              key={leaf.leafId}
+            />
+          );
         })}
       </div>
     </>

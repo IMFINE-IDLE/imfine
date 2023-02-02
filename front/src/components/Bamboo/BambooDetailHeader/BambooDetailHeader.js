@@ -1,6 +1,5 @@
 import React from 'react';
-import { FiHeart, FiMessageCircle } from 'react-icons/fi';
-import { FiMoreVertical } from 'react-icons/fi';
+import { FiMoreVertical, FiHeart, FiMessageCircle } from 'react-icons/fi';
 import BtnDropDown from '../BtnDropDown/BtnDropDown';
 import {
   BoxOuter,

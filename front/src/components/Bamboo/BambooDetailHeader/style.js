@@ -36,7 +36,6 @@ const BambooImg = styled.img.attrs({
   width: 5em;
   margin-left: 1em;
   height: 5em;
-  float: left;
 `;
 
 const Content = styled.h1`
@@ -46,7 +45,6 @@ const Content = styled.h1`
 `;
 
 const LabelOuter = styled.div`
-  float: right;
   display: inline-flex;
   flex-direction: row;
   justify-content: flex-end;
