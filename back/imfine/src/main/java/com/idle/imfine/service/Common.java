@@ -33,7 +33,7 @@ public class Common {
     }
 
     public int getFollowRelation(User user, User other) {
-        if (user == other) {
+        if (user.getName().equals(other.getName())) {
             return 0;
         } else if (followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
             return 1;
