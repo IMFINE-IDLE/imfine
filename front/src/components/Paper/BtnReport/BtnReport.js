@@ -14,7 +14,7 @@ function BtnReport({ paperId }) {
     }
   };
   return (
-    <div style={{ cursor: 'pointer', position: 'relative', zIndex: '2' }}>
+    <div style={{ cursor: 'pointer', position: 'relative' }}>
       <FiMoreVertical
         onClick={(e) => {
           e.stopPropagation();
