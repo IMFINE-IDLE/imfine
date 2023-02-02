@@ -5,7 +5,7 @@ import reset from 'styled-reset';
 const iconStyle = {
   verticalAlign: 'middle',
   color: 'var(--icon-color)',
-  fontSize: '1.5rem',
+  fontSize: '1.3rem',
 };
 
 const GlobalStyle = createGlobalStyle`
