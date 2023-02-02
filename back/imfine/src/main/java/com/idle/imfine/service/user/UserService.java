@@ -27,8 +27,6 @@ public interface UserService {
 
     void withdrawal(String uid);
 
-    SearchUserInfoResponseDto searchUserInfo(String uid);
-
     SearchUserInfoResponseDto searchUserInfo(String uid, String otherUid);
 
     void modifyUserName(String uid, ModifyUserNameRequestDto requestDto);
