@@ -18,6 +18,8 @@ import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.bamboo.BambooService;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,11 +65,12 @@ public class BambooServiceImpl implements BambooService {
     }
 
     @Override
-    public List<ResponseBamboo> showList(String filter, Pageable pageable) {
+    public List<ResponseBamboo> showList(String filter, String uid, Pageable pageable) {
 
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();
 
+        User user = userRepository.getByUid(uid);
         List<ResponseBamboo> responseBambooList = new ArrayList<>();
         Page<Bamboo> all = null;
 
@@ -79,14 +82,18 @@ public class BambooServiceImpl implements BambooService {
             all = bambooRepository.findByCreatedAtBetweenOrderByCreatedAtDesc(start, end, pageable);
         }
 
+        List<Bamboo> heartBamboos = bambooRepository.findByHeartList(user.getId(), start, end);
+
         for(Bamboo b : all) {
             Duration duration = Duration.between(b.getCreatedAt(), end);
+
             ResponseBamboo responseBamboo = ResponseBamboo.builder()
                     .bambooId(b.getId())
                     .content(b.getContent())
                     .remainTime(24 - duration.toHours())
                     .likeCount(b.getLikeCount())
                     .leafCount(b.getLeafCount())
+                    .isHeart(heartBamboos.stream().anyMatch(bamboo -> b.getId() == bamboo.getId()))
                     .build();
             responseBambooList.add(responseBamboo);
         }
@@ -103,57 +110,31 @@ public class BambooServiceImpl implements BambooService {
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();
 
+        Page<Bamboo> all = null;
+
         if(filter.equals("write")) {
-            Page<Bamboo> all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
-//            Page<Bamboo> all = bambooRepository.findByWriterAndCreatedAtBetween(user.getId(), start, end, pageable);
-
-            for(Bamboo b : all) {
-                Duration duration = Duration.between(b.getCreatedAt(), end);
-
-                ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                        .bambooId(b.getId())
-                        .content(b.getContent())
-                        .remainTime(24 - duration.toHours())
-                        .likeCount(b.getLikeCount())
-                        .leafCount(b.getLeafCount())
-                        .build();
-                responseBambooList.add(responseBamboo);
-            }
+            all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
         } else if(filter.equals("comment")) {
-            Set<Long> bambooSet = new HashSet<>();
-            Page<Leaf> all = leafRepository.getByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
-
-            for(Leaf b : all) {
-                if (bambooSet.contains(b.getBamboo().getId())) {
-                    continue;
-                }
-                bambooSet.add(b.getBamboo().getId());
-                Duration duration = Duration.between(b.getCreatedAt(), end);
-                ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                    .bambooId(b.getBamboo().getId())
-                    .content(b.getBamboo().getContent())
-                    .remainTime(24 - duration.toHours())
-                    .likeCount(b.getBamboo().getLikeCount())
-                    .leafCount(b.getBamboo().getLeafCount())
-                    .build();
-                responseBambooList.add(responseBamboo);
-            }
+            List<Leaf> leaves = leafRepository.getByWriter_IdAndCreatedAtBetween(user.getId(), start, end);
+            all = bambooRepository.findByLeaves(leaves, start, end, pageable);
         } else if(filter.equals("like")) {
-            Page<Bamboo> all = bambooRepository.findByHeart(user.getId(), start, end, pageable);
-            for(Bamboo b : all) {
-                Duration duration = Duration.between(b.getCreatedAt(), end);
-
-                ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                        .bambooId(b.getId())
-                        .content(b.getContent())
-                        .remainTime(24 - duration.toHours())
-                        .likeCount(b.getLikeCount())
-                        .leafCount(b.getLeafCount())
-                        .build();
-                responseBambooList.add(responseBamboo);
-            }
+            all = bambooRepository.findByHeart(user.getId(), start, end, pageable);
         }
 
+        List<Bamboo> heartBamboos = bambooRepository.findByHeartList(user.getId(), start, end);
+        for(Bamboo b : all) {
+            Duration duration = Duration.between(b.getCreatedAt(), end);
+
+            ResponseBamboo responseBamboo = ResponseBamboo.builder()
+                    .bambooId(b.getId())
+                    .content(b.getContent())
+                    .remainTime(24 - duration.toHours())
+                    .likeCount(b.getLikeCount())
+                    .leafCount(b.getLeafCount())
+                    .isHeart(heartBamboos.stream().anyMatch(bamboo -> b.getId() == bamboo.getId()))
+                    .build();
+            responseBambooList.add(responseBamboo);
+        }
         return responseBambooList;
     }
 
@@ -161,7 +142,9 @@ public class BambooServiceImpl implements BambooService {
     public ResponseBambooDetailDto showBambooDetail(long bambooId, String uid) {
 
         Bamboo bamboo = bambooRepository.getById(bambooId);
+        User user = userRepository.getByUid(uid);
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+
         if (LocalDateTime.now().isAfter(endShowTime)) {
             LOGGER.info("24시간 지난 밤부-----------------------------------------------------");
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
@@ -170,25 +153,28 @@ public class BambooServiceImpl implements BambooService {
         LOGGER.info("대나무 상세조회");
         List<ResponseLeafDto> responseLeafDtoList = new ArrayList<>();
         List<Leaf> leafList = leafRepository.getByBamboo_Id(bambooId);
+        List<Leaf> heartLeafList = leafRepository.findByHeartList(user.getId());
         for (Leaf l : leafList) {
             ResponseLeafDto responseLeafDto = ResponseLeafDto.builder()
-                .leafId(l.getId())
-                .content(l.getContent())
-                .likeCount(l.getLikeCount())
-                .declarationCount(l.getDeclarationCount())
-                .createDate(l.getCreatedAt())
-                .build();
+                    .leafId(l.getId())
+                    .content(l.getContent())
+                    .likeCount(l.getLikeCount())
+                    .declarationCount(l.getDeclarationCount())
+                    .isHeart(heartLeafList.stream().anyMatch(leaf -> l.getId() == leaf.getId()))
+                    .createDate(l.getCreatedAt())
+                    .build();
             responseLeafDtoList.add(responseLeafDto);
         }
-
+        boolean isHeart = heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 4, bambooId);
         ResponseBambooDetailDto responseBambooDetailDto = ResponseBambooDetailDto.builder()
-            .bambooId(bambooId)
-            .content(bamboo.getContent())
-            .createdDate(bamboo.getCreatedAt())
-            .likeCount(bamboo.getLikeCount())
-            .leafCount(bamboo.getLeafCount())
-            .leaf(responseLeafDtoList)
-            .build();
+                .bambooId(bambooId)
+                .content(bamboo.getContent())
+                .createdDate(bamboo.getCreatedAt())
+                .likeCount(bamboo.getLikeCount())
+                .leafCount(bamboo.getLeafCount())
+                .isHeart(isHeart)
+                .leaf(responseLeafDtoList)
+                .build();
 
         return responseBambooDetailDto;
     }

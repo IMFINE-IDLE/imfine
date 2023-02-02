@@ -14,9 +14,12 @@ import org.springframework.data.repository.query.Param;
 public interface LeafRepository extends JpaRepository<Leaf, Long> {
     List<Leaf> getByBamboo_Id(long bambooId);
 
-    Page<Leaf> getByWriter_IdAndCreatedAtBetween(long id, LocalDateTime start, LocalDateTime end, Pageable pageable);
+    List<Leaf> getByWriter_IdAndCreatedAtBetween(long id, LocalDateTime start, LocalDateTime end);
 
+    @Query("select l from Leaf l join Heart h on l.id = h.contentsId where h.contentsCodeId = 5 and h.senderId = :senderId")
+    List<Leaf> findByHeartList(@Param("senderId") long senderId);
     @Modifying
     @Query("delete from Leaf l where l.bamboo in :bamboo")
     void deleteLeavesBy(@Param("bamboo") List<Bamboo> bamboos);
+
 }

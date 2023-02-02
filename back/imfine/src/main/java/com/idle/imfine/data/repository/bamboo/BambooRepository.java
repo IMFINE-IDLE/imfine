@@ -1,6 +1,7 @@
 package com.idle.imfine.data.repository.bamboo;
 
 import com.idle.imfine.data.entity.bamboo.Bamboo;
+import com.idle.imfine.data.entity.leaf.Leaf;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
@@ -24,14 +25,20 @@ public interface BambooRepository extends JpaRepository<Bamboo, Long> {
     Page<Bamboo> findByWriter_IdAndCreatedAtBetween(long writerId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 //    Page<Bamboo> findByWriterAndCreatedAtBetween(long writerId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    @Query("select b from Bamboo b inner join Heart h on b.id = h.contentsId where h.senderId = :writerId and b.createdAt between :start and :end")
+    @Query("select b from Bamboo b inner join Heart h on b.id = h.contentsId where h.contentsCodeId = 4 and h.senderId = :writerId and b.createdAt between :start and :end")
     Page<Bamboo> findByHeart(@Param("writerId") long writerId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
+
+    @Query("select b from Bamboo b join Heart h on b.id = h.contentsId where h.contentsCodeId = 4 and h.senderId = :senderId and b.createdAt between :start and :end")
+    List<Bamboo> findByHeartList(@Param("senderId") long senderId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     List<Bamboo> findByDeleteAtBefore(LocalDateTime now);
 
     @Modifying
     @Query("delete from Bamboo b where b.deleteAt < :now")
     void deleteByDeleteAtBefore(@Param("now") LocalDateTime now);
-    //where x.startDate < ?1
+
+//    @Query("select distinct b from Bamboo b where b.leaves in :leaves and b.createdAt between :start and :end")
+    @Query("select distinct b from Bamboo b join Leaf l on l.bamboo=b where l in :leaves and b.createdAt between :start and :end")
+    Page<Bamboo> findByLeaves(@Param("leaves") List<Leaf> leaves, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 
 }

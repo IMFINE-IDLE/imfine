@@ -20,6 +20,7 @@ public class ResponseBamboo {
 //    private LocalDateTime createdDate;
     private int likeCount;
     private int leafCount;
+    private boolean isHeart = false;
 
 //    public ResponseBamboo(Bamboo entity) {
 //        this.bambooId = entity.getBambooId();
