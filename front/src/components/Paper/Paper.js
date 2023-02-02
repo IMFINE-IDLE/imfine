@@ -29,6 +29,30 @@ function Paper({ paper }) {
     images,
     symptomList,
   } = paper;
+
+  // 게시글 시간 표시 함수
+  function getTimeDifference(timeString) {
+    let currentTime = new Date();
+    let providedTime = new Date(date);
+    let milli = currentTime.getTime() - providedTime.getTime();
+    let timeGap = parseInt(milli / 60000);
+    // console.log(paperId, timeGap);
+
+    if (timeGap < 60) {
+      return `${timeGap}분전`;
+    } else if (timeGap >= 60 && timeGap < 60 * 24) {
+      return `${parseInt(timeGap / 60)}시간전`;
+    } else if (timeGap >= 60 * 24) {
+      if (currentTime.getFullYear() - providedTime.getFullYear()) {
+        return `${providedTime.getFullYear()}년 ${
+          providedTime.getMonth() + 1
+        }월 ${providedTime.getDate()}일`;
+      } else {
+        return `${providedTime.getMonth() + 1}월 ${providedTime.getDate()}일`;
+      }
+    }
+  }
+
   return (
     <BoxPaper onClick={() => navigate(`/paper/${paperId}`)}>
       <BoxTop>
@@ -61,7 +85,7 @@ function Paper({ paper }) {
         return <img src={`${URL}/${image}`} alt="" />;
       })} */}
       <BoxLikeCmt>
-        <span>{date}</span>
+        <span>{getTimeDifference(date)}</span>
         <div>
           <FiHeart style={{ color: 'var(--red-color)' }} />
           <SpanLikeCmt>{likeCount}</SpanLikeCmt>
