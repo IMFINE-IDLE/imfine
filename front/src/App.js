@@ -39,9 +39,7 @@ function App() {
       </Route>
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
-      <Route path="/profile" element={<ProfilePage />}>
-        {/* <Route index path=":user" element={<ProfileContent />} />
-        <Route path=":user/follows" element={<ProfileFollows />} /> */}
+      <Route path="/profile/:name" element={<ProfilePage />}>
         <Route index element={<ProfileContent />} />
         <Route path="follows" element={<ProfileFollows />} />
       </Route>
