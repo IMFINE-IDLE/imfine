@@ -3,7 +3,17 @@ import { FiHeart } from 'react-icons/fi';
 import { FiMessageCircle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { URL } from '../../api/api';
-import { BoxLikeCmt, BoxPaper, SpanLikeCmt } from './style';
+import {
+  BoxLikeCmt,
+  BoxPaper,
+  SpanLikeCmt,
+  BoxTop,
+  Symptom,
+  BoxRight,
+  BoxLeft,
+  BtnDiary,
+  BoxContent,
+} from './style';
 
 function Paper({ paper }) {
   const navigate = useNavigate();
@@ -21,22 +31,32 @@ function Paper({ paper }) {
   } = paper;
   return (
     <BoxPaper onClick={() => navigate(`/paper/${paperId}`)}>
-      <img
-        src={`/assets/clovers/clover${condition}.svg`}
-        alt=""
-        width={'50px'}
-        height={'50px'}
-      />
-      {name}
-      {symptomList.map((symptom) => {
-        return (
-          <span key={symptom.symptomId}>
-            {symptom.symptomName} {symptom.score}
-          </span>
-        );
-      })}
-      <div>{title}</div>
-      <div>{content}</div>
+      <BoxTop>
+        <BoxLeft>
+          <img
+            src={`/assets/clovers/clover${condition}.svg`}
+            alt=""
+            width={'50px'}
+            height={'50px'}
+          />
+          <p>{name}</p>
+        </BoxLeft>
+        <BoxRight>
+          <div>
+            <BtnDiary type="button">{title}</BtnDiary>
+          </div>
+          <div>
+            {symptomList.map((symptom) => {
+              return (
+                <Symptom key={symptom.symptomId}>
+                  {symptom.symptomName} {symptom.score}
+                </Symptom>
+              );
+            })}
+          </div>
+        </BoxRight>
+      </BoxTop>
+      <BoxContent>{content}</BoxContent>
       {/* {images.map((image) => {
         return <img src={`${URL}/${image}`} alt="" />;
       })} */}

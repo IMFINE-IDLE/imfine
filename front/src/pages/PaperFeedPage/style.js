@@ -12,11 +12,11 @@ const BoxPaperFeed = styled.div`
 `;
 
 const Circle = styled(BoxGrad)`
-  position: absolute;
-  top: ${(prop) => (prop.small ? '0' : null)};
+  position: fixed;
+  top: ${(prop) => (prop.small ? '70px' : null)};
   right: ${(prop) => (prop.small ? '-150px' : null)};
   left: ${(prop) => (prop.small ? null : '-230px')};
-  bottom: ${(prop) => (prop.small ? null : '650px')};
+  bottom: ${(prop) => (prop.small ? null : '0px')};
   width: ${(prop) => (prop.small ? '300px' : '500px')};
   height: ${(prop) => (prop.small ? '300px' : '500px')};
   border-radius: 50%;
