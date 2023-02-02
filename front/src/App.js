@@ -11,6 +11,7 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
 import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
 import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
+import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
@@ -39,6 +40,7 @@ function App() {
       </Route>
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreate />} />
+        <Route path="/paper/:paperId" element={<PaperDetailPage />} />
       </Route>
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
