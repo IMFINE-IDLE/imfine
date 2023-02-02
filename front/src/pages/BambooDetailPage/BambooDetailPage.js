@@ -16,7 +16,11 @@ function BambooDetailPage() {
   return (
     <>
       <NavBarBasic Back={true} Text={''} />
-      <BambooDetailHeader content={'test입니다.'} />
+      <BambooDetailHeader
+        content={
+          'test입니다.test입니다test입니다test입니다test입니다test입니다test입니다test입니다test입니다test입니다test입니다test입니다test입니다'
+        }
+      />
     </>
   );
 }

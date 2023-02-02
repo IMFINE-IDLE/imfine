@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { BoxBtnFloat, IconContainer, BtnLink } from './style';
 
-function BtnDropDown() {
+function BtnDropDown({ title }) {
   const [isClicked, setIsClicked] = useState(false);
   return (
     <BoxBtnFloat>

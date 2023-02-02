@@ -9,6 +9,8 @@ import {
   BambooImg,
   LabelOuter,
   LabelStatus,
+  RightDiv,
+  Container,
 } from './style';
 
 function BambooDetailHeader({ content }) {
@@ -16,18 +18,22 @@ function BambooDetailHeader({ content }) {
     <div>
       <BoxOuter>
         <BoxHeader>
-          <BambooImg />
           <Content>{content}</Content>
-          <BtnDropDown />
-          <LabelOuter>
-            <BsHeartFill />
-            <LabelStatus>{'like'}</LabelStatus>
-            <RiChat3Line />
-            <LabelStatus>{'content'}</LabelStatus>
-          </LabelOuter>
+          <RightDiv>
+            <BambooImg />
+            <LabelOuter>
+              <BsHeartFill />
+              <LabelStatus>{'like'}</LabelStatus>
+              <RiChat3Line />
+              <LabelStatus>{'content'}</LabelStatus>
+            </LabelOuter>
+          </RightDiv>
+          <Container>
+            <BtnDropDown />
+          </Container>
         </BoxHeader>
-        <div>댓글몇개표시</div>
       </BoxOuter>
+      <div>댓글몇개표시</div>
     </div>
   );
 }

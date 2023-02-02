@@ -4,11 +4,8 @@ import { Btn } from '../../common/Btn/Btn';
 
 const BoxBtnFloat = styled.div`
   position: relative;
-  width: 60%;
   min-width: 9em;
   max-width: 12em;
-  bottom: 90px;
-  right: 30px;
   display: flex;
   justify-content: center;
   align-items: flex-end;
