@@ -1,27 +1,31 @@
 import React from 'react';
-import { FiBook, FiHeart } from 'react-icons/fi';
-import { FiMessageCircle } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { URL } from '../../api/api';
+import { URL } from '../../../api/api';
+import BtnReport from '../BtnReport/BtnReport';
+import DiaryTitle from '../DiaryTitle/DiaryTitle';
+import LikeComment from '../LikeComment/LikeComment';
 import {
-  BoxLikeCmt,
+  BoxBottom,
   BoxPaper,
-  SpanLikeCmt,
   BoxTop,
   Symptom,
   BoxRight,
   BoxLeft,
-  BtnDiary,
   BoxContent,
   SpanDate,
 } from './style';
 
-function Paper({ paper }) {
+function PaperItem({ paper }) {
+  const userId = useSelector((state) => {
+    return state.user.uid;
+  });
   const navigate = useNavigate();
   const {
     paperId,
-    condition,
+    uid,
     name,
+    condition,
     title,
     content,
     likeCount,
@@ -54,6 +58,9 @@ function Paper({ paper }) {
     }
   }
 
+  // 내 게시글인지 여부
+  const isMine = Boolean(uid === userId);
+
   return (
     <BoxPaper onClick={() => navigate(`/paper/${paperId}`)}>
       <BoxTop>
@@ -66,43 +73,36 @@ function Paper({ paper }) {
           />
         </BoxLeft>
         <BoxRight>
-          <div style={{ padding: '.5em .3em' }}>
-            <p style={{ fontWeight: '700' }}>{name}</p>
-          </div>
           <div>
-            {symptomList.map((symptom) => {
-              return (
-                <Symptom key={symptom.symptomId}>
-                  {symptom.symptomName} {symptom.score}
-                </Symptom>
-              );
-            })}
+            <div style={{ padding: '.5em .3em' }}>
+              <p style={{ fontWeight: '700' }}>{name}</p>
+            </div>
+            <div>
+              {symptomList.map((symptom) => {
+                return (
+                  <Symptom key={symptom.symptomId}>
+                    {symptom.symptomName} {symptom.score}
+                  </Symptom>
+                );
+              })}
+            </div>
           </div>
+          {!isMine && <BtnReport paperId={paperId} />}
         </BoxRight>
       </BoxTop>
       <BoxContent>{content}</BoxContent>
       {/* {images.map((image) => {
         return <img src={`${URL}/${image}`} alt="" />;
       })} */}
-      <BoxLikeCmt>
+      <BoxBottom>
         <div>
-          <BtnDiary type="button">
-            <FiBook style={{}} />
-            &nbsp;
-            {title}
-          </BtnDiary>
+          <DiaryTitle title={title} />
           <SpanDate>{getTimeDifference(date)}</SpanDate>
         </div>
-
-        <div>
-          <FiHeart style={{ color: 'var(--red-color)' }} />
-          <SpanLikeCmt>{likeCount}</SpanLikeCmt>
-          <FiMessageCircle />
-          <SpanLikeCmt>{commentCount}</SpanLikeCmt>
-        </div>
-      </BoxLikeCmt>
+        <LikeComment likeCount={likeCount} commentCount={commentCount} />
+      </BoxBottom>
     </BoxPaper>
   );
 }
 
-export default Paper;
+export default PaperItem;
