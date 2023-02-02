@@ -14,7 +14,7 @@ import {
   ReplyContainer,
 } from './style';
 
-function BambooDetailHeader({ content }) {
+function BambooDetailHeader({ bambooId, content, leafCount, likeCount }) {
   return (
     <div>
       <BoxOuter>
@@ -24,9 +24,9 @@ function BambooDetailHeader({ content }) {
             <BambooImg />
             <LabelOuter>
               <BsHeartFill />
-              <LabelStatus>{'like'}</LabelStatus>
+              <LabelStatus>{likeCount}</LabelStatus>
               <RiChat3Line />
-              <LabelStatus>{'content'}</LabelStatus>
+              <LabelStatus>{leafCount}</LabelStatus>
             </LabelOuter>
           </RightDiv>
           <Container>

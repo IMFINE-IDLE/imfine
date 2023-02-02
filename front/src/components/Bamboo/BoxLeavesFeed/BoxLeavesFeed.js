@@ -1,12 +1,15 @@
 import { BsHeartFill } from 'react-icons/bs';
 import { RiChat3Line } from 'react-icons/ri';
-import { BoxNoShadLeaves } from './style';
+import { BoxNoShadLeaves, ImgLeaves } from './style';
 
-function BoxLeavesFeed({ Leaves }) {
-  const { content } = Leaves;
+function BoxLeavesFeed({ leaves }) {
+  const { content } = leaves;
+
   return (
     <div>
-      <BoxNoShadLeaves></BoxNoShadLeaves>
+      <BoxNoShadLeaves>
+        <ImgLeaves />
+      </BoxNoShadLeaves>
     </div>
   );
 }

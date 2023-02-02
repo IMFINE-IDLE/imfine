@@ -11,4 +11,11 @@ const BoxNoShadLeaves = styled(BoxNoShad)`
   flex-direction: column;
 `;
 
-export { BoxNoShadLeaves };
+const ImgLeaves = styled.img.attrs({
+  src: `/assets/images/BambooReply.png`,
+})`
+  height: 3em;
+  width: 3em;
+  margin: 1em 0.5em 1em 1em;
+`;
+export { BoxNoShadLeaves, ImgLeaves };
