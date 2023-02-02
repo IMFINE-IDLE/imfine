@@ -14,6 +14,6 @@ public interface ConditionService {
 
     public ConditionResponseDto getConditionByDay(String uid, String day);
 
-    public Map<String, Integer> getAllCondtionByMonth(String uid, String month);
+    public Map<String, String> getAllCondtionByMonth(String uid, String month);
 
 }

@@ -72,18 +72,19 @@ public class ConditionServiceImpl implements ConditionService {
     }
 
     @Override
-    public Map<String, Integer> getAllCondtionByMonth(String uid, String month) {
+    public Map<String, String> getAllCondtionByMonth(String uid, String month) {
         User user = common.getUserByUid(uid);
         LocalDate startDate = common.convertDateType(month + "-01");
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
-        Map<String, Integer> responseDto = new HashMap<>();
+        Map<String, String> responseDto = new HashMap<>();
 
         List<Condition> conditions = conditionRepository.findAllByUserAndDateBetween(user, startDate, endDate);
 
         for (Condition condition : conditions) {
             String day = String.valueOf(condition.getDate().getDayOfMonth());
-            responseDto.put(day, condition.getCondition());
+            String con = String.valueOf(condition.getCondition());
+            responseDto.put(day, con);
         }
 
         return responseDto;

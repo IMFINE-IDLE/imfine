@@ -12,6 +12,8 @@ public interface ConditionRepository extends JpaRepository<Condition, Long> {
 
     Optional<Condition> findByUserAndDate(User user, LocalDate date);
 
+    List<Condition> findAllByUserInAndDate(List<User> userList, LocalDate date);
+
     List<Condition> findAllByUserAndDateBetween(User user, LocalDate startDate, LocalDate endDate);
 
     boolean existsByUserAndDate(User user, LocalDate date);

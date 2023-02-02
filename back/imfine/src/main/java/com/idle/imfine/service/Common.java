@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +31,12 @@ public class Common {
     public int getTodayUserCondition(User user) {
         Condition condition = conditionRepository.findByUserAndDate(user, LocalDate.now()).orElse(null);
         return condition != null ? condition.getCondition() : -1;
+    }
+
+    public List<Condition> getAllUserCondtion(List<User> userList, LocalDate date) {
+        List<Condition> conditionList = conditionRepository.findAllByUserInAndDate(userList, date);
+
+        return null;
     }
 
     public int getFollowRelation(User user, User other) {
