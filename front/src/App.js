@@ -12,6 +12,9 @@ import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
 import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
 import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
+import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
+import ChangeName from './pages/ChangeName/ChangeName';
+import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -46,6 +49,9 @@ function App() {
         <Route index element={<ProfileContent />} />
         <Route path="follows" element={<ProfileFollows />} />
       </Route>
+      <Route path="/profile-config" element={<ProfileConfigPage />} />
+      <Route path="/change-name" element={<ChangeName />} />
+      <Route path="/change-symptom" element={<ChangeSymptom />} />
     </Routes>
     // </Wrapper>
   );
