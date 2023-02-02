@@ -20,8 +20,8 @@ const BoxLeft = styled.div`
 
 const BoxRight = styled.div`
   display: flex;
-  justify-content: space-evenly;
-  flex-direction: column;
+  justify-content: space-between;
+  /* flex-direction: column; */
   flex: 1;
 `;
 
