@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { Clover } from '../../common/Clover/Clover';
 import {
@@ -17,10 +18,12 @@ const ProfileInfo = ({
   followerCount,
   relation,
 }) => {
+  const state = useSelector((state) => state);
+
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
       <ProfileInfoContainer>
-        <Clover width="4.2em" height="4.2em" />
+        <Clover code={state.userInfo.cloverCode} width="4.2em" height="4.2em" />
 
         <ProfileInfoWrapper>
           <ProfileNickNameWrapper>
