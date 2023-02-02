@@ -87,7 +87,7 @@ function PaperItem({ paper }) {
               })}
             </div>
           </div>
-          {!isMine && <BtnReport />}
+          {!isMine && <BtnReport paperId={paperId} />}
         </BoxRight>
       </BoxTop>
       <BoxContent>{content}</BoxContent>

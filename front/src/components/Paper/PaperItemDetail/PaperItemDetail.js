@@ -13,6 +13,7 @@ import {
 import { BoxPaperDetail } from './style';
 
 function PaperItemDetail({
+  paperId,
   condition,
   name,
   title,
@@ -41,7 +42,7 @@ function PaperItemDetail({
               <DiaryTitle title={title} />
             </div>
           </div>
-          <BtnReport />
+          <BtnReport paperId={paperId} />
         </BoxRight>
       </BoxTop>
       <BoxContent>{content}</BoxContent>

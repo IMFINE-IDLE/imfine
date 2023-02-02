@@ -3,6 +3,7 @@ const URL = 'http://i8A809.p.ssafy.io:8080';
 
 const USERS = '/user';
 const PAPER = '/paper';
+const REPORT = '/report';
 
 const api = {
   user: {
@@ -15,6 +16,7 @@ const api = {
   paper: {
     paperFeed: () => URL + PAPER + '/list',
     paperDetail: (paperId) => URL + PAPER + paperId,
+    paperReport: (paperId) => URL + REPORT + PAPER + paperId,
   },
 };
 

@@ -21,6 +21,7 @@ function PaperDetailPage() {
     <>
       <NavBarBasic Back />
       <PaperItemDetail
+        paperId={paperId}
         condition={0}
         name={'닉네임'}
         title={'나의 항암 일기'}
