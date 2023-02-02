@@ -2,6 +2,7 @@ package com.idle.imfine.data.dto.paper.response;
 
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -68,7 +68,7 @@ public class PaperServiceImpl implements PaperService {
         Diary diary = diaryRepository.findById(requestPaperPostDto.getDiaryId())
                 .orElseThrow(RuntimeException::new);
 
-        Paper exist = paperRepository.findByDiaryAndDate(diary, requestPaperPostDto.getDate());
+        Paper exist = paperRepository.findByDiaryAndDate(diary, common.convertDateType(requestPaperPostDto.getDate()));
         if (exist != null) {
             throw new RuntimeException();
         }

@@ -14,7 +14,7 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     List<Paper> getPaperByDiary(Diary diary);
     @Query("select DISTINCT p from Paper p left join fetch p.paperHasSymptoms phs where p.diary = :diary")
     List<Paper> findAllJoinFetch(@Param("diary") Diary diary);
-    Paper findByDiaryAndDate(Diary diary, String date);
+    Paper findByDiaryAndDate(Diary diary, LocalDate date);
     boolean existsAllByDiary(Diary diary);
     @Query("select p from Paper p where p.diary in :diaries and p.open=true")
     List<Paper> findAllByDiariesIn(@Param("diaries") List<Diary> diaries, Pageable pageable);
