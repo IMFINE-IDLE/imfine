@@ -5,7 +5,7 @@ export const res = {
   data: [
     {
       paperId: 9,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임이최대열자예요',
       content:
         '일기내용블라블라어떻게 하나요? 블라블라 Most fonts have a particular weight which corresponds to one of the numbers in Common weight name mapping. However some fonts, called variablethe chosen weight.',
@@ -30,7 +30,7 @@ export const res = {
     },
     {
       paperId: 8,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -54,7 +54,7 @@ export const res = {
     },
     {
       paperId: 7,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -78,7 +78,7 @@ export const res = {
     },
     {
       paperId: 6,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -102,7 +102,7 @@ export const res = {
     },
     {
       paperId: 5,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -126,7 +126,7 @@ export const res = {
     },
     {
       paperId: 4,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -150,7 +150,7 @@ export const res = {
     },
     {
       paperId: 3,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -174,7 +174,7 @@ export const res = {
     },
     {
       paperId: 2,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -198,7 +198,7 @@ export const res = {
     },
     {
       paperId: 1,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,
@@ -222,7 +222,7 @@ export const res = {
     },
     {
       paperId: 0,
-      title: '제목',
+      title: '일기장 제목',
       name: '닉네임',
       content: '일기내용블라블라',
       commentCount: 0,

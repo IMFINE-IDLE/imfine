@@ -27,6 +27,7 @@ const BoxRight = styled.div`
 
 const BtnDiary = styled(BtnSymptom)`
   background-color: var(--main-color);
+  padding: 0.1em 0.3em 0 0;
   font-weight: 700;
   font-size: 1rem;
 `;
@@ -49,6 +50,13 @@ const BoxLikeCmt = styled.div`
   align-items: center;
 `;
 
+const SpanDate = styled.span`
+  font-weight: 400;
+  color: var(--icon-color);
+  font-size: 14px;
+  margin-left: 0.2em;
+`;
+
 const SpanLikeCmt = styled.label`
   font-weight: 400;
   color: var(--icon-color);
@@ -64,5 +72,6 @@ export {
   Symptom,
   BoxContent,
   BoxLikeCmt,
+  SpanDate,
   SpanLikeCmt,
 };

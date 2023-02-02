@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiHeart } from 'react-icons/fi';
+import { FiBook, FiHeart } from 'react-icons/fi';
 import { FiMessageCircle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { URL } from '../../api/api';
@@ -13,6 +13,7 @@ import {
   BoxLeft,
   BtnDiary,
   BoxContent,
+  SpanDate,
 } from './style';
 
 function Paper({ paper }) {
@@ -63,11 +64,10 @@ function Paper({ paper }) {
             width={'50px'}
             height={'50px'}
           />
-          <p>{name}</p>
         </BoxLeft>
         <BoxRight>
-          <div>
-            <BtnDiary type="button">{title}</BtnDiary>
+          <div style={{ padding: '.5em .3em' }}>
+            <p style={{ fontWeight: '700' }}>{name}</p>
           </div>
           <div>
             {symptomList.map((symptom) => {
@@ -85,7 +85,15 @@ function Paper({ paper }) {
         return <img src={`${URL}/${image}`} alt="" />;
       })} */}
       <BoxLikeCmt>
-        <span>{getTimeDifference(date)}</span>
+        <div>
+          <BtnDiary type="button">
+            <FiBook style={{}} />
+            &nbsp;
+            {title}
+          </BtnDiary>
+          <SpanDate>{getTimeDifference(date)}</SpanDate>
+        </div>
+
         <div>
           <FiHeart style={{ color: 'var(--red-color)' }} />
           <SpanLikeCmt>{likeCount}</SpanLikeCmt>
