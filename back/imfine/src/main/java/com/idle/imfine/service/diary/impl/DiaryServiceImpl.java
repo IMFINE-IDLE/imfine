@@ -27,14 +27,15 @@ import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.symptom.DiaryHasSymptomRepository;
 import com.idle.imfine.data.repository.symptom.SymptomRepository;
+import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.service.Common;
 import com.idle.imfine.service.diary.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,13 +56,14 @@ public class DiaryServiceImpl implements DiaryService {
     private final PaperHasSymptomRepository paperHasSymptomRepository;
     private final PaperRepository paperRepository;
     private final SubscribeRepository subscribeRepository;
-    private final UserDetailsService userDetailsService;
+    private final Common common;
     private final Logger LOGGER = LoggerFactory.getLogger(DiaryService.class);
+    private final ConditionRepository conditionRepository;
 
     @Override
     @Transactional
     public void save(RequestDiaryPostDto saveDiary, String uId) {
-        User user = (User) userDetailsService.loadUserByUsername(uId);
+        User user = common.getUserByUid(uId);
         MedicalCode medicalCode = medicalCodeRepository.getById(saveDiary.getMedicalId());
 
         Diary diary = Diary.builder()
@@ -141,8 +143,8 @@ public class DiaryServiceImpl implements DiaryService {
         for (Paper paper : papers) {
             for (PaperHasSymptom paperHasSymptom : paper.getPaperHasSymptoms()) {
                 for (ResponseSymptomChartRecordDto recordList : recordDtos) {
-                    if (symptomIdByName.get(recordList.getSymptomName())
-                            == paperHasSymptom.getSymptomId()) {
+                    if ((int) symptomIdByName.get(recordList.getSymptomName())
+                            == (int) paperHasSymptom.getSymptomId()) {
                         recordList.getResponseDateScoreDtos().add(ResponseDateScoreDto.builder()
                                 .score(paperHasSymptom.getScore())
                                 .date(paper.getDate())
@@ -165,7 +167,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .commentCount(paper.getCommentCount())
                 .likeCount(paper.getLikeCount())
                 .date(paper.getDate())
-                .condition("기쁨")
+                .condition(conditionRepository.findByUserAndDate(diary.getWriter(), paper.getDate()).get().getCondition())
                 .open(paper.isOpen())
                 .images(new ArrayList<>())
                 .symptomList(paper.getPaperHasSymptoms().stream().map(
@@ -309,7 +311,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional
     public void deleteDiaryHasSymptom(int diaryHasSymptomId, String uid) {
-        User user = (User) userDetailsService.loadUserByUsername(uid);
+        User user = common.getUserByUid(uid);
         DiaryHasSymptom diaryHasSymptom = diaryHasSymptomRepository.findById(diaryHasSymptomId)
                 .orElseThrow(RuntimeException::new);
         LOGGER.info("삭제하러 들어옴...............{}, {}", diaryHasSymptom.getDiary().getId(), uid);

@@ -6,6 +6,7 @@ import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.image.Image;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -41,7 +42,7 @@ public class Paper extends BaseCreatedEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String date;
+    private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
