@@ -4,8 +4,11 @@ import com.idle.imfine.data.dto.diary.request.RequestDiaryFilterDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryModifyDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryPostDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
+import com.idle.imfine.data.dto.diary.response.ResponseDiaryPostPaper;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
+import com.idle.imfine.data.dto.diary.response.ResponsePutMedicalSymptomsDto;
+import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
@@ -317,5 +320,40 @@ public class DiaryServiceImpl implements DiaryService {
         LOGGER.info("삭제하러 들어옴...............{}, {}", diaryHasSymptom.getDiary().getId(), uid);
         paperHasSymptomRepository.deleteBySymptomId(diaryHasSymptom.getSymptom().getId(), paperRepository.findAllJoinFetch(diaryHasSymptom.getDiary()));
         diaryHasSymptomRepository.delete(diaryHasSymptom);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ResponseDiaryPostPaper> getMyDiaryList(String uid) {
+        return diaryRepository.findAllByUserId(common.getUserByUid(uid).getId()).stream().map(
+                diary -> ResponseDiaryPostPaper.builder()
+                        .diaryId(diary.getId())
+                        .title(diary.getTitle())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponsePutMedicalSymptomsDto getDiaryMedicalAndSymptom(long diaryId, String uid) {
+        Diary diary = diaryRepository.findByFetchSymptom(diaryId)
+                .orElseThrow(RuntimeException::new);
+        if (!diary.getWriter().getUid().equals(uid)) {
+            // 에러처리 하기
+            throw new RuntimeException("잘못된 접근입니다.");
+        }
+
+        return ResponsePutMedicalSymptomsDto.builder()
+                .medical(ResponseMedicalListDto.builder()
+                        .medicalId(diary.getMedicalCode().getId())
+                        .medicalName(diary.getMedicalCode().getName())
+                        .build())
+                .symptomList(diary.getDiaryHasSymptoms().stream().map(
+                        diaryHasSymptom -> ResponseSymptomDto.builder()
+                                .symptomId(diaryHasSymptom.getId())
+                                .symptomName(diaryHasSymptom.getSymptom().getName())
+                                .build()
+                ).collect(Collectors.toList()))
+                .build();
     }
 }
