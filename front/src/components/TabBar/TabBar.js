@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { ReactComponent as MainTabSvg } from './icons/home.svg';
 import { ReactComponent as DiaryTabSvg } from './icons/diary.svg';
 import { ReactComponent as BambooTabSvg } from './icons/bamboo.svg';
@@ -11,12 +11,13 @@ import {
   TabNavLink,
   ActiveBar,
   TabCenter,
-  Clover,
+  MainClover,
   CloverStatusContainer,
 } from './style';
 
 const TabBar = () => {
-  const [currentClover, setCurrentClover] = useState('main');
+  const state = useSelector((state) => state);
+  const [currentClover, setCurrentClover] = useState(state.userInfo.cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
   return (
@@ -44,12 +45,12 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <TabCenter>
-          <Clover
+          <MainClover
             onClick={() => setCloversOpen((prev) => !prev)}
-            src={`/assets/clovers/clover-${currentClover}.svg`}
+            code={currentClover}
             width="6.25em"
             height="6.25em"
-            isMain={true}
+            pointer={true}
           />
         </TabCenter>
         <Tab>
@@ -59,7 +60,7 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <Tab>
-          <TabNavLink to="/profile">
+          <TabNavLink to="/profile/user12">
             <ActiveBar />
             <ProfileTabSvg stroke="currentColor" />
           </TabNavLink>

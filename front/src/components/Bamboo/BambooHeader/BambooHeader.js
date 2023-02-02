@@ -7,10 +7,10 @@ import {
   BambooImg,
 } from './style';
 
-function BambooHeader({ title, subTitle, secondSubTitle }) {
+function BambooHeader({ title, subTitle, secondSubTitle, bottom }) {
   return (
     <div>
-      <BoxOuter>
+      <BoxOuter bottom={bottom}>
         <BoxHeader>
           <TitleHeader> {title}</TitleHeader>
           <SubTitleHeader>

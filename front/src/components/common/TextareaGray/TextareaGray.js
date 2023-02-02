@@ -20,11 +20,12 @@ const Textarea = styled.textarea`
   border-radius: 25px;
   outline: none;
   padding: ${(props) => props.padding || '1em'};
-  width: ${(props) => props.width || '100%'};
-  min-height: 100px;
+  min-width: ${(props) => props.width || '16em'};
+  min-height: 20em;
   margin: ${(props) => props.margin || '0'};
   overflow: hidden;
   resize: none;
+  display: inline-block;
 `;
 
 function TextareaGray({ value, setValue, width, margin, padding }) {

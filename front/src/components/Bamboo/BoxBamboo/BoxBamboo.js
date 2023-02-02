@@ -5,7 +5,7 @@ function BoxBamboo({ res }) {
   const [bambooList, setBambooList] = useState([]);
   useEffect(() => {
     setBambooList(res.data);
-  }, []);
+  }, [res.data]);
 
   return (
     <div>

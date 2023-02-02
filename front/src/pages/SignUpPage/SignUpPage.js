@@ -79,29 +79,23 @@ function SignUpPage() {
               idErrorMsg: '아이디는 최대 12자까지 가능합니다.',
             };
           });
-          currInput.id = currInput.id.substring(0, 12);
-          setTimeout(() => {
-            setErrMsg((prev) => {
-              return { ...prev, idErrorMsg: '' };
-            });
-          }, 2000); // 2초뒤 에러 메시지 지움
+        } else {
+          // 12자 이하일 경우 (유효할 경우에만) 아이디 중복체크
+          const asyncCheckId = async () => {
+            try {
+              const res = await axios.get(api.user.checkId(currInput.id));
+              setErrMsg((prev) => {
+                return { ...prev, idErrorMsg: '' };
+              });
+            } catch (err) {
+              console.log(err.response.data);
+              setErrMsg((prev) => {
+                return { ...prev, idErrorMsg: err.response.data.message };
+              });
+            }
+          };
+          asyncCheckId();
         }
-
-        // 아이디 중복체크
-        const asyncCheckId = async () => {
-          try {
-            const res = await axios.get(api.user.checkId(currInput.id));
-            setErrMsg((prev) => {
-              return { ...prev, idErrorMsg: '' };
-            });
-          } catch (err) {
-            console.log(err.response.data);
-            setErrMsg((prev) => {
-              return { ...prev, idErrorMsg: err.response.data.message };
-            });
-          }
-        };
-        asyncCheckId();
       }
 
       // 2. 닉네임 유효성 검사
@@ -121,40 +115,29 @@ function SignUpPage() {
               nameErrorMsg: '닉네임은 최대 10자까지 가능합니다',
             };
           });
-          setTimeout(() => {
-            setErrMsg((prev) => {
-              return {
-                ...prev,
-                nameErrorMsg: '닉네임은 최대 10자까지 가능합니다',
-              };
-            });
-          }, 2000);
+        } else {
+          // 10자 이하일 경우 (유효할 경우에만) 닉네임 중복체크
+          const asyncCheckName = async () => {
+            try {
+              const resName = await axios.get(
+                api.user.checkName(currInput.name)
+              );
+              setErrMsg((prev) => {
+                return { ...prev, nameErrorMsg: '' };
+              });
+            } catch (err) {
+              // console.log(err.response.data);
+              setErrMsg((prev) => {
+                return { ...prev, nameErrorMsg: err.response.data.message };
+              });
+            }
+          };
+          asyncCheckName();
         }
-        // 닉네임 중복체크 로직
-        const asyncCheckName = async () => {
-          try {
-            const resName = await axios.get(api.user.checkName(currInput.name));
-            setErrMsg((prev) => {
-              return { ...prev, nameErrorMsg: '' };
-            });
-          } catch (err) {
-            console.log(err.response.data);
-            setErrMsg((prev) => {
-              return { ...prev, nameErrorMsg: err.response.data.message };
-            });
-          }
-        };
-        asyncCheckName();
       }
 
       // 3. 이메일 유효성 검사
       if (currInput.email) {
-        setErrMsg((prev) => {
-          return {
-            ...prev,
-            emailErrorMsg: '',
-          };
-        });
         checkStage(3);
         const isEmailValid = (email) => {
           const emailRegex =
@@ -163,12 +146,23 @@ function SignUpPage() {
           return emailRegex.test(email);
         };
         if (isEmailValid(currInput.email)) {
-          setErrMsg((prev) => {
-            return {
-              ...prev,
-              emailErrorMsg: '',
-            };
-          });
+          // 유효한 경우에만 이메일 중복체크
+          const asyncCheckEmail = async () => {
+            try {
+              const resEmail = await axios.get(
+                api.user.checkEmail(currInput.email)
+              );
+              setErrMsg((prev) => {
+                return { ...prev, emailErrorMsg: '' };
+              });
+            } catch (err) {
+              console.log(err.response.data);
+              setErrMsg((prev) => {
+                return { ...prev, emailErrorMsg: err.response.data.message };
+              });
+            }
+          };
+          asyncCheckEmail();
         } else {
           setErrMsg((prev) => {
             return {
@@ -177,24 +171,6 @@ function SignUpPage() {
             };
           });
         }
-
-        // 이메일 중복체크
-        const asyncCheckEmail = async () => {
-          try {
-            const resEmail = await axios.get(
-              api.user.checkEmail(currInput.email)
-            );
-            setErrMsg((prev) => {
-              return { ...prev, emailErrorMsg: '' };
-            });
-          } catch (err) {
-            console.log(err.response.data);
-            setErrMsg((prev) => {
-              return { ...prev, emailErrorMsg: err.response.data.message };
-            });
-          }
-        };
-        asyncCheckEmail();
       }
 
       // 4. 비밀번호 유효성 검사
@@ -227,28 +203,6 @@ function SignUpPage() {
         }
       }
 
-      // 전체 유효 여부 확인
-      const noErr = Object.values(errorMsg).every(
-        (x) => x === '' || x === null
-      );
-      console.log(noErr);
-      if (
-        noErr &&
-        // Object.values(errorMsg).every((x) => x === '' || x === null) &&
-        currInput.id.length > 0 &&
-        currInput.name.length > 0 &&
-        currInput.email.length > 0 &&
-        currInput.password.length > 0 &&
-        currInput.confirmPassword.length > 0 &&
-        currInput.password === currInput.confirmPassword
-      ) {
-        console.log('TRUE');
-        setIsValid(true);
-      } else {
-        setIsValid(false);
-        setIsNext(false);
-      }
-
       return currInput;
     },
     {
@@ -268,6 +222,27 @@ function SignUpPage() {
     confirmPwErrorMsg,
   } = errorMsg;
 
+  // 전체 유효 여부 확인
+  const noErr = Object.values(errorMsg).every((x) => x === '' || x === null);
+  // console.log(noErr);
+  if (
+    noErr &&
+    id.length > 0 &&
+    id.length <= 12 &&
+    name.length > 0 &&
+    name.length <= 12 &&
+    email.length > 0 &&
+    password.length > 0 &&
+    confirmPassword.length > 0 &&
+    password === confirmPassword
+  ) {
+    // console.log('TRUE');
+    if (!isValid) setIsValid(true);
+  } else {
+    if (isValid) setIsValid(false);
+    if (isNext) setIsNext(false);
+  }
+
   const signUpByData = async () => {
     const userData = {
       uid: id,
@@ -279,7 +254,7 @@ function SignUpPage() {
     try {
       const success = await dispatch(signUp(userData)).unwrap();
       setIsNext(true);
-      console.log(success);
+      // console.log(success);
     } catch (rejectWithValue) {
       console.log(rejectWithValue);
       alert(rejectWithValue.response.data.message);
