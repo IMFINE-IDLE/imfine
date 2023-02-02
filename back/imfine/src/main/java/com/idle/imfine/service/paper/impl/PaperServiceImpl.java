@@ -18,16 +18,17 @@ import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
-import com.idle.imfine.data.repository.diary.SubscribeRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.image.ImageRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
+import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.paper.PaperService;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class PaperServiceImpl implements PaperService {
     private final Common common;
     private final HeartRepository heartRepository;
     private final FollowRepository followRepository;
-    private final SubscribeRepository subscribeRepository;
+    private final ConditionRepository conditionRepository;
     private final FileStore fileStore;
     static final Logger LOGGER = LoggerFactory.getLogger(PaperServiceImpl.class);
     @Override
@@ -73,7 +74,7 @@ public class PaperServiceImpl implements PaperService {
                 .diary(diary)
                 .content(requestPaperPostDto.getContents())
                 .open(requestPaperPostDto.isOpen())
-                .date(requestPaperPostDto.getDate())
+                .date(LocalDate.now())
                 .build());
         List<UploadFile> storeImageFiles;
         storeImageFiles = fileStore.storeFiles(requestPaperPostDto.getImages());
@@ -239,8 +240,11 @@ public class PaperServiceImpl implements PaperService {
                         .uid(paper.getDiary().getWriter().getUid())
                         .commentCount(paper.getCommentCount())
                         .likeCount(paper.getLikeCount())
-                        .date(common.convertDateAllType(paper.getCreatedAt()))
+                        .date(paper.getDate())
+                        .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                         .open(paper.isOpen())
+                        .condition(conditionRepository.findByUserAndDate(paper.getDiary()
+                                .getWriter(), paper.getDate()).get().getCondition())
                         .images(paper.getImages().stream().map(
                                 image -> image.getPath()
                         ).collect(Collectors.toList()))

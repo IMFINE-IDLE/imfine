@@ -1,5 +1,6 @@
 package com.idle.imfine.data.dto.symptom.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class ResponseDateScoreDto {
-    private String date;
+    private LocalDate date;
     private int score;
 }

@@ -1,6 +1,7 @@
 package com.idle.imfine.data.dto.paper.response;
 
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +20,10 @@ public class ResponsePaperDto {
     private String content;
     private int commentCount;
     private int likeCount;
-    private String date;
-    private String condition;
+    private LocalDate date;
+    private int condition;
     private boolean open;
+    private String createdAt;
     List<String> images;
     List<ResponsePaperSymptomRecordDto> symptomList;
 }
