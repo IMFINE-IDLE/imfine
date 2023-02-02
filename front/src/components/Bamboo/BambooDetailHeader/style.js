@@ -6,7 +6,6 @@ const BoxOuter = styled.div`
 `;
 
 const BoxHeader = styled.div`
-  height: 12em;
   border-radius: 0px 0px 50px 50px;
   background-color: var(--light-color);
   outline: none;
@@ -19,12 +18,12 @@ const BambooImg = styled.img.attrs({
   margin-left: 1em;
   height: 5em;
   float: left;
-  margin-bottom: 1em;
 `;
 
 const RightDiv = styled.div`
   height: 5em;
-  margin: ${(props) => props.margin || '1em 0 0 '};
+  position: relative;
+  bottom: 0;
 `;
 
 const Content = styled.h1`
@@ -57,11 +56,16 @@ const LabelStatus = styled.label`
 
 const Container = styled.div`
   width: inherit;
-  margin: 1em;
+  margin: 2em;
   position: relative;
   display: inline-block;
   top: -12em;
   float: right;
+`;
+
+const ReplyContainer = styled.div`
+  padding-top: 1em;
+  padding-left: 1em;
 `;
 export {
   BoxOuter,
@@ -72,4 +76,5 @@ export {
   LabelOuter,
   LabelStatus,
   Container,
+  ReplyContainer,
 };

@@ -11,6 +11,7 @@ import {
   LabelStatus,
   RightDiv,
   Container,
+  ReplyContainer,
 } from './style';
 
 function BambooDetailHeader({ content }) {
@@ -32,8 +33,8 @@ function BambooDetailHeader({ content }) {
             <BtnDropDown />
           </Container>
         </BoxHeader>
+        <ReplyContainer>댓글들어가는자리</ReplyContainer>
       </BoxOuter>
-      <div>댓글몇개표시</div>
     </div>
   );
 }
