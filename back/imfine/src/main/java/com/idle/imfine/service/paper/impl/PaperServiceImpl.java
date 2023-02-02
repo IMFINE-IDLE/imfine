@@ -13,10 +13,12 @@ import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.image.Image;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
+import com.idle.imfine.data.repository.comment.CommentRepository;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.image.ImageRepository;
@@ -54,7 +56,9 @@ public class PaperServiceImpl implements PaperService {
     private final FollowRepository followRepository;
     private final ConditionRepository conditionRepository;
     private final FileStore fileStore;
+    private final CommentRepository commentRepository;
     static final Logger LOGGER = LoggerFactory.getLogger(PaperServiceImpl.class);
+
     @Override
     @Transactional
     public void save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException {
@@ -182,29 +186,33 @@ public class PaperServiceImpl implements PaperService {
         List<DiaryHasSymptom> diaryHasSymptoms = paperDiary.getDiaryHasSymptoms();
         List<PaperHasSymptom> paperHasSymptoms = paper.getPaperHasSymptoms();
         List<ResponsePaperSymptomRecordDto> responsePaperSymptomRecordDtos = new ArrayList<>();
-        for (DiaryHasSymptom diaryHasSymptom: diaryHasSymptoms) {
+        for (DiaryHasSymptom diaryHasSymptom : diaryHasSymptoms) {
             for (PaperHasSymptom paperHasSymptom : paperHasSymptoms) {
                 if (paperHasSymptom.getSymptomId() == diaryHasSymptom.getSymptom().getId()) {
                     responsePaperSymptomRecordDtos.add(ResponsePaperSymptomRecordDto.builder()
-                                    .symptomId(paperHasSymptom.getSymptomId())
-                                    .symptomName(diaryHasSymptom.getSymptom().getName())
-                                    .score(paperHasSymptom.getScore())
+                            .symptomId(paperHasSymptom.getSymptomId())
+                            .symptomName(diaryHasSymptom.getSymptom().getName())
+                            .score(paperHasSymptom.getScore())
                             .build());
                     break;
                 }
             }
         }
-
+        List<Comment> myHeartComment = commentRepository.findCommentByHeartAndPaperIn(
+                    paper.getId(), 3,
+                    user);
         return ResponsePaperDetailDto.builder()
                 .diaryId(paperDiary.getId())
                 .userId(user.getId())
-                .userStatus(user.getId()==paperDiary.getWriter().getId()? 0 : 2)
+                .userStatus(user.getId() == paperDiary.getWriter().getId() ? 0 : 2)
                 .userName(user.getName())
                 .content(paper.getContent())
                 .symptoms(responsePaperSymptomRecordDtos)
                 .images(paper.getImages().stream().map(
                         Image::getPath
                 ).collect(Collectors.toList()))
+                .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(
+                        paperDiary.getWriter().getId(), 2, paper.getId()))
                 .comments(paper.getComments().stream().map(
                         comment -> ResponseCommentDto.builder()
                                 .commentId(comment.getId())
@@ -213,7 +221,11 @@ public class PaperServiceImpl implements PaperService {
                                 .likeCount(comment.getLikeCount())
                                 .declarationCount(comment.getDeclarationCount())
                                 .content(comment.getContent())
-                                .createdDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+                                .myHeart(myHeartComment.stream().anyMatch(
+                                        heartComment -> heartComment.getId() == comment.getId()
+                                ))
+                                .createdDate(LocalDateTime.now()
+                                        .format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                                 .build()
                 ).collect(Collectors.toList()))
                 .build();
@@ -221,7 +233,7 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ResponsePaperDto> getPaperList(String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);
         List<User> users = followRepository.findAllByFollowingUser(user)
@@ -231,6 +243,9 @@ public class PaperServiceImpl implements PaperService {
         diaries.addAll(diaries1);
         diaries = diaries.stream().distinct().collect(Collectors.toList());
         List<Paper> papers = paperRepository.findAllByDiariesIn(diaries, pageable);
+        List<Paper> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
+                diaries);
+
         return papers.stream().map(
                 paper -> ResponsePaperDto.builder()
                         .diaryId(paper.getDiary().getId())
@@ -240,6 +255,7 @@ public class PaperServiceImpl implements PaperService {
                         .uid(paper.getDiary().getWriter().getUid())
                         .commentCount(paper.getCommentCount())
                         .likeCount(paper.getLikeCount())
+                        .myHeart(myHeartPapers.stream().anyMatch(heartPaper -> heartPaper.getId() == paper.getId()))
                         .date(paper.getDate())
                         .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                         .open(paper.isOpen())

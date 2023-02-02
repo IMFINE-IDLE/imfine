@@ -18,7 +18,7 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     boolean existsAllByDiary(Diary diary);
     @Query("select p from Paper p where p.diary in :diaries and p.open=true")
     List<Paper> findAllByDiariesIn(@Param("diaries") List<Diary> diaries, Pageable pageable);
-    @Query("select p from Paper p join Heart h on h.contentsId=p.id where p.id between :sIdx and :eIdx and h.senderId=:userId")
-    List<Paper> findLikePaperByBetweenIdxAndSenderId(@Param("sIdx") long sIdx, @Param("eIdx") long eIdx, @Param("userId") long userId);
+    @Query("select p from Paper p join Heart h on h.contentsId=p.id where p.diary in :diaries and h.senderId=:userId")
+    List<Paper> findHeartPaperByUserIdAAndDiaryIn(@Param("userId") long userId, @Param("diaries") List<Diary> diaries);
     List<Paper> findAllByDiaryInAndDate(List<Diary> diaries, LocalDate date);
 }

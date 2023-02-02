@@ -17,5 +17,6 @@ public class ResponseCommentDto {
     private String userName;
     private String content;
     private String createdDate;
+    private boolean myHeart;
     private int userStatus;
 }
