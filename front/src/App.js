@@ -15,6 +15,7 @@ import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
+import { PrivateRoute, PublicRoute } from './Route/Route';
 import instance from './api/instance';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -34,24 +35,114 @@ function App() {
   return (
     // <Wrapper>
     <Routes>
-      <Route index element={<PaperFeedPage />} />
-      {/* <Route index element={<Login />} /> */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/home" element={<PaperFeedPage />} />
+      <Route
+        index
+        element={
+          <PrivateRoute>
+            <PaperFeedPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <SignUpPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/home"
+        element={
+          <PrivateRoute>
+            <PaperFeedPage />
+          </PrivateRoute>
+        }
+      />
       <Route path="/diary">
-        <Route path="/diary/create" element={<DiaryCreate />} />
+        <Route
+          path="/diary/create"
+          element={
+            <PrivateRoute>
+              <DiaryCreate />
+            </PrivateRoute>
+          }
+        />
       </Route>
       <Route path="/paper">
-        <Route path="/paper/create" element={<PaperCreate />} />
-        <Route path="/paper/:paperId" element={<PaperDetailPage />} />
+        <Route
+          path="/paper/create"
+          element={
+            <PrivateRoute>
+              <PaperCreate />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/paper/:paperId"
+          element={
+            <PrivateRoute>
+              <PaperDetailPage />
+            </PrivateRoute>
+          }
+        />
       </Route>
-      <Route path="/bamboo" element={<BambooFeedPage />}></Route>
-      <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
-      <Route path="/bamboo/:bambooId" element={<BambooDetailPage />}></Route>
-      <Route path="/profile/:name" element={<ProfilePage />}>
-        <Route index element={<ProfileContent />} />
-        <Route path="follows" element={<ProfileFollows />} />
+      <Route
+        path="/bamboo"
+        element={
+          <PrivateRoute>
+            <BambooFeedPage />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route
+        path="/bamboo/create"
+        element={
+          <PrivateRoute>
+            <BambooCreatePage />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route
+        path="/bamboo/:bambooId"
+        element={
+          <PrivateRoute>
+            <BambooDetailPage />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route
+        path="/profile/:name"
+        element={
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        }
+      >
+        <Route
+          index
+          element={
+            <PrivateRoute>
+              <ProfileContent />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="follows"
+          element={
+            <PrivateRoute>
+              <ProfileFollows />
+            </PrivateRoute>
+          }
+        />
       </Route>
       <Route path="/profile-config" element={<ProfileConfigPage />} />
       <Route path="/change-name" element={<ChangeName />} />
