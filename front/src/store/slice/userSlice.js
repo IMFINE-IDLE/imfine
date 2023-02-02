@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import api from '../../api/api';
+import instance from '../../api/instance';
 
 export const signUp = createAsyncThunk(
   'user/signUp',
@@ -16,6 +17,8 @@ export const signUp = createAsyncThunk(
       };
 
       axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
+      instance.defaults.headers.common['X-AUTH-TOKEN'] =
+        localStorage.getItem('accessToken');
       // console.log(accessToken);
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
