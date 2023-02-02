@@ -34,6 +34,7 @@ import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.diary.DiaryService;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -164,7 +165,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional(readOnly = true)
     public ResponsePaperDto getPaper(long diaryId, String date) {
         Diary diary = diaryRepository.getById(diaryId);
-        Paper paper = paperRepository.findByDiaryAndDate(diary, date);
+        Paper paper = paperRepository.findByDiaryAndDate(diary, common.convertDateType(date));
         ResponsePaperDto responsePaperDto = ResponsePaperDto.builder()
                 .paperId(paper.getId())
                 .commentCount(paper.getCommentCount())
