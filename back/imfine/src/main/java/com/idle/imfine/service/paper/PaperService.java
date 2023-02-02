@@ -22,4 +22,6 @@ public interface PaperService {
     ResponsePaperDetailDto getPaperDetail(long paperId, String uid);
 
     List<ResponsePaperDto> getPaperList(String uid, Pageable pageable);
+
+    List<ResponsePaperDto> getAllPaperByDate(String uid, String date);
 }

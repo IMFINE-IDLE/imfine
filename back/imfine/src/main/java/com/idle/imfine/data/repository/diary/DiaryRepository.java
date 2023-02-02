@@ -23,4 +23,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<Diary> findAllByWriterIn(List<User> users);
     @Query("SELECT distinct d FROM Diary d join fetch Subscribe s on d=s.diary where s.userId=:id")
     List<Diary> findAllByUserId(@Param("id") long id);
+
+    List<Diary> findAllByWriter(User writer);
 }

@@ -5,6 +5,7 @@ import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.*;
+import com.idle.imfine.service.paper.impl.PaperServiceImpl;
 import com.idle.imfine.service.user.ConditionService;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.UserService;
@@ -28,6 +29,7 @@ public class UserController {
     private final FollowService followService;
     private final ConditionService conditionService;
     private final ResponseService responseService;
+    private final PaperServiceImpl paperService;
 
     @PostMapping("/sign-in")
     public ResponseEntity<Result> signIn(@RequestBody SignInRequestDto requestDto) {
@@ -165,9 +167,8 @@ public class UserController {
 
     @GetMapping("/{uid}/paper/{date}")
     public ResponseEntity<Result> getAllPaperByDay(@PathVariable String uid, @PathVariable String date) {
-
         return ResponseEntity.ok()
-                .body(responseService.getSuccessResult());
+                .body(responseService.getListResult((paperService.getAllPaperByDate(uid, date))));
     }
 
 
