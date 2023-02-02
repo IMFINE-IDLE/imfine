@@ -15,6 +15,7 @@ import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
+import instance from './api/instance';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -25,6 +26,9 @@ import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
 //     background: none;
 //   }s
 // `;
+
+instance.defaults.headers.common['X-AUTH-TOKEN'] =
+  localStorage.getItem('accessToken');
 
 function App() {
   return (
