@@ -1,16 +1,35 @@
 import styled from 'styled-components';
-
+import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 const BoxOuter = styled.div`
   padding: ${(props) => props.padding || '0px'};
   margin-bottom: ${(props) => props.bottom || '1em'};
 `;
 
-const BoxHeader = styled.div`
+const BoxHeader = styled(BoxNoShad)`
   border-radius: 0px 0px 50px 50px;
+  padding: 1em 1em 1em 1em;
   background-color: var(--light-color);
   outline: none;
+  min-height: 190px;
 `;
 
+const TopDiv = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const BottomDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const RightDiv = styled.div`
+  height: 5em;
+  position: relative;
+  bottom: 0;
+`;
 const BambooImg = styled.img.attrs({
   src: '/assets/images/Bamboo.png',
 })`
@@ -20,21 +39,10 @@ const BambooImg = styled.img.attrs({
   float: left;
 `;
 
-const RightDiv = styled.div`
-  height: 5em;
-  position: relative;
-  bottom: 0;
-`;
-
 const Content = styled.h1`
   color: var(--default-font-color);
-  font-weight: 700;
-  font-size: 1em;
-  min-width: 15em;
-  padding: 1.7em 1em 1.2em;
-  text-align: justify;
-  top: 1.3em;
-  position: relative;
+  padding: 1em 0;
+  text-align: center;
 `;
 
 const LabelOuter = styled.div`
@@ -77,4 +85,6 @@ export {
   LabelStatus,
   Container,
   ReplyContainer,
+  TopDiv,
+  BottomDiv,
 };

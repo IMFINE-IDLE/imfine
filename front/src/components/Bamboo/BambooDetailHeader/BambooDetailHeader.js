@@ -1,6 +1,6 @@
 import React from 'react';
-import { BsHeartFill } from 'react-icons/bs';
-import { RiChat3Line } from 'react-icons/ri';
+import { FiHeart, FiMessageCircle } from 'react-icons/fi';
+import { FiMoreVertical } from 'react-icons/fi';
 import BtnDropDown from '../BtnDropDown/BtnDropDown';
 import {
   BoxOuter,
@@ -12,30 +12,27 @@ import {
   RightDiv,
   Container,
   ReplyContainer,
+  TopDiv,
+  BottomDiv,
 } from './style';
 
 function BambooDetailHeader({ bambooId, content, leafCount, likeCount }) {
   return (
-    <div>
-      <BoxOuter>
-        <BoxHeader>
-          <Content>{content}</Content>
-          <RightDiv>
-            <BambooImg />
-            <LabelOuter>
-              <BsHeartFill />
-              <LabelStatus>{likeCount}</LabelStatus>
-              <RiChat3Line />
-              <LabelStatus>{leafCount}</LabelStatus>
-            </LabelOuter>
-          </RightDiv>
-          <Container>
-            <BtnDropDown />
-          </Container>
-        </BoxHeader>
-        <ReplyContainer>댓글들어가는자리</ReplyContainer>
-      </BoxOuter>
-    </div>
+    <BoxHeader>
+      <TopDiv>
+        <FiMoreVertical />
+      </TopDiv>
+      <Content>{content}</Content>
+      <BottomDiv>
+        <BambooImg />
+        <LabelOuter>
+          <FiHeart />
+          <LabelStatus>{likeCount}</LabelStatus>
+          <FiMessageCircle />
+          <LabelStatus>{leafCount}</LabelStatus>
+        </LabelOuter>
+      </BottomDiv>
+    </BoxHeader>
   );
 }
 
