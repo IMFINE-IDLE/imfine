@@ -160,7 +160,7 @@ public class UserController {
 
     @GetMapping("/{uid}/condition/month/{month}")
     public ResponseEntity<Result> getAllConditionByMonth(@PathVariable String uid, @PathVariable String month) {
-        Map<LocalDate, Integer> responseDto = conditionService.getAllCondtionByMonth(uid, month);
+        Map<String, String> responseDto = conditionService.getAllCondtionByMonth(uid, month);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseDto)) ;
     }
