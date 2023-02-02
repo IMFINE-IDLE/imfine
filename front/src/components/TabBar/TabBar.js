@@ -60,7 +60,7 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <Tab>
-          <TabNavLink to="/profile/user12">
+          <TabNavLink to={`/profile/${state.user.uid}`}>
             <ActiveBar />
             <ProfileTabSvg stroke="currentColor" />
           </TabNavLink>

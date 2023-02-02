@@ -19,6 +19,7 @@ const ProfileInfo = ({
   relation,
 }) => {
   const state = useSelector((state) => state);
+  console.log(state);
 
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
