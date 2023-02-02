@@ -3,15 +3,16 @@ import { FiBook, FiHeart } from 'react-icons/fi';
 import { FiMessageCircle } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { URL } from '../../../api/api';
+import DiaryTitle from '../DiaryTitle/DiaryTitle';
+import LikeComment from '../LikeComment/LikeComment';
 import {
-  BoxLikeCmt,
+  BoxBottom,
   BoxPaper,
   SpanLikeCmt,
   BoxTop,
   Symptom,
   BoxRight,
   BoxLeft,
-  BtnDiary,
   BoxContent,
   SpanDate,
 } from './style';
@@ -84,23 +85,13 @@ function PaperItem({ paper }) {
       {/* {images.map((image) => {
         return <img src={`${URL}/${image}`} alt="" />;
       })} */}
-      <BoxLikeCmt>
+      <BoxBottom>
         <div>
-          <BtnDiary type="button">
-            <FiBook style={{}} />
-            &nbsp;
-            {title}
-          </BtnDiary>
+          <DiaryTitle title={title} />
           <SpanDate>{getTimeDifference(date)}</SpanDate>
         </div>
-
-        <div>
-          <FiHeart style={{ color: 'var(--red-color)' }} />
-          <SpanLikeCmt>{likeCount}</SpanLikeCmt>
-          <FiMessageCircle />
-          <SpanLikeCmt>{commentCount}</SpanLikeCmt>
-        </div>
-      </BoxLikeCmt>
+        <LikeComment likeCount={likeCount} commentCount={commentCount} />
+      </BoxBottom>
     </BoxPaper>
   );
 }
