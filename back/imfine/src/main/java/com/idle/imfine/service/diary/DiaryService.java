@@ -4,8 +4,10 @@ import com.idle.imfine.data.dto.diary.request.RequestDiaryFilterDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryModifyDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryPostDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
+import com.idle.imfine.data.dto.diary.response.ResponseDiaryPostPaper;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
+import com.idle.imfine.data.dto.diary.response.ResponsePutMedicalSymptomsDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
@@ -30,4 +32,8 @@ public interface DiaryService {
     void addDairyHasSymptom(RequestSymptomRegistrationDto requestSymptomRegistrationDto, String uid);
 
     void deleteDiaryHasSymptom(int build, String uid);
+
+    List<ResponseDiaryPostPaper> getMyDiaryList(String uid);
+
+    ResponsePutMedicalSymptomsDto getDiaryMedicalAndSymptom(long diaryId, String uid);
 }

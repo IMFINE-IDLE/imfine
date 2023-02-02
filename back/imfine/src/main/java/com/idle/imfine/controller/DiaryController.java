@@ -133,4 +133,16 @@ public class DiaryController {
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
+    @GetMapping("/list/paper-post")
+    public ResponseEntity<Result> getMyDiaryListForPostPaper(@LoginUser String uid) {
+        return ResponseEntity.ok()
+                .body(responseService.getListResult(diaryService.getMyDiaryList(uid)));
+    }
+
+    @GetMapping("/{diary-id}/post/list")
+    public ResponseEntity<Result> getDiaryPostList(@PathVariable("diary-id") long diaryId,
+            @LoginUser String uid) {
+        return ResponseEntity.ok()
+                .body(responseService.getSingleResult(diaryService.getDiaryMedicalAndSymptom(diaryId, uid)));
+    }
 }
