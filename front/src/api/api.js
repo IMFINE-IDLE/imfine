@@ -14,6 +14,7 @@ const api = {
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
+    paperDetail: (paperId) => URL + PAPER + paperId,
   },
 };
 
