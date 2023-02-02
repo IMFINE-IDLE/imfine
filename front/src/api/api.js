@@ -18,6 +18,7 @@ const api = {
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,
+    getDetailBamboo: (params) => URL + BAMBOO + `/detail/${params}`,
   },
 };
 
