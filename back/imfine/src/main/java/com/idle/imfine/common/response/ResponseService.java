@@ -40,7 +40,6 @@ public class ResponseService {
     public Result getSuccessResult() {
         Result result = new Result();
         result.setSuccess(true);
-        result.setStatus(200);
         result.setMessage(SUCCESS_MSG);
 
         return result;
@@ -48,7 +47,6 @@ public class ResponseService {
 
     public void setSuccessResult(Result result) {
         result.setSuccess(true);
-        result.setStatus(200);
         result.setMessage(SUCCESS_MSG);
     }
 
