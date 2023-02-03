@@ -37,13 +37,15 @@ function Modal({ type, setModalOpen, apiFunc }) {
   // api 세팅 완료되면 아래처럼 종류에 따라 다른 텍스트 적용 필요
   let text;
   if (type === '댓글신고') {
-    text = '해당 댓글을 신고하시겠습니까?';
+    text = '해당 댓글을 신고할까요?';
   } else if (type === '일기신고') {
-    text = '해당 일기를 신고하시겠습니까?';
+    text = '해당 일기를 신고할까요?';
   } else if (type === '댓글삭제') {
-    text = '해당 댓글을 삭제하시겠습니까?';
+    text = '해당 댓글을 삭제할까요?';
   } else if (type === '일기삭제') {
-    text = '해당 일기를 삭제하시겠습니까?';
+    text = '해당 일기를 삭제할까요?';
+  } else if (type === '일기편집') {
+    text = '해당 일기를 편집할까요?';
   }
 
   return (

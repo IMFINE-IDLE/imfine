@@ -7,8 +7,6 @@ const BoxModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: var(--gray-color); */
-  /* opacity: 0.8; */
   background: rgba(248, 250, 249, 0.8);
 `;
 
@@ -21,7 +19,6 @@ const BoxInnerModal = styled.div`
   justify-content: center;
   align-items: center;
   padding: 1em;
-  /* border: 1px solid gray; */
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
   z-index: 1;
   background-color: white;
