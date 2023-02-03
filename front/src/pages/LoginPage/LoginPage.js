@@ -4,7 +4,14 @@ import { useNavigate } from 'react-router';
 import { InputGray } from '../../components/common/InputGray/InputGray';
 import useInput from '../../hooks/useInput';
 import { logIn } from '../../store/slice/userSlice';
-import { BoxLogin, BoxInnerLogin, BoxInput, BtnLogin } from './style';
+import {
+  BoxLogin,
+  BoxInnerLogin,
+  BoxInput,
+  BtnLogin,
+  BoxOptions,
+  SpanOption,
+} from './style';
 
 function Login() {
   const dispatch = useDispatch();
@@ -69,6 +76,13 @@ function Login() {
           >
             로그인하기
           </BtnLogin>
+          <BoxOptions>
+            <SpanOption>아이디 찾기</SpanOption>|
+            <SpanOption>비밀번호 찾기</SpanOption>|
+            <SpanOption onClick={() => navigate('/signup')}>
+              회원가입 하기
+            </SpanOption>
+          </BoxOptions>
         </form>
       </BoxInnerLogin>
     </BoxLogin>
