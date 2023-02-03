@@ -15,6 +15,7 @@ import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseDateScoreDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
+import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Subscribe;
 import com.idle.imfine.data.entity.User;
@@ -171,7 +172,8 @@ public class DiaryServiceImpl implements DiaryService {
                 .commentCount(paper.getCommentCount())
                 .likeCount(paper.getLikeCount())
                 .date(paper.getDate())
-                .condition(conditionRepository.findByUserAndDate(diary.getWriter(), paper.getDate()).get().getCondition())
+                .condition(String.format("%d", conditionRepository.findByUserAndDate(diary.getWriter(), paper.getDate()).orElseGet(
+                        Condition::new).getCondition()))
                 .open(paper.isOpen())
                 .images(new ArrayList<>())
                 .symptomList(paper.getPaperHasSymptoms().stream().map(
