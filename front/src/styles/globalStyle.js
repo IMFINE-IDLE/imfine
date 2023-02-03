@@ -78,6 +78,15 @@ const GlobalStyle = createGlobalStyle`
   abbr {
     text-decoration: none;
   }
+
+  a,
+  div,
+  span,
+  input,
+  button,
+  textarea {
+    font-family: inherit;
+  }
 `;
 
 export { iconStyle, GlobalStyle };
