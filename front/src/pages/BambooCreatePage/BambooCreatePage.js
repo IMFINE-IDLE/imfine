@@ -18,7 +18,11 @@ function BambooCreatePage() {
         {
           content: value,
         },
-        { headers: { 'X-AUTH-TOKEN': localStorage.getItem('accessToken') } }
+        {
+          headers: {
+            Authorization: localStorage.getItem('accessToken'),
+          },
+        }
       );
     } catch (err) {
       console.log('Err', err);
@@ -27,7 +31,12 @@ function BambooCreatePage() {
 
   return (
     <>
-      <NavBarBasic Back={true} Text={''} />
+      <NavBarBasic
+        BackgroundColor={'light'}
+        TextColor={'icon'}
+        Back={true}
+        Text={'대나무 작성'}
+      />
       <BambooHeader
         title={'대나무숲 외치기'}
         subTitle={'비밀대나무는'}

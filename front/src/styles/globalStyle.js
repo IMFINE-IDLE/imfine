@@ -6,6 +6,7 @@ const iconStyle = {
   verticalAlign: 'middle',
   color: 'var(--icon-color)',
   fontSize: '1.3rem',
+  cursor: 'pointer',
 };
 
 const GlobalStyle = createGlobalStyle`
