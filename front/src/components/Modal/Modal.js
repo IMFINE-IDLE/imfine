@@ -20,7 +20,7 @@ function Modal({ type, setModalOpen }) {
   const [modalOpen, setModalOpen] = useState(false);
   <button onClick={() => setModalOpen(true)}>클릭해야할것</button>
   {modalOpen && (
-    <Modal setModalOpen={setModalOpen} />
+    <Modal type={'댓글신고'} setModalOpen={setModalOpen} />
     )}
     */
 

@@ -27,7 +27,7 @@ function PaperDetailPage() {
     <>
       <NavBarBasic Back />
       <PaperItemDetail
-        // isMine={true}
+        isMine={true}
         paperId={paperId}
         condition={0}
         name={'닉네임'}
