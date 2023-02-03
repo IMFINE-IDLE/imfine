@@ -22,7 +22,7 @@ public class FileStore {
         try {
             String osSystem = InetAddress.getLocalHost().getHostName();
             if (!osSystem.substring(0, 7).equals("DESKTOP")) {
-                fileDir = "/home/ubuntu/resource";
+                fileDir = "/home/ubuntu/resource/";
             }
         } catch (UnknownHostException e) {
             throw new RuntimeException("지원하지 않는 OS입니다.");
@@ -31,6 +31,9 @@ public class FileStore {
     }
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
         List<UploadFile> storeFileResult = new ArrayList<>();
+        if (multipartFiles == null) {
+            return storeFileResult;
+        }
         for (MultipartFile multipartFile : multipartFiles) {
             if (!multipartFile.isEmpty()) {
                 storeFileResult.add(storeFile(multipartFile));

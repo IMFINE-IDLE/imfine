@@ -18,7 +18,8 @@ public class ResponseDiaryDetailDto {
     private int userStatus;
     private String title;
     private String description;
-    private String userName;
+    private String uid;
+    private String name;
     private String medicalName;
     private String beginDate;
     private String endedDate;

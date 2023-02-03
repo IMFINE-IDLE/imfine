@@ -120,7 +120,8 @@ public class DiaryServiceImpl implements DiaryService {
                 .userStatus(uid.equals(foundDiary.getWriter().getName()) ? 0 : 1)
                 .title(foundDiary.getTitle())
                 .description(foundDiary.getDescription())
-                .userName(foundDiary.getWriter().getName())
+                .name(foundDiary.getWriter().getName())
+                .uid(foundDiary.getWriter().getUid())
                 .medicalName(foundDiary.getMedicalCode().getName())
                 .beginDate(
                         foundDiary.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
