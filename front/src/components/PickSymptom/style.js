@@ -27,6 +27,16 @@ const BoxToggle = styled.div`
   margin-bottom: 1em;
 `;
 
+const ToggleContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const ToggleText = styled.span`
+  font-size: 0.75em;
+  margin-right: 0.5em;
+`;
+
 const ToggleWrapper = styled.div`
   position: relative;
   display: inline-block;
@@ -36,7 +46,7 @@ const ToggleWrapper = styled.div`
 `;
 const ToggleLabel = styled.label`
   position: absolute;
-  top: 0;
+  top: 3px;
   left: 0;
   width: 42px;
   height: 24px;
@@ -110,6 +120,8 @@ export {
   Title,
   BoxTopArea,
   BoxToggle,
+  ToggleContainer,
+  ToggleText,
   ToggleWrapper,
   ToggleLabel,
   Toggle,

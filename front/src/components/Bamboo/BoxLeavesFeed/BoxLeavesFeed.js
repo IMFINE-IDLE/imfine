@@ -1,12 +1,30 @@
-import { BsHeartFill } from 'react-icons/bs';
-import { RiChat3Line } from 'react-icons/ri';
-import { BoxNoShadLeaves } from './style';
+import { FiMoreVertical, FiHeart, FiMessageCircle } from 'react-icons/fi';
+import {
+  BoxNoShadLeaves,
+  ImgLeaves,
+  ColumnDiv,
+  TopDiv,
+  BottomDiv,
+  Content,
+  LikeLabel,
+} from './style';
 
-function BoxLeavesFeed({ Leaves }) {
-  const { content } = Leaves;
+function BoxLeavesFeed({ leafId, content, likeCount, declarationCount }) {
   return (
     <div>
-      <BoxNoShadLeaves></BoxNoShadLeaves>
+      <ColumnDiv>
+        <BoxNoShadLeaves>
+          <TopDiv>
+            <FiHeart />
+            <LikeLabel>{likeCount}</LikeLabel>
+            <FiMoreVertical />
+          </TopDiv>
+          <BottomDiv>
+            <ImgLeaves />
+            <Content>{content}</Content>
+          </BottomDiv>
+        </BoxNoShadLeaves>
+      </ColumnDiv>
     </div>
   );
 }

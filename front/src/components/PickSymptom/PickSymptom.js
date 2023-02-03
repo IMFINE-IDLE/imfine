@@ -7,6 +7,8 @@ import {
   BoxPickMenu,
   BtnLeftTap,
   BoxToggle,
+  ToggleContainer,
+  ToggleText,
   ToggleWrapper,
   Toggle,
   ToggleLabel,
@@ -39,8 +41,8 @@ function PickSymptom() {
       <BoxTopArea>
         <BoxToggle>
           <TitleSmall style={{ fontWeight: '600' }}>계정 공개 여부</TitleSmall>
-          <div style={{ display: 'inline-block' }}>
-            {/* <span>{isOpen ? '공개' : '비공개'}</span> */}
+          <ToggleContainer>
+            <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
             <ToggleWrapper isOpen={isOpen}>
               <Toggle
                 id="toggle"
@@ -52,7 +54,7 @@ function PickSymptom() {
               />
               <ToggleLabel htmlFor="toggle" />
             </ToggleWrapper>
-          </div>
+          </ToggleContainer>
         </BoxToggle>
         <BoxSymptom>
           <TitleSmall>관심 질병/수술 &nbsp; | &nbsp;</TitleSmall>
