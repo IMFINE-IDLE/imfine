@@ -1,4 +1,6 @@
-import React from 'react';
+import axios from 'axios';
+import api from '../../api/api';
+import React, { useState, useEffect } from 'react';
 import BambooHeader from '../../components/Bamboo/BambooHeader/BambooHeader';
 import Tabs from '../../components/Tabs/Tabs';
 import TabBar from '../../components/TabBar/TabBar';
@@ -7,6 +9,26 @@ import BoxBamboo from '../../components/Bamboo/BoxBamboo/BoxBamboo';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 
 function BambooFeedPage() {
+  const [responseAll, setResponseAll] = useState({});
+  const [searchFilter, setSearchFilter] = useState('latest');
+
+  // 필터링 타입 props로 설정 필요...
+  const fetchBambooFeed = async () => {
+    try {
+      const res = await axios.get(api.bamboo.getBambooFeed(searchFilter), {
+        headers: { 'X-AUTH-TOKEN': localStorage.getItem('accessToken') },
+      });
+      console.log('response확인', res.data);
+      setResponseAll(res.data);
+    } catch (err) {
+      console.log('err occured', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchBambooFeed();
+  }, []);
+
   const res = {
     success: true,
     status: 200,
@@ -38,7 +60,11 @@ function BambooFeedPage() {
     ],
   };
   const tabArr = [
-    { idx: 0, tabName: '모두보기', tabContent: <BoxBamboo res={res} /> },
+    {
+      idx: 0,
+      tabName: '모두보기',
+      tabContent: <BoxBamboo res={responseAll} />,
+    },
     { idx: 1, tabName: '나의활동', tabContent: <BoxBamboo res={myRes} /> },
   ];
   return (

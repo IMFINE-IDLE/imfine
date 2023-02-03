@@ -11,18 +11,18 @@ import {
 import BambooTimer from '../BambooTimer/BambooTimer';
 
 function BoxBambooFeed({ bamboo }) {
-  const { content } = bamboo;
+  const { content, bambooId, remainTime, likeCount, leafCount } = bamboo;
   return (
     /* box 눌렀을때 navigate 설정필요*/
     <BoxBambooOuter>
       <BoxShadBamboo>
-        <BambooTimer remainHour={20} />
+        <BambooTimer remainHour={remainTime} />
         <TextContent>{content}</TextContent>
         <LabelOuter>
           <BsHeartFill />
-          <LabelStatus>{content}</LabelStatus>
+          <LabelStatus>{likeCount}</LabelStatus>
           <RiChat3Line />
-          <LabelStatus>{content}</LabelStatus>
+          <LabelStatus>{leafCount}</LabelStatus>
         </LabelOuter>
       </BoxShadBamboo>
     </BoxBambooOuter>
