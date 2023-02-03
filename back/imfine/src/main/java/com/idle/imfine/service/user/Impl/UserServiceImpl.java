@@ -99,8 +99,8 @@ public class UserServiceImpl implements UserService {
 
         LOGGER.info("[SignService.signIn] ResponseDto 객체 생성");
         SignInResponseDto responseDto = SignInResponseDto.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(String.valueOf(user.getUid()), user.getRoles()))
-                .refreshToken(jwtTokenProvider.createRefreshToken(String.valueOf(user.getUid()), user.getRoles()))
+                .accessToken("Bearer " + jwtTokenProvider.createAccessToken(String.valueOf(user.getUid()), user.getRoles()))
+                .refreshToken("Bearer " + jwtTokenProvider.createRefreshToken(String.valueOf(user.getUid()), user.getRoles()))
                 .build();
 
         user.updateRefreshToken(responseDto.getRefreshToken());
@@ -163,8 +163,8 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
 
             return RefreshResponseDto.builder()
-                    .accessToken(newAccessToken)
-                    .refreshToken(newRefreshToken)
+                    .accessToken("Bearer " + newAccessToken)
+                    .refreshToken("Bearer " + newRefreshToken)
                     .build();
         } catch (TokenNotFoundException e) {
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
