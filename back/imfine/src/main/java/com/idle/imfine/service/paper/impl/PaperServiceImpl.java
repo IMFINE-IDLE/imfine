@@ -10,6 +10,7 @@ import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
+import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
@@ -259,8 +260,8 @@ public class PaperServiceImpl implements PaperService {
                         .date(paper.getDate())
                         .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                         .open(paper.isOpen())
-                        .condition(conditionRepository.findByUserAndDate(paper.getDiary()
-                                .getWriter(), paper.getDate()).get().getCondition())
+                        .condition(String.format("%d",conditionRepository.findByUserAndDate(paper.getDiary()
+                                .getWriter(), paper.getDate()).orElseGet(Condition::new).getCondition()))
                         .images(paper.getImages().stream().map(
                                 image -> image.getPath()
                         ).collect(Collectors.toList()))
@@ -307,8 +308,8 @@ public class PaperServiceImpl implements PaperService {
                         .date(paper.getDate())
                         .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                         .open(paper.isOpen())
-                        .condition(conditionRepository.findByUserAndDate(paper.getDiary()
-                                .getWriter(), paper.getDate()).get().getCondition())
+                        .condition(String.format("%d",conditionRepository.findByUserAndDate(paper.getDiary()
+                                .getWriter(), paper.getDate()).orElseGet(Condition::new).getCondition()))
                         .images(paper.getImages().stream().map(
                                 image -> image.getPath()
                         ).collect(Collectors.toList()))
