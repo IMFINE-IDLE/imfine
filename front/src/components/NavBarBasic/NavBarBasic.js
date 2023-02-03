@@ -1,5 +1,5 @@
 import { NavBar, NavItem, Logo, Title, Search, Bell } from './style';
-import { NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { BiChevronLeft, BiSearch, BiBell } from 'react-icons/bi';
 import React from 'react';
 
@@ -12,6 +12,8 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text, path }) {
 
   // BackgroundColor : 네비게이션 바 배경색상
   // TextColor : 타이틀이 있는 네비게이션의 경우, props로 컬러변경 (default: var(--icon-color))
+
+  const navigate = useNavigate();
   if (!Back) {
     return (
       <NavBar color={BackgroundColor}>
@@ -38,10 +40,13 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text, path }) {
   } else {
     return (
       <NavBar color={BackgroundColor}>
-        <NavItem justify="left">
-          <NavLink to="/">
-            <BiChevronLeft />
-          </NavLink>
+        <NavItem
+          onClick={() => {
+            navigate(-1);
+          }}
+          justify="left"
+        >
+          <BiChevronLeft />
         </NavItem>
         <NavItem>
           <Title color={TextColor}>{Text}</Title>
