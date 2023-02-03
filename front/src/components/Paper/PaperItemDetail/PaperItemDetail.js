@@ -9,6 +9,7 @@ import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
 import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
+import SymptomRating from '../SymptomRating/SymptomRating';
 import { BoxBottomDetail, BoxPaperDetail } from './style';
 
 function PaperItemDetail({
@@ -17,6 +18,7 @@ function PaperItemDetail({
   condition,
   name,
   title,
+  symptomList,
   content,
   images,
   likeCount,
@@ -65,7 +67,10 @@ function PaperItemDetail({
             <BtnReport paperId={paperId} />
           </BoxRight>
         </BoxTop>
-        <BoxContent>{content}</BoxContent>
+        <BoxContent>
+          <SymptomRating symptomList={symptomList} />
+          {content}
+        </BoxContent>
         <BoxBottomDetail isMine>
           <div>
             {isMine && (
