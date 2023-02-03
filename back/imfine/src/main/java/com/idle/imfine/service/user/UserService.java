@@ -5,11 +5,12 @@ import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
 import com.idle.imfine.data.dto.user.response.SignInResponseDto;
-import com.idle.imfine.data.entity.User;
+import org.springframework.http.HttpHeaders;
+
 
 public interface UserService {
 
-    SignInResponseDto signUp(SignUpRequestDto requestDto);
+    HttpHeaders signUp(SignUpRequestDto requestDto);
 
     SignInResponseDto signIn(SignInRequestDto requestDto);
 

@@ -22,7 +22,7 @@ public class ResponsePaperDto {
     private int commentCount;
     private int likeCount;
     private LocalDate date;
-    private int condition;
+    private String condition;
     private boolean myHeart;
     private boolean open;
     private String createdAt;
