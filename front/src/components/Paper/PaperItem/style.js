@@ -40,7 +40,7 @@ const BoxContent = styled.div`
 const BoxBottom = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: ${(props) => (props.isMine ? 'flex-end' : 'space-between')};
+  justify-content: ${(props) => (props.isMine ? 'space-between' : 'flex-end')};
   align-items: center;
 `;
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router';
 import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
@@ -23,6 +24,8 @@ function PaperItemDetail({
   likeCount,
   commentCount,
 }) {
+  const navigate = useNavigate();
+
   return (
     <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
       <BoxTop>
@@ -48,12 +51,20 @@ function PaperItemDetail({
       </BoxTop>
       <BoxContent>{content}</BoxContent>
       <BoxBottom isMine>
-        {isMine && (
-          <div>
-            <FiEdit style={{ marginRight: '.5em' }} />
-            <FiTrash2 />
-          </div>
-        )}
+        <div>
+          {isMine && (
+            <div>
+              <FiEdit
+                style={{ marginRight: '.5em', cursor: 'pointer' }}
+                onClick={() => {
+                  navigate('/paper/create');
+                }}
+              />
+              <FiTrash2 />
+            </div>
+          )}
+        </div>
+
         <LikeComment likeCount={likeCount} commentCount={commentCount} />
       </BoxBottom>
     </BoxPaperDetail>
