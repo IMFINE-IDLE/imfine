@@ -1,3 +1,5 @@
+import axios from 'axios';
+import api from '../../api/api';
 import React, { useState, useEffect } from 'react';
 import BambooHeader from '../../components/Bamboo/BambooHeader/BambooHeader';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
@@ -7,6 +9,21 @@ import { DivTextArea, BtnUpdate } from './style';
 
 function BambooCreatePage() {
   const [value, setValue] = useState('');
+
+  const fetchPost = async () => {
+    console.log(value);
+    try {
+      await axios.post(
+        api.bamboo.postBamboo(),
+        {
+          content: value,
+        },
+        { headers: { 'X-AUTH-TOKEN': localStorage.getItem('accessToken') } }
+      );
+    } catch (err) {
+      console.log('Err', err);
+    }
+  };
 
   return (
     <>
@@ -26,7 +43,7 @@ function BambooCreatePage() {
         />
       </DivTextArea>
       <DivTextArea>
-        <BtnUpdate> 대나무 숲에 외치기</BtnUpdate>
+        <BtnUpdate onClick={fetchPost}> 대나무 숲에 외치기</BtnUpdate>
       </DivTextArea>
     </>
   );
