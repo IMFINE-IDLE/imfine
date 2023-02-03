@@ -29,21 +29,6 @@ function BambooFeedPage() {
     fetchBambooFeed();
   }, []);
 
-  const res = {
-    success: true,
-    status: 200,
-    message: '요청에 성공하였습니다.',
-    data: [
-      {
-        bambooId: 1,
-        content: 'aaa',
-      },
-      {
-        bambooId: 2,
-        content: 'bbb',
-      },
-    ],
-  };
   const myRes = {
     success: true,
     status: 200,
