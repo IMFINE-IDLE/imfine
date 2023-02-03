@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +34,8 @@ public class DiaryController {
 
     @PostMapping
     public ResponseEntity<Result> postDiary(@RequestBody RequestDiaryPostDto requestDiaryPostDto, @LoginUser String uid){
-        diaryService.save(requestDiaryPostDto, uid);
-        return ResponseEntity.ok().body(responseService.getSuccessResult());
+        return ResponseEntity.ok()
+                .body(responseService.getSingleResult(diaryService.save(requestDiaryPostDto, uid)));
     }
 
     @GetMapping("/list")
