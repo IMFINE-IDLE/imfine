@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-
+import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import TabBar from '../../components/TabBar/TabBar';
 import ProfileInfo from '../../components/Profile/ProfileInfo/ProfileInfo';
 
 function ProfilePage() {
+  //////////////////////////
+  //        Hooks         //
+  //////////////////////////
+
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { accessToken } = useSelector((state) => {
+    return { accessToken: state.user.accessToken };
+  });
+  const { name } = useParams();
 
-  const params = useParams();
-
-  // 임시
-  const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMTIiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjc1MjM5NzA0LCJleHAiOjE2NzU4NDQ1MDR9.V6cppFBOd18kOsr5CKm2ZsSY_jYO_PezMpAvq7ClyFM';
-  // 임시
-  const fetchUrl = `http://i8A809.p.ssafy.io:8080/user/${params.name}`;
-  // const fetchUrl = `http://i8A809.p.ssafy.io:8080/user/${'user12'}`;
+  //////////////////////////
+  //      Functions       //
+  //////////////////////////
 
   const fetchUserInfo = async () => {
     try {
@@ -30,11 +34,11 @@ function ProfilePage() {
       setLoading(true);
 
       // axios 요청
-      const response = await axios.get(fetchUrl, {
-        headers: { 'X-AUTH-TOKEN': token },
+      const response = await axios.get(api.profile.getUserInfo(name), {
+        headers: { 'X-AUTH-TOKEN': accessToken },
       });
 
-      // response.data 안에 들어있는 data를 users 에 저장
+      // response.data 안에 들어있는 data를 userInfo 에 저장
       setUserInfo(response.data.data);
     } catch (e) {
       setError(e);
@@ -45,12 +49,16 @@ function ProfilePage() {
 
   useEffect(() => {
     fetchUserInfo();
-  }, [fetchUrl]);
+  }, []);
+
+  //////////////////////////
+  //        Views         //
+  //////////////////////////
 
   if (loading) return <div>로딩중..</div>;
   if (error) return <div>에러가 발생했습니다</div>;
 
-  // 아직 users 가 받아와지지 않았을 때는 아무것도 표시하지 않음.
+  // 아직 userInfo 가 받아와지지 않았을 때는 아무것도 표시하지 않음.
   if (!userInfo) return null;
 
   return (

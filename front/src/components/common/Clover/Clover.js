@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const Clover = styled.img.attrs((props) => ({
-  src: `/assets/clovers/clover${props.code || 'default'}.svg`,
+  src: `/assets/clovers/clover${props.code || '-1'}.svg`,
 }))`
   ${({ width, height, pointer }) =>
     css`

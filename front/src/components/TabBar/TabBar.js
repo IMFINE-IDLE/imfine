@@ -16,8 +16,11 @@ import {
 } from './style';
 
 const TabBar = () => {
-  const state = useSelector((state) => state);
-  const [currentClover, setCurrentClover] = useState(state.userInfo.cloverCode);
+  const { uid, cloverCode } = useSelector((state) => {
+    return { uid: state.user.uid, cloverCode: state.userInfo.cloverCode };
+  });
+  console.log('state', uid, cloverCode);
+  const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
   return (
@@ -25,6 +28,7 @@ const TabBar = () => {
       {cloversOpen && (
         <CloverStatusContainer width="18.75em" height="11em" radius="25px">
           <CloverModal
+            currentClover={currentClover}
             setCurrentClover={setCurrentClover}
             setCloversOpen={setCloversOpen}
           />
@@ -60,7 +64,7 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <Tab>
-          <TabNavLink to="/profile/user12">
+          <TabNavLink to={`/profile/${uid}`}>
             <ActiveBar />
             <ProfileTabSvg stroke="currentColor" />
           </TabNavLink>
