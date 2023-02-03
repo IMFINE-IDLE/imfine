@@ -23,6 +23,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,15 +44,18 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public SignInResponseDto signUp(SignUpRequestDto requestDto) {
+    public HttpHeaders signUp(SignUpRequestDto requestDto) {
         LOGGER.info("[SignService.signUp] 회원 가입 정보 전달");
 
         LOGGER.info("[SignService.signUp] 회원 uid 중복 검사");
         checkUidDuplicate(requestDto.getUid());
+        LOGGER.info("[SignService.signUp] 회원 uid 중복 검사 완료");
         LOGGER.info("[SignService.signUp] 회원 name 중복 검사");
         checkNameDuplicate(requestDto.getName());
+        LOGGER.info("[SignService.signUp] 회원 name 중복 검사 완료");
         LOGGER.info("[SignService.signUp] 회원 email 중복 검사");
         checkEmailDuplicate(requestDto.getEmail());
+        LOGGER.info("[SignService.signUp] 회원 email 중복 검사 완료");
 
         // 회원가입 정보
         User user = User.builder()
@@ -63,18 +67,23 @@ public class UserServiceImpl implements UserService {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
-        User savedUser = userRepository.save(user);
+//        User savedUser = userRepository.save(user);
 
-        // 로그인
-        SignInResponseDto responseDto = SignInResponseDto.builder()
-                .accessToken(jwtTokenProvider.createAccessToken(String.valueOf(user.getUid()), user.getRoles()))
-                .refreshToken(jwtTokenProvider.createRefreshToken(String.valueOf(user.getUid()), user.getRoles()))
-                .build();
+//        // 로그인
+//        SignInResponseDto responseDto = SignInResponseDto.builder()
+//                .accessToken(jwtTokenProvider.createAccessToken(String.valueOf(user.getUid()), user.getRoles()))
+//                .refreshToken(jwtTokenProvider.createRefreshToken(String.valueOf(user.getUid()), user.getRoles()))
+//                .build();
+        LOGGER.info("[SignService.signUp] 회원 토큰 생성");
+        String accessToken = jwtTokenProvider.createAccessToken(user.getUid(), user.getRoles());
+        String refreshToken = jwtTokenProvider.createRefreshToken(user.getUid(), user.getRoles());
+        LOGGER.info("[SignService.signUp] 회원 토큰 생성 완료");
 
-        savedUser.updateRefreshToken(responseDto.getRefreshToken());
-        userRepository.save(savedUser);
+        user.updateRefreshToken(refreshToken);
+        userRepository.save(user);
+        LOGGER.info("[SignService.signUp] 회원 가입 완료");
 
-        return responseDto;
+        return common.createTokenHeaders(user, accessToken, refreshToken);
     }
 
     @Override
@@ -120,14 +129,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void signOut(String uid) {
-        LOGGER.info("[SignService.signOut] refresh token 제거 uid: {}", uid);
+        LOGGER.info("[SignService.signOut] 로그아웃 시도");
         User user = common.getUserByUid(uid);
-        LOGGER.info("[SignService.signOut] 유저 정보 가져오기 {}", user.getUid());
 
+        LOGGER.info("[SignService.signOut] refresh token 제거 시도");
         user.updateRefreshToken(null);
-        LOGGER.info("[SignService.signOut] refresh token 제거");
+        LOGGER.info("[SignService.signOut] refresh token 제거 완료");
 
         userRepository.save(user);
+        LOGGER.info("[SignService.signOut] 로그아웃 성공");
     }
 
     @Override
