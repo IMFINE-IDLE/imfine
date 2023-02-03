@@ -36,6 +36,9 @@ const GlobalStyle = createGlobalStyle`
     --pink-color: #FC9595;
     --red-color: #D61616;
     --default-font-color: #2D2D2D;
+
+    /* Navigation bar height */
+    --nav-height: 65px;
   }
 
   *, *::before, *::after {
