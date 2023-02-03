@@ -35,18 +35,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             LOGGER.info("[doFilterInternal] token 값 추출 시작");
-            // 헤더에서 JWT 토큰 가져오기
             String token = jwtTokenProvider.resolveToken(request);
             LOGGER.info("[doFilterInternal] token 값 추출 완료. token : {}", token);
 
-            LOGGER.info("[doFilterInternal] token 값 유효성 체크 시작");
             if (jwtTokenProvider.validateToken(token)) {
-                // 토큰으로부터 유저 정보 가져오기
+                LOGGER.info("[doFilterInternal] token에서 유저 정보 가져오기");
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                // SecurityContext에 Authentication 객체 저장
+                LOGGER.info("[doFilterInternal] SecurityContext에 Authentication 객체 저장");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
 
         } catch (UserNotFoundException e) {
             request.setAttribute("exception", UserErrorCode.USER_NOT_FOUND.name());

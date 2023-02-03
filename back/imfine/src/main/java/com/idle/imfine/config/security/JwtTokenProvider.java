@@ -124,7 +124,6 @@ public class JwtTokenProvider {
         try {
             LOGGER.info("[validateToken] 토큰 유효 체크 시작");
             if(token == null || token.isEmpty()) throw new TokenNotFoundException();
-            if(!Pattern.matches("Bearer .*", token)) throw new TokenNotFoundException();
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             LOGGER.info("[validateToken] 토큰 유효 체크 완료");
             return !claims.getBody().getExpiration().before(new Date());
