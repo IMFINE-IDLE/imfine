@@ -1,6 +1,18 @@
-FROM adoptopenjdk/openjdk11
-ENV APP_HOME=/usr/app/
-WORKDIR $APP_HOME
-COPY build/libs/*.jar application.jar
-EXPOSE 8080
-CMD ["java", "-jar", "application.jar"]
+FROM gradle:jdk11 as build
+
+WORKDIR /app
+
+COPY . .
+
+CMD ["gradlew", "clean", "build"]
+#RUN gradle build --no-daemon
+
+FROM openjdk:11-jre-slim
+
+WORKDIR /app
+
+COPY --from=build /app/build/libs/*.jar app.jar
+
+ENV JAVA_OPTS=""
+
+CMD ["java", "-jar", "app.jar"]

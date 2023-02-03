@@ -16,6 +16,7 @@ services:
     image: mariadb
     volumes:
       - /home/ubuntu/dev/data/mariadb:/var/lib/mysql
+#      - C:/dev/data/mariadb:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=imfine
       - MYSQL_ROOT_PASSWORD=1234
