@@ -43,6 +43,7 @@ const api = {
   },
   diary: {
     postDiary: () => URL + DIARY,
+    getDiaryInfo: (params) => URL + DIARY + `/${params}`,
   },
 };
 
