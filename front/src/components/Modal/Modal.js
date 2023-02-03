@@ -11,16 +11,21 @@ import {
   BtnModal,
   BtnWrap,
   BtnCircle,
+  ModalClose,
 } from './style';
 
-function Modal({ type, setModalOpen }) {
+function Modal({ type, setModalOpen, apiFunc }) {
   /**
    * 상위 컴포넌트에서 세팅해야할 것
-   * 액션 클릭했을때 Modal 컴포넌트 보여주기
+   1. * 액션 클릭했을때 Modal 컴포넌트 보여주기
   const [modalOpen, setModalOpen] = useState(false);
   <button onClick={() => setModalOpen(true)}>클릭해야할것</button>
+
+  2. props 넘겨주기
+  - type : 모달에 띄울 텍스트
+  - apiFunc : 예 선택시 실행할 함수
   {modalOpen && (
-    <Modal type={'댓글신고'} setModalOpen={setModalOpen} />
+    <Modal type={'댓글신고'} setModalOpen={setModalOpen} apiFunc={api 요청 보낼 함수} />
     )}
     */
 
@@ -38,15 +43,19 @@ function Modal({ type, setModalOpen }) {
   return (
     <BoxModal>
       <BoxInnerModal ref={ref}>
-        {/* <ModalClose ref={ref} onClick={() => setModalOpen(false)}>
+        <ModalClose ref={ref} onClick={() => setModalOpen(false)}>
           <img src="/assets/icons/close.png" alt="닫기" width="20px" />
-        </ModalClose> */}
+        </ModalClose>
         <ModalContent>
           <CloverImg />
           <SpeechBubble>{text}</SpeechBubble>
           <BoxBtns>
             <BtnWrap>
-              <BtnModal isClose={true}>
+              <BtnModal
+                ref={ref}
+                isClose={true}
+                onClick={() => setModalOpen(false)}
+              >
                 <img
                   src="/assets/icons/close-red-color.png"
                   alt="아니오"
@@ -56,7 +65,7 @@ function Modal({ type, setModalOpen }) {
               </BtnModal>
             </BtnWrap>
             <BtnWrap>
-              <BtnModal isClose={false}>
+              <BtnModal isClose={false} onClick={apiFunc}>
                 <img
                   src="/assets/icons/check-main-color.png"
                   alt="예"

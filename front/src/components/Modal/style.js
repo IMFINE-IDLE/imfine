@@ -7,8 +7,9 @@ const BoxModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--gray-color);
-  opacity: 0.8;
+  /* background-color: var(--gray-color); */
+  /* opacity: 0.8; */
+  background: rgba(248, 250, 249, 0.8);
 `;
 
 const BoxInnerModal = styled.div`
