@@ -42,8 +42,7 @@ public class Bamboo extends BaseCreatedEntity {
     private int declarationCount;
     @Column(nullable = false)
     private int leafCount;
-    @Column
-    @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime deleteAt;
     @ManyToOne
     @JoinColumn(name="writer_id")

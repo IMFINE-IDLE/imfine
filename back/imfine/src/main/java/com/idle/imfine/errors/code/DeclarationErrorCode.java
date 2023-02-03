@@ -6,12 +6,11 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum DiaryErrorCode implements ErrorCode {
+public enum DeclarationErrorCode implements ErrorCode {
 
-    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 일기장입니다."),
+    REPORT_CONFLICT(HttpStatus.CONFLICT, "중복된 신고가 존재합니다."),
+    REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 삭제된 콘텐츠입니다.")
     ;
-
     private final HttpStatus httpStatus;
     private final String message;
-
 }
