@@ -54,7 +54,7 @@ function BambooFeedPage() {
   ];
   return (
     <>
-      <NavBarBasic />
+      <NavBarBasic BackgroundColor={'light'} />
       <div>
         <BambooHeader
           title={'대나무메인'}

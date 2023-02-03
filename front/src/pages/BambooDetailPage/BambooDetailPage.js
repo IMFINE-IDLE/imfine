@@ -50,7 +50,12 @@ function BambooDetailPage() {
 
   return (
     <>
-      <NavBarBasic Back={true} Text={''} />
+      <NavBarBasic
+        TextColor={'icon'}
+        BackgroundColor={'light'}
+        Back={true}
+        Text={'대나무 작성'}
+      />
       <BambooDetailHeader
         bambooId={Bamboo.bambooId}
         content={Bamboo.content}
