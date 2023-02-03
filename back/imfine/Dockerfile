@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN gradle build --no-daemon
+CMD ["gradlew", "clean", "build"]
+#RUN gradle build --no-daemon
 
 FROM openjdk:11-jre-slim
 
