@@ -16,7 +16,7 @@ function BambooFeedPage() {
   const fetchBambooFeed = async () => {
     try {
       const res = await axios.get(api.bamboo.getBambooFeed(searchFilter), {
-        headers: { 'X-AUTH-TOKEN': localStorage.getItem('accessToken') },
+        headers: { Authorization: localStorage.getItem('accessToken') },
       });
       console.log('response확인', res.data);
       setResponseAll(res.data);
