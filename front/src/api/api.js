@@ -2,6 +2,7 @@
 const URL = 'http://i8A809.p.ssafy.io:8080';
 
 const USERS = '/user';
+const DIARY = '/diary';
 const PAPER = '/paper';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
@@ -39,6 +40,9 @@ const api = {
     postLeaf: () => URL + LEAF,
     postLeafLike: () => URL + LEAF + '/like',
     deletLeafLike: (params) => URL + LEAF + `/like/${params}`,
+  },
+  diary: {
+    postDiary: () => URL + DIARY,
   },
 };
 

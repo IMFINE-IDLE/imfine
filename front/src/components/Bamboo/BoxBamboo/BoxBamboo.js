@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BoxBambooFeed from '../BoxBambooFeed/BoxBambooFeed';
 
 function BoxBamboo({ res }) {
+  console.log(res);
   const [bambooList, setBambooList] = useState([]);
   useEffect(() => {
     setBambooList(res.data);
@@ -9,9 +10,10 @@ function BoxBamboo({ res }) {
 
   return (
     <div>
-      {bambooList.map((bamboo) => {
-        return <BoxBambooFeed bamboo={bamboo} key={bamboo.bambooId} />;
-      })}
+      {bambooList &&
+        bambooList.map((bamboo) => {
+          return <BoxBambooFeed bamboo={bamboo} key={bamboo.bambooId} />;
+        })}
     </div>
   );
 }
