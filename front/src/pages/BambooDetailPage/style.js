@@ -9,7 +9,14 @@ const TopDiv = styled.div`
 const ReplyLabel = styled.label`
   font-weight: 400;
   color: var(--icon-color);
-  margin 0 
+  margin: 0;
 `;
 
-export { TopDiv, ReplyLabel };
+const ReplyDiv = styled.div`
+  margin: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+`;
+export { TopDiv, ReplyLabel, ReplyDiv };
