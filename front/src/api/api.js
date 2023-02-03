@@ -3,6 +3,8 @@ const URL = 'http://localhost:8080';
 
 const USERS = '/user';
 const PAPER = '/paper';
+const BAMBOO = '/bamboo';
+const LEAF = '/leaf';
 const REPORT = '/report';
 
 const api = {
@@ -24,6 +26,19 @@ const api = {
     getUserInfo: (params) => URL + USERS + `/${params}`,
     getMonthCondition: (params) =>
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
+  },
+  bamboo: {
+    postBamboo: () => URL + BAMBOO,
+    getDetailBamboo: (params) => URL + BAMBOO + `/detail/${params}`,
+    getBambooFeed: (filter) => URL + BAMBOO + `/list?filter=${filter}`,
+    getUserBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
+    postBambooLike: () => URL + BAMBOO + '/like',
+    deleteBambooLike: (params) => URL + BAMBOO + `/like/${params}}`,
+  },
+  leaf: {
+    postLeaf: () => URL + LEAF,
+    postLeafLike: () => URL + LEAF + '/like',
+    deletLeafLike: (params) => URL + LEAF + `/like/${params}`,
   },
 };
 
