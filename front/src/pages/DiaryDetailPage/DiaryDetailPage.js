@@ -60,8 +60,9 @@ const DiaryDetailPage = () => {
     <>
       <NavBarBasic Back={true} />
       <BoxShad>
-        {diaryInfo.title}
-        <span>userName {diaryInfo.userName}</span>
+        <span>title: {diaryInfo.title}</span> <br />
+        <span>description: {diaryInfo.description}</span> <br />
+        <span>userName: {diaryInfo.userName}</span> <br />
       </BoxShad>
 
       {/* <StatusCalendar uid={diaryInfo.userId} /> */}

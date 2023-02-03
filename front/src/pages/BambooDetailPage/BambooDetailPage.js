@@ -1,6 +1,7 @@
+import axios from 'axios';
+import api from '../../api/api';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
 import BambooDetailHeader from '../../components/Bamboo/BambooDetailHeader/BambooDetailHeader';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import BoxLeavesFeed from '../../components/Bamboo/BoxLeavesFeed/BoxLeavesFeed';
@@ -9,7 +10,7 @@ import { TopDiv, ReplyLabel } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
 
 function BambooDetailPage() {
-  const params = useParams();
+  const { bambooId } = useParams();
   const res = {
     success: true,
     status: 200,
@@ -40,12 +41,23 @@ function BambooDetailPage() {
       },
     ],
   };
-  const [Bamboo, setBamboo] = useState([]);
-  const [Leaves, setLeaves] = useState([]);
+  const [bamboo, setbamboo] = useState([]);
+  const [leaves, setleaves] = useState([]);
 
+  const fetchBambooDetail = async () => {
+    try {
+      const res = await axios.get(api.bamboo.getDetailBamboo(bambooId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log('bamboodetails', res.data.data);
+      setbamboo(res.data.data);
+      setleaves(res.data.data.leaf);
+    } catch (err) {
+      console.log('err', err);
+    }
+  };
   useEffect(() => {
-    setBamboo(res.data[0]);
-    setLeaves(res.data[0].leaf);
+    fetchBambooDetail();
   }, []);
 
   return (
@@ -56,18 +68,19 @@ function BambooDetailPage() {
         Back={true}
         Text={'대나무 작성'}
       />
+
       <BambooDetailHeader
-        bambooId={Bamboo.bambooId}
-        content={Bamboo.content}
-        leafCount={Bamboo.leafCount}
-        likeCount={Bamboo.likeCount}
+        bambooId={bamboo.bambooId}
+        content={bamboo.content}
+        leafCount={bamboo.leafCount}
+        likeCount={bamboo.likeCount}
       />
       <TopDiv>
         <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
-        <ReplyLabel>댓글 {Bamboo.leafCount}개</ReplyLabel>
+        <ReplyLabel>댓글 {bamboo.leafCount}개</ReplyLabel>
       </TopDiv>
       <div>
-        {Leaves.map((leaf) => {
+        {leaves.map((leaf) => {
           return (
             <BoxLeavesFeed
               likeCount={leaf.likeCount}
