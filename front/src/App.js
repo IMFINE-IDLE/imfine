@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
-import DiaryCreate from './pages/DiaryCreate/DiaryCreate';
+import DiaryCreatePage from './pages/DiaryCreatePage/DiaryCreatePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import PaperCreate from './pages/PaperCreate/PaperCreate';
 import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
@@ -15,6 +15,7 @@ import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
+import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -36,7 +37,8 @@ function App() {
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/home" element={<PaperFeedPage />} />
       <Route path="/diary">
-        <Route path="/diary/create" element={<DiaryCreate />} />
+        <Route path="create" element={<DiaryCreatePage />} />
+        <Route path=":diaryId" element={<DiaryDetailPage />} />
       </Route>
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreate />} />
