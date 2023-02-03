@@ -1,0 +1,23 @@
+version: "3.2"
+services:
+  back:
+    build: .
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb:3306/imfine
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+
+  database:
+    container_name: mariadb
+    image: mariadb
+    volumes:
+      - /home/ubuntu/dev/data/mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=imfine
+      - MYSQL_ROOT_PASSWORD=1234
+    ports:
+      - 3356:3306

@@ -1,0 +1,75 @@
+.react-calendar {
+  width: 100%;
+  max-width: 100%;
+  background: none;
+  border: none;
+  font-family: 'Pretendard-Regular';
+  line-height: 1em;
+}
+
+/* 내비게이션 */
+.react-calendar__navigation {
+  height: 1.5em;
+  margin-bottom: 0.75em;
+}
+.react-calendar__navigation button:enabled {
+  padding: 0 5em;
+}
+.react-calendar__navigation button:disabled {
+  background: none;
+  cursor: default;
+  color: var(--gray800-color);
+  font-size: 1em;
+  font-weight: 700;
+}
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background: none;
+}
+
+/* 요일표시 */
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 0.75em;
+  text-decoration: none;
+}
+
+/* 주말 색깔표시 제거 */
+.react-calendar__month-view__days__day--weekend {
+  /* color: #d10000; */
+  color: #5f5f5f;
+}
+.react-calendar__month-view__days__day--neighboringMonth {
+  /* color: #757575; */
+  color: #5f5f5f;
+}
+
+/* 개별 날짜 */
+.react-calendar__tile {
+  padding: 0.25em 0;
+  line-height: 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--gray700-color);
+}
+
+/* 개별 날짜 선택했을 때 background 색깔 없애기 */
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus,
+.react-calendar__tile--now,
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus,
+.react-calendar__tile--active,
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus,
+.react-calendar--selectRange .react-calendar__tile--hover {
+  background: none;
+  color: var(--gray700-color);
+}
+.react-calendar__tile--active:enabled:focus {
+  color: var(--gray800-color);
+}
