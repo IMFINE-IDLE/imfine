@@ -5,6 +5,7 @@ const USERS = '/user';
 const PAPER = '/paper';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
+const REPORT = '/report';
 
 const api = {
   user: {
@@ -13,9 +14,12 @@ const api = {
     checkName: (params) => URL + USERS + `/check/name/${params}`,
     checkEmail: (params) => URL + USERS + `/check/email/${params}`,
     login: () => URL + USERS + '/sign-in',
+    updateOpenStatus: () => URL + USERS + '/open',
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
+    paperDetail: (paperId) => URL + PAPER + paperId,
+    paperReport: (paperId) => URL + REPORT + PAPER + paperId,
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,

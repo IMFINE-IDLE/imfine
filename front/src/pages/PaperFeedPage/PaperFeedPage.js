@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import Paper from '../../components/Paper/Paper';
+import PaperItem from '../../components/Paper/PaperItem/PaperItem';
 import TabBar from '../../components/TabBar/TabBar';
 import { BoxPaperFeed, Circle } from './style';
 import { res } from './tmp';
@@ -37,7 +37,7 @@ function PaperFeedPage() {
       <NavBarBasic />
       <BoxPaperFeed>
         {paperList.map((paper) => {
-          return <Paper paper={paper} key={paper.paperId} />;
+          return <PaperItem paper={paper} key={paper.paperId} />;
         })}
         <BtnFloat />
         <Circle small />
