@@ -67,7 +67,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public void save(RequestDiaryPostDto saveDiary, String uId) {
+    public long save(RequestDiaryPostDto saveDiary, String uId) {
         User user = common.getUserByUid(uId);
         MedicalCode medicalCode = medicalCodeRepository.getById(saveDiary.getMedicalId());
 
@@ -93,6 +93,7 @@ public class DiaryServiceImpl implements DiaryService {
                         .build());
             }
         }
+        return savedDiary.getId();
     }
 
     @Override

@@ -19,7 +19,6 @@ public class FileStore {
     public String getFullPath(String filename) {
         return fileDir + filename;
     }
-
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
         List<UploadFile> storeFileResult = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
