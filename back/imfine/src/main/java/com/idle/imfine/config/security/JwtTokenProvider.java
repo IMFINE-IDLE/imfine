@@ -10,17 +10,14 @@
 package com.idle.imfine.config.security;
 
 import com.idle.imfine.errors.token.TokenNotFoundException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
+import com.idle.imfine.errors.token.WrongTypeTokenException;
+import io.jsonwebtoken.*;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -111,7 +108,15 @@ public class JwtTokenProvider {
     // HTTP Request Header 에 설정된 토큰 값을 가져옴
     public String resolveToken(HttpServletRequest request) {
         LOGGER.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
-        return request.getHeader("X-AUTH-TOKEN");
+        String authorization = request.getHeader("Authorization");
+        if (authorization == null || authorization.isEmpty()) {
+            LOGGER.info("[resolveToken] HTTP 헤더에서 Token 없음");
+            throw new TokenNotFoundException();
+        } else if (!Pattern.matches("Bearer .*", authorization)) {
+            LOGGER.info("[resolveToken] HTTP 헤더에서 Token 타입 잘못됨.");
+            throw new WrongTypeTokenException();
+        }
+        return authorization.substring(7);
     }
 
     // JWT 토큰의 유효성 + 만료일 체크
@@ -119,6 +124,7 @@ public class JwtTokenProvider {
         try {
             LOGGER.info("[validateToken] 토큰 유효 체크 시작");
             if(token == null || token.isEmpty()) throw new TokenNotFoundException();
+            if(!Pattern.matches("Bearer .*", token)) throw new TokenNotFoundException();
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             LOGGER.info("[validateToken] 토큰 유효 체크 완료");
             return !claims.getBody().getExpiration().before(new Date());

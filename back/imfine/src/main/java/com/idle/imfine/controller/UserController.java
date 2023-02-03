@@ -12,6 +12,7 @@ import com.idle.imfine.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +55,10 @@ public class UserController {
 
     @PostMapping("/sign-up")
     public ResponseEntity<Result> signUp(@RequestBody SignUpRequestDto requestDto) {
-        SignInResponseDto responseDto = userService.signUp(requestDto);
+        HttpHeaders headers = userService.signUp(requestDto);
         return ResponseEntity.ok()
-                .body(responseService.getSingleResult(responseDto));
+                .headers(headers)
+                .body(responseService.getSuccessResult());
     }
 
     @PutMapping("/profile")
