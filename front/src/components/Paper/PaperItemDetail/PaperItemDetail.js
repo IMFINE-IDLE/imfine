@@ -13,6 +13,7 @@ import {
 import { BoxPaperDetail } from './style';
 
 function PaperItemDetail({
+  isMine,
   paperId,
   condition,
   name,
@@ -46,11 +47,13 @@ function PaperItemDetail({
         </BoxRight>
       </BoxTop>
       <BoxContent>{content}</BoxContent>
-      <BoxBottom>
-        <div>
-          <FiEdit style={{ marginRight: '.5em' }} />
-          <FiTrash2 />
-        </div>
+      <BoxBottom isMine>
+        {isMine && (
+          <div>
+            <FiEdit style={{ marginRight: '.5em' }} />
+            <FiTrash2 />
+          </div>
+        )}
         <LikeComment likeCount={likeCount} commentCount={commentCount} />
       </BoxBottom>
     </BoxPaperDetail>

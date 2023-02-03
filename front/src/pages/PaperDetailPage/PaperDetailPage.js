@@ -1,14 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import api from '../../api/api';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItemDetail from '../../components/Paper/PaperItemDetail/PaperItemDetail';
 
 function PaperDetailPage() {
   const { paperId } = useParams();
-  // const [paper, setPaper] = useState(null);
+  const [paper, setPaper] = useState(null);
   // useEffect(() => {
   //   const fetchPaperDetail = async () => {
   //     const res = await axios.get(api.paper.paperDetail(paperId));
@@ -17,10 +17,17 @@ function PaperDetailPage() {
   //   fetchPaperDetail();
   // }, []);
 
+  // 내 게시글인지 여부
+  // const userId = useSelector((state) => {
+  //   return state.user.uid;
+  // });
+  // const isMine = Boolean(paper.uid === userId);
+
   return (
     <>
       <NavBarBasic Back />
       <PaperItemDetail
+        // isMine={isMine}
         paperId={paperId}
         condition={0}
         name={'닉네임'}
