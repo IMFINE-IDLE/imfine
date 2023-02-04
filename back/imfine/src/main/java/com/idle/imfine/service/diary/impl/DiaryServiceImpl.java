@@ -253,13 +253,13 @@ public class DiaryServiceImpl implements DiaryService {
         Page<Diary> diaryPage;
         if (requestDiaryFilterDto.getMedicalId().size() == 0
                 && requestDiaryFilterDto.getSymptomId().size() == 0) {
-            diaryPage = diaryRepository.findAllByOpen(pageable);
+            diaryPage = diaryRepository.findAllByOpenTrue(pageable);
         } else if (requestDiaryFilterDto.getMedicalId().size() == 0) {
-            diaryPage = diaryRepository.findByDiaryHasSymptomsInAndOpen(diaryHasSymptoms, pageable);
+            diaryPage = diaryRepository.findByDiaryHasSymptomsInAndOpenTrue(diaryHasSymptoms, pageable);
         } else if (requestDiaryFilterDto.getSymptomId().size() == 0) {
-            diaryPage = diaryRepository.findByMedicalCodeInAndOpen(medicalCodes, pageable);
+            diaryPage = diaryRepository.findByMedicalCodeInAndOpenTrue(medicalCodes,  pageable);
         } else {
-            diaryPage = diaryRepository.findByOpenOrMedicalCodeInAndOpenAndDiaryHasSymptomsIn(medicalCodes,
+            diaryPage = diaryRepository.findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(medicalCodes,
                     diaryHasSymptoms, pageable);
         }
 
