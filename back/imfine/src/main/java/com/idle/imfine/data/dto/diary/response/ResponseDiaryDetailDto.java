@@ -16,12 +16,13 @@ import lombok.NoArgsConstructor;
 public class ResponseDiaryDetailDto {
     private long userId;
     private int userStatus;
+    private String uid;
     private String title;
     private String description;
-    private String userName;
+    private String name;
     private String medicalName;
     private String beginDate;
     private String endedDate;
-
+    private boolean isSubscribe;
     List<ResponseSymptomDto> diaryHasSymptoms;
 }
