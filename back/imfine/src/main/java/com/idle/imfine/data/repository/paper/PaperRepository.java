@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 public interface PaperRepository extends JpaRepository<Paper, Long> {
     List<Paper> getPaperByDiary(Diary diary);
     Paper getByDiaryAndDate(Diary diary, LocalDate date);
+//    Optional<Paper> findByDiaryAndDate(Diary diary, LocalDate date);
     boolean existsAllByDiary(Diary diary);
     List<Paper> findAllByDiaryInAndDate(List<Diary> diaries, LocalDate date);
     @Query("select DISTINCT p from Paper p left join fetch p.paperHasSymptoms phs where p.diary = :diary")

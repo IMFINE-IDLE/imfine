@@ -14,11 +14,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
-    Page<Diary> findAllByOpen(Pageable pageable);
-    Page<Diary> findByOpenOrMedicalCodeInAndOpenAndDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
+    Page<Diary> findAllByOpenTrue(Pageable pageable);
+    Page<Diary> findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
         List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Page<Diary> findByDiaryHasSymptomsInAndOpen(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Page<Diary> findByMedicalCodeInAndOpen(List<MedicalCode> medicalCode, Pageable pageable);
+    Page<Diary> findByDiaryHasSymptomsInAndOpenTrue(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
+    Page<Diary> findByMedicalCodeInAndOpenTrue(List<MedicalCode> medicalCode, Pageable pageable);
     Optional<Diary> findByIdAndWriter(long diaryId, User user);
     List<Diary> findAllByWriterIn(List<User> users);
     List<Diary> findAllByWriter(User writer);
