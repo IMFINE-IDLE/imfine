@@ -41,6 +41,7 @@ const api = {
     postBamboo: () => URL + BAMBOO,
     getDetailBamboo: (params) => URL + BAMBOO + `/detail/${params}`,
     getBambooFeed: (filter) => URL + BAMBOO + `/list?filter=${filter}`,
+    getMyBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
     getUserBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
     postBambooLike: () => URL + BAMBOO + '/like',
     deleteBambooLike: (bambooId) => URL + BAMBOO + `/like/${bambooId}`,
