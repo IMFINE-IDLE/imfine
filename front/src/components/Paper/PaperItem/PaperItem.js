@@ -30,15 +30,16 @@ function PaperItem({ paper }) {
     content,
     likeCount,
     commentCount,
-    date,
+    createdAt,
     images,
     symptomList,
+    myHeart,
   } = paper;
 
   // 게시글 시간 표시 함수
   function getTimeDifference(timeString) {
     let currentTime = new Date();
-    let providedTime = new Date(date);
+    let providedTime = new Date(createdAt);
     let milli = currentTime.getTime() - providedTime.getTime();
     let timeGap = parseInt(milli / 60000);
     // console.log(paperId, timeGap);
@@ -97,9 +98,14 @@ function PaperItem({ paper }) {
       <BoxBottom>
         <div>
           <DiaryTitle title={title} />
-          <SpanDate>{getTimeDifference(date)}</SpanDate>
+          <SpanDate>{getTimeDifference(createdAt)}</SpanDate>
         </div>
-        <LikeComment likeCount={likeCount} commentCount={commentCount} />
+        <LikeComment
+          paperId={paperId}
+          myHeart={myHeart}
+          likeCount={likeCount}
+          commentCount={commentCount}
+        />
       </BoxBottom>
     </BoxPaper>
   );
