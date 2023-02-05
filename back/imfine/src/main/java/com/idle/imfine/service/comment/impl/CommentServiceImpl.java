@@ -50,17 +50,17 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = commentRepository.getById(requestHeartDto.getContentId());
         //에러처리 똑바로
-        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, requestHeartDto.getContentId())) {
-            throw new RuntimeException("");
+        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, requestHeartDto.getContentId())) {
+//            throw new RuntimeException("");
+            heartRepository.save(Heart.builder()
+                    .senderId(user.getId())
+                    .contentsCodeId(3)
+                    .contentsId(requestHeartDto.getContentId())
+                    .build());
+            comment.setLikeCount(comment.getLikeCount() + 1);
         }
 
-        heartRepository.save(Heart.builder()
-                .senderId(user.getId())
-                .contentsCodeId(3)
-                .contentsId(requestHeartDto.getContentId())
-                .build());
 
-        comment.setLikeCount(comment.getLikeCount() + 1);
     }
 
     @Override
