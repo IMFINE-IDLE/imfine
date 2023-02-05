@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { URL } from '../../../api/api';
@@ -16,7 +16,7 @@ import {
   SpanDate,
 } from './style';
 
-function PaperItem({ paper }) {
+function PaperItem({ paper, likePaper, likePaperDelete }) {
   const userId = useSelector((state) => {
     return state.user.uid;
   });
@@ -30,15 +30,16 @@ function PaperItem({ paper }) {
     content,
     likeCount,
     commentCount,
-    date,
+    createdAt,
     images,
     symptomList,
+    myHeart,
   } = paper;
 
   // 게시글 시간 표시 함수
   function getTimeDifference(timeString) {
     let currentTime = new Date();
-    let providedTime = new Date(date);
+    let providedTime = new Date(createdAt);
     let milli = currentTime.getTime() - providedTime.getTime();
     let timeGap = parseInt(milli / 60000);
     // console.log(paperId, timeGap);
@@ -78,7 +79,7 @@ function PaperItem({ paper }) {
               <p style={{ fontWeight: '700' }}>{name}</p>
             </div>
             <div>
-              {symptomList.map((symptom) => {
+              {symptomList?.map((symptom) => {
                 return (
                   <Symptom key={symptom.symptomId}>
                     {symptom.symptomName} {symptom.score}
@@ -97,9 +98,16 @@ function PaperItem({ paper }) {
       <BoxBottom>
         <div>
           <DiaryTitle title={title} />
-          <SpanDate>{getTimeDifference(date)}</SpanDate>
+          <SpanDate>{getTimeDifference(createdAt)}</SpanDate>
         </div>
-        <LikeComment likeCount={likeCount} commentCount={commentCount} />
+        <LikeComment
+          id={paperId}
+          myHeart={myHeart}
+          likeCount={likeCount}
+          commentCount={commentCount}
+          like={likePaper}
+          likeDelete={likePaperDelete}
+        />
       </BoxBottom>
     </BoxPaper>
   );

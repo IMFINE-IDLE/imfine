@@ -4,6 +4,7 @@ const URL = 'http://i8A809.p.ssafy.io:8080';
 const USERS = '/user';
 const DIARY = '/diary';
 const PAPER = '/paper';
+const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
@@ -20,8 +21,16 @@ const api = {
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
-    paperDetail: (paperId) => URL + PAPER + paperId,
-    paperReport: (paperId) => URL + REPORT + PAPER + paperId,
+    paperDetail: (paperId) => URL + PAPER + `/${paperId}`,
+    paperReport: (paperId) => URL + REPORT + PAPER + `/${paperId}`,
+    paperLikePost: () => URL + PAPER + '/like',
+    paperLikeDelete: (paperId) => URL + PAPER + `/${paperId}/like`,
+  },
+  comment: {
+    commentCreate: () => URL + COMMENT,
+    commentDelete: (commentId) => URL + COMMENT + `/${commentId}`,
+    commentLike: () => URL + COMMENT + '/like',
+    commentLikeDelete: (commentId) => URL + COMMENT + `/like/${commentId}`,
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
