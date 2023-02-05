@@ -5,6 +5,7 @@ import api from '../../../api/api';
 import { BtnSmall } from './style';
 
 function LeavesBtnReport({ LeafId }) {
+  // 댓글 신고 컴포넌트
   const [isClicked, setIsClicked] = useState(false);
   const reportPaper = async (LeafId) => {
     try {
