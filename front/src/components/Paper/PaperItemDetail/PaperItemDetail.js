@@ -22,6 +22,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     content,
     images,
     userStatus, // userStatus 0이면 내꺼, 다른 숫자면 다른 유저꺼
+    myHeart,
     likeCount,
     commentCount,
   } = paper;
@@ -88,6 +89,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
           </div>
           <LikeComment
             id={paperId}
+            myHeart={myHeart}
             likeCount={likeCount}
             commentCount={commentCount}
             like={likePaper}

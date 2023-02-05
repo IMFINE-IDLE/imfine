@@ -13,7 +13,13 @@ import {
   SpanUser,
 } from './style';
 
-function PaperComment({ comment, paperId, likeComment, likeCommentDelete }) {
+function PaperComment({
+  comment,
+  paperId,
+  likeComment,
+  likeCommentDelete,
+  deleteComment,
+}) {
   const {
     commentId,
     condition,
@@ -25,17 +31,6 @@ function PaperComment({ comment, paperId, likeComment, likeCommentDelete }) {
     likeCount,
     myHeart,
   } = comment;
-
-  // 댓글 삭제
-  const deleteComment = async () => {
-    try {
-      const res = await axios.delete(api.comment.commentDelete(commentId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
 
   const fillHeart = myHeart ? 'var(--red-color)' : 'none';
 
@@ -78,7 +73,7 @@ function PaperComment({ comment, paperId, likeComment, likeCommentDelete }) {
                     likeCommentDelete(commentId);
                   } else {
                     // 좋아요 안되어있으면 등록
-                    likeComment(paperId);
+                    likeComment(commentId);
                   }
                 }}
               />

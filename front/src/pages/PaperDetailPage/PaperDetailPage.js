@@ -14,12 +14,11 @@ function PaperDetailPage() {
   const { paperId } = useParams();
   const [paperDetail, setPaperDetail] = useState({});
   const fetchPaperDetail = async () => {
-    console.log('실행');
     try {
       const res = await axios.get(api.paper.paperDetail(paperId), {
-        headers: localStorage.getItem('accessToken'),
+        headers: { Authorization: localStorage.getItem('accessToken') },
       });
-      console.log(res.data);
+      // console.log(res.data);
       setPaperDetail(res.data.data);
     } catch (err) {
       console.log(err.response.data);
@@ -27,8 +26,8 @@ function PaperDetailPage() {
   };
 
   useEffect(() => {
-    // fetchPaperDetail();
-    setPaperDetail(resDetail.data);
+    fetchPaperDetail();
+    // setPaperDetail(resDetail.data);
   }, []);
 
   // 일기 좋아요 등록
@@ -61,6 +60,19 @@ function PaperDetailPage() {
     }
   };
 
+  // 댓글 삭제
+  const deleteComment = async (commentId) => {
+    try {
+      const res = await axios.delete(api.comment.commentDelete(commentId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
   // 댓글 좋아요 등록
   const likeComment = async (paperId) => {
     try {
@@ -72,6 +84,7 @@ function PaperDetailPage() {
         { headers: { Authorization: localStorage.getItem('accessToken') } }
       );
       console.log(res);
+      fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
     }
@@ -84,6 +97,7 @@ function PaperDetailPage() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
       console.log(res);
+      fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
     }
@@ -104,9 +118,9 @@ function PaperDetailPage() {
           <span> 댓글 {paperDetail?.comments?.length}개</span>
           {paperDetail?.comments?.map((comment) => (
             <PaperComment
-              paperId={paperId}
               comment={comment}
               key={comment.commentId}
+              deleteComment={deleteComment}
               likeComment={likeComment}
               likeCommentDelete={likeCommentDelete}
             />
