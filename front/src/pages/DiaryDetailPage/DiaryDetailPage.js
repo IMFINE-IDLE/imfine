@@ -11,6 +11,7 @@ import { DiaryInfoContainer, DiaryDateSpan } from './style';
 import DiaryTitle from '../../components/Paper/DiaryTitle/DiaryTitle';
 import { ReactComponent as BookmarkSvg } from './bookmark.svg';
 import PickedItemList from '../../components/PickedItemList/PickedItemList';
+import SymptomGraph from '../../components/SymptomGraph/SymptomGraph';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
@@ -198,20 +199,28 @@ const DiaryDetailPage = () => {
           </DiaryDateSpan>
         </DiaryInfoContainer>
 
-        <FlexDiv height="1.25em" justify="end">
+        <FlexDiv height="1.25em" justify="end" margin="1em 0 0.5em 0">
           <DiaryDateSpan
             onClick={() => setShowGraph((prev) => !prev)}
-            style={{ cursor: 'pointer' }}
+            pointer={true}
           >
             증상 추이 보기
             <img
-              src="/assets/icons/chevron-down.svg"
+              src={`/assets/icons/chevron-${showGraph ? 'up' : 'down'}.svg`}
               alt="show graph"
-              style={{ paddingLeft: '0.3em' }}
+              style={{
+                paddingLeft: '0.3em',
+                position: 'relative',
+                top: '-0.15em',
+              }}
             />
           </DiaryDateSpan>
         </FlexDiv>
-        {showGraph && <BoxShad>'show'</BoxShad>}
+        {showGraph && (
+          <BoxShad radius="25px" height="15em" margin="0 0 1.5em 0">
+            <SymptomGraph />
+          </BoxShad>
+        )}
 
         <StatusCalendar uid={'user12'} />
         {/* <StatusCalendar uid={diaryInfo.uid} /> */}

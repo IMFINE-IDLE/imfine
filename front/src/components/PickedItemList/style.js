@@ -4,7 +4,7 @@ import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 
 const PickedTitle = styled.span`
   color: var(--gray800-color);
-  font-weight: 700;
+  font-weight: 800;
   text-align: center;
   width: 20%;
 `;
