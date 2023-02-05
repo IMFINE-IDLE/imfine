@@ -6,6 +6,7 @@ import api from '../../api/api';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItemDetail from '../../components/Paper/PaperItemDetail/PaperItemDetail';
 import { resDetail } from './tmp';
+import PaperComment from '../../components/Paper/PaperComment/PaperComment';
 
 function PaperDetailPage() {
   const { paperId } = useParams();
@@ -39,6 +40,7 @@ function PaperDetailPage() {
     <>
       <NavBarBasic Back />
       <PaperItemDetail isMine={true} paper={paperDetail} paperId={paperId} />
+      <PaperComment commentList={paperDetail.comments} />
     </>
   );
 }

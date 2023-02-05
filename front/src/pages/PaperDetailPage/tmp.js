@@ -4,10 +4,12 @@ export const resDetail = {
   data: {
     diaryId: 8,
     uid: 5,
+    title: '제목',
     condition: 2,
     name: '닉네임11',
     content: '4',
     myHeart: false,
+    createdAt: '2023-02-03 07:02:53',
     symptomList: [
       {
         symptomId: 1,
@@ -17,7 +19,7 @@ export const resDetail = {
       {
         symptomId: 2,
         symptomName: '두통',
-        score: 20,
+        score: 7,
       },
     ],
     images: [],
@@ -29,7 +31,7 @@ export const resDetail = {
         declarationCount: 0,
         name: '닉네임11',
         content: '힘내세요!!',
-        createdDate: '20230205',
+        createdAt: '2023-02-05 07:02:53',
         myHeart: false,
         condition: 0,
       },
@@ -40,7 +42,7 @@ export const resDetail = {
         declarationCount: 0,
         name: '닉네임11',
         content: '힘내세요!!',
-        createdDate: '20230205',
+        createdAt: '2023-02-04 07:02:53',
         myHeart: false,
         condition: 0,
       },
@@ -51,7 +53,7 @@ export const resDetail = {
         declarationCount: 0,
         name: '닉네임11',
         content: '힘내세요!!',
-        createdDate: '20230205',
+        createdAt: '2023-02-01 07:02:53',
         myHeart: false,
         condition: 0,
       },
