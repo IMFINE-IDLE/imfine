@@ -23,7 +23,7 @@ const api = {
     paperDetail: (paperId) => URL + PAPER + paperId,
     paperReport: (paperId) => URL + REPORT + PAPER + paperId,
     paperLikePost: () => URL + PAPER + '/like',
-    // paperLikeDelete: (paperId) => URL + PAPER + `${paperId}/like/1`,
+    paperLikeDelete: (paperId) => URL + PAPER + `/${paperId}/like`,
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,

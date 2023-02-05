@@ -11,10 +11,22 @@ function LikeComment({ paperId, myHeart, likeCount, commentCount }) {
       const res = await axios.post(
         api.paper.paperLikePost(),
         {
-          contentsId: paperId,
+          contentId: paperId,
         },
         { headers: { Authorization: localStorage.getItem('accessToken') } }
       );
+      console.log(res);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  const likeDelete = async (paperId) => {
+    try {
+      const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
     } catch (err) {
       console.log(err.response.data);
     }
@@ -30,10 +42,10 @@ function LikeComment({ paperId, myHeart, likeCount, commentCount }) {
         onClick={(e) => {
           e.stopPropagation();
           if (myHeart) {
+            likeDelete(paperId);
           } else {
             likePost();
           }
-          console.log('하트');
         }}
       />
       <SpanLikeCmt>{likeCount}</SpanLikeCmt>
