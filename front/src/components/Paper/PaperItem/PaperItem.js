@@ -79,7 +79,7 @@ function PaperItem({ paper }) {
               <p style={{ fontWeight: '700' }}>{name}</p>
             </div>
             <div>
-              {symptomList.map((symptom) => {
+              {symptomList?.map((symptom) => {
                 return (
                   <Symptom key={symptom.symptomId}>
                     {symptom.symptomName} {symptom.score}
