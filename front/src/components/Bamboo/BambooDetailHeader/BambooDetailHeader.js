@@ -14,12 +14,12 @@ import {
   TopDiv,
   BottomDiv,
 } from './style';
-
+import BambooBtnReport from '../BambooBtnReport/BambooBtnReport';
 function BambooDetailHeader({ bambooId, content, leafCount, likeCount }) {
   return (
     <BoxHeader>
       <TopDiv>
-        <FiMoreVertical />
+        <BambooBtnReport />
       </TopDiv>
       <Content>{content}</Content>
       <BottomDiv>
