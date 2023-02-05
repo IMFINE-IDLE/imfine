@@ -9,13 +9,35 @@ import {
   LikeLabel,
 } from './style';
 
-function BoxLeavesFeed({ leafId, content, likeCount, declarationCount }) {
+function BoxLeavesFeed({
+  leafId,
+  content,
+  likeCount,
+  likeLeaf,
+  deleteLikeLeaf,
+  heart,
+}) {
+  const fillHeart = heart ? 'var(--red-color)' : 'none';
+
   return (
     <div>
       <ColumnDiv>
         <BoxNoShadLeaves>
           <TopDiv>
-            <FiHeart />
+            <FiHeart
+              style={{
+                color: 'var(--red-color)',
+                fill: fillHeart,
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                if (heart) {
+                  deleteLikeLeaf(leafId);
+                } else {
+                  likeLeaf(leafId);
+                }
+              }}
+            />
             <LikeLabel>{likeCount}</LikeLabel>
             <FiMoreVertical />
           </TopDiv>

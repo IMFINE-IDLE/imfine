@@ -77,6 +77,37 @@ function BambooDetailPage() {
     }
   };
 
+  // 댓글 좋아요 post
+  const likeLeaf = async (leafId) => {
+    try {
+      const res = await axios.post(
+        api.leaf.postLeafLike(),
+        {
+          contentId: leafId,
+        },
+        {
+          headers: { Authorization: localStorage.getItem('accessToken') },
+        }
+      );
+      console.log(res);
+      fetchBambooDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 좋아요 취소 delete
+  const deleteLikeLeaf = async (leafId) => {
+    try {
+      const res = await axios.delete(api.leaf.deletLeafLike(leafId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+      fetchBambooDetail();
+    } catch (err) {
+      console.log(err.repsonse.data);
+    }
+  };
   useEffect(() => {
     fetchBambooDetail();
   }, []);
@@ -112,6 +143,10 @@ function BambooDetailPage() {
                 likeCount={leaf.likeCount}
                 content={leaf.content}
                 key={leaf.leafId}
+                leafId={leaf.leafId}
+                likeLeaf={likeLeaf}
+                deleteLikeLeaf={deleteLikeLeaf}
+                heart={leaf.heart}
               />
             );
           })}

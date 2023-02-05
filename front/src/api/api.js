@@ -49,7 +49,7 @@ const api = {
   leaf: {
     postLeaf: () => URL + LEAF,
     postLeafLike: () => URL + LEAF + '/like',
-    deletLeafLike: (params) => URL + LEAF + `/like/${params}`,
+    deletLeafLike: (leafId) => URL + LEAF + `/like/${leafId}`,
     reportLeaf: () => URL + REPORT + LEAF,
   },
   diary: {
