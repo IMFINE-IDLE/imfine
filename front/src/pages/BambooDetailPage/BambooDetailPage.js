@@ -7,12 +7,14 @@ import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import BoxLeavesFeed from '../../components/Bamboo/BoxLeavesFeed/BoxLeavesFeed';
 import { TopDiv, ReplyLabel, ReplyDiv } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
+import BambooReplyBox from '../../components/Bamboo/BambooReplyBox/BambooReplyBox';
 
 function BambooDetailPage() {
   const { bambooId } = useParams();
   const [bamboo, setbamboo] = useState([]);
   const [leaves, setleaves] = useState([]);
 
+  // 대나무 상세보기 get
   const fetchBambooDetail = async () => {
     try {
       const res = await axios.get(api.bamboo.getDetailBamboo(bambooId), {
@@ -25,6 +27,25 @@ function BambooDetailPage() {
       console.log('error', err);
     }
   };
+
+  // 대나무 댓글달기 post
+  const replyBamboo = async (replyComment) => {
+    try {
+      const res = await axios.post(
+        api.leaf.postLeaf(),
+        {
+          bambooId,
+          content: replyComment,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+      fetchBambooDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
   useEffect(() => {
     fetchBambooDetail();
   }, []);
@@ -61,6 +82,7 @@ function BambooDetailPage() {
             );
           })}
         </div>
+        <BambooReplyBox replyBamboo={replyBamboo} />
       </>
     );
   } else {
@@ -85,6 +107,7 @@ function BambooDetailPage() {
         </TopDiv>
 
         <ReplyDiv>등록된 댓글이 없습니다?</ReplyDiv>
+        <BambooReplyBox replyBamboo={replyBamboo} />
       </>
     );
   }
