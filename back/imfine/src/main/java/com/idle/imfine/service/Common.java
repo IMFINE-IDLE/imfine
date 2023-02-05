@@ -1,7 +1,7 @@
 package com.idle.imfine.service;
 
 import com.idle.imfine.config.security.JwtTokenProvider;
-import com.idle.imfine.data.dto.notification.request.RequestNotificationDto;
+import com.idle.imfine.data.dto.user.response.TokenResponseDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.notification.Notification;
