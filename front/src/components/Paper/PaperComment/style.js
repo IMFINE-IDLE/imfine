@@ -18,6 +18,7 @@ const BoxUser = styled.div`
 
 const SpanUser = styled.span`
   font-weight: 700;
+  margin-right: 0.3em;
 `;
 
 const BoxBtns = styled.div`

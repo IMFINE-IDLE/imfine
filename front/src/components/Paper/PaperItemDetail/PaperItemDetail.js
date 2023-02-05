@@ -93,7 +93,8 @@ function PaperItemDetail({ isMine, paperId, paper }) {
       </BoxPaperDetail>
       {modalOpen && (
         <Modal
-          type={'일기삭제'}
+          type={'일기'}
+          action={'삭제'}
           setModalOpen={setModalOpen}
           apiFunc={() => deletePaper(paperId)}
         />
