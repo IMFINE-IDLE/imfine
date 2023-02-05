@@ -95,15 +95,16 @@ public class PaperServiceImpl implements PaperService {
                         .path(path.getStoreFileName())
                         .build()
         );
-
-        imageRepository.saveAll(saveImage.collect(Collectors.toList()));
+        if (saveImage.count() != 0){
+            imageRepository.saveAll(saveImage.collect(Collectors.toList()));
+        }
         Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
-                symptomRecord -> PaperHasSymptom.builder()
-                        .symptomId(symptomRecord.getSymptomId())
-                        .score(symptomRecord.getScore())
-                        .paper(savedPaper)
-                        .build()
-        );
+            symptomRecord -> PaperHasSymptom.builder()
+                    .symptomId(symptomRecord.getSymptomId())
+                    .score(symptomRecord.getScore())
+                    .paper(savedPaper)
+                    .build()
+            );
         paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
     }
 
@@ -155,9 +156,8 @@ public class PaperServiceImpl implements PaperService {
                 .contentsId(requestHeartDto.getContentId())
                 .senderId(user.getId())
                 .build();
-
-        foundPaper.addLikeCount();
         heartRepository.save(heart);
+        foundPaper.addLikeCount();
     }
 
     @Override
@@ -166,15 +166,18 @@ public class PaperServiceImpl implements PaperService {
         User user = common.getUserByUid(uid);
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
             .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
-
-        if (! heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+        LOGGER.info("uid {}, contentcode {}, contentid {} 삭제 가능? {}", user.getId(), requestHeartDto.getContentCodeId()
+            , requestHeartDto.getContentId(), heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+                requestHeartDto.getContentCodeId(), requestHeartDto.getContentId()));
+        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
             requestHeartDto.getContentCodeId(), requestHeartDto.getContentId())) {
             throw new ErrorException(PaperErrorCode.PAPER_NOT_FOUND_HEART);
         }
-        heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(requestHeartDto.getContentId(),
-                requestHeartDto.getContentCodeId(), user.getId());
+        heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+                requestHeartDto.getContentCodeId(), requestHeartDto.getContentId());
 
         foundPaper.delLikeCount();
+        paperRepository.save(foundPaper);
     }
 
     @Override
@@ -216,7 +219,7 @@ public class PaperServiceImpl implements PaperService {
                         Image::getPath
                 ).collect(Collectors.toList()))
                 .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(
-                        paperDiary.getWriter().getId(), 2, paper.getId()))
+                        user.getId(), 2, paper.getId()))
                 .comments(paper.getComments().stream().map(
                         comment -> ResponseCommentDto.builder()
                                 .commentId(comment.getId())
