@@ -29,7 +29,8 @@ const BoxBtns = styled.div`
 
 const BoxContent = styled.div`
   padding: 0.5em 1.5em;
-  color: var(--gray800-color);
+  color: var(--icon-color);
+  line-height: 1.2rem;
 `;
 
 export { BoxCommentItem, BoxTop, BoxUser, SpanUser, BoxBtns, BoxContent };

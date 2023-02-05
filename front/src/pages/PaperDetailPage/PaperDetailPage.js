@@ -9,6 +9,7 @@ import { resDetail } from './tmp';
 import PaperComment from '../../components/Paper/PaperComment/PaperComment';
 import { BoxComment } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
+import CommentCreate from '../../components/Paper/CommentCreate/CommentCreate';
 
 function PaperDetailPage() {
   const { paperId } = useParams();
@@ -127,6 +128,7 @@ function PaperDetailPage() {
           ))}
         </div>
       </BoxComment>
+      <CommentCreate />
     </>
   );
 }
