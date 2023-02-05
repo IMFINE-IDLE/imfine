@@ -13,44 +13,102 @@ import { FiMessageCircle } from 'react-icons/fi';
 function PaperDetailPage() {
   const { paperId } = useParams();
   const [paperDetail, setPaperDetail] = useState({});
-  // const fetchPaperDetail = async () => {
-  //   console.log('실행');
-  //   try {
-  //     const res = await axios.get(api.paper.paperDetail(paperId), {
-  //       headers: localStorage.getItem('accessToken'),
-  //     });
-  //     console.log(res.data);
-  //     setPaper(res.data.data);
-  //   } catch (err) {
-  //     console.log(err.response.data);
-  //   }
-  // };
+  const fetchPaperDetail = async () => {
+    console.log('실행');
+    try {
+      const res = await axios.get(api.paper.paperDetail(paperId), {
+        headers: localStorage.getItem('accessToken'),
+      });
+      console.log(res.data);
+      setPaperDetail(res.data.data);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
   useEffect(() => {
     // fetchPaperDetail();
     setPaperDetail(resDetail.data);
   }, []);
 
-  // 내 게시글인지 여부
-  // const userId = useSelector((state) => {
-  //   return state.user.uid;
-  // });
-  // const uid = localStorage.getItem('uid');
-  // const isMine = Boolean(paper.userId === uid);
+  // 일기 좋아요 등록
+  const likePaper = async (paperId) => {
+    try {
+      const res = await axios.post(
+        api.paper.paperLikePost(),
+        {
+          contentId: paperId,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 일기 좋아요 취소
+  const likePaperDelete = async (paperId) => {
+    try {
+      const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 좋아요 등록
+  const likeComment = async (paperId) => {
+    try {
+      const res = await axios.post(
+        api.comment.commentLike(),
+        {
+          contentId: paperId,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 좋아요 취소
+  const likeCommentDelete = async (commentId) => {
+    try {
+      const res = await axios.delete(api.comment.commentLikeDelete(commentId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
   return (
     <>
       <NavBarBasic Back />
-      <PaperItemDetail isMine={true} paper={paperDetail} paperId={paperId} />
+      <PaperItemDetail
+        paper={paperDetail}
+        paperId={paperId}
+        likePaper={likePaper}
+        likePaperDelete={likePaperDelete}
+      />
       <BoxComment>
         <div style={{ marginBottom: '1em' }}>
           <FiMessageCircle />
           <span> 댓글 {paperDetail?.comments?.length}개</span>
           {paperDetail?.comments?.map((comment) => (
             <PaperComment
+              paperId={paperId}
               comment={comment}
               key={comment.commentId}
-              paperId={paperId}
+              likeComment={likeComment}
+              likeCommentDelete={likeCommentDelete}
             />
           ))}
         </div>

@@ -12,7 +12,7 @@ import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
 import { BoxBottomDetail, BoxPaperDetail } from './style';
 
-function PaperItemDetail({ paperId, paper }) {
+function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
   const navigate = useNavigate();
   const {
     condition,
@@ -25,19 +25,16 @@ function PaperItemDetail({ paperId, paper }) {
     likeCount,
     commentCount,
   } = paper;
-  // const token = useSelector((state) => state.user.accessToken);
-  // const token = localStorage.getItem('accessToken');
 
   // 일기 삭제 함수
   const deletePaper = async (paperId) => {
-    // try {
-    //   const res = await axios.delete(api.paper.paperDetail(paperId), {
-    //     headers: { 'X-AUTH-TOKEN': token },
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    //   console.log(err.response.data.message);
-    // }
+    try {
+      const res = await axios.delete(api.paper.paperDetail(paperId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
   };
 
   // 일기 삭제 모달
@@ -89,7 +86,13 @@ function PaperItemDetail({ paperId, paper }) {
               </div>
             )}
           </div>
-          <LikeComment likeCount={likeCount} commentCount={commentCount} />
+          <LikeComment
+            id={paperId}
+            likeCount={likeCount}
+            commentCount={commentCount}
+            like={likePaper}
+            likeDelete={likePaperDelete}
+          />
         </BoxBottomDetail>
       </BoxPaperDetail>
       {modalOpen && (

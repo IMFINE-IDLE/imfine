@@ -13,7 +13,7 @@ import {
   SpanUser,
 } from './style';
 
-function PaperComment({ comment, paperId }) {
+function PaperComment({ comment, paperId, likeComment, likeCommentDelete }) {
   const {
     commentId,
     condition,
@@ -38,37 +38,6 @@ function PaperComment({ comment, paperId }) {
   };
 
   const fillHeart = myHeart ? 'var(--red-color)' : 'none';
-  // 댓글 좋아요 등록
-  const likeComment = async () => {
-    try {
-      const res = await axios.post(
-        api.comment.commentLike(),
-        {
-          contentId: paperId,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
-      console.log(res);
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
-  // 댓글 좋아요 취소
-  const likeCommentDelete = async (commentId) => {
-    try {
-      const res = await axios.delete(
-        api.comment.commentLikeDelete(),
-        {
-          contentId: commentId,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
-      console.log(res);
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
 
   // 댓글 삭제, 신고 위한 모달
   const [modalOpen, setModalOpen] = useState(false);
@@ -109,7 +78,7 @@ function PaperComment({ comment, paperId }) {
                     likeCommentDelete(commentId);
                   } else {
                     // 좋아요 안되어있으면 등록
-                    likeComment();
+                    likeComment(paperId);
                   }
                 }}
               />
