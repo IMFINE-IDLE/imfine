@@ -10,7 +10,7 @@ function SymptomRating({ symptomList }) {
   return (
     <BoxSymptomRating>
       <div>
-        {symptomList.map((symptom) => {
+        {symptomList?.map((symptom) => {
           return (
             <DivSymptom key={symptom.symptomId}>
               <LabelSymptom>{symptom.symptomName}</LabelSymptom>

@@ -5,57 +5,148 @@ import { useSelector } from 'react-redux';
 import api from '../../api/api';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItemDetail from '../../components/Paper/PaperItemDetail/PaperItemDetail';
+import { resDetail } from './tmp';
+import PaperComment from '../../components/Paper/PaperComment/PaperComment';
+import { BoxComment } from './style';
+import { FiMessageCircle } from 'react-icons/fi';
+import CommentCreate from '../../components/Paper/CommentCreate/CommentCreate';
 
 function PaperDetailPage() {
   const { paperId } = useParams();
-  const [paper, setPaper] = useState(null);
-  // useEffect(() => {
-  //   const fetchPaperDetail = async () => {
-  //     const res = await axios.get(api.paper.paperDetail(paperId));
-  //     setPaper(res.data.data);
-  //   };
-  //   fetchPaperDetail();
-  // }, []);
+  const [paperDetail, setPaperDetail] = useState({});
+  const fetchPaperDetail = async () => {
+    try {
+      const res = await axios.get(api.paper.paperDetail(paperId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      // console.log(res.data);
+      setPaperDetail(res.data.data);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
-  // 내 게시글인지 여부
-  // const userId = useSelector((state) => {
-  //   return state.user.uid;
-  // });
-  // const isMine = Boolean(paper.uid === userId);
+  useEffect(() => {
+    fetchPaperDetail();
+    // setPaperDetail(resDetail.data);
+  }, []);
+
+  // 일기 좋아요 등록
+  const likePaper = async (paperId) => {
+    try {
+      const res = await axios.post(
+        api.paper.paperLikePost(),
+        {
+          contentId: paperId,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 일기 좋아요 취소
+  const likePaperDelete = async (paperId) => {
+    try {
+      const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 작성
+  const createComment = async (commentContent) => {
+    try {
+      const res = await axios.post(
+        api.comment.commentCreate(),
+        {
+          paperId,
+          content: commentContent,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 삭제
+  const deleteComment = async (commentId) => {
+    try {
+      const res = await axios.delete(api.comment.commentDelete(commentId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 좋아요 등록
+  const likeComment = async (paperId) => {
+    try {
+      const res = await axios.post(
+        api.comment.commentLike(),
+        {
+          contentId: paperId,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 좋아요 취소
+  const likeCommentDelete = async (commentId) => {
+    try {
+      const res = await axios.delete(api.comment.commentLikeDelete(commentId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
   return (
     <>
       <NavBarBasic Back />
       <PaperItemDetail
-        isMine={true}
+        paper={paperDetail}
         paperId={paperId}
-        condition={0}
-        name={'닉네임'}
-        title={'나의 항암 일기'}
-        symptomList={[
-          {
-            symptomId: 1,
-            symptomName: '어지러움',
-            score: 1,
-          },
-          {
-            symptomId: 2,
-            symptomName: '두통',
-            score: 3,
-          },
-          {
-            symptomId: 3,
-            symptomName: '최대다섯자',
-            score: 5,
-          },
-        ]}
-        content={
-          '어떻게 하나요? 블라블라 Most fonts have a particular weight which corresponds to one of the numbers in Common weight name mapping. However some fonts, called variablethe chosen weight.'
-        }
-        images={[]}
-        likeCount={0}
-        commentCount={0}
+        likePaper={likePaper}
+        likePaperDelete={likePaperDelete}
       />
+      <BoxComment>
+        <div style={{ marginBottom: '1em' }}>
+          <FiMessageCircle />
+          <span> 댓글 {paperDetail?.comments?.length}개</span>
+          {paperDetail?.comments?.map((comment) => (
+            <PaperComment
+              comment={comment}
+              key={comment.commentId}
+              deleteComment={deleteComment}
+              likeComment={likeComment}
+              likeCommentDelete={likeCommentDelete}
+            />
+          ))}
+        </div>
+      </BoxComment>
+      <CommentCreate createComment={createComment} />
     </>
   );
 }
