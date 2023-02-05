@@ -26,7 +26,7 @@ function PaperFeedPage() {
         console.log(res.data);
         setPaperList(res.data.data);
       } catch (err) {
-        console.log(err);
+        console.log(err.response.data);
       }
     };
     fetchPaperFeed();

@@ -101,6 +101,7 @@ function PaperItem({ paper }) {
           <SpanDate>{getTimeDifference(createdAt)}</SpanDate>
         </div>
         <LikeComment
+          paperId={paperId}
           myHeart={myHeart}
           likeCount={likeCount}
           commentCount={commentCount}
