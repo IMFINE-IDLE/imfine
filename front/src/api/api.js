@@ -20,8 +20,8 @@ const api = {
   },
   paper: {
     paperFeed: () => URL + PAPER + '/list',
-    paperDetail: (paperId) => URL + PAPER + paperId,
-    paperReport: (paperId) => URL + REPORT + PAPER + paperId,
+    paperDetail: (paperId) => URL + PAPER + `/${paperId}`,
+    paperReport: (paperId) => URL + REPORT + PAPER + `/${paperId}`,
     paperLikePost: () => URL + PAPER + '/like',
     paperLikeDelete: (paperId) => URL + PAPER + `/${paperId}/like`,
   },

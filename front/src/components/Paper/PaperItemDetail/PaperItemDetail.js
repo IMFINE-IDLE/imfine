@@ -12,19 +12,18 @@ import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
 import { BoxBottomDetail, BoxPaperDetail } from './style';
 
-function PaperItemDetail({
-  isMine,
-  paperId,
-  condition,
-  name,
-  title,
-  symptomList,
-  content,
-  images,
-  likeCount,
-  commentCount,
-}) {
+function PaperItemDetail({ isMine, paperId, paper }) {
   const navigate = useNavigate();
+  const {
+    condition,
+    name,
+    title,
+    symptomList,
+    content,
+    images,
+    likeCount,
+    commentCount,
+  } = paper;
   // const token = useSelector((state) => state.user.accessToken);
   // const token = localStorage.getItem('accessToken');
 
@@ -42,7 +41,7 @@ function PaperItemDetail({
 
   // 일기 삭제 모달
   const [modalOpen, setModalOpen] = useState(false);
-
+  console.log(symptomList);
   return (
     <>
       <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
