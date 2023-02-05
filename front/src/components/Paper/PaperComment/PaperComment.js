@@ -42,6 +42,20 @@ function PaperComment({ comment, paperId }) {
   };
 
   // 댓글 좋아요 취소
+  const likeCommentDelete = async (commentId) => {
+    try {
+      const res = await axios.delete(
+        api.comment.commentLikeDelete(),
+        {
+          contentId: commentId,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
 
   return (
     <BoxCommentItem>
@@ -67,6 +81,7 @@ function PaperComment({ comment, paperId }) {
                 e.stopPropagation();
                 if (myHeart) {
                   // 좋아요 되어있으면 취소
+                  likeCommentDelete(commentId);
                 } else {
                   // 좋아요 안되어있으면 등록
                   likeComment();

@@ -28,6 +28,7 @@ const api = {
   },
   comment: {
     commentLike: () => URL + COMMENT + '/like',
+    commentLikeDelete: (commentId) => URL + COMMENT + `/like/${commentId}`,
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
