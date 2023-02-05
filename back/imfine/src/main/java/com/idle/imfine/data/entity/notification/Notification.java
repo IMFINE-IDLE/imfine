@@ -32,12 +32,12 @@ public class Notification extends BaseCreatedEntity {
     private long senderId;
 
     @Column(nullable = false)
-    private long contentsCodeId;
+    private int contentsCodeId;
 
-    @Column(nullable = false)
+    @Column
     private long contentsId;
 
-    @Column(nullable = false)
-    private boolean check;
+    @Column(columnDefinition="tinyint(1) default 1")
+    private boolean isCheck;
 
 }
