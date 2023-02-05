@@ -5,9 +5,8 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class SignInResponseDto {
+public class TokenResponseDto {
 
     private String accessToken;
-    private String refreshToken;
 
 }

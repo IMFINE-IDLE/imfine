@@ -39,7 +39,7 @@ public class JwtTokenProvider {
 
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
-    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 30; // 30분 토큰 유효
+    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60; // 1시간 토큰 유효
     private final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7; // 1주 토큰 유효
 
     // SecretKey 에 대해 인코딩 수행

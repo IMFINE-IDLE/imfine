@@ -1,6 +1,6 @@
 package com.idle.imfine.service;
 
-import com.idle.imfine.config.security.JwtTokenProvider;
+import com.idle.imfine.data.dto.user.response.TokenResponseDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.ConditionRepository;
@@ -8,15 +8,15 @@ import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.Cookie;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,29 +25,44 @@ public class Common {
     private final UserRepository userRepository;
     private final ConditionRepository conditionRepository;
     private final FollowRepository followRepository;
-    private final JwtTokenProvider jwtTokenProvider;
 
     public User getUserByUid(String uid) {
         return userRepository.findByUid(uid)
                 .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
     }
 
-    public HttpHeaders createTokenHeaders(User user, String accessToken, String refreshToken) {
-        String uid = user.getUid();
-        List<String> role = user.getRoles();
+    public Map<String, Object> createTokenResult(String accessToken, String refreshToken) {
+        Map<String, Object> result = new HashMap<>();
 
+        HttpHeaders headers = createTokenHeader(refreshToken);
+
+        TokenResponseDto body = TokenResponseDto.builder()
+                .accessToken("Bearer " + accessToken)
+                .build();
+
+        result.put("headers", headers);
+        result.put("body", body);
+
+        return result;
+    }
+
+    public HttpHeaders createTokenHeader(String refreshToken) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", makeTokenCookie("access_token", accessToken, 60 * 60));
-        headers.add("Set-Cookie", makeTokenCookie("refresh_token", refreshToken, 60 * 60 * 24 * 30));
-
+        headers.add("Set-Cookie", createTokenCookie("refreshToken", refreshToken, 60 * 60 * 24 * 7));
         return headers;
     }
 
-    public String makeTokenCookie(String name, String token, int maxAge) {
-        Cookie cookie = new Cookie(name, "Bearer " + token);
-        cookie.setMaxAge(maxAge);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+    public HttpHeaders deleteTokenHeader() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", createTokenCookie("refreshToken", "", 0));
+        return headers;
+    }
+
+    public String createTokenCookie(String name, String token, int maxAge) {
+        ResponseCookie cookie = ResponseCookie.from(name, "Bearer%" + token)
+                .httpOnly(true)
+                .maxAge(maxAge)
+                .build();
         return cookie.toString();
     }
 
