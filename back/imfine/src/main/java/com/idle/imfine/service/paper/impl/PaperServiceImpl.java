@@ -210,11 +210,18 @@ public class PaperServiceImpl implements PaperService {
                     user);
         return ResponsePaperDetailDto.builder()
                 .diaryId(paperDiary.getId())
+                .title(paperDiary.getTitle())
                 .userId(user.getId())
                 .userStatus(user.getId() == paperDiary.getWriter().getId() ? 0 : 2)
-                .userName(user.getName())
+                .name(user.getName())
                 .content(paper.getContent())
-                .symptoms(responsePaperSymptomRecordDtos)
+                .likeCount(paper.getLikeCount())
+                .commentCount(paper.getCommentCount())
+                .createdAt(common.convertDateAllType(paper.getCreatedAt()))
+                .condition(String.valueOf(
+                    conditionRepository.findByUserAndDate(paperDiary.getWriter(), paper.getDate())
+                        .orElseGet(Condition::new).getCondition()))
+                .symptomList(responsePaperSymptomRecordDtos)
                 .images(paper.getImages().stream().map(
                         Image::getPath
                 ).collect(Collectors.toList()))
