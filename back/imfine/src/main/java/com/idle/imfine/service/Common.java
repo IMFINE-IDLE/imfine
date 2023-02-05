@@ -1,8 +1,11 @@
 package com.idle.imfine.service;
 
-import com.idle.imfine.data.dto.user.response.TokenResponseDto;
+import com.idle.imfine.config.security.JwtTokenProvider;
+import com.idle.imfine.data.dto.notification.request.RequestNotificationDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.entity.notification.Notification;
+import com.idle.imfine.data.repository.notification.NotificationRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
@@ -25,6 +28,8 @@ public class Common {
     private final UserRepository userRepository;
     private final ConditionRepository conditionRepository;
     private final FollowRepository followRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final NotificationRepository notificationRepository;
 
     public User getUserByUid(String uid) {
         return userRepository.findByUid(uid)
@@ -110,5 +115,18 @@ public class Common {
     }
     public String convertDateAllType(LocalDateTime date) {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public void saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId) {
+//        User user = userRepository.getByUid(uid);
+
+        Notification notification = Notification.builder()
+            .senderId(senderId)
+            .recieverId(recieverId)
+            .contentsCodeId(contenstsCodeId)
+            .contentsId(contentsId)
+            .build();
+
+        notificationRepository.save(notification);
     }
 }

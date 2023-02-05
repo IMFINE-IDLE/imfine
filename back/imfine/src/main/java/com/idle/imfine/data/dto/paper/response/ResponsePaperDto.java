@@ -18,6 +18,7 @@ public class ResponsePaperDto {
     private String title;
     private long paperId;
     private String uid;
+    private String name;
     private String content;
     private int commentCount;
     private int likeCount;
