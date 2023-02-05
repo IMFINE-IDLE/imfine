@@ -7,6 +7,8 @@ import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItemDetail from '../../components/Paper/PaperItemDetail/PaperItemDetail';
 import { resDetail } from './tmp';
 import PaperComment from '../../components/Paper/PaperComment/PaperComment';
+import { BoxComment } from './style';
+import { FiMessageCircle } from 'react-icons/fi';
 
 function PaperDetailPage() {
   const { paperId } = useParams();
@@ -40,7 +42,15 @@ function PaperDetailPage() {
     <>
       <NavBarBasic Back />
       <PaperItemDetail isMine={true} paper={paperDetail} paperId={paperId} />
-      <PaperComment commentList={paperDetail.comments} />
+      <BoxComment>
+        <div style={{ marginBottom: '1em' }}>
+          <FiMessageCircle />
+          <span> 댓글 {paperDetail?.comments?.length}개</span>
+          {paperDetail?.comments?.map((comment) => (
+            <PaperComment comment={comment} key={comment.commentId} />
+          ))}
+        </div>
+      </BoxComment>
     </>
   );
 }
