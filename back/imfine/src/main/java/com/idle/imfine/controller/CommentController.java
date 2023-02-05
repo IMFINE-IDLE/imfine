@@ -53,9 +53,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/like/{comment-id}")
-    public ResponseEntity<Result> deleteCommentLike(@PathVariable(value = "comment-id") long commentId, @LoginUser String uid) {
-//        RequestHeartDto requestLikeDto = new RequestHeartDto(1, 3, );
-        commentService.deleteCommentLike(commentId, uid);
+    public ResponseEntity<Result> deleteCommentLike(@PathVariable(value = "comment-id") RequestHeartDto requestHeartDto, @LoginUser String uid) {
+        requestHeartDto.setContentCodeId(3);
+        commentService.deleteCommentLike(requestHeartDto, uid);
         LOGGER.info("좋아요 삭제 {}", commentService);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }

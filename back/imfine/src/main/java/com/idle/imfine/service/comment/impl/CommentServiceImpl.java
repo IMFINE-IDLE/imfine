@@ -9,7 +9,6 @@ import com.idle.imfine.data.repository.comment.CommentRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.comment.CommentService;
-import com.idle.imfine.service.user.Impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.getById(requestHeartDto.getContentId());
         //에러처리 똑바로
         if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, requestHeartDto.getContentId())) {
-            throw new RuntimeException();
+            throw new RuntimeException("");
         }
 
         heartRepository.save(Heart.builder()
@@ -66,17 +65,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteCommentLike(long commentId, String uid) {
+    public void deleteCommentLike(RequestHeartDto requestHeartDto, String uid) {
         User user = common.getUserByUid(uid);
 
-        Comment comment = commentRepository.getById(commentId);
+        Comment comment = commentRepository.getById(requestHeartDto.getContentId());
         //에러처리 똑바로
-        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, commentId)) {
-            throw new RuntimeException();
+        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), requestHeartDto.getContentCodeId(),
+            requestHeartDto.getContentId())) {
+            heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+                requestHeartDto.getContentCodeId(), requestHeartDto.getContentId());
+            comment.setLikeCount(comment.getLikeCount() - 1);
         }
 
-        heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, commentId);
-
-        comment.setLikeCount(comment.getLikeCount() - 1);
     }
 }
