@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { URL } from '../../../api/api';
@@ -16,7 +16,7 @@ import {
   SpanDate,
 } from './style';
 
-function PaperItem({ paper }) {
+function PaperItem({ paper, likePaper, likePaperDelete }) {
   const userId = useSelector((state) => {
     return state.user.uid;
   });
@@ -79,7 +79,7 @@ function PaperItem({ paper }) {
               <p style={{ fontWeight: '700' }}>{name}</p>
             </div>
             <div>
-              {symptomList.map((symptom) => {
+              {symptomList?.map((symptom) => {
                 return (
                   <Symptom key={symptom.symptomId}>
                     {symptom.symptomName} {symptom.score}
@@ -101,10 +101,12 @@ function PaperItem({ paper }) {
           <SpanDate>{getTimeDifference(createdAt)}</SpanDate>
         </div>
         <LikeComment
-          paperId={paperId}
+          id={paperId}
           myHeart={myHeart}
           likeCount={likeCount}
           commentCount={commentCount}
+          like={likePaper}
+          likeDelete={likePaperDelete}
         />
       </BoxBottom>
     </BoxPaper>
