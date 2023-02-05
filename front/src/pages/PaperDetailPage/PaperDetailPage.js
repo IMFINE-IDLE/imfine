@@ -47,7 +47,11 @@ function PaperDetailPage() {
           <FiMessageCircle />
           <span> 댓글 {paperDetail?.comments?.length}개</span>
           {paperDetail?.comments?.map((comment) => (
-            <PaperComment comment={comment} key={comment.commentId} />
+            <PaperComment
+              comment={comment}
+              key={comment.commentId}
+              paperId={paperId}
+            />
           ))}
         </div>
       </BoxComment>

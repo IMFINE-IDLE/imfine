@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React from 'react';
 import { FiHeart, FiMessageCircle } from 'react-icons/fi';
+import api from '../../../api/api';
 import BtnReport from '../BtnReport/BtnReport';
 import {
   BoxBtns,
@@ -10,7 +12,7 @@ import {
   SpanUser,
 } from './style';
 
-function PaperComment({ comment }) {
+function PaperComment({ comment, paperId }) {
   const {
     commentId,
     condition,
@@ -21,7 +23,25 @@ function PaperComment({ comment }) {
     likeCount,
     myHeart,
   } = comment;
+
   const fillHeart = myHeart ? 'var(--red-color)' : 'none';
+  // 댓글 좋아요 등록
+  const likeComment = async () => {
+    try {
+      const res = await axios.post(
+        api.comment.commentLike(),
+        {
+          contentId: paperId,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 댓글 좋아요 취소
 
   return (
     <BoxCommentItem>
@@ -46,7 +66,10 @@ function PaperComment({ comment }) {
               onClick={(e) => {
                 e.stopPropagation();
                 if (myHeart) {
+                  // 좋아요 되어있으면 취소
                 } else {
+                  // 좋아요 안되어있으면 등록
+                  likeComment();
                 }
               }}
             />

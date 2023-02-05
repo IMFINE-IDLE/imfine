@@ -4,6 +4,7 @@ const URL = 'http://i8A809.p.ssafy.io:8080';
 const USERS = '/user';
 const DIARY = '/diary';
 const PAPER = '/paper';
+const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
@@ -24,6 +25,9 @@ const api = {
     paperReport: (paperId) => URL + REPORT + PAPER + `/${paperId}`,
     paperLikePost: () => URL + PAPER + '/like',
     paperLikeDelete: (paperId) => URL + PAPER + `/${paperId}/like`,
+  },
+  comment: {
+    commentLike: () => URL + COMMENT + '/like',
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
