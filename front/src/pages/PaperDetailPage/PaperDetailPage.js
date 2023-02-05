@@ -61,6 +61,24 @@ function PaperDetailPage() {
     }
   };
 
+  // 댓글 작성
+  const createComment = async (commentContent) => {
+    try {
+      const res = await axios.post(
+        api.comment.commentCreate(),
+        {
+          paperId,
+          content: commentContent,
+        },
+        { headers: { Authorization: localStorage.getItem('accessToken') } }
+      );
+      console.log(res);
+      fetchPaperDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
   // 댓글 삭제
   const deleteComment = async (commentId) => {
     try {
@@ -128,7 +146,7 @@ function PaperDetailPage() {
           ))}
         </div>
       </BoxComment>
-      <CommentCreate />
+      <CommentCreate createComment={createComment} />
     </>
   );
 }
