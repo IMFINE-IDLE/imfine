@@ -3,22 +3,41 @@ package com.idle.imfine.controller;
 import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
-import com.idle.imfine.data.dto.user.request.*;
-import com.idle.imfine.data.dto.user.response.*;
+import com.idle.imfine.data.dto.user.request.ChangePasswordRequestDto;
+import com.idle.imfine.data.dto.user.request.ConditionRequestDto;
+import com.idle.imfine.data.dto.user.request.InitProfileRequestDto;
+import com.idle.imfine.data.dto.user.request.ModifyUserMedicalListRequestDto;
+import com.idle.imfine.data.dto.user.request.ModifyUserNameRequestDto;
+import com.idle.imfine.data.dto.user.request.ModifyUserOepnRequestDto;
+import com.idle.imfine.data.dto.user.request.SignInRequestDto;
+import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
+import com.idle.imfine.data.dto.user.request.followUserRequestDto;
+import com.idle.imfine.data.dto.user.response.ConditionResponseDto;
+import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
+import com.idle.imfine.data.dto.user.response.FollowResponseDto;
+import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
+import com.idle.imfine.data.dto.user.response.TokenResponseDto;
 import com.idle.imfine.service.paper.impl.PaperServiceImpl;
 import com.idle.imfine.service.user.ConditionService;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.UserService;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
@@ -34,31 +53,40 @@ public class UserController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<Result> signIn(@RequestBody SignInRequestDto requestDto) {
-        SignInResponseDto responseDto = userService.signIn(requestDto);
+        Map<String, Object> result = userService.signIn(requestDto);
+        HttpHeaders headers = (HttpHeaders) result.get("headers");
+        TokenResponseDto body = (TokenResponseDto) result.get("body");
         return ResponseEntity.ok()
-                .body(responseService.getSingleResult(responseDto));
+                .headers(headers)
+                .body(responseService.getSingleResult(body));
     }
 
     @PostMapping("/sign-out")
     public ResponseEntity<Result> signOut(@LoginUser String loginUid) {
-        userService.signOut(loginUid);
+        HttpHeaders headers = userService.signOut(loginUid);
         return ResponseEntity.ok()
+                .headers(headers)
                 .body(responseService.getSuccessResult());
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<Result> refresh(@RequestHeader(name = "X-AUTH-TOKEN") String refreshToken) {
-        RefreshResponseDto responseDto = userService.refresh(refreshToken);
+    public ResponseEntity<Result> refresh(@CookieValue(name = "refreshToken", required = false) Cookie cookie) {
+        Map<String, Object> result = userService.refresh(cookie);
+        HttpHeaders headers = (HttpHeaders) result.get("headers");
+        TokenResponseDto body = (TokenResponseDto) result.get("body");
         return ResponseEntity.ok()
-                .body(responseService.getSingleResult(responseDto));
+                .headers(headers)
+                .body(responseService.getSingleResult(body));
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Result> signUp(@RequestBody SignUpRequestDto requestDto) {
-        HttpHeaders headers = userService.signUp(requestDto);
+        Map<String, Object> result = userService.signUp(requestDto);
+        HttpHeaders headers = (HttpHeaders) result.get("headers");
+        TokenResponseDto body = (TokenResponseDto) result.get("body");
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(responseService.getSuccessResult());
+                .body(responseService.getSingleResult(body));
     }
 
     @PutMapping("/profile")
