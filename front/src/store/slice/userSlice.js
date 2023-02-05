@@ -1,18 +1,27 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import Cookies from 'universal-cookie';
 import api from '../../api/api';
 import instance from '../../api/instance';
+
+const setClientHeaders = (token) => {
+  axios.interceptors.request.use(function (config) {
+    config.headers.Authorization = `${token}`;
+    return config;
+  });
+};
 
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post(api.user.signUp(), userData, {});
+      const res = await axios.post(api.user.signUp(), userData, {
+        withCredentials: true,
+      });
       console.log(res.data);
-      alert(document.cookie);
-      const cookies = new Cookies();
-      alert(cookies);
+      const accessToken = res.data.data.accessToken;
+      // setCookie('accessToken')
+
+      setClientHeaders(accessToken);
       // const { uid, accessToken, refreshToken } = res.data.data;
       // const saveData = {
       //   uid: userData.uid,
