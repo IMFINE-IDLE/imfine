@@ -265,7 +265,7 @@ public class PaperServiceImpl implements PaperService {
                         .commentCount(paper.getCommentCount())
                         .likeCount(paper.getLikeCount())
                         .name(paper.getDiary().getWriter().getName())
-                        .isHeart(myHeartPapers.stream().anyMatch(heartPaper -> heartPaper.getId()
+                        .myHeart(myHeartPapers.stream().anyMatch(heartPaper -> heartPaper.getId()
                             .equals(paper.getId())))
                         .date(paper.getDate())
                         .createdAt(common.convertDateAllType(paper.getCreatedAt()))

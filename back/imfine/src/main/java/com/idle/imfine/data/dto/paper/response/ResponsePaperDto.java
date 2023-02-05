@@ -24,7 +24,7 @@ public class ResponsePaperDto {
     private int likeCount;
     private LocalDate date;
     private String condition;
-    private boolean isHeart;
+    private boolean myHeart;
     private boolean open;
     private String createdAt;
     List<String> images;
