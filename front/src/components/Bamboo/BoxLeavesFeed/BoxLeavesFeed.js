@@ -9,6 +9,8 @@ import {
   LikeLabel,
 } from './style';
 
+import LeavesBtnReport from '../LeavesBtnReport/LeavesBtnReport';
+
 function BoxLeavesFeed({
   leafId,
   content,
@@ -39,7 +41,7 @@ function BoxLeavesFeed({
               }}
             />
             <LikeLabel>{likeCount}</LikeLabel>
-            <FiMoreVertical />
+            <LeavesBtnReport />
           </TopDiv>
           <BottomDiv>
             <ImgLeaves />
