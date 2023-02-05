@@ -18,12 +18,13 @@ public class ResponsePaperDto {
     private String title;
     private long paperId;
     private String uid;
+    private String name;
     private String content;
     private int commentCount;
     private int likeCount;
     private LocalDate date;
     private String condition;
-    private boolean myHeart;
+    private boolean isHeart;
     private boolean open;
     private String createdAt;
     List<String> images;

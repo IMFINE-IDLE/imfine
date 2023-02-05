@@ -146,6 +146,10 @@ public class PaperServiceImpl implements PaperService {
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
                 .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
 
+        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+            requestHeartDto.getContentCodeId(), requestHeartDto.getContentId())) {
+            throw new ErrorException(PaperErrorCode.PAPER_DUPLICATE_HEART);
+        }
         Heart heart = Heart.builder()
                 .contentsCodeId(requestHeartDto.getContentCodeId())
                 .contentsId(requestHeartDto.getContentId())
@@ -163,6 +167,10 @@ public class PaperServiceImpl implements PaperService {
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
             .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
 
+        if (! heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+            requestHeartDto.getContentCodeId(), requestHeartDto.getContentId())) {
+            throw new ErrorException(PaperErrorCode.PAPER_NOT_FOUND_HEART);
+        }
         heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(requestHeartDto.getContentId(),
                 requestHeartDto.getContentCodeId(), user.getId());
 
@@ -253,7 +261,8 @@ public class PaperServiceImpl implements PaperService {
                         .uid(paper.getDiary().getWriter().getUid())
                         .commentCount(paper.getCommentCount())
                         .likeCount(paper.getLikeCount())
-                        .myHeart(myHeartPapers.stream().anyMatch(heartPaper -> heartPaper.getId()
+                        .name(paper.getDiary().getWriter().getName())
+                        .isHeart(myHeartPapers.stream().anyMatch(heartPaper -> heartPaper.getId()
                             .equals(paper.getId())))
                         .date(paper.getDate())
                         .createdAt(common.convertDateAllType(paper.getCreatedAt()))
