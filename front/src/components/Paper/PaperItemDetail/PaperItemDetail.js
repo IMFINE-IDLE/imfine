@@ -12,7 +12,7 @@ import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
 import { BoxBottomDetail, BoxPaperDetail } from './style';
 
-function PaperItemDetail({ isMine, paperId, paper }) {
+function PaperItemDetail({ paperId, paper }) {
   const navigate = useNavigate();
   const {
     condition,
@@ -21,6 +21,7 @@ function PaperItemDetail({ isMine, paperId, paper }) {
     symptomList,
     content,
     images,
+    userStatus, // userStatus 0이면 내꺼, 다른 숫자면 다른 유저꺼
     likeCount,
     commentCount,
   } = paper;
@@ -70,9 +71,9 @@ function PaperItemDetail({ isMine, paperId, paper }) {
           <SymptomRating symptomList={symptomList} />
           {content}
         </BoxContent>
-        <BoxBottomDetail isMine>
+        <BoxBottomDetail userStatus={Boolean(!userStatus)}>
           <div>
-            {isMine && (
+            {Boolean(!userStatus) && (
               <div>
                 <FiEdit
                   style={{ marginRight: '.5em' }}

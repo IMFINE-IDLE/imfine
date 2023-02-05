@@ -18,7 +18,7 @@ function PaperComment({ comment, paperId }) {
     commentId,
     condition,
     name,
-    userStatus,
+    userStatus, // userStatus 0이면 내꺼, 다른 숫자면 다른 유저꺼
     uid,
     content,
     createdAt,
