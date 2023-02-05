@@ -46,8 +46,8 @@ const api = {
   diary: {
     postDiary: () => URL + DIARY,
     getDiaryInfo: (params) => URL + DIARY + `/${params}`,
-    setDiaryBookmark: () => URL + DIARY + '/subscribe',
-    deleteDiaryBookmark: (params) => URL + DIARY + `/${params}/subscribe`,
+    setDiarySubscribe: () => URL + DIARY + '/subscribe',
+    deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
   },
 };
 

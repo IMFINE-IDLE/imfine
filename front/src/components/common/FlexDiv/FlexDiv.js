@@ -1,7 +1,17 @@
 import styled, { css } from 'styled-components';
 
 export const FlexDiv = styled.div`
-  ${({ width, height, justify, align, direction, wrap, display }) => css`
+  ${({
+    display,
+    width,
+    height,
+    justify,
+    align,
+    direction,
+    wrap,
+    padding,
+    margin,
+  }) => css`
     display: ${display || 'flex'};
     flex-direction: ${direction || 'row'};
     justify-content: ${justify || 'center'};
@@ -9,5 +19,7 @@ export const FlexDiv = styled.div`
     flex-wrap: ${wrap || 'nowrap'};
     width: ${width || '100%'};
     height: ${height || '100%'};
+    padding: ${padding || '0'};
+    margin: ${margin || '0'};
   `}
 `;

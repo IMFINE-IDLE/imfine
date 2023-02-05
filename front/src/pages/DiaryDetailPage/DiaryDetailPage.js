@@ -55,26 +55,26 @@ const DiaryDetailPage = () => {
     setLoading(false);
   };
 
-  // const fetchUpdateBookmarkStatus = async (status) => {
-  //   try {
-  //     const fetchUrl = status
-  //       ? api.diary.deleteDiaryBookmark()
-  //       : api.diary.setDiaryBookmark(status);
-  //     const method = status ? 'delete' : 'post';
-  //     const res = await axios({
-  //       url: fetchUrl,
-  //       method: method,
-  //       data: { diaryId: diaryId },
-  //       headers: {
-  //         Authorization: localStorage.getItem('accessToken'),
-  //       },
-  //     });
+  const fetchUpdateSubscribeStatus = async (status) => {
+    try {
+      const fetchUrl = status
+        ? api.diary.deleteDiarySubscribe()
+        : api.diary.setDiarySubscribe(status);
+      const method = status ? 'delete' : 'post';
+      const res = await axios({
+        url: fetchUrl,
+        method: method,
+        data: { diaryId: diaryId },
+        headers: {
+          Authorization: localStorage.getItem('accessToken'),
+        },
+      });
 
-  //     console.log('bookmark', res.data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+      console.log('bookmark', res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
     fetchGetDiaryInfo();
@@ -86,7 +86,40 @@ const DiaryDetailPage = () => {
 
   // const isMine = diaryInfo.uid === localStorage.getItem('uid') ? true : false;
   const isMine = false;
-  let bookmark = false;
+
+  const medicalList = [
+    {
+      medicalId: 1,
+      medicalName: `${diaryInfo.medicalName}`,
+    },
+  ];
+  const diaryHasSymptoms = [
+    {
+      symptomId: 16,
+      symptomName: '두통',
+    },
+    {
+      symptomId: 17,
+      symptomName: '어지러움',
+    },
+    {
+      symptomId: 18,
+      symptomName: '어지러움',
+    },
+    {
+      symptomId: 19,
+      symptomName: '어지러움',
+    },
+    {
+      symptomId: 14,
+      symptomName: '어지러움',
+    },
+    {
+      symptomId: 15,
+      symptomName: '어지러움',
+    },
+  ];
+
   return (
     <>
       <NavBarBasic Back={true} />
@@ -105,30 +138,46 @@ const DiaryDetailPage = () => {
                 <BookmarkSvg
                   onClick={(e) => {
                     e.preventDefault();
-                    // fetchUpdateBookmarkStatus(diaryInfo.bookmark);
-                    // fetchUpdateBookmarkStatus(bookmark);
-                    // bookmark = !bookmark;
-                    // setDiaryInfo({bokkmark} => !bookmark);
+                    fetchUpdateSubscribeStatus(diaryInfo.subscribe);
+                    // setDiaryInfo({subscribe} => !prev.subscribe);
                   }}
-                  fill={bookmark ? 'var(--main-color)' : 'var(--gray-color)'}
+                  fill={
+                    diaryInfo.subscribe
+                      ? 'var(--main-color)'
+                      : 'var(--gray-color)'
+                  }
                   stroke={
-                    bookmark ? 'var(--main-color)' : 'var(--gray800-color)'
+                    diaryInfo.subscribe
+                      ? 'var(--main-color)'
+                      : 'var(--gray800-color)'
                   }
                   style={{ position: 'relative', top: '-1.5px' }}
                 />
               )}
               <img src="/assets/icons/more-vertical.svg" alt="more" />
-              {/* {bookmark ? 'bookmark true' : 'bookmark false'} */}
             </FlexDiv>
           </FlexDiv>
           <FlexDiv direction="column">
             <PickedItemList
               title="작성자"
               isIcon={false}
-              text={diaryInfo.userName}
+              type="text"
+              text={diaryInfo.name}
             />
-            <PickedItemList />
-            <PickedItemList />
+            <PickedItemList
+              title="질병/수술"
+              isIcon={true}
+              type="medical"
+              medicals={medicalList}
+            />
+            <PickedItemList
+              title="증상"
+              isIcon={true}
+              type="symptom"
+              symptoms={diaryHasSymptoms}
+              canModify={true}
+              color="light-pink"
+            />
           </FlexDiv>
           <FlexDiv>
             {/* <FlexDiv width="50%"> */}
@@ -136,28 +185,32 @@ const DiaryDetailPage = () => {
               시작일
             </DiaryDateSpan>
             <DiaryDateSpan width="35%">{diaryInfo.beginDate}</DiaryDateSpan>
-            <DiaryDateSpan width="15%">종료일</DiaryDateSpan>
+            <DiaryDateSpan width="15%" bold={true}>
+              종료일
+            </DiaryDateSpan>
             <DiaryDateSpan width="35%">
               {diaryInfo.endDate || '-'}
             </DiaryDateSpan>
-            {/* <span>시작일</span>
-              <span>{diaryInfo.beginDate}</span>
-            </FlexDiv>
-            <FlexDiv width="50%">
-              <span>종료일</span>
-              <span>{diaryInfo.endDate || '-'}</span>
-            </FlexDiv> */}
           </FlexDiv>
-          <FlexDiv>{diaryInfo.description}</FlexDiv>
-          <DiaryDateSpan>{diaryInfo.description}</DiaryDateSpan>
+          {/* <FlexDiv>{diaryInfo.description}</FlexDiv> */}
+          <DiaryDateSpan textAlign="start" padding="0 0.2em">
+            {diaryInfo.description || '일기장 설명이 없어요'}
+          </DiaryDateSpan>
         </DiaryInfoContainer>
 
-        <span
-          onClick={() => setShowGraph((prev) => !prev)}
-          style={{ cursor: 'pointer' }}
-        >
-          증상 추이 보기 {showGraph ? 'show' : 'no show'}
-        </span>
+        <FlexDiv height="1.25em" justify="end">
+          <DiaryDateSpan
+            onClick={() => setShowGraph((prev) => !prev)}
+            style={{ cursor: 'pointer' }}
+          >
+            증상 추이 보기
+            <img
+              src="/assets/icons/chevron-down.svg"
+              alt="show graph"
+              style={{ paddingLeft: '0.3em' }}
+            />
+          </DiaryDateSpan>
+        </FlexDiv>
         {showGraph && <BoxShad>'show'</BoxShad>}
 
         <StatusCalendar uid={'user12'} />

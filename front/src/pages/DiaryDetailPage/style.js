@@ -11,12 +11,12 @@ const DiaryInfoContainer = styled(BoxShad)`
 const DiaryInfoWrapper = styled.div``;
 
 const DiaryDateSpan = styled.span`
-  ${({ width, bold }) => css`
+  ${({ width, bold, textAlign, padding }) => css`
     width: ${width};
-    text-align: center;
+    text-align: ${textAlign || 'center'};
     font-weight: ${bold ? '700' : '400'};
     color: var(--icon-color);
-    padding-top: 1em;
+    padding: ${padding || '1em 0'};
   `}
 `;
 
