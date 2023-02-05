@@ -14,6 +14,37 @@ function BambooDetailPage() {
   const [bamboo, setbamboo] = useState([]);
   const [leaves, setleaves] = useState([]);
 
+  // 대나무 좋아요 post
+  const likeBamboo = async (bambooId) => {
+    try {
+      const res = await axios.post(
+        api.bamboo.postBambooLike(bambooId),
+        {
+          contentId: bambooId,
+        },
+        {
+          headers: { Authorization: localStorage.getItem('accessToken') },
+        }
+      );
+      console.log(res);
+      fetchBambooDetail();
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+
+  // 대나무 좋아요 취소 delete
+  const removeLikeBamboo = async (bambooId) => {
+    try {
+      const res = await axios.delete(api.bamboo.deleteBambooLike(bambooId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log(res);
+      fetchBambooDetail();
+    } catch (err) {
+      console.log(err.repsonse.data);
+    }
+  };
   // 대나무 상세보기 get
   const fetchBambooDetail = async () => {
     try {
@@ -65,6 +96,9 @@ function BambooDetailPage() {
           content={bamboo.content}
           leafCount={bamboo.leafCount}
           likeCount={bamboo.likeCount}
+          likeBamboo={likeBamboo}
+          removeLikeBamboo={removeLikeBamboo}
+          heart={bamboo.heart}
         />
         <TopDiv>
           <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
