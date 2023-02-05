@@ -12,6 +12,7 @@ import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.BambooErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
+import com.idle.imfine.service.Common;
 import com.idle.imfine.service.bamboo.impl.BambooServiceImpl;
 import com.idle.imfine.service.leaf.LeafService;
 import java.time.LocalDateTime;
@@ -31,6 +32,7 @@ public class LeafServiceImpl implements LeafService {
     private final UserRepository userRepository;
     private final BambooRepository bambooRepository;
     private final HeartRepository heartRepository;
+    private final Common common;
 
     @Override
     public void save(RequestLeafDto requestLeafDto) {
@@ -55,7 +57,7 @@ public class LeafServiceImpl implements LeafService {
         leafRepository.save(leaf);
         bamboo.setLeafCount(bamboo.getLeafCount() + 1);
         bambooRepository.save(bamboo);
-
+        common.saveNotification(user.getId(), leaf.getWriter().getId(), 4, leaf.getId());
     }
 
     @Override
