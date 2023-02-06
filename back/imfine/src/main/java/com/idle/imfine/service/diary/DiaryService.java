@@ -36,4 +36,6 @@ public interface DiaryService {
     List<ResponseDiaryPostPaper> getMyDiaryList(String uid);
 
     ResponsePutMedicalSymptomsDto getDiaryMedicalAndSymptom(long diaryId, String uid);
+
+    List<ResponseDiaryListDto> getDiarySubscribe(String uid);
 }
