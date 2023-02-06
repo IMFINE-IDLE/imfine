@@ -54,9 +54,8 @@ function DiaryCreatePage() {
         },
         { headers: { Authorization: localStorage.getItem('accessToken') } }
       );
-      console.log(res);
-      // navigate(`/diary/${res.data.data.diaryId}`);
-      navigate(`/diary/1`);
+
+      navigate(`/diary/${res.data.data}`);
     } catch (err) {
       console.error(err);
     }
@@ -70,16 +69,16 @@ function DiaryCreatePage() {
     });
   };
 
-  useEffect(() => {
-    console.log({
-      medicalId: medicalPick.id,
-      open: isOpen,
-      title: diaryInfo.title,
-      description: diaryInfo.description,
-      image: '1',
-      symptom: symptomPickList.map((symptom) => symptom.id),
-    });
-  }, [diaryInfo]);
+  // useEffect(() => {
+  //   console.log({
+  //     medicalId: medicalPick.id,
+  //     open: isOpen,
+  //     title: diaryInfo.title,
+  //     description: diaryInfo.description,
+  //     image: '1',
+  //     symptom: symptomPickList.map((symptom) => symptom.id),
+  //   });
+  // }, [diaryInfo]);
 
   return (
     <>
