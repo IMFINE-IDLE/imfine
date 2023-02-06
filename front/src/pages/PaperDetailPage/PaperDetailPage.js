@@ -1,11 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import api from '../../api/api';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItemDetail from '../../components/Paper/PaperItemDetail/PaperItemDetail';
-import { resDetail } from './tmp';
 import PaperComment from '../../components/Paper/PaperComment/PaperComment';
 import { BoxComment } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
@@ -28,7 +26,6 @@ function PaperDetailPage() {
 
   useEffect(() => {
     fetchPaperDetail();
-    // setPaperDetail(resDetail.data);
   }, []);
 
   // 일기 좋아요 등록
@@ -132,19 +129,17 @@ function PaperDetailPage() {
         likePaperDelete={likePaperDelete}
       />
       <BoxComment>
-        <div style={{ marginBottom: '1em' }}>
-          <FiMessageCircle />
-          <span> 댓글 {paperDetail?.comments?.length}개</span>
-          {paperDetail?.comments?.map((comment) => (
-            <PaperComment
-              comment={comment}
-              key={comment.commentId}
-              deleteComment={deleteComment}
-              likeComment={likeComment}
-              likeCommentDelete={likeCommentDelete}
-            />
-          ))}
-        </div>
+        <FiMessageCircle />
+        <span> 댓글 {paperDetail?.comments?.length}개</span>
+        {paperDetail?.comments?.map((comment) => (
+          <PaperComment
+            comment={comment}
+            key={comment.commentId}
+            deleteComment={deleteComment}
+            likeComment={likeComment}
+            likeCommentDelete={likeCommentDelete}
+          />
+        ))}
       </BoxComment>
       <CommentCreate createComment={createComment} />
     </>
