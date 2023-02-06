@@ -72,6 +72,7 @@ const StyledSelectbox = styled.div`
   width: ${(props) => props.width || '100%'};
   height: 3rem;
   border-radius: 8px;
+  margin-right: 0.5em;
   background: ${(props) =>
     'var(--' + props.color + '-color)' || 'var(--gray-color)'};
   cursor: pointer;

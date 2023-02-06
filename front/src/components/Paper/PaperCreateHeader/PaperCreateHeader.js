@@ -33,6 +33,11 @@ function PaperCreateHeader({ items }) {
   const [yearActive, setYearActive] = useState(false);
   const [yearSelected, setYearSelected] = useState(years[0]);
 
+  // 다이어리 정보 호출
+  const [diaries, setDiaries] = useState([]);
+  const [diariesActive, setDiariesActive] = useState(false);
+  const [diariesSelected, setDiariesSelected] = useState(diaries[0]);
+
   for (let y = now.getFullYear(); y >= 1930; y -= 1) {
     years.push(y);
   }
@@ -69,44 +74,45 @@ function PaperCreateHeader({ items }) {
         Text={'일기 작성'}
         TextColor={'icon'}
       />
-      <TopDiv>
-        <Title>
-          기록했던 <br /> 일기장을 꺼내보세요.
-        </Title>
-      </TopDiv>
-      <CenterDiv>
-        <DropDownR25
-          items={items}
-          active={active}
-          setActive={setActive}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      </CenterDiv>
-      <BottomDiv>
-        <DropDownR25
-          items={years}
-          active={yearActive}
-          setActive={setYearActive}
-          selected={yearSelected}
-          setSelected={setYearSelected}
-        />
-        <DropDownR25
-          items={months}
-          active={monthActive}
-          setActive={setMonthActive}
-          selected={monthSelected}
-          setSelected={setMonthSelected}
-        />
-        <DropDownR25
-          items={days}
-          active={dateActive}
-          setActive={setDateActive}
-          selected={dateSelected}
-          setSelected={setDateSelected}
-        />
-      </BottomDiv>
-      <BoxPaperDetail />
+      <BoxPaperDetail>
+        <TopDiv>
+          <Title>
+            기록했던 <br /> 일기장을 꺼내보세요.
+          </Title>
+        </TopDiv>
+        <CenterDiv>
+          <DropDownR25
+            items={items}
+            active={active}
+            setActive={setActive}
+            selected={selected}
+            setSelected={setSelected}
+          />
+        </CenterDiv>
+        <BottomDiv>
+          <DropDownR25
+            items={years}
+            active={yearActive}
+            setActive={setYearActive}
+            selected={yearSelected}
+            setSelected={setYearSelected}
+          />
+          <DropDownR25
+            items={months}
+            active={monthActive}
+            setActive={setMonthActive}
+            selected={monthSelected}
+            setSelected={setMonthSelected}
+          />
+          <DropDownR25
+            items={days}
+            active={dateActive}
+            setActive={setDateActive}
+            selected={dateSelected}
+            setSelected={setDateSelected}
+          />
+        </BottomDiv>
+      </BoxPaperDetail>
     </>
   );
 }
