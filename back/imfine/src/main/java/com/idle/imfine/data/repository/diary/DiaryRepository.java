@@ -22,7 +22,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByIdAndWriter(long diaryId, User user);
     List<Diary> findAllByWriterIn(List<User> users);
     List<Diary> findAllByWriter(User writer);
-    @Query("select distinct d from Diary d join fetch Paper p on p.diary=d join fetch d.diaryHasSymptoms Where d.id=:diaryId")
+    @Query("select distinct d from Diary d join fetch Paper p on p.diary=d join fetch DiaryHasSymptom dhs on dhs.diary=d Where d.id=:diaryId")
     Optional<Diary> findDiaryByIdFetchPaper(@Param("diaryId") long diaryId);
     @Query("select distinct d from Diary d join fetch d.diaryHasSymptoms join fetch d.writer join fetch d.medicalCode where d.id=:diaryId")
     Optional<Diary> findDiaryByIdFetchDetail(@Param("diaryId") long diaryId);

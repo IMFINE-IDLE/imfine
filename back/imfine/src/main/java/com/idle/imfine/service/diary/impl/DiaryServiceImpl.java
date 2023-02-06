@@ -155,20 +155,20 @@ public class DiaryServiceImpl implements DiaryService {
         for (DiaryHasSymptom symptom : diary.getDiaryHasSymptoms()) {
             recordDtos.add(ResponseSymptomChartRecordDto.builder()
                     .symptomName(symptom.getSymptom().getName())
-                    .responseDateScoreDtos(new ArrayList<>())
+                    .scores(new ArrayList<>())
                     .build());
             symptomIdByName.put(symptom.getSymptom().getName(), symptom.getId());
         }
 
         List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findPaperHasSymptomByPaperIn(
             diary.getPapers());
-
+        LOGGER.info("가져온거 사이즈 {}", symptoms.size());
         for (Paper paper : diary.getPapers()) {
             for (PaperHasSymptom paperHasSymptom : symptoms) {
                 for (ResponseSymptomChartRecordDto recordList : recordDtos) {
                     if (symptomIdByName.get(recordList.getSymptomName())
                         .equals(paperHasSymptom.getSymptomId())) {
-                        recordList.getResponseDateScoreDtos().add(ResponseDateScoreDto.builder()
+                        recordList.getScores().add(ResponseDateScoreDto.builder()
                                 .score(paperHasSymptom.getScore())
                                 .date(paper.getDate())
                                 .build());
@@ -186,7 +186,7 @@ public class DiaryServiceImpl implements DiaryService {
         Diary diary = diaryRepository.findById(diaryId)
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
-        Paper paper = paperRepository.getByDiaryAndDate(diary, common.convertDateType(date));
+        Paper paper = paperRepository.getByDiary_IdAndDate(diary.getId(), common.convertDateType(date));
 
         return ResponsePaperDto.builder()
                 .paperId(paper.getId())

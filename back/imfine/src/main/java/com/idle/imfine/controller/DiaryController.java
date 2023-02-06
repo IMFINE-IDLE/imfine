@@ -44,7 +44,7 @@ public class DiaryController {
         , @RequestParam(value = "symptom-id") List<Integer> symptomId
         , @RequestParam(value = "page") int page){
         String sort = tab.equals("popular") ? "subscribeCount" : "postedAt";
-        Pageable pageable = PageRequest.of(page, 10, Direction.DESC, sort);
+        Pageable pageable = PageRequest.of(page, 12, Direction.DESC, sort);
         List<ResponseDiaryListDto> responseDto = diaryService.getDiaryList(RequestDiaryFilterDto.builder()
                         .tab(tab)
                         .medicalId(medicalId)
