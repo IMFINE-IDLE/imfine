@@ -1,10 +1,9 @@
 import React from 'react';
-
+import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCreateHeader';
 function PaperCreate() {
   return (
     <div>
-      PaperCreate
-      <div>일기 작성 페이지</div>
+      <PaperCreateHeader />
     </div>
   );
 }

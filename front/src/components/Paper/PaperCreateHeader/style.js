@@ -5,6 +5,9 @@ import { InputGray } from '../../common/InputGray/InputGray';
 
 const BoxPaperDetail = styled(BoxNoShad)`
   min-height: 200px;
+  border-radius: 0px 0px 50px 50px;
+  padding: 1em 1em 1em 1em;
+  background-color: var(--main-color);
 `;
 
 const Title = styled.h1`
