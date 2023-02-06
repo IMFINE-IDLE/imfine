@@ -1,23 +1,37 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import api from '../../api/api';
+import instance from '../../api/instance';
+
+const setClientHeaders = (token) => {
+  axios.interceptors.request.use(function (config) {
+    config.headers.Authorization = `${token}`;
+    return config;
+  });
+};
 
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post(api.user.signUp(), userData);
+      const res = await axios.post(api.user.signUp(), userData, {
+        withCredentials: true,
+      });
       console.log(res.data);
-      const { uid, accessToken, refreshToken } = res.data.data;
-      const saveData = {
-        uid: userData.uid,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-      };
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
-      // console.log(accessToken);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
+      const accessToken = res.data.data.accessToken;
+      // setCookie('accessToken')
+
+      setClientHeaders(accessToken);
+      // const { uid, accessToken, refreshToken } = res.data.data;
+      // const saveData = {
+      //   uid: userData.uid,
+      //   accessToken: accessToken,
+      //   refreshToken: refreshToken,
+      // };
+      // axios.defaults.headers.common['Authorization'] = `${accessToken}`;
+      // // console.log(accessToken);
+      // localStorage.setItem('accessToken', accessToken);
+      // localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('uid', userData.uid);
       const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
       setInterval(logOut, JWT_EXPIRATION_TIME);
