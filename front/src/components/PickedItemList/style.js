@@ -7,6 +7,7 @@ const PickedTitle = styled.span`
   font-weight: 800;
   text-align: center;
   width: 20%;
+  min-width: 5em;
 `;
 
 const PickedDivision = styled.span`
