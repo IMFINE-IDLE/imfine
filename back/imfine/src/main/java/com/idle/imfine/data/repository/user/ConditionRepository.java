@@ -21,6 +21,6 @@ public interface ConditionRepository extends JpaRepository<Condition, Long> {
 
     boolean existsByUserAndDate(User user, LocalDate date);
 
-    @Query("select new map (c.id as id, c.condition) from Condition c where c.date=:now and c.user in :commentUsers")
+    @Query("select new map (c.id as id, c.condition) from Condition c where c.date=:now and c.user.id in :commentUsers")
     Map<Long, Integer> findConditionsByDateAndUserIn(@Param("now") LocalDate now, @Param("commentUsers") List<Long> commentsUsers);
 }
