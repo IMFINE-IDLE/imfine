@@ -120,6 +120,11 @@ public class DiaryServiceImpl implements DiaryService {
                     .symptomName(forEachHasSyomptom.getSymptom().getName())
                     .build());
         }
+        List<ResponseMedicalListDto> medicals = new ArrayList<ResponseMedicalListDto>();
+        medicals.add(ResponseMedicalListDto.builder()
+                .medicalId(foundDiary.getMedicalCode().getId())
+                .medicalName(foundDiary.getMedicalCode().getName())
+                .build());
 
         return ResponseDiaryDetailDto.builder()
                 .userId(foundDiary.getWriter().getId())
@@ -129,7 +134,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .isSubscribe(subscribeRepository.existsByDiaryAndUserId(foundDiary, user.getId()))
                 .description(foundDiary.getDescription())
                 .name(foundDiary.getWriter().getName())
-                .medicalName(foundDiary.getMedicalCode().getName())
+                .medicals(medicals)
                 .beginDate(
                         foundDiary.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .endedDate(foundDiary.getEndedAt() != null ? foundDiary.getEndedAt()
@@ -267,6 +272,7 @@ public class DiaryServiceImpl implements DiaryService {
             diary -> ResponseDiaryListDto.builder()
                 .diaryId(diary.getId())
                 .title(diary.getTitle())
+                .medicalName(diary.getMedicalCode().getName())
                 .name(diary.getWriter().getName())
                 .image(diary.getImage())
                 .subscribeCount(diary.getSubscribeCount())

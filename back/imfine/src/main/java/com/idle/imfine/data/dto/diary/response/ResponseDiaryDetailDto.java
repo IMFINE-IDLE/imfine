@@ -1,6 +1,7 @@
 package com.idle.imfine.data.dto.diary.response;
 
 
+import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import java.util.List;
@@ -20,7 +21,7 @@ public class ResponseDiaryDetailDto {
     private String title;
     private String description;
     private String name;
-    private String medicalName;
+    private List<ResponseMedicalListDto> medicals;
     private String beginDate;
     private String endedDate;
     private boolean isSubscribe;
