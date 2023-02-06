@@ -90,14 +90,14 @@ public class PaperServiceImpl implements PaperService {
         diary.paperAdd();
         diary.setPostedAt(LocalDateTime.now());
 
-        Stream<Image> saveImage = storeImageFiles.stream().map(
+        List<Image> saveImage = storeImageFiles.stream().map(
                 path ->  Image.builder()
                         .paperId(savedPaper.getId())
                         .path(path.getStoreFileName())
                         .build()
-        );
-        if (saveImage.count() != 0){
-            imageRepository.saveAll(saveImage.collect(Collectors.toList()));
+        ).collect(Collectors.toList());
+        if (saveImage.size() != 0){
+            imageRepository.saveAll(saveImage);
         }
         Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
             symptomRecord -> PaperHasSymptom.builder()
