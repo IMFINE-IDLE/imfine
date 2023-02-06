@@ -1,5 +1,5 @@
-// const URL = 'http://localhost:8080';
-const URL = 'http://i8A809.p.ssafy.io:8080';
+const URL = 'http://localhost:8080';
+// const URL = 'http://i8A809.p.ssafy.io:8080';
 
 const USERS = '/user';
 const DIARY = '/diary';
@@ -16,6 +16,7 @@ const api = {
     checkName: (params) => URL + USERS + `/check/name/${params}`,
     checkEmail: (params) => URL + USERS + `/check/email/${params}`,
     login: () => URL + USERS + '/sign-in',
+    logout: () => URL + USERS + '/sign-out',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },

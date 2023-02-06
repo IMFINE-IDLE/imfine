@@ -24,21 +24,21 @@ export const signUp = createAsyncThunk(
       console.log(res.data);
       const accessToken = res.data.data.accessToken;
 
-      // 쿠키 세팅 테스트
-      setCookie('accessToken', accessToken, {
-        path: '/',
-        // httpOnly: true,
-        // secure: true,
-      });
+      // // 쿠키 세팅 테스트
+      // setCookie('accessToken', accessToken, {
+      //   path: '/',
+      //   // httpOnly: true,
+      //   // secure: true,
+      // });
 
-      // axios.defaults.headers.common['Authorization'] = getCookie('accessToken');
+      // // axios.defaults.headers.common['Authorization'] = getCookie('accessToken');
 
-      // axios interceptor
-      setClientHeaders(accessToken);
+      // // axios interceptor
+      // setClientHeaders(accessToken);
 
       const saveData = {
         uid: userData.uid,
-        accessToken: accessToken,
+        // accessToken: accessToken,
         // refreshToken: refreshToken,
       };
 
@@ -90,7 +90,21 @@ export const logIn = createAsyncThunk(
   }
 );
 
-export const logOut = createAsyncThunk('user/logOut', async () => {});
+export const logOut = createAsyncThunk(
+  'user/logOut',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const resLogout = await axios.post(api.user.logout(), {
+        withCredentials: true,
+      });
+      console.log(resLogout);
+      return resLogout;
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',
@@ -119,6 +133,15 @@ const userSlice = createSlice({
         state.uid = action.payload.uid;
       })
       .addCase(logIn.rejected, (state, action) => {
+        console.log(action.payload.response.data);
+      })
+      .addCase(logOut.fulfilled, (state, action) => {
+        state.isLogin = false;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.uid = null;
+      })
+      .addCase(logOut.rejected, (state, action) => {
         console.log(action.payload.response.data);
       });
   },

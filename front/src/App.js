@@ -16,6 +16,7 @@ import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
 import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
+import LogOutPage from './pages/LogOutPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -34,6 +35,7 @@ function App() {
       <Route index element={<PaperFeedPage />} />
       {/* <Route index element={<Login />} /> */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/logout" element={<LogOutPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/home" element={<PaperFeedPage />} />
       <Route path="/diary">
