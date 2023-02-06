@@ -11,7 +11,7 @@ import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 function BambooFeedPage() {
   const [responseAll, setResponseAll] = useState({});
   const [searchFilter, setSearchFilter] = useState('latest');
-
+  const [mySearchFilter, setMySearchFilter] = useState('write');
   // 필터링 타입 props로 설정 필요...
   const fetchBambooFeed = async () => {
     try {
@@ -25,8 +25,22 @@ function BambooFeedPage() {
     }
   };
 
+  // 내가 쓴 대나무 관련 글들 get
+  const fetchMyBambooFeed = async () => {
+    try {
+      const res = await axios.get(api.bamboo.getMyBambooFeed(mySearchFilter), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log('response확인', res.data);
+      setResponseAll(res.data);
+    } catch (err) {
+      console.log('err occured', err);
+    }
+  };
+
   useEffect(() => {
     fetchBambooFeed();
+    fetchMyBambooFeed();
   }, []);
 
   const myRes = {
@@ -50,7 +64,11 @@ function BambooFeedPage() {
       tabName: '모두보기',
       tabContent: <BoxBamboo res={responseAll} />,
     },
-    { idx: 1, tabName: '나의활동', tabContent: <BoxBamboo res={myRes} /> },
+    {
+      idx: 1,
+      tabName: '나의활동',
+      tabContent: <BoxBamboo res={responseAll} />,
+    },
   ];
   return (
     <>
