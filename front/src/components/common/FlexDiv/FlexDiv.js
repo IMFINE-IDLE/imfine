@@ -9,6 +9,7 @@ export const FlexDiv = styled.div`
     align,
     direction,
     wrap,
+    gap,
     padding,
     margin,
   }) => css`
@@ -17,6 +18,7 @@ export const FlexDiv = styled.div`
     justify-content: ${justify || 'center'};
     align-items: ${align || 'center'};
     flex-wrap: ${wrap || 'nowrap'};
+    gap: ${gap || '0'};
     width: ${width || '100%'};
     height: ${height || '100%'};
     padding: ${padding || '0'};
