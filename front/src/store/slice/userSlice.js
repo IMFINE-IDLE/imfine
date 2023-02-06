@@ -1,13 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import api from '../../api/api';
-import instance from '../../api/instance';
-import { getCookie, setCookie } from '../../utils/cookie';
 
 export const setClientHeaders = (token) => {
   axios.interceptors.request.use(function (config) {
     config.withCredentials = true;
-    config.headers.Authorization = token;
+    // config.headers.Authorization = token;
     return config;
   });
 };
@@ -22,7 +20,7 @@ export const signUp = createAsyncThunk(
         withCredentials: true,
       });
       console.log(res.data);
-      const accessToken = res.data.data.accessToken;
+      // const accessToken = res.data.data.accessToken;
 
       // // 쿠키 세팅 테스트
       // setCookie('accessToken', accessToken, {
@@ -61,21 +59,21 @@ export const logIn = createAsyncThunk(
       const resLogin = await axios.post(api.user.login(), userData, {
         withCredentials: true,
       });
-
-      const { accessToken } = resLogin.data.data;
+      console.log(resLogin);
+      // const { accessToken } = resLogin.data.data;
 
       // axios interceptor
-      setClientHeaders(accessToken);
+      // setClientHeaders(accessToken);
 
-      setCookie('accessToken', accessToken, {
-        path: '/',
-        // httpOnly: true,
-        // secure: true,
-      });
+      // setCookie('accessToken', accessToken, {
+      //   path: '/',
+      //   // httpOnly: true,
+      //   // secure: true,
+      // });
 
       const saveData = {
         uid: userData.uid,
-        accessToken,
+        // accessToken,
         // refreshToken,
       };
 
@@ -85,6 +83,7 @@ export const logIn = createAsyncThunk(
 
       return saveData;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err);
     }
   }
