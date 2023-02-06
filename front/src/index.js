@@ -7,25 +7,25 @@ import { IconContext } from 'react-icons';
 import { Provider } from 'react-redux';
 import store from './store';
 import axios from 'axios';
-import { CookiesProvider } from 'react-cookie';
+import { onSilentRefresh } from './store/slice/userSlice';
 
 axios.defaults.withCredentials = true;
+onSilentRefresh();
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
-  <CookiesProvider>
-    <BrowserRouter>
-      <Provider store={store}>
-        <GlobalStyle />
-        <IconContext.Provider
-          value={{
-            style: iconStyle,
-          }}
-        >
-          <App />
-        </IconContext.Provider>
-      </Provider>
-    </BrowserRouter>
-  </CookiesProvider>
+  <BrowserRouter>
+    <Provider store={store}>
+      <GlobalStyle />
+      <IconContext.Provider
+        value={{
+          style: iconStyle,
+        }}
+      >
+        <App />
+      </IconContext.Provider>
+    </Provider>
+  </BrowserRouter>
   // </React.StrictMode>,
 );

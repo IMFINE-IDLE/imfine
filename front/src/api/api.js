@@ -17,6 +17,7 @@ const api = {
     checkEmail: (params) => URL + USERS + `/check/email/${params}`,
     login: () => URL + USERS + '/sign-in',
     logout: () => URL + USERS + '/sign-out',
+    refresh: () => URL + USERS + '/refresh',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },

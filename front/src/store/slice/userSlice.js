@@ -10,7 +10,14 @@ export const setClientHeaders = (token) => {
   });
 };
 
-// axios.defaults.headers.common['Authorization'] = getCookie('accessToken');
+export const onSilentRefresh = async () => {
+  try {
+    const refresh = await axios.post(api.user.refresh());
+    console.log(refresh);
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 export const signUp = createAsyncThunk(
   'user/signUp',
@@ -42,8 +49,8 @@ export const signUp = createAsyncThunk(
 
       localStorage.setItem('uid', userData.uid);
 
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
-      setInterval(logOut, JWT_EXPIRATION_TIME);
+      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000; // 30분
+      setInterval(onSilentRefresh, JWT_EXPIRATION_TIME - 60000); // accessToken 만료되기 1분전 로그인 연장
 
       return saveData;
     } catch (err) {
@@ -60,28 +67,19 @@ export const logIn = createAsyncThunk(
         withCredentials: true,
       });
       console.log(resLogin);
-      // const { accessToken } = resLogin.data.data;
 
       // axios interceptor
       // setClientHeaders(accessToken);
 
-      // setCookie('accessToken', accessToken, {
-      //   path: '/',
-      //   // httpOnly: true,
-      //   // secure: true,
-      // });
-
-      const saveData = {
-        uid: userData.uid,
-        // accessToken,
-        // refreshToken,
-      };
+      // const saveData = {
+      //   uid: userData.uid,
+      // };
 
       localStorage.setItem('uid', userData.uid);
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
-      setInterval(logOut, JWT_EXPIRATION_TIME);
+      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000; // 30분
+      setInterval(onSilentRefresh, JWT_EXPIRATION_TIME - 60000); // accessToken 만료되기 1분전 로그인 연장
 
-      return saveData;
+      return userData.uid;
     } catch (err) {
       console.log(err);
       return rejectWithValue(err);
@@ -108,9 +106,9 @@ export const logOut = createAsyncThunk(
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    isLogin: false,
-    accessToken: '',
-    refreshToken: '',
+    // isLogin: false,
+    // accessToken: '',
+    // refreshToken: '',
     uid: '',
   },
   reducers: {},
@@ -118,8 +116,8 @@ const userSlice = createSlice({
     builder
       .addCase(signUp.fulfilled, (state, action) => {
         state.isLogin = true;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
+        // state.accessToken = action.payload.accessToken;
+        // state.refreshToken = action.payload.refreshToken;
         state.uid = action.payload.uid;
       })
       .addCase(signUp.rejected, (state, action) => {
@@ -127,8 +125,8 @@ const userSlice = createSlice({
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.isLogin = true;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
+        // state.accessToken = action.payload.accessToken;
+        // state.refreshToken = action.payload.refreshToken;
         state.uid = action.payload.uid;
       })
       .addCase(logIn.rejected, (state, action) => {
@@ -136,8 +134,8 @@ const userSlice = createSlice({
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.isLogin = false;
-        state.accessToken = null;
-        state.refreshToken = null;
+        // state.accessToken = null;
+        // state.refreshToken = null;
         state.uid = null;
       })
       .addCase(logOut.rejected, (state, action) => {
