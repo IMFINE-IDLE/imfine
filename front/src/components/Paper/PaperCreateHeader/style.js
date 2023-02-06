@@ -26,6 +26,24 @@ const TopDiv = styled.div`
   background-color: var(--main-color);
 `;
 
+const SelectContainer = styled.select`
+  position: relative;
+  width: 100%;
+  height: 3em;
+  border-radius: 8px;
+  background: var(--gray-color);
+  cursor: pointer;
+  border-width: 0;
+`;
+
+const Options = styled.option`
+  box-sizing: border-box;
+  list-style-type: none;
+  width: 100%;
+  border-radius: 25px;
+  background: #f8faf9;
+  margin-top: 1em;
+`;
 const CenterDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -34,10 +52,19 @@ const CenterDiv = styled.div`
   background-color: var(--main-color);
 `;
 
-const bottomDiv = styled.div`
+const BottomDiv = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+  padding: 1em;
 `;
 
-export { BoxPaperDetail, Title, TopDiv, CenterDiv, bottomDiv };
+export {
+  BoxPaperDetail,
+  Title,
+  TopDiv,
+  CenterDiv,
+  BottomDiv,
+  SelectContainer,
+  Options,
+};

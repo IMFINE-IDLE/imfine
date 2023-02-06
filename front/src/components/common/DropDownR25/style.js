@@ -31,6 +31,8 @@ const StyledOptionList = styled.ul`
 `;
 
 const StyledOptionItem = styled.li`
+  position: relative;
+  z-index: 1;
   border-radius: 25px;
   box-sizing: border-box;
   padding: 1.5em;
