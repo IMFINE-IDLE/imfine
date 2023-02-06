@@ -54,6 +54,12 @@ public class DiaryController {
         LOGGER.info("왜 안되는 거지{}", pageable);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
+    @GetMapping("/subscribe")
+    public ResponseEntity<Result> getDiarySubscribe(@LoginUser String uid) {
+        LOGGER.info("내가 구독한 일기장 조회 api들어옴 {}", uid);
+        List<ResponseDiaryListDto> responseDto = diaryService.getDiarySubscribe(uid);
+        return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
+    }
 
     @GetMapping("/{diary-id}")
     public ResponseEntity<Result> getDiaryDetail(@PathVariable(value = "diary-id") long diaryId, @LoginUser String uid) {

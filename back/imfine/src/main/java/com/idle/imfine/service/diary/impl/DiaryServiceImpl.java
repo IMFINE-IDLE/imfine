@@ -380,4 +380,11 @@ public class DiaryServiceImpl implements DiaryService {
                 ).collect(Collectors.toList()))
                 .build();
     }
+
+    @Override
+    public List<ResponseDiaryListDto> getDiarySubscribe(String uid) {
+        User user = common.getUserByUid(uid);
+        List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(user);
+        return null;
+    }
 }
