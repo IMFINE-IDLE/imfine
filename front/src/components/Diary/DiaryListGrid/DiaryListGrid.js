@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import DiaryItem from '../DiaryItem/DiaryItem';
 
 const DiaryListGrid = ({ type, medicalIds, symptomIds }) => {
+  const navigate = useNavigate();
   const [diaryList, setDiaryList] = useState([]);
 
   // 일기장 목록 가져오기
