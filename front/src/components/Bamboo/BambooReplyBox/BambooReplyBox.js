@@ -18,7 +18,7 @@ function BambooReplyBox({ replyBamboo }) {
         type="submit"
         onClick={(e) => {
           e.preventDefault();
-          if (inputValue.length > 1) {
+          if (inputValue.length >= 1) {
             replyBamboo(inputValue);
             setInputValue('');
           } else {

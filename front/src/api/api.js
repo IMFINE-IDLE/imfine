@@ -56,6 +56,7 @@ const api = {
   },
   diary: {
     postDiary: () => URL + DIARY,
+    getDiaryList: () => URL + DIARY + '/list',
     getDiaryInfo: (params) => URL + DIARY + `/${params}`,
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,

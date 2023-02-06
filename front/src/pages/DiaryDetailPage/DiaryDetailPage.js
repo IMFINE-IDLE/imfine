@@ -176,7 +176,7 @@ const DiaryDetailPage = () => {
               isIcon={true}
               type="symptom"
               symptoms={diaryHasSymptoms}
-              canModify={true}
+              canModify={false}
               color="light-pink"
             />
           </FlexDiv>
