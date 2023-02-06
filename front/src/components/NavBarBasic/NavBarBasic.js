@@ -26,7 +26,7 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text, path }) {
           <Title display="none">{Text}</Title>
         </NavItem>
         <NavItem>
-          <NavLink to="/">
+          <NavLink to="/search">
             <BiSearch />
           </NavLink>
         </NavItem>
