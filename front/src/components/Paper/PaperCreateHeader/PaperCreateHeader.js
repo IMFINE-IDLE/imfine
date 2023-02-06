@@ -13,7 +13,7 @@ import DropDownR25 from '../../common/DropDownR25/DropDownR25';
 function PaperCreateHeader({ items }) {
   const [active, setActive] = useState(false);
   const [selected, setSelected] = useState(items[0]);
-
+  console.log('response', items);
   const now = new Date();
 
   const [form, setForm] = useState({
