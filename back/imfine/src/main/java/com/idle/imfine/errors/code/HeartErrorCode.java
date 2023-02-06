@@ -6,10 +6,9 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CommentErrorCode implements ErrorCode {
-
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 댓글입니다."),
-    COMMENT_ACCESS_DENIED(HttpStatus.UNAUTHORIZED, "접근이 거부되었습니다")
+public enum HeartErrorCode implements ErrorCode {
+    HEART_NOT_FOUND(HttpStatus.CONFLICT, "좋아요가 이미 존재합니다."),
+    HEART_DELETE_CONFLICT(HttpStatus.NOT_FOUND, "좋아요가 존재하지 않습니다.")
     ;
     private final HttpStatus httpStatus;
     private final String message;

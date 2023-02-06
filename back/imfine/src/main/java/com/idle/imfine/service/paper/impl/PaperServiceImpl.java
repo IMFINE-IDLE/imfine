@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -156,8 +157,9 @@ public class PaperServiceImpl implements PaperService {
                 .contentsId(requestHeartDto.getContentId())
                 .senderId(user.getId())
                 .build();
-        heartRepository.save(heart);
         foundPaper.addLikeCount();
+        paperRepository.save(foundPaper);
+        heartRepository.save(heart);
     }
 
     @Override
@@ -208,6 +210,27 @@ public class PaperServiceImpl implements PaperService {
         List<Comment> myHeartComment = commentRepository.findCommentByHeartAndPaperIn(
                     paper.getId(), 3,
                     user);
+        List<Comment> paperComments = commentRepository.findCommentsByFetchWriterAndPaperId(
+                paperId);
+        List<Long> commentsUsers = paperComments.stream().map(Comment::getId).collect(Collectors.toList());
+        Map<Long, Integer> commentConditions = conditionRepository.findConditionsByDateAndUserIn(LocalDate.now(), commentsUsers);
+        List<ResponseCommentDto> comments = paperComments.stream().map(
+                comment -> ResponseCommentDto.builder()
+                        .commentId(comment.getId())
+                        .userId(comment.getWriter().getId())
+                        .uid(comment.getWriter().getUid())
+                        .name(user.getName())
+                        .likeCount(comment.getLikeCount())
+                        .declarationCount(comment.getDeclarationCount())
+                        .content(comment.getContent())
+                        .myHeart(myHeartComment.stream().anyMatch(
+                                heartComment -> heartComment.getId() == comment.getId()
+                        ))
+                        .createdAt(common.convertDateAllType(comment.getCreatedAt()))
+                        .userStatus(comment.getWriter().getId() == user.getId() ? 0 : 1)
+                        .condition(String.valueOf(commentConditions.getOrDefault(comment.getWriter().getId(), 0)))
+                        .build()
+        ).collect(Collectors.toList());
         return ResponsePaperDetailDto.builder()
                 .diaryId(paperDiary.getId())
                 .title(paperDiary.getTitle())
@@ -227,22 +250,7 @@ public class PaperServiceImpl implements PaperService {
                 ).collect(Collectors.toList()))
                 .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(
                         user.getId(), 2, paper.getId()))
-                .comments(paper.getComments().stream().map(
-                        comment -> ResponseCommentDto.builder()
-                                .commentId(comment.getId())
-                                .userId(comment.getWriter().getId())
-                                .uid(comment.getWriter().getUid())
-                                .name(user.getName())
-                                .likeCount(comment.getLikeCount())
-                                .declarationCount(comment.getDeclarationCount())
-                                .content(comment.getContent())
-                                .myHeart(myHeartComment.stream().anyMatch(
-                                        heartComment -> heartComment.getId() == comment.getId()
-                                ))
-                                .createdAt(common.convertDateAllType(comment.getCreatedAt()))
-                                .userStatus(comment.getWriter().getId() == user.getId() ? 0 : 1)
-                                .build()
-                ).collect(Collectors.toList()))
+                .comments(comments)
                 .build();
 
     }

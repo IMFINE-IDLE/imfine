@@ -11,5 +11,5 @@ public interface CommentService {
 
     void postCommentLike(RequestHeartDto requestHeartDto, String uid);
 
-    void deleteCommentLike(RequestHeartDto commentId, String uid);
+    void deleteCommentLike(RequestHeartDto requestHeartDto, String uid);
 }
