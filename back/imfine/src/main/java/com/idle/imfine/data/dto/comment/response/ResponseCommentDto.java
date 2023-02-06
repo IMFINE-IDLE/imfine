@@ -20,4 +20,6 @@ public class ResponseCommentDto {
     private String createdAt;
     private boolean myHeart;
     private int userStatus;
+    private String condition;
+    
 }
