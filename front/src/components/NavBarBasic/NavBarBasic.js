@@ -1,16 +1,19 @@
+import React from 'react';
 import { NavBar, NavItem, Logo, Title, Search, Bell } from './style';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { BiChevronLeft, BiSearch, BiBell } from 'react-icons/bi';
-import React from 'react';
+import NavBarRightItem from './NavBarRightItem';
+function NavBarBasic({ BackgroundColor, TextColor, Back, Text }) {
+  // 작성예시 :
+  // <NavBarBasic Back={true} Text={'일기장 작성하기'} BackgroundColor={'icon'} TextColor={'gray'} />
 
-function NavBarBasic({ BackgroundColor, TextColor, Back, Text, path }) {
+  // ** [0209] ** 기존 props의 path값은 삭제되었습니다.
+
   // Back: boolean parameter
   // Back == false면 로고있는 네비게이션 바
-  // Back == true면 backbutton 있는 네비게이션 바
-  // <NavBarBasic Back={true} Text={'네비게이션 바 타이틀 값'} />
-  // path는 추후 페이지 연결시 지정하는 경로로 넘겨줄 값
-
-  // BackgroundColor : 네비게이션 바 배경색상
+  // Back == true면 뒤로가기버튼있는 네비게이션 바
+  // Text = 네비게이션 바 타이틀 값
+  // BackgroundColor : 네비게이션 바 배경색상 (default: var(--gray-color))
   // TextColor : 타이틀이 있는 네비게이션의 경우, props로 컬러변경 (default: var(--icon-color))
 
   const navigate = useNavigate();
@@ -25,16 +28,7 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text, path }) {
         <NavItem justify="center">
           <Title display="none">{Text}</Title>
         </NavItem>
-        <NavItem>
-          <NavLink to="/">
-            <BiSearch />
-          </NavLink>
-        </NavItem>
-        <NavItem right="1em">
-          <NavLink to="/">
-            <BiBell />
-          </NavLink>
-        </NavItem>
+        <NavBarRightItem />
       </NavBar>
     );
   } else {
@@ -51,16 +45,7 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text, path }) {
         <NavItem>
           <Title color={TextColor}>{Text}</Title>
         </NavItem>
-        <NavItem>
-          <NavLink to="/">
-            <BiSearch />
-          </NavLink>
-        </NavItem>
-        <NavItem right="1em">
-          <NavLink to="/">
-            <BiBell />
-          </NavLink>
-        </NavItem>
+        <NavBarRightItem />
       </NavBar>
     );
   }
