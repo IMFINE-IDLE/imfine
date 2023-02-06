@@ -57,7 +57,7 @@ public class PaperController {
     @PutMapping
     public ResponseEntity<Result> putPaper(@RequestBody RequestPaperPutDto requestPaperPutDto, @LoginUser String uid){
         paperService.modifyPaper(requestPaperPutDto, uid);
-        LOGGER.info("일기 수정 {}, {}", requestPaperPutDto, requestPaperPutDto.getSymptoms().get(0).getSymptomId());
+        LOGGER.info("일기 수정 {}, {}", requestPaperPutDto, requestPaperPutDto.getSymptomList().get(0).getSymptomId());
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 

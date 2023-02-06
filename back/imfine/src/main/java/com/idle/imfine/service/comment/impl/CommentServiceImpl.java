@@ -41,6 +41,7 @@ public class CommentServiceImpl implements CommentService {
                         .paperId(requestContentRegistraitionDto.getPaperId())
                 .build());
         paper.setCommentCount(paper.getCommentCount() + 1);
+        paperRepository.save(paper);
     }
 
     @Override
@@ -57,6 +58,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.delete(comment);
         paper.setCommentCount(paper.getCommentCount() - 1);
+        paperRepository.save(paper);
     }
 
     @Override
@@ -75,6 +77,7 @@ public class CommentServiceImpl implements CommentService {
                 .contentsId(requestHeartDto.getContentId())
                 .build());
         comment.setLikeCount(comment.getLikeCount() + 1);
+        commentRepository.save(comment);
     }
 
     @Override
