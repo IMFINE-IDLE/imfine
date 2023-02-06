@@ -4,29 +4,36 @@ import axios from 'axios';
 import Calendar from 'react-calendar';
 import moment from 'moment';
 
-import api from '../../api/api';
-import { BoxShad } from '../common/BoxShad/BoxShad';
-import { Clover } from '../common/Clover/Clover';
 import 'react-calendar/dist/Calendar.css';
 import './style.css';
 
+import api from '../../api/api';
+import CloverModal from '../TabBar/CloverModal';
+import { BoxShad } from '../common/BoxShad/BoxShad';
+import { Clover } from '../common/Clover/Clover';
+import { CalendarStatusModifyBtn } from './style';
+
 const StatusCalendar = ({ uid }) => {
-  const state = useSelector((state) => state);
+  // 클로버 모달 관련 state
+  const [currentClover, setCurrentClover] = useState('');
+  const [cloversOpen, setCloversOpen] = useState(true);
+  // 달력 관련 state
   const [value, onChange] = useState(new Date());
   const [monthCondition, setMonthCondition] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const params = {
-    uid,
-    date: moment(value).format('YYYY-MM'),
-  };
-
+  // 해당 달의 컨디션 정보 불러오기
   const fetchProfileCalendar = async () => {
     try {
       setError(null);
       setMonthCondition(null);
       setLoading(true);
+
+      const params = {
+        uid,
+        date: moment(value).format('YYYY-MM'),
+      };
 
       const res = await axios.get(api.profile.getMonthCondition(params), {
         headers: { Authorization: localStorage.getItem('accessToken') },
@@ -54,7 +61,7 @@ const StatusCalendar = ({ uid }) => {
 
   return (
     <div>
-      <BoxShad width="22.875em">
+      <BoxShad style={{ minWidth: '22.875em' }} height="auto">
         <Calendar
           onChange={onChange}
           value={value}
@@ -71,7 +78,7 @@ const StatusCalendar = ({ uid }) => {
           tileContent={({ date }) => {
             return (
               <Clover
-                code={monthCondition[moment(date).format('YYYY-MM-DD') || '-1']}
+                code={monthCondition[moment(date).format('D') || '-1']}
                 width="2.7em"
                 height="2.7em"
                 pointer={true}
@@ -79,7 +86,18 @@ const StatusCalendar = ({ uid }) => {
             );
           }}
         />
+        {cloversOpen && (
+          <CloverModal
+            currentClover={currentClover}
+            setCurrentClover={setCurrentClover}
+            setCloversOpen={setCloversOpen}
+            // style={{ position: 'relative', zIndex: '1', top: '-50%' }}
+          />
+        )}
       </BoxShad>
+      <CalendarStatusModifyBtn color="light" height="3em" margin="1em 0">
+        하루 컨디션 변경하기
+      </CalendarStatusModifyBtn>
     </div>
   );
 };
