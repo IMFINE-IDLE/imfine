@@ -130,15 +130,15 @@ public class PaperServiceImpl implements PaperService {
         paper.setContent(requestPaperPutDto.getContents());
         paper.setOpen(requestPaperPutDto.isOpen());
         List<PaperHasSymptom> symptoms = paper.getPaperHasSymptoms();
-
         for (PaperHasSymptom symptom : symptoms) {
-            for (ResponseSymptomRecordDto putSymptom : requestPaperPutDto.getSymptoms()) {
+            for (ResponseSymptomRecordDto putSymptom : requestPaperPutDto.getSymptomList()) {
                 if (symptom.getSymptomId() == putSymptom.getSymptomId()) {
                     symptom.setScore(putSymptom.getScore());
                     break;
                 }
             }
         }
+
     }
 
     @Transactional
@@ -261,6 +261,7 @@ public class PaperServiceImpl implements PaperService {
         User user = common.getUserByUid(uid);
         List<User> users = followRepository.findAllByFollowingUser(user)
                 .stream().map(Follow::getFollowedUser).collect(Collectors.toList());
+        users.add(user);
         List<Diary> diaries = diaryRepository.findAllByWriterIn(users);
         List<Diary> diaries1 = diaryRepository.findAllByUserId(user.getId());
 

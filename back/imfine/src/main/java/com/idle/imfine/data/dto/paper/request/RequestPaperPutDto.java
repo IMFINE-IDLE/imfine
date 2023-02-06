@@ -16,6 +16,6 @@ public class RequestPaperPutDto {
     private long paperId;
     private String contents;
     private boolean open;
-    private List<ResponseSymptomRecordDto> symptoms;
+    private List<ResponseSymptomRecordDto> symptomList;
     private List<String> images;
 }
