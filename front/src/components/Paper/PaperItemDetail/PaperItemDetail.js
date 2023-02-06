@@ -33,6 +33,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
       const res = await axios.delete(api.paper.paperDetail(paperId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
+      navigate('/home');
     } catch (err) {
       console.log(err.response.data.message);
     }
