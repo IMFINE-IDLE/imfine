@@ -11,22 +11,27 @@ const BoxPaperDetail = styled(BoxNoShad)`
 `;
 
 const Title = styled.h1`
-  color: var(--default-font-color);
+  color: var(--icon-color);
   font-weight: 700;
-  font-size: 1em;
+  font-size: 1.5em;
+  background-color: var(--main-color);
 `;
 
 const TopDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
+  line-height: 2.5em;
+  padding-left: 1.2em;
+  background-color: var(--main-color);
 `;
 
-const centerDiv = styled.div`
+const CenterDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1em;
+  padding: 1em;
+  background-color: var(--main-color);
 `;
 
 const bottomDiv = styled.div`
@@ -35,4 +40,4 @@ const bottomDiv = styled.div`
   align-items: center;
 `;
 
-export { BoxPaperDetail, Title, TopDiv, centerDiv, bottomDiv };
+export { BoxPaperDetail, Title, TopDiv, CenterDiv, bottomDiv };

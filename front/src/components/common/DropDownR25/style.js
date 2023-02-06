@@ -6,8 +6,6 @@ const activeExist = ({ active = true }) => {
 
 const StyledOptionList = styled.ul`
   box-sizing: border-box;
-  position: absolute;
-  top: 2.6rem;
   list-style-type: none;
   width: 100%;
   border-radius: 25px;
@@ -29,17 +27,19 @@ const StyledOptionList = styled.ul`
     width: 0;
     height: 0;
   }
+  margin-top: 1em;
 `;
 
 const StyledOptionItem = styled.li`
   border-radius: 25px;
   box-sizing: border-box;
-  padding: 20px 20px 20px 0;
+  padding: 1.5em;
   transition: 0.3s;
   background-color: #f8faf9;
   &:hover {
     background: #f8faf9;
   }
+  margin-top: 0.2em;
 `;
 
 const StyledSelectedLabel = styled.button`
@@ -51,7 +51,7 @@ const StyledSelectedLabel = styled.button`
   width: inherit;
   height: inherit;
   justify-content: left;
-  padding-left: 2.5rem;
+  padding-left: 1.5em;
   font-size: 16px;
   background-color: #f8faf9;
   background-size: 2rem;
@@ -67,10 +67,11 @@ const Dropdown = styled.img`
 
 const StyledSelectbox = styled.div`
   position: relative;
-  width: ${(props) => props.width || '1em'};
+  width: ${(props) => props.width || '100%'};
   height: 3rem;
   border-radius: 8px;
-  background: #ffffff;
+  background: ${(props) =>
+    'var(--' + props.color + '-color)' || 'var(--gray-color)'};
   cursor: pointer;
 `;
 

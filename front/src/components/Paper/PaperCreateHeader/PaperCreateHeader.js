@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { BoxPaperDetail, Title, TopDiv, centerDiv, bottomDiv } from './style';
+import { BoxPaperDetail, Title, TopDiv, CenterDiv, bottomDiv } from './style';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
-function PaperCreateHeader() {
+import DropDownR25 from '../../common/DropDownR25/DropDownR25';
+function PaperCreateHeader({ items }) {
+  console.log('aaaa', items);
+  const [active, setActive] = useState(true);
+  const [selected, setSelected] = useState(items[0]);
+
   return (
     <>
       <NavBarBasic
@@ -15,6 +20,15 @@ function PaperCreateHeader() {
           기록했던 <br /> 일기장을 꺼내보세요.
         </Title>
       </TopDiv>
+      <CenterDiv>
+        <DropDownR25
+          items={items}
+          active={active}
+          setActive={setActive}
+          selected={selected}
+          setSelected={setSelected}
+        />
+      </CenterDiv>
       <BoxPaperDetail />
     </>
   );
