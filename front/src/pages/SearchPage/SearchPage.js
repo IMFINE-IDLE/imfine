@@ -11,6 +11,7 @@ import { BigCircle } from '../PaperFeedPage/style';
 
 function SearchPage() {
   const dispatch = useDispatch();
+  const searchHistory = useSelector((state) => state.userInfo.searchHistory);
   const [isSearching, setIsSearching] = useState(false);
   const [query, setQuery] = useState(''); // 검색창에 검색하는 쿼리
   const [queryResult, setQueryResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
