@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { Clover } from '../../common/Clover/Clover';
 import {
@@ -12,6 +13,7 @@ import {
 
 const ProfileInfo = ({
   condition,
+  uid,
   name,
   open,
   followingCount,
@@ -19,6 +21,7 @@ const ProfileInfo = ({
   relation,
 }) => {
   const state = useSelector((state) => state);
+  const navigate = useNavigate();
 
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
@@ -51,16 +54,45 @@ const ProfileInfo = ({
           </ProfileNickNameWrapper>
 
           <div>
-            <ProfileItemSpan>팔로잉</ProfileItemSpan>
-            <ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  // state: { type: 'following', idx: 0 },
+                  state: 'following',
+                })
+              }
+            >
+              팔로잉
+            </ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  state: 'following',
+                })
+              }
+            >
               {followingCount >= 1000
                 ? parseInt(followingCount / 1000) + 'k'
                 : followingCount}
             </ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
-            <ProfileItemSpan>팔로워</ProfileItemSpan>
-            <ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  state: 'follower',
+                })
+              }
+            >
+              팔로워
+            </ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  state: 'follower',
+                })
+              }
+            >
               {followerCount >= 1000
                 ? parseInt(followerCount / 1000) + 'k'
                 : followerCount}

@@ -49,7 +49,7 @@ function App() {
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
       <Route path="/bamboo/:bambooId" element={<BambooDetailPage />}></Route>
-      <Route path="/profile/:name" element={<ProfilePage />}>
+      <Route path="/profile/:uid" element={<ProfilePage />}>
         <Route index element={<ProfileContent />} />
         <Route path="follows" element={<ProfileFollows />} />
       </Route>
