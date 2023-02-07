@@ -33,7 +33,8 @@ public class LeafServiceImpl implements LeafService {
     private final UserRepository userRepository;
     private final BambooRepository bambooRepository;
     private final HeartRepository heartRepository;
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
+    private final Common common;
 
     @Override
     public void save(RequestLeafDto requestLeafDto) {
@@ -58,7 +59,8 @@ public class LeafServiceImpl implements LeafService {
         leafRepository.save(leaf);
         bamboo.setLeafCount(bamboo.getLeafCount() + 1);
         bambooRepository.save(bamboo);
-//        common.saveNotification(user.getId(), leaf.getWriter().getId(), 4, leaf.getId());
+        LOGGER.info("{} {} {}", user.getId(), bamboo.getWriter().getId(), bamboo.getId());
+//        common.saveNotification(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId());
         notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId());
     }
 
@@ -84,7 +86,7 @@ public class LeafServiceImpl implements LeafService {
             heartRepository.save(heart);
             leaf.setLikeCount(leaf.getLikeCount() + 1);
             leafRepository.save(leaf);
-
+            notificationService.send(user.getId(), leaf.getWriter().getId(), 5, leaf.getId());
         }
     }
 
