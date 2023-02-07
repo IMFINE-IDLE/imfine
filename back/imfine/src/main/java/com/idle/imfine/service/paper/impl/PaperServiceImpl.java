@@ -222,7 +222,7 @@ public class PaperServiceImpl implements PaperService {
                         .commentId(comment.getId())
                         .userId(comment.getWriter().getId())
                         .uid(comment.getWriter().getUid())
-                        .name(user.getName())
+                        .name(comment.getWriter().getName())
                         .likeCount(comment.getLikeCount())
                         .declarationCount(comment.getDeclarationCount())
                         .content(comment.getContent())
