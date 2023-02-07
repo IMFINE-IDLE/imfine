@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import { DiaryItemSpan } from './style';
@@ -12,8 +13,13 @@ const DiaryItem = ({
   subscribeCount,
   title,
 }) => {
+  const navigate = useNavigate();
+
   return (
-    <div style={{ width: '30%' }}>
+    <div
+      style={{ width: '30%', cursor: 'pointer' }}
+      onClick={() => navigate(`/diary/${diaryId}`)}
+    >
       <BoxNoShad radius="20px 20px 0 0" color="gray" height="6em">
         <FlexDiv height="auto" align="start">
           <FlexDiv>

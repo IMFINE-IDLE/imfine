@@ -16,9 +16,6 @@ function ProfilePage() {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { accessToken } = useSelector((state) => {
-    return { accessToken: state.user.accessToken };
-  });
   const { name } = useParams();
 
   //////////////////////////
@@ -35,7 +32,7 @@ function ProfilePage() {
 
       // axios 요청
       const response = await axios.get(api.profile.getUserInfo(name), {
-        headers: { 'X-AUTH-TOKEN': accessToken },
+        headers: { Authorization: localStorage.getItem('accessToken') },
       });
 
       // response.data 안에 들어있는 data를 userInfo 에 저장
