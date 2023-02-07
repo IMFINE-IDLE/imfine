@@ -26,6 +26,7 @@ public class ResponsePaperDto {
     private String condition;
     private boolean myHeart;
     private boolean open;
+    private boolean hasNext;
     private String createdAt;
     List<String> images;
     List<ResponsePaperSymptomRecordDto> symptomList;

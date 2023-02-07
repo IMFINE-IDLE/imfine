@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface SymptomService {
 
-    @Query("select s from Symptom s where s.symptomCode.id=:id")
     List<ResponseSymptomViewDto> getSymptomList(@Param("id") int symptomCode);
 
     List<ResponseSymptomCodeDto> getSymptomCodeList();
