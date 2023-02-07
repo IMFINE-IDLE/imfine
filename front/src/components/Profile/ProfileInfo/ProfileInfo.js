@@ -16,19 +16,34 @@ const ProfileInfo = ({
   uid,
   name,
   open,
-  showFollows,
   followingCount,
   followerCount,
   relation,
 }) => {
-  const state = useSelector((state) => state);
+  const { cloverCode } = useSelector((state) => state.userInfo);
+  // console.log(cloverCode);
   const navigate = useNavigate();
-  const [type, setType] = useState('팔로잉');
+  // const [type, setType] = useState('팔로잉');
+
+  // const isMine = uid === localStorage.getItem('uid') ? true : false;
+  // if (isMine) {
+  //   const [code, setCode] = useState(cloverCode);
+  // } else {
+  //   const code = condition;
+  // }
+
+  const infoToFollowPage = {
+    name,
+    open,
+    followingCount,
+    followerCount,
+    condition,
+  };
 
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
       <ProfileInfoContainer>
-        <Clover code={state.userInfo.cloverCode} width="4.2em" height="4.2em" />
+        <Clover code={condition} width="4.2em" height="4.2em" />
 
         <ProfileInfoWrapper>
           <ProfileNickNameWrapper>
@@ -55,13 +70,11 @@ const ProfileInfo = ({
             </div>
           </ProfileNickNameWrapper>
 
-          {/* {showFollows && ( */}
           <div>
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  // state: { type: 'following', idx: 0 },
-                  state: '팔로잉',
+                  state: { ...infoToFollowPage, type: '팔로잉' },
                 })
               }
             >
@@ -70,7 +83,7 @@ const ProfileInfo = ({
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  state: '팔로잉',
+                  state: { ...infoToFollowPage, type: '팔로잉' },
                 })
               }
             >
@@ -83,7 +96,7 @@ const ProfileInfo = ({
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  state: '팔로워',
+                  state: { ...infoToFollowPage, type: '팔로워' },
                 })
               }
             >
@@ -92,7 +105,7 @@ const ProfileInfo = ({
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  state: '팔로워',
+                  state: { ...infoToFollowPage, type: '팔로워' },
                 })
               }
             >
@@ -101,7 +114,6 @@ const ProfileInfo = ({
                 : followerCount}
             </ProfileItemSpan>
           </div>
-          {/* )} */}
         </ProfileInfoWrapper>
       </ProfileInfoContainer>
     </BoxNoShad>
