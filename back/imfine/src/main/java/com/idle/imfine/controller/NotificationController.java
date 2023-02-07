@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -56,7 +57,7 @@ public class NotificationController {
     }
 
     @GetMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
-    public SseEmitter getNotification(@LoginUser String uid,
+    public SseEmitter getNotification(@LoginUser String uid, @RequestParam String token,
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         LOGGER.info("알람 리스트 api에 들어옴");
 //        List<ResponseNotification> responseNotificationList = notificationService.showList(uid, pageable);

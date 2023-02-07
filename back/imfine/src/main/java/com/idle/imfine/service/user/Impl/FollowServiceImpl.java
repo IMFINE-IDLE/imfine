@@ -7,6 +7,7 @@ import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.errors.code.FollowErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
+import com.idle.imfine.service.notification.NotificationService;
 import com.idle.imfine.service.user.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ public class FollowServiceImpl implements FollowService {
     private final Logger LOGGER = LoggerFactory.getLogger(FollowServiceImpl.class);
     private final Common common;
     private final FollowRepository followRepository;
+    private final NotificationService notificationService;
 
 
     @Override
@@ -58,6 +60,7 @@ public class FollowServiceImpl implements FollowService {
         common.increaseFollowingCount(user);
         common.increaseFollwerCount(other);
         followRepository.save(follow);
+        notificationService.send(user.getId(), other.getId(), 6, user.getId());
         LOGGER.info("팔로우가 완료되었습니다.");
     }
 
