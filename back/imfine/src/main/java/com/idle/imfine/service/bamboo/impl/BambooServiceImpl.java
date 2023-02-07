@@ -16,6 +16,7 @@ import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.BambooErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.bamboo.BambooService;
+import com.idle.imfine.service.notification.NotificationService;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
@@ -46,6 +47,7 @@ public class BambooServiceImpl implements BambooService {
     private final UserRepository userRepository;
     private final HeartRepository heartRepository;
     private final LeafRepository leafRepository;
+    private final NotificationService notificationService;
 
     @Override
     public void save(RequestBambooDto requestBamboo) {
@@ -202,6 +204,8 @@ public class BambooServiceImpl implements BambooService {
             heartRepository.save(heart);
             bamboo.setLikeCount(bamboo.getLikeCount() + 1);
             bambooRepository.save(bamboo);
+
+            notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId());
         }
     }
 

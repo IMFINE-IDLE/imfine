@@ -43,7 +43,7 @@ public class NotificationServiceImpl implements NotificationService {
         boolean isOpen = user.isOpen();
 
         for (Notification n : all) {
-            String userId = userRepository.getById(n.getId()).getUid();
+            String userId = userRepository.getById(n.getSenderId()).getName();
             if (n.getContentsCodeId() == 6 && !isOpen) {
                 ResponseNotification notification = ResponseNotification.builder()
                         .notificationId(n.getId())
@@ -72,7 +72,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public ResponseNotificationDetail showNotification(long notificationId) {
         Notification notification = notificationRepository.getById(notificationId);
-        String senderId = userRepository.getById(notification.getSenderId()).getUid();
+        String senderId = userRepository.getById(notification.getSenderId()).getName();
         ResponseNotificationDetail responseNotificationDetail = ResponseNotificationDetail.builder()
                 .contentsCodeId(notification.getContentsCodeId())
                 .contentsId(notification.getContentsId())
