@@ -37,9 +37,9 @@ function DropDownR25({
         {' '}
         {items
           .filter((item) => item !== selected)
-          .map((item) => (
+          .map((item, index) => (
             <StyledOptionItem
-              key={item} // map을 쓰기 위해서는 해당 방식으로 key가 주어져야함.
+              key={index} // map을 쓰기 위해서는 해당 방식으로 key가 주어져야함.
               onClick={() => {
                 setActive(false);
                 setSelected(item);

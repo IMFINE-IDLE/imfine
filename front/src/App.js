@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import DiaryCreatePage from './pages/DiaryCreatePage/DiaryCreatePage';
 import LoginPage from './pages/LoginPage/LoginPage';
-import PaperCreate from './pages/PaperCreate/PaperCreate';
+import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
 import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
@@ -43,7 +43,7 @@ function App() {
         <Route path=":diaryId" element={<DiaryDetailPage />} />
       </Route>
       <Route path="/paper">
-        <Route path="/paper/create" element={<PaperCreate />} />
+        <Route path="/paper/create" element={<PaperCreatePage />} />
         <Route path="/paper/:paperId" element={<PaperDetailPage />} />
       </Route>
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
