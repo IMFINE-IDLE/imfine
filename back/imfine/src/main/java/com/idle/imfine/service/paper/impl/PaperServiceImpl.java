@@ -74,7 +74,10 @@ public class PaperServiceImpl implements PaperService {
         Diary diary = diaryRepository.findById(requestPaperPostDto.getDiaryId())
                 .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
-        Paper exist = paperRepository.getByDiaryAndDate(diary, common.convertDateType(requestPaperPostDto.getDate()));
+
+        LOGGER.info("date : {} requestDate{}",  requestPaperPostDto.getDiaryId(), requestPaperPostDto.getDate());
+        LocalDate date = common.convertDateType(requestPaperPostDto.getDate());
+        Paper exist = paperRepository.getByDiary_IdAndDate(diary.getId(), date);
         if (exist != null) {
             throw new ErrorException(PaperErrorCode.PAPER_DUPLICATE_DATE);
         }
@@ -83,7 +86,7 @@ public class PaperServiceImpl implements PaperService {
                 .diary(diary)
                 .content(requestPaperPostDto.getContents())
                 .open(requestPaperPostDto.isOpen())
-                .date(LocalDate.now())
+                .date(date)
                 .build());
         List<UploadFile> storeImageFiles;
         storeImageFiles = fileStore.storeFiles(requestPaperPostDto.getImages());

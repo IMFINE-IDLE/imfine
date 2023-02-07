@@ -12,4 +12,5 @@ public interface DiaryHasSymptomRepository extends JpaRepository<DiaryHasSymptom
     List<DiaryHasSymptom> getDiaryHasSymptomBySymptomIn(List<Symptom> symptoms);
     Optional<DiaryHasSymptom> findDiaryHasSymptomByDiary_IdAndSymptom_Id(long diaryId,
             int symptomId);
+//    Map<Long, String>
 }
