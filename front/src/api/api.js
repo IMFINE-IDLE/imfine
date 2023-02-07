@@ -1,5 +1,5 @@
-// const URL = 'http://localhost:8080';
-const URL = 'http://i8A809.p.ssafy.io:8080';
+// const URL = 'http://localhost:8080/api';
+const URL = 'http://i8A809.p.ssafy.io/api';
 
 const USERS = '/user';
 const DIARY = '/diary';
@@ -36,6 +36,8 @@ const api = {
     getUserInfo: (params) => URL + USERS + `/${params}`,
     getMonthCondition: (params) =>
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
+    getFollowingList: (params) => URL + USERS + `/${params}/following`,
+    getFollowerList: (params) => URL + USERS + `/${params}/follower`,
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,
