@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ResponseSymptomRecordDto {
     protected int symptomId;
     protected int score;
