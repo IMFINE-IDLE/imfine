@@ -73,3 +73,7 @@
 .react-calendar__tile--active:enabled:focus {
   color: var(--gray800-color);
 }
+
+.day-clicked {
+  color: var(--gray700-color);
+}
