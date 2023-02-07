@@ -57,7 +57,7 @@ public class NotificationController {
     }
 
     @GetMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
-    public SseEmitter getNotification(@LoginUser String uid, @RequestParam String token,
+    public SseEmitter getNotification(@PathVariable String uid,
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         LOGGER.info("알람 리스트 api에 들어옴");
 //        List<ResponseNotification> responseNotificationList = notificationService.showList(uid, pageable);
