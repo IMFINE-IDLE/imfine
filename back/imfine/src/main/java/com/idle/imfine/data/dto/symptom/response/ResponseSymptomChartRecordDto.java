@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ResponseSymptomChartRecordDto {
     private String date;
-    List<ResponseDateScoreDto> symptoms;
+    List<ResponseSymptomScoreDto> symptoms;
 }

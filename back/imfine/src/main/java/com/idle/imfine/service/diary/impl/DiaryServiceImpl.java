@@ -13,6 +13,7 @@ import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
+import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomScoreDto;
 import com.idle.imfine.data.entity.Condition;
@@ -91,8 +92,7 @@ public class DiaryServiceImpl implements DiaryService {
         Diary savedDiary = diaryRepository.save(diary);
         if (symptoms.size() != 0) {
             for (Integer s : symptoms) {
-                Symptom symptom = symptomRepository.findById(s)
-                        .orElseThrow(RuntimeException::new);
+                Symptom symptom = symptomRepository.getById(s);
                 diaryHasSymptomRepository.save(DiaryHasSymptom.builder()
                         .symptom(symptom)
                         .diary(savedDiary)
@@ -154,43 +154,63 @@ public class DiaryServiceImpl implements DiaryService {
         LocalDate startDate = date.minusDays(minusDays);
         LocalDate endDate = startDate.plusDays(6);
 
-        LOGGER.info("일기장 증상 차트 조회 시작일 {} .. 종료일 ..", startDate, endDate);
-        Diary diary = diaryRepository.findDiaryByIdFetchPaper(requestDto.getDiaryId(), startDate, endDate)
+        LOGGER.info("일기장 증상 차트 조회 시작일 {} .. 종료일 .. {}", startDate, endDate);
+        Diary diary = diaryRepository.findById(requestDto.getDiaryId())
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
 
-//        List<ResponseSymptomChartRecordDto> recordDtos = new ArrayList<>();
-        Map<Integer, String> symptomIdByName = symptomRepository.getAllByDiaryIdSymptomMap(
-                requestDto.getDiaryId());
+        List<Symptom> symptomByDiary = diaryHasSymptomRepository.getAllByDiaryIdSymptomMap(
+                diary);
+        Map<Integer, String> symptomIdByName = new HashMap<>();
+        symptomByDiary.forEach(
+                symptom -> symptomIdByName.put(symptom.getId(), symptom.getName())
+        );
 
-        List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findPaperHasSymptomByPaperIn(
-            diary.getPapers());
-        LOGGER.info("가져온거 사이즈 {}", symptoms.size());
+        List<PaperHasSymptom> paperHasSymptoms = paperHasSymptomRepository.findPaperHasSymptomByPaperIn(
+                diary, startDate, endDate);
 
-        List<Paper> papers = diary.getPapers();
 
-        Map<String, List<ResponseSymptomScoreDto>> responseDto = new HashMap<>();
+        Map<String, List<ResponseSymptomScoreDto>> responsePureDto = new HashMap<>();
         LocalDate crtDate = startDate;
         for (int i = 0; i < 7; i++) {
-            responseDto.put(crtDate.toString(),new ArrayList<>());
-            crtDate.plusDays(1);
+            responsePureDto.put(crtDate.toString(),new ArrayList<>());
+            crtDate = crtDate.plusDays(1);
         }
-        LOGGER.info("일기장 증상 차트 일주일 생성");
 
-        symptoms.forEach(
-                paperHasSymptom -> responseDto.get(paperHasSymptom.getPaper().getDate()).add(
-                                ResponseSymptomScoreDto.builder()
-                                        .symptomName(symptomIdByName.get(paperHasSymptom.getSymptomId()))
-                                        .score(paperHasSymptom.getScore())
-                                .build())
-        );
+        for (PaperHasSymptom paperHasSymptom : paperHasSymptoms) {
+            if (paperHasSymptom == null) {
+                continue;
+            }
+
+            responsePureDto.get(paperHasSymptom.getPaper().getDate().toString()).add(
+                    ResponseSymptomScoreDto.builder()
+                            .symptomName(
+                                    symptomIdByName.get(
+                                            paperHasSymptom.getSymptomId()))
+                            .score(paperHasSymptom.getScore())
+                            .build());
+        }
+
+        crtDate = startDate;
+        List<ResponseSymptomChartRecordDto> responseDto = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            String dateString = crtDate.toString();
+            responseDto.add(
+                    ResponseSymptomChartRecordDto.builder()
+                            .date(dateString)
+                            .symptoms(responsePureDto.get(dateString))
+                            .build());
+            crtDate = crtDate.plusDays(1);
+        }
+
+
         LOGGER.info("증상 목록 정렬 완료 ");
 //        papers.stream().forEach(
 //                paper -> recordDtos.add(ResponseSymptomChartRecordDto.builder()
 //                        .date(paper.getDate().toString())
 //        );
 
-        return responseDto;
+        return responsePureDto;
     }
 
     @Override
