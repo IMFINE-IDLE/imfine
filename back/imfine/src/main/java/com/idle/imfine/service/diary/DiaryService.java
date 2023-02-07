@@ -11,15 +11,14 @@ import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.diary.response.ResponsePutMedicalSymptomsDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
-import com.idle.imfine.data.dto.symptom.response.ResponseSymptomScoreDto;
+import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import java.util.List;
-import java.util.Map;
 import org.springframework.data.domain.Pageable;
 
 public interface DiaryService {
     long save(RequestDiaryPostDto diary, String uId);
     ResponseDiaryDetailDto getDiaryDetail(long diaryId, String uid);
-    Map<String, List<ResponseSymptomScoreDto>> getDiarySymptomsAll(RequestSymptomChartDto requestDto);
+    List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(RequestSymptomChartDto requestDto);
     ResponsePaperDto getPaper(long diary, String date);
     void saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto);
 
