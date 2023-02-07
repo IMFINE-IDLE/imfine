@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BiChevronLeft, BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router';
 import {
@@ -8,10 +8,8 @@ import {
   SearchInput,
 } from './style';
 
-function SearchNavBar({ handleSearch }) {
+function SearchNavBar({ query, setQuery, handleSearch }) {
   const navigate = useNavigate();
-
-  const [query, setQuery] = useState('');
 
   const onKeyPress = (e) => {
     if (e.key === 'Enter') {
