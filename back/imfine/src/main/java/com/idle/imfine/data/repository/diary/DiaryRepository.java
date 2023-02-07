@@ -9,20 +9,23 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
-    Page<Diary> findAllByOpenTrue(Pageable pageable);
-    Page<Diary> findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
+    Slice<Diary> findAllByOpenTrue(Pageable pageable);
+    Slice<Diary> findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
         List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Page<Diary> findByDiaryHasSymptomsInAndOpenTrue(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Page<Diary> findByMedicalCodeInAndOpenTrue(List<MedicalCode> medicalCode, Pageable pageable);
+    Slice<Diary> findByDiaryHasSymptomsInAndOpenTrue(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
+    Slice<Diary> findByMedicalCodeInAndOpenTrue(List<MedicalCode> medicalCode, Pageable pageable);
     Optional<Diary> findByIdAndWriter(long diaryId, User user);
     List<Diary> findAllByWriterIn(List<User> users);
     List<Diary> findAllByWriter(User writer);
+    @Query("select distinct d from MedicalCode m join fetch Diary d on d.medicalCode=m where d.writer=:writer")
+    List<Diary> findByDiaryFetchMedicalCode(@Param("writer") User writer);
     @Query("select distinct d from Diary d join fetch Paper p on p.diary=d  Where d.id=:diaryId and p.date between :startDate and :endDate")
     Optional<Diary> findDiaryByIdFetchPaper(@Param("diaryId") long diaryId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     @Query("select distinct d from Diary d join fetch d.diaryHasSymptoms join fetch d.writer join fetch d.medicalCode where d.id=:diaryId")
