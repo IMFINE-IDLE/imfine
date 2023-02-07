@@ -67,7 +67,11 @@ function PaperItem({ paper, likePaper, likePaperDelete }) {
       <BoxTop>
         <BoxLeft>
           <img
-            src={`/assets/clovers/clover${condition}.svg`}
+            src={
+              condition !== null
+                ? `/assets/clovers/clover${condition}.svg`
+                : '/assets/clovers/clover-1.svg'
+            }
             alt=""
             width={'50px'}
             height={'50px'}
