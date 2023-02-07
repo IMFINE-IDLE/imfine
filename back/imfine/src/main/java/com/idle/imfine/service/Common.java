@@ -39,7 +39,7 @@ public class Common {
     public Map<String, Object> createTokenResult(String accessToken, String refreshToken) {
         Map<String, Object> result = new HashMap<>();
 
-        HttpHeaders headers = createTokenHeader(refreshToken);
+        HttpHeaders headers = createTokenHeader(accessToken, refreshToken);
 
         TokenResponseDto body = TokenResponseDto.builder()
                 .accessToken("Bearer " + accessToken)
@@ -51,21 +51,26 @@ public class Common {
         return result;
     }
 
-    public HttpHeaders createTokenHeader(String refreshToken) {
+    public HttpHeaders createTokenHeader(String accessToken, String refreshToken) {
         HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", createTokenCookie("accessToken", accessToken, 60 * 60 * 24 * 7));
         headers.add("Set-Cookie", createTokenCookie("refreshToken", refreshToken, 60 * 60 * 24 * 7));
         return headers;
     }
 
     public HttpHeaders deleteTokenHeader() {
         HttpHeaders headers = new HttpHeaders();
+        headers.add("Set-Cookie", createTokenCookie("accessToken", "", 0));
         headers.add("Set-Cookie", createTokenCookie("refreshToken", "", 0));
         return headers;
     }
 
     public String createTokenCookie(String name, String token, int maxAge) {
         ResponseCookie cookie = ResponseCookie.from(name, "Bearer%" + token)
+                .path("/")
                 .httpOnly(true)
+//                .secure(true)
+//                .sameSite("None")
                 .maxAge(maxAge)
                 .build();
         return cookie.toString();

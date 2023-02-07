@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -108,11 +109,21 @@ public class JwtTokenProvider {
     // HTTP Request Header 에 설정된 토큰 값을 가져옴
     public String resolveToken(HttpServletRequest request) {
         LOGGER.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
+//        Cookie[] cookies = request.getCookies();
+//
+//        String authorization = "";
+//
+//        for (Cookie cookie : cookies) {
+//            if ("accessToken".equals(cookie.getName())) {
+//                authorization = cookie.getValue();
+//            }
+//        }
+
         String authorization = request.getHeader("Authorization");
         if (authorization == null || authorization.isEmpty()) {
             LOGGER.info("[resolveToken] HTTP 헤더에서 Token 없음");
             throw new TokenNotFoundException();
-        } else if (!Pattern.matches("Bearer .*", authorization)) {
+        } else if (!Pattern.matches("Bearer%.*", authorization)) {
             LOGGER.info("[resolveToken] HTTP 헤더에서 Token 타입 잘못됨.");
             throw new WrongTypeTokenException();
         }
