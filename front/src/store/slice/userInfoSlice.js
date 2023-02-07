@@ -11,7 +11,7 @@ const userInfoSlice = createSlice({
       state.cloverCode = action.payload;
     },
     addSearchHistory: (state, action) => {
-      state.searchHistory.push(action.payload);
+      state.searchHistory.unshift(action.payload);
     },
   },
 });

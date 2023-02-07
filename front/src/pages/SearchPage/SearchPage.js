@@ -49,10 +49,12 @@ function SearchPage() {
         </div>
       ) : (
         <div>
+          <h2>최근 검색어</h2>
           <div>
-            <h2>최근 검색어</h2>
+            {searchHistory.map((searchItem) => (
+              <div>{searchItem}</div>
+            ))}
           </div>
-          <div>블라블라</div>
           <BigCircle />
         </div>
       )}
