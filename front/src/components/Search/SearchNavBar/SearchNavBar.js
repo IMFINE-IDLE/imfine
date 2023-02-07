@@ -8,7 +8,7 @@ import {
   SearchInput,
 } from './style';
 
-function SearchNavBar({ query, setQuery, handleSearch }) {
+function SearchNavBar({ keyword, setKeyword, handleSearch }) {
   const navigate = useNavigate();
 
   const onKeyPress = (e) => {
@@ -16,9 +16,10 @@ function SearchNavBar({ query, setQuery, handleSearch }) {
       const trimmedString = e.target.value.trim();
       if (trimmedString === '' || trimmedString === null) {
         alert('검색어를 입력해주세요.');
+        setKeyword('');
         return;
       }
-      setQuery(trimmedString);
+      setKeyword(trimmedString);
       handleSearch(trimmedString);
     }
   };
@@ -36,8 +37,8 @@ function SearchNavBar({ query, setQuery, handleSearch }) {
       <BoxSearchInput>
         <BiSearch style={{ cursor: 'default' }} />
         <SearchInput
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
           autoFocus
           placeholder="검색어를 입력하세요"
           type="text"

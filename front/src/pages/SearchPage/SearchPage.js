@@ -14,18 +14,19 @@ function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
   const searchHistory = useSelector((state) => state.userInfo.searchHistory);
-  const [query, setQuery] = useState(''); // 검색창에 검색하는 쿼리
-  const [queryResult, setQueryResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
+  const [keyword, setKeyword] = useState(''); // 검색창에 검색하는 쿼리
+  const [keywordResult, setKeywordResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
 
-  const handleSearch = async (queryInput) => {
-    if (queryInput === '' || queryInput === null) {
+  const handleSearch = async (trimmedKeyword) => {
+    if (trimmedKeyword === '' || trimmedKeyword === null) {
       return;
     }
+    setSearchParams({ query: trimmedKeyword });
+    setKeywordResult(trimmedKeyword);
+    dispatch(addSearchHistory(trimmedKeyword)); // 최근 검색어 저장
+
     try {
       // query 가지고 서치 api 요청
-      setSearchParams({ query: queryInput });
-      dispatch(addSearchHistory(queryInput)); // 최근 검색어 저장
-      setQueryResult(queryInput);
     } catch (err) {
       console.log(err);
     }
@@ -38,26 +39,28 @@ function SearchPage() {
   ];
 
   useEffect(() => {
-    const currentQuery = searchParams.get('query');
+    let currentQuery = searchParams.get('query');
     if (currentQuery === '' || currentQuery === null) {
+      setKeyword('');
       return;
     }
-    console.log(currentQuery);
-    setQuery(currentQuery);
-    dispatch(addSearchHistory(currentQuery));
-    setQueryResult(currentQuery);
-  }, []);
+
+    let trimmedQuery = currentQuery.trim();
+    setKeyword(trimmedQuery);
+    dispatch(addSearchHistory(trimmedQuery));
+    setKeywordResult(trimmedQuery);
+  }, [dispatch, searchParams]);
 
   return (
     <>
       <SearchNavBar
-        query={query}
-        setQuery={setQuery}
+        keyword={keyword}
+        setKeyword={setKeyword}
         handleSearch={handleSearch}
       />
       {searchParams.get('query') ? (
         <div>
-          <SearchResult queryResult={queryResult} />
+          <SearchResult keywordResult={keywordResult} />
           <Tabs tabArr={tabArr} btnWidth={'6.2em'} />
           {/* <TabBar /> */}
         </div>
