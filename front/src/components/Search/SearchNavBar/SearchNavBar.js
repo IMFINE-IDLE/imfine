@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BiChevronLeft, BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router';
 import {
@@ -8,8 +8,17 @@ import {
   SearchInput,
 } from './style';
 
-function SearchNavBar() {
+function SearchNavBar({ handleSearch }) {
   const navigate = useNavigate();
+
+  const [query, setQuery] = useState('');
+
+  const onKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(query);
+    }
+  };
+
   return (
     <BoxNavBar>
       <BoxChevronLeft
@@ -21,8 +30,15 @@ function SearchNavBar() {
         <BiChevronLeft />
       </BoxChevronLeft>
       <BoxSearchInput>
-        <BiSearch />
-        <SearchInput type="text" />
+        <BiSearch style={{ cursor: 'default' }} />
+        <SearchInput
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          autoFocus
+          placeholder="검색어를 입력하세요"
+          type="text"
+          onKeyPress={onKeyPress}
+        />
       </BoxSearchInput>
     </BoxNavBar>
   );
