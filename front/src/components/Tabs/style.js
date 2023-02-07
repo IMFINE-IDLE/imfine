@@ -15,11 +15,11 @@ const TabBtnContainer = styled.div`
 
 const TabBtn = styled.button`
   ${Btn}
-  ${({ width, height }) => css`
+  ${({ width, height, fontColor }) => css`
     width: ${width || '8.75em'};
     height: ${height || '3.125em'};
     padding: 0;
-    color: var(--default-font-color);
+    color: ${fontColor || 'var(--gray800-color)'};
     font-weight: 700;
     position: relative;
     top: ${height
