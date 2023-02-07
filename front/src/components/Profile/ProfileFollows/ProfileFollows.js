@@ -101,8 +101,9 @@ const ProfileFollows = () => {
   const { uid } = useParams();
   const { name, open, condition, type, followingCount, followerCount } =
     useLocation().state;
-  const [followType, setFollowType] = useState(type);
   const [users, setUsers] = useState(null);
+  const [followType, setFollowType] = useState(type); // '팔로잉' 또는 '팔로워'
+  const [trigger, setTrigger] = useState(false); // 목록에 변화가 생겼을 때 다시 렌더링하기 위한 트리거 변수
 
   const fetchFollowList = async () => {
     const url =
@@ -125,7 +126,7 @@ const ProfileFollows = () => {
 
   useEffect(() => {
     fetchFollowList();
-  }, [followType]);
+  }, [followType, trigger]);
 
   if (!users) return null;
 
@@ -175,7 +176,11 @@ const ProfileFollows = () => {
           radius="50px 50px 0 0"
         >
           <ProfileFollowListWrapper>
-            <FollowList users={users} type={followType} />
+            <FollowList
+              users={users}
+              type={followType}
+              setTrigger={setTrigger}
+            />
           </ProfileFollowListWrapper>
         </ProfileFollowListContainer>
       </ProfileFollowContainer>

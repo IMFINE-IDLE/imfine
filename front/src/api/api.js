@@ -38,6 +38,8 @@ const api = {
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
     getFollowingList: (params) => URL + USERS + `/${params}/following`,
     getFollowerList: (params) => URL + USERS + `/${params}/follower`,
+    follow: () => URL + USERS + '/follow',
+    unfollow: (params) => URL + USERS + `/follow/${params}`,
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,
