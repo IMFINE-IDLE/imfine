@@ -15,6 +15,7 @@ import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.bamboo.impl.BambooServiceImpl;
 import com.idle.imfine.service.leaf.LeafService;
+import com.idle.imfine.service.notification.NotificationService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class LeafServiceImpl implements LeafService {
     private final UserRepository userRepository;
     private final BambooRepository bambooRepository;
     private final HeartRepository heartRepository;
-    private final Common common;
+    private NotificationService notificationService;
 
     @Override
     public void save(RequestLeafDto requestLeafDto) {
@@ -57,7 +58,8 @@ public class LeafServiceImpl implements LeafService {
         leafRepository.save(leaf);
         bamboo.setLeafCount(bamboo.getLeafCount() + 1);
         bambooRepository.save(bamboo);
-        common.saveNotification(user.getId(), leaf.getWriter().getId(), 4, leaf.getId());
+//        common.saveNotification(user.getId(), leaf.getWriter().getId(), 4, leaf.getId());
+        notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId());
     }
 
     @Override
