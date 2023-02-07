@@ -8,12 +8,18 @@ import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropd
 import DateDropdown from '../../components/Paper/DateDropdown/DateDropdown';
 
 function PaperCreatePage() {
-  const items = ['aaaa', 'bbbb', 'cccc'];
+  const now = new Date();
   const [diaries, setDiaries] = useState([]);
   const [diaryTitle, setDiaryTitle] = useState('');
-  const [active, setActive] = useState(true);
-  const [selected, setSelected] = useState([]);
+  const [form, setForm] = useState({
+    year: now.getFullYear(),
+    month: '01',
+    day: '01',
+  });
 
+  console.log('dddd', form.day);
+  console.log('mmmm', form.month);
+  console.log('yyyy', form.year);
   const getDiaries = async () => {
     try {
       const res = await axios.get(api.diary.getDiaries(), {
@@ -46,7 +52,7 @@ function PaperCreatePage() {
           state={setDiaryTitle}
           diaries={diaries}
         />
-        <DateDropdown />
+        <DateDropdown value={form} state={setForm} />
       </BoxPaperDetail>
     </>
   );

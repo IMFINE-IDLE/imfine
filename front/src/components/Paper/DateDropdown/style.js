@@ -20,6 +20,7 @@ const SelectContainer = styled.select`
   border-width: 0;
   padding-left: 1em;
   background-color: var(--light-color);
+  margin: 0.3em;
 
   appearance: none;
   &::-o-appearance {
