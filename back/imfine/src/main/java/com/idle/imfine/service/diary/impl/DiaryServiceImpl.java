@@ -150,8 +150,9 @@ public class DiaryServiceImpl implements DiaryService {
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
         Map<String, Integer> symptomIdByName = new HashMap<>();
-        List<ResponseSymptomChartRecordDto> recordDtos = new ArrayList<>();
 
+        List<ResponseSymptomChartRecordDto> recordDtos = new ArrayList<>();
+//        diaryHasSymptomRepository.
         for (DiaryHasSymptom symptom : diary.getDiaryHasSymptoms()) {
             recordDtos.add(ResponseSymptomChartRecordDto.builder()
                     .symptomName(symptom.getSymptom().getName())
@@ -350,7 +351,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     @Transactional(readOnly = true)
     public List<ResponseDiaryPostPaper> getMyDiaryList(String uid) {
-        return diaryRepository.findAllByUserId(common.getUserByUid(uid).getId()).stream().map(
+        return diaryRepository.findAllByWriter(common.getUserByUid(uid)).stream().map(
                 diary -> ResponseDiaryPostPaper.builder()
                         .diaryId(diary.getId())
                         .title(diary.getTitle())

@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests() // 리퀘스트에 대한 사용권한 체크
-                .antMatchers("/user/sign-up", "/user/sign-in", "/user/refresh", "/user/check/**", "/user/find-id/**", "/user/find-password/**").permitAll() // 가입 및 로그인 주소는 허용
+                .antMatchers("/api/user/sign-up", "/api/user/sign-in", "/api/user/refresh", "/api/user/check/**", "/api/user/find-id/**", "/api/user/find-password/**").permitAll() // 가입 및 로그인 주소는 허용
                 .antMatchers("**exception**").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN") // 나머지 요청은 인증된 USER, ADMIN만 접근 가능
 
