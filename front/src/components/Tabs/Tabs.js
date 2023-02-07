@@ -39,6 +39,7 @@ const Tabs = ({ tabArr, idx, setType, btnWidth, btnHeight }) => {
               }}
               key={tab.tabName}
               color={currentTab.idx === idx ? 'main' : 'gray'}
+              fontColor={currentTab.idx === idx ? 'white' : null}
               width={btnWidth}
               height={btnHeight}
             >

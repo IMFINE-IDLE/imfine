@@ -17,6 +17,7 @@ import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
 import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
 import DiaryFeedPage from './pages/DiaryFeedPage/DiaryFeedPage';
+import SearchPage from './pages/SearchPage/SearchPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -37,6 +38,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/home" element={<PaperFeedPage />} />
+      <Route path="/search" element={<SearchPage />} />
       <Route path="/diary">
         <Route index element={<DiaryFeedPage />} />
         <Route path="create" element={<DiaryCreatePage />} />
