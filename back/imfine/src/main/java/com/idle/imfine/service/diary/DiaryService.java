@@ -15,7 +15,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface DiaryService {
-    long save(RequestDiaryPostDto diary, String uId);
+    void save(RequestDiaryPostDto diary, String uId);
     ResponseDiaryDetailDto getDiaryDetail(long diaryId, String uid);
     List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(long diaryId);
     ResponsePaperDto getPaper(long diary, String date);
@@ -36,6 +36,4 @@ public interface DiaryService {
     List<ResponseDiaryPostPaper> getMyDiaryList(String uid);
 
     ResponsePutMedicalSymptomsDto getDiaryMedicalAndSymptom(long diaryId, String uid);
-
-    List<ResponseDiaryListDto> getDiarySubscribe(String uid);
 }

@@ -47,18 +47,15 @@ public class CommentController {
 
     @PostMapping("/like")
     public ResponseEntity<Result> postCommentLike(@RequestBody RequestHeartDto requestHeartDto, @LoginUser String uid) {
-        requestHeartDto.setContentCodeId(3);
         commentService.postCommentLike(requestHeartDto, uid);
         LOGGER.info("댓글 좋아요 등록 들어옴 {}", requestHeartDto);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @DeleteMapping("/like/{comment-id}")
-    public ResponseEntity<Result> deleteCommentLike(@PathVariable(value = "comment-id") long commnetId, @LoginUser String uid) {
-        commentService.deleteCommentLike(RequestHeartDto.builder()
-                .contentId(commnetId)
-                .contentCodeId(3)
-            .build(), uid);
+    public ResponseEntity<Result> deleteCommentLike(@PathVariable(value = "comment-id") long commentId, @LoginUser String uid) {
+//        RequestHeartDto requestLikeDto = new RequestHeartDto(1, 3, );
+        commentService.deleteCommentLike(commentId, uid);
         LOGGER.info("좋아요 삭제 {}", commentService);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }

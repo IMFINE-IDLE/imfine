@@ -15,14 +15,7 @@ import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
-import com.idle.imfine.errors.code.BambooErrorCode;
-import com.idle.imfine.errors.code.CommentErrorCode;
-import com.idle.imfine.errors.code.DeclarationErrorCode;
-import com.idle.imfine.errors.code.DiaryErrorCode;
-import com.idle.imfine.errors.code.PaperErrorCode;
-import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.declaration.DeclarationService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +38,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
     public void saveDiaryReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Diary diary = diaryRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
-
-        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(1,
-                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
-            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
-        }
+        Diary diary = diaryRepository.getById(requestDeclaration.getContentsId());
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(1)
@@ -66,12 +54,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
     public void savePaperReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Paper paper = paperRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
-
-        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(2,
-                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
-            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
-        }
+        Paper paper = paperRepository.getById(requestDeclaration.getContentsId());
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(2)
@@ -88,12 +71,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
     public void saveCommentReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Comment comment = commentRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(CommentErrorCode.COMMENT_NOT_FOUND));
-
-        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(3,
-                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
-            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
-        }
+        Comment comment = commentRepository.getById(requestDeclaration.getContentsId());
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(3)
@@ -110,12 +88,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
     public void saveBambooReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Bamboo bamboo = bambooRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND));
-
-        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(4,
-                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
-            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
-        }
+        Bamboo bamboo = bambooRepository.getById(requestDeclaration.getContentsId());
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(4)
@@ -133,11 +106,6 @@ public class DeclarationServiceImpl implements DeclarationService {
     public void saveLeafReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
         Leaf leaf = leafRepository.getById(requestDeclaration.getContentsId());
-
-        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(5,
-                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
-            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
-        }
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(5)

@@ -24,6 +24,5 @@ public class Image {
     @Column(nullable = false)
     private String path;
 
-    @Column(nullable = false)
     private long paperId;
 }

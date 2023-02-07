@@ -14,12 +14,9 @@ public class ResponseCommentDto {
     private long userId;
     private int likeCount;
     private int declarationCount;
-    private String uid;
-    private String name;
+    private String userName;
     private String content;
-    private String createdAt;
+    private String createdDate;
     private boolean myHeart;
     private int userStatus;
-    private String condition;
-    
 }

@@ -51,7 +51,7 @@ public class Paper extends BaseCreatedEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    @Column(nullable = false)
     private boolean open;
 
     @Column(nullable = false)

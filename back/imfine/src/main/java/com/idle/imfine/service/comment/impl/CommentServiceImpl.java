@@ -5,16 +5,11 @@ import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.comment.Comment;
-import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.repository.comment.CommentRepository;
 import com.idle.imfine.data.repository.heart.HeartRepository;
-import com.idle.imfine.data.repository.paper.PaperRepository;
-import com.idle.imfine.errors.code.CommentErrorCode;
-import com.idle.imfine.errors.code.HeartErrorCode;
-import com.idle.imfine.errors.code.PaperErrorCode;
-import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.comment.CommentService;
+import com.idle.imfine.service.user.Impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
-    private final PaperRepository paperRepository;
     private final Common common;
     private final HeartRepository heartRepository;
 
@@ -32,15 +26,11 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void save(RequestContentRegistraitionDto requestContentRegistraitionDto, String uid) {
         User user = common.getUserByUid(uid);
-        Paper paper = paperRepository.findById(requestContentRegistraitionDto.getPaperId())
-                .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
-
         commentRepository.save(Comment.builder()
                         .content(requestContentRegistraitionDto.getContent())
                         .writer(user)
                         .paperId(requestContentRegistraitionDto.getPaperId())
                 .build());
-        paper.setCommentCount(paper.getCommentCount() + 1);
     }
 
     @Override
@@ -48,15 +38,10 @@ public class CommentServiceImpl implements CommentService {
     public void delete(long commentId, String uid) {
         User user = common.getUserByUid(uid);
         Comment comment = commentRepository.getById(commentId);
-        Paper paper = paperRepository.findById(comment.getPaperId())
-                .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
-
-        if (comment.getWriter().getId() != user.getId()){
-            throw new ErrorException(CommentErrorCode.COMMENT_ACCESS_DENIED);
+        if (comment.getWriter().getId() == user.getId()){
+            commentRepository.delete(comment);
         }
-
-        commentRepository.delete(comment);
-        paper.setCommentCount(paper.getCommentCount() - 1);
+        /// 에러처리
     }
 
     @Override
@@ -66,31 +51,32 @@ public class CommentServiceImpl implements CommentService {
 
         Comment comment = commentRepository.getById(requestHeartDto.getContentId());
         //에러처리 똑바로
-        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, requestHeartDto.getContentId())) {
-            throw new ErrorException(HeartErrorCode.HEART_DELETE_CONFLICT);
+        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, requestHeartDto.getContentId())) {
+            throw new RuntimeException();
         }
+
         heartRepository.save(Heart.builder()
                 .senderId(user.getId())
                 .contentsCodeId(3)
                 .contentsId(requestHeartDto.getContentId())
                 .build());
+
         comment.setLikeCount(comment.getLikeCount() + 1);
     }
 
     @Override
     @Transactional
-    public void deleteCommentLike(RequestHeartDto requestHeartDto, String uid) {
+    public void deleteCommentLike(long commentId, String uid) {
         User user = common.getUserByUid(uid);
 
-        Comment comment = commentRepository.getById(requestHeartDto.getContentId());
+        Comment comment = commentRepository.getById(commentId);
         //에러처리 똑바로
-        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), requestHeartDto.getContentCodeId(),
-            requestHeartDto.getContentId())) {
-            throw new ErrorException(HeartErrorCode.HEART_NOT_FOUND);
+        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, commentId)) {
+            throw new RuntimeException();
         }
-        heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
-            requestHeartDto.getContentCodeId(), requestHeartDto.getContentId());
-        comment.setLikeCount(comment.getLikeCount() - 1);
 
+        heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, commentId);
+
+        comment.setLikeCount(comment.getLikeCount() - 1);
     }
 }

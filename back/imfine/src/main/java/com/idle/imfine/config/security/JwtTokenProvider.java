@@ -10,16 +10,18 @@
 package com.idle.imfine.config.security;
 
 import com.idle.imfine.errors.token.TokenNotFoundException;
-import com.idle.imfine.errors.token.WrongTypeTokenException;
-import io.jsonwebtoken.*;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ public class JwtTokenProvider {
 
     @Value("${springboot.jwt.secret}")
     private String secretKey = "secretKey";
-    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 60; // 1시간 토큰 유효
+    private final long ACCESS_TOKEN_EXPIRE_TIME = 1000L * 60 * 30; // 30분 토큰 유효
     private final long REFRESH_TOKEN_EXPIRE_TIME = 1000L * 60 * 60 * 24 * 7; // 1주 토큰 유효
 
     // SecretKey 에 대해 인코딩 수행
@@ -109,25 +111,7 @@ public class JwtTokenProvider {
     // HTTP Request Header 에 설정된 토큰 값을 가져옴
     public String resolveToken(HttpServletRequest request) {
         LOGGER.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
-//        Cookie[] cookies = request.getCookies();
-//
-//        String authorization = "";
-//
-//        for (Cookie cookie : cookies) {
-//            if ("accessToken".equals(cookie.getName())) {
-//                authorization = cookie.getValue();
-//            }
-//        }
-
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null || authorization.isEmpty()) {
-            LOGGER.info("[resolveToken] HTTP 헤더에서 Token 없음");
-            throw new TokenNotFoundException();
-        } else if (!Pattern.matches("Bearer%.*", authorization)) {
-            LOGGER.info("[resolveToken] HTTP 헤더에서 Token 타입 잘못됨.");
-            throw new WrongTypeTokenException();
-        }
-        return authorization.substring(7);
+        return request.getHeader("X-AUTH-TOKEN");
     }
 
     // JWT 토큰의 유효성 + 만료일 체크

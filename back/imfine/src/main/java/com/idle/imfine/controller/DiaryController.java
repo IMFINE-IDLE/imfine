@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,17 +35,18 @@ public class DiaryController {
 
     @PostMapping
     public ResponseEntity<Result> postDiary(@RequestBody RequestDiaryPostDto requestDiaryPostDto, @LoginUser String uid){
-        return ResponseEntity.ok()
-                .body(responseService.getSingleResult(diaryService.save(requestDiaryPostDto, uid)));
+        diaryService.save(requestDiaryPostDto, uid);
+        return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @GetMapping("/list")
     public ResponseEntity<Result> getDiaryList(@RequestParam(value = "tab") String tab
         , @RequestParam(value = "medical-id") List<Integer> medicalId
         , @RequestParam(value = "symptom-id") List<Integer> symptomId
-        , @RequestParam(value = "page") int page){
+        , @RequestParam(value = "page") int page
+        , @RequestParam(value = "size") int size){
         String sort = tab.equals("popular") ? "subscribeCount" : "postedAt";
-        Pageable pageable = PageRequest.of(page, 10, Direction.DESC, sort);
+        Pageable pageable = PageRequest.of(page, size, Direction.DESC, sort);
         List<ResponseDiaryListDto> responseDto = diaryService.getDiaryList(RequestDiaryFilterDto.builder()
                         .tab(tab)
                         .medicalId(medicalId)
@@ -52,12 +54,6 @@ public class DiaryController {
                         .build(),
                 pageable);
         LOGGER.info("왜 안되는 거지{}", pageable);
-        return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
-    }
-    @GetMapping("/subscribe")
-    public ResponseEntity<Result> getDiarySubscribe(@LoginUser String uid) {
-        LOGGER.info("내가 구독한 일기장 조회 api들어옴 {}", uid);
-        List<ResponseDiaryListDto> responseDto = diaryService.getDiarySubscribe(uid);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
 

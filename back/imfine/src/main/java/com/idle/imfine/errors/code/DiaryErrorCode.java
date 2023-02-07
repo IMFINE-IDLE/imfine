@@ -8,9 +8,12 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum DiaryErrorCode implements ErrorCode {
 
-    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 일기장입니다."),
-    DIARY_WRONG_USER(HttpStatus.UNAUTHORIZED, "권한이 없는 일기장 수정 요청입니다."),
-    DIARY_DUPLICATE_SYMPTOM(HttpStatus.CONFLICT, "증상이 이미 존재합니다."),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다."),
+    USER_DUPLICATE_UID(HttpStatus.CONFLICT, "중복된 아이디가 존재합니다."),
+    USER_DUPLICATE_NAME(HttpStatus.CONFLICT, "중복된 닉네임이 존재합니다."),
+    USER_DUPLICATE_EMAIL(HttpStatus.CONFLICT, "중복된 이메일이 존재합니다."),
+    USER_WRONG_UID(HttpStatus.UNAUTHORIZED, "아이디가 틀렸습니다."),
+    USER_WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
     ;
 
     private final HttpStatus httpStatus;

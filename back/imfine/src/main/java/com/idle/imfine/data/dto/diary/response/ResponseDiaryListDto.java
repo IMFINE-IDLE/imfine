@@ -17,7 +17,6 @@ public class ResponseDiaryListDto {
     private long diaryId;
     private int paperCount;
     private int subscribeCount;
-    private String medicalName;
     private String image;
     private String name;
     private String title;

@@ -2,23 +2,22 @@ package com.idle.imfine.service.user;
 
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
+import com.idle.imfine.data.dto.user.response.RefreshResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
-import java.util.Map;
-import javax.servlet.http.Cookie;
-import org.springframework.http.HttpHeaders;
-
+import com.idle.imfine.data.dto.user.response.SignInResponseDto;
+import com.idle.imfine.data.entity.User;
 
 public interface UserService {
 
-    Map<String, Object> signUp(SignUpRequestDto requestDto);
+    SignInResponseDto signUp(SignUpRequestDto requestDto);
 
-    Map<String, Object> signIn(SignInRequestDto requestDto);
+    SignInResponseDto signIn(SignInRequestDto requestDto);
 
     void initProfile(String uid, InitProfileRequestDto requestDto);
 
-    HttpHeaders signOut(String uid);
+    void signOut(String uid);
 
-    Map<String, Object> refresh(Cookie cookie);
+    RefreshResponseDto refresh(String refreshToken);
 
     void checkUidDuplicate(String uid);
 

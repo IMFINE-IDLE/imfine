@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom, Long> {
     List<PaperHasSymptom> findByPaper(Paper paper);
 
-    List<PaperHasSymptom> findPaperHasSymptomByPaperIn(List<Paper> papers);
-
     @Modifying
     @Query("delete from PaperHasSymptom phs where phs.symptomId=:symptomId and phs.paper in :papers")
     void deleteBySymptomId(@Param("symptomId") int symptomId, @Param("papers") List<Paper> paper);

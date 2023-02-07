@@ -17,16 +17,10 @@ public class ResponsePaperDetailDto {
     private long diaryId;
     private long userId;
     private int userStatus;
-    private int likeCount;
-    private int commentCount;
-    private String title;
-    private String name;
+    private String userName;
     private String content;
-    private String uid;
-    private String createdAt;
-    private String condition;
     private boolean myHeart;
-    private List<ResponsePaperSymptomRecordDto> symptomList;
+    private List<ResponsePaperSymptomRecordDto> symptoms;
     private List<String> images;
     private List<ResponseCommentDto> comments;
 }
