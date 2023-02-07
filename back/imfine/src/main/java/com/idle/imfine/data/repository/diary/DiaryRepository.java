@@ -3,7 +3,6 @@ package com.idle.imfine.data.repository.diary;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.medical.MedicalCode;
-import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import java.util.List;
 import java.util.Optional;
@@ -14,16 +13,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
-    Page<Diary> findByMedicalCodeInOrDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
+
+    Page<Diary> findAllByOpenTrue(Pageable pageable);
+    Page<Diary> findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
         List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Page<Diary> findByDiaryHasSymptomsIn(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Page<Diary> findByMedicalCodeIn(List<MedicalCode> medicalCode, Pageable pageable);
-    Page<Diary> findAll(Pageable pageable);
+    Page<Diary> findByDiaryHasSymptomsInAndOpenTrue(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
+    Page<Diary> findByMedicalCodeInAndOpenTrue(List<MedicalCode> medicalCode, Pageable pageable);
     Optional<Diary> findByIdAndWriter(long diaryId, User user);
     List<Diary> findAllByWriterIn(List<User> users);
+    List<Diary> findAllByWriter(User writer);
+    @Query("select distinct d from Diary d join fetch Paper p on p.diary=d join fetch d.diaryHasSymptoms Where d.id=:diaryId")
+    Optional<Diary> findDiaryByIdFetchPaper(@Param("diaryId") long diaryId);
+    @Query("select distinct d from Diary d join fetch d.diaryHasSymptoms join fetch d.writer join fetch d.medicalCode where d.id=:diaryId")
+    Optional<Diary> findDiaryByIdFetchDetail(@Param("diaryId") long diaryId);
     @Query("SELECT distinct d FROM Diary d join fetch Subscribe s on d=s.diary where s.userId=:id")
     List<Diary> findAllByUserId(@Param("id") long id);
-    List<Diary> findAllByWriter(User writer);
     @Query("select distinct d from Diary d join fetch DiaryHasSymptom s on d=s.diary where d.id=:diaryId")
     Optional<Diary> findByFetchSymptom(@Param("diaryId") long diaryId);
+    @Query("select distinct d from Diary d join fetch d.writer join fetch d.medicalCode join Subscribe s on s.diary=d where d.writer=:user")
+    List<Diary> findAllByWriterAndSubscribe(@Param("user") User user);
 }

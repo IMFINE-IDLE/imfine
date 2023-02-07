@@ -12,6 +12,7 @@ import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.comment.Comment;
@@ -27,6 +28,9 @@ import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
+import com.idle.imfine.errors.code.DiaryErrorCode;
+import com.idle.imfine.errors.code.PaperErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.paper.PaperService;
@@ -36,6 +40,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -67,13 +72,12 @@ public class PaperServiceImpl implements PaperService {
 
         ///// 에러처리 똑바로 하기
         Diary diary = diaryRepository.findById(requestPaperPostDto.getDiaryId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
-        Paper exist = paperRepository.findByDiaryAndDate(diary, common.convertDateType(requestPaperPostDto.getDate()));
+        Paper exist = paperRepository.getByDiaryAndDate(diary, common.convertDateType(requestPaperPostDto.getDate()));
         if (exist != null) {
-            throw new RuntimeException();
+            throw new ErrorException(PaperErrorCode.PAPER_DUPLICATE_DATE);
         }
-        LOGGER.info("왜 안되는 거야~~~ paper{}", requestPaperPostDto.getUserId());
 
         Paper savedPaper = paperRepository.save(Paper.builder()
                 .diary(diary)
@@ -85,23 +89,23 @@ public class PaperServiceImpl implements PaperService {
         storeImageFiles = fileStore.storeFiles(requestPaperPostDto.getImages());
         diary.paperAdd();
         diary.setPostedAt(LocalDateTime.now());
-        LOGGER.info("왜 안되는 거야~~~ image");
 
-        Stream<Image> saveImage = storeImageFiles.stream().map(
+        List<Image> saveImage = storeImageFiles.stream().map(
                 path ->  Image.builder()
                         .paperId(savedPaper.getId())
                         .path(path.getStoreFileName())
                         .build()
-        );
-        imageRepository.saveAll(saveImage.collect(Collectors.toList()));
-        LOGGER.info("왜 안되는 거야~~~ paper has{}", requestPaperPostDto.getSymptoms());
+        ).collect(Collectors.toList());
+        if (saveImage.size() != 0){
+            imageRepository.saveAll(saveImage);
+        }
         Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
-                symptomRecord -> PaperHasSymptom.builder()
-                        .symptomId(symptomRecord.getSymptomId())
-                        .score(symptomRecord.getScore())
-                        .paper(savedPaper)
-                        .build()
-        );
+            symptomRecord -> PaperHasSymptom.builder()
+                    .symptomId(symptomRecord.getSymptomId())
+                    .score(symptomRecord.getScore())
+                    .paper(savedPaper)
+                    .build()
+            );
         paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
     }
 
@@ -109,7 +113,8 @@ public class PaperServiceImpl implements PaperService {
     @Override
     public void delete(long paperId, String uid) {
         User user = common.getUserByUid(uid);
-        Paper foundPaper = paperRepository.findById(paperId).orElseThrow(RuntimeException::new);
+        Paper foundPaper = paperRepository.findById(paperId)
+            .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
         paperHasSymptomRepository.deleteByPaper(foundPaper.getId());
         paperRepository.deleteById(paperId);
     }
@@ -119,7 +124,9 @@ public class PaperServiceImpl implements PaperService {
     public void modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) {
         User user = common.getUserByUid(uid);
 
-        Paper paper = paperRepository.getById(requestPaperPutDto.getPaperId());
+        Paper paper = paperRepository.findById(requestPaperPutDto.getPaperId())
+            .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
+
         paper.setContent(requestPaperPutDto.getContents());
         paper.setOpen(requestPaperPutDto.isOpen());
         List<PaperHasSymptom> symptoms = paper.getPaperHasSymptoms();
@@ -132,16 +139,6 @@ public class PaperServiceImpl implements PaperService {
                 }
             }
         }
-        // 수정 방법에 대한 고민
-        // 전부 삭제 후 다시생성 or 그냥 일일히 비교 탐색 후 값만 바꿔주기
-//        paperHasSymptomRepository.deleteBySymptomId(paper);
-//
-//        Stream<PaperHasSymptom> paperHasSymptomList = requestPaperPutDto.getSymptoms().stream().map(
-//                symptomRecord -> PaperHasSymptom.builder()
-//                        .symptomId(symptomRecord.getSymptomId())
-//                        .score(symptomRecord.getScore())
-//                        .build()
-//        );
     }
 
     @Transactional
@@ -149,15 +146,19 @@ public class PaperServiceImpl implements PaperService {
     public void postPaperLike(RequestHeartDto requestHeartDto, String uid) {
         User user = common.getUserByUid(uid);
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
 
+        if (heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+            requestHeartDto.getContentCodeId(), requestHeartDto.getContentId())) {
+            throw new ErrorException(PaperErrorCode.PAPER_DUPLICATE_HEART);
+        }
         Heart heart = Heart.builder()
                 .contentsCodeId(requestHeartDto.getContentCodeId())
                 .contentsId(requestHeartDto.getContentId())
                 .senderId(user.getId())
                 .build();
-
         foundPaper.addLikeCount();
+        paperRepository.save(foundPaper);
         heartRepository.save(heart);
     }
 
@@ -166,12 +167,19 @@ public class PaperServiceImpl implements PaperService {
     public void deletePaperLike(RequestHeartDto requestHeartDto, String uid) {
         User user = common.getUserByUid(uid);
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
-                .orElseThrow(RuntimeException::new);
-
-        heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(requestHeartDto.getContentId(),
-                requestHeartDto.getContentCodeId(), user.getId());
+            .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
+        LOGGER.info("uid {}, contentcode {}, contentid {} 삭제 가능? {}", user.getId(), requestHeartDto.getContentCodeId()
+            , requestHeartDto.getContentId(), heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+                requestHeartDto.getContentCodeId(), requestHeartDto.getContentId()));
+        if (!heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+            requestHeartDto.getContentCodeId(), requestHeartDto.getContentId())) {
+            throw new ErrorException(PaperErrorCode.PAPER_NOT_FOUND_HEART);
+        }
+        heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(),
+                requestHeartDto.getContentCodeId(), requestHeartDto.getContentId());
 
         foundPaper.delLikeCount();
+        paperRepository.save(foundPaper);
     }
 
     @Override
@@ -181,7 +189,7 @@ public class PaperServiceImpl implements PaperService {
 
         // 에러처리 똑바로 하기
         Paper paper = paperRepository.findById(paperId)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
         Diary paperDiary = paper.getDiary();
 
         List<DiaryHasSymptom> diaryHasSymptoms = paperDiary.getDiaryHasSymptoms();
@@ -202,33 +210,47 @@ public class PaperServiceImpl implements PaperService {
         List<Comment> myHeartComment = commentRepository.findCommentByHeartAndPaperIn(
                     paper.getId(), 3,
                     user);
+        List<Comment> paperComments = commentRepository.findCommentsByFetchWriterAndPaperId(
+                paperId);
+        List<Long> commentsUsers = paperComments.stream().map(Comment::getId).collect(Collectors.toList());
+        Map<Long, Integer> commentConditions = conditionRepository.findConditionsByDateAndUserIn(LocalDate.now(), commentsUsers);
+        List<ResponseCommentDto> comments = paperComments.stream().map(
+                comment -> ResponseCommentDto.builder()
+                        .commentId(comment.getId())
+                        .userId(comment.getWriter().getId())
+                        .uid(comment.getWriter().getUid())
+                        .name(user.getName())
+                        .likeCount(comment.getLikeCount())
+                        .declarationCount(comment.getDeclarationCount())
+                        .content(comment.getContent())
+                        .myHeart(myHeartComment.stream().anyMatch(
+                                heartComment -> heartComment.getId() == comment.getId()
+                        ))
+                        .createdAt(common.convertDateAllType(comment.getCreatedAt()))
+                        .userStatus(comment.getWriter().getId() == user.getId() ? 0 : 1)
+                        .condition(String.valueOf(commentConditions.getOrDefault(comment.getWriter().getId(), 0)))
+                        .build()
+        ).collect(Collectors.toList());
         return ResponsePaperDetailDto.builder()
                 .diaryId(paperDiary.getId())
-                .userId(user.getId())
-                .userStatus(user.getId() == paperDiary.getWriter().getId() ? 0 : 2)
-                .userName(user.getName())
+                .title(paperDiary.getTitle())
+                .uid(paperDiary.getWriter().getUid())
+                .userStatus(user.getId() == paperDiary.getWriter().getId() ? 0 : 1)
+                .name(paperDiary.getWriter().getName())
                 .content(paper.getContent())
-                .symptoms(responsePaperSymptomRecordDtos)
+                .likeCount(paper.getLikeCount())
+                .commentCount(paper.getCommentCount())
+                .createdAt(common.convertDateAllType(paper.getCreatedAt()))
+                .condition(String.valueOf(
+                    conditionRepository.findByUserAndDate(paperDiary.getWriter(), paper.getDate())
+                        .orElseGet(Condition::new).getCondition()))
+                .symptomList(responsePaperSymptomRecordDtos)
                 .images(paper.getImages().stream().map(
                         Image::getPath
                 ).collect(Collectors.toList()))
                 .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(
-                        paperDiary.getWriter().getId(), 2, paper.getId()))
-                .comments(paper.getComments().stream().map(
-                        comment -> ResponseCommentDto.builder()
-                                .commentId(comment.getId())
-                                .userId(comment.getWriter().getId())
-                                .userName(user.getName())
-                                .likeCount(comment.getLikeCount())
-                                .declarationCount(comment.getDeclarationCount())
-                                .content(comment.getContent())
-                                .myHeart(myHeartComment.stream().anyMatch(
-                                        heartComment -> heartComment.getId() == comment.getId()
-                                ))
-                                .createdDate(LocalDateTime.now()
-                                        .format(DateTimeFormatter.ofPattern("yyyyMMdd")))
-                                .build()
-                ).collect(Collectors.toList()))
+                        user.getId(), 2, paper.getId()))
+                .comments(comments)
                 .build();
 
     }
@@ -238,11 +260,13 @@ public class PaperServiceImpl implements PaperService {
     public List<ResponsePaperDto> getPaperList(String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);
         List<User> users = followRepository.findAllByFollowingUser(user)
-                .stream().map(follow -> follow.getFollowedUser()).collect(Collectors.toList());
+                .stream().map(Follow::getFollowedUser).collect(Collectors.toList());
         List<Diary> diaries = diaryRepository.findAllByWriterIn(users);
         List<Diary> diaries1 = diaryRepository.findAllByUserId(user.getId());
+
         diaries.addAll(diaries1);
         diaries = diaries.stream().distinct().collect(Collectors.toList());
+
         List<Paper> papers = paperRepository.findAllByDiariesIn(diaries, pageable);
         List<Paper> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
                 diaries);
@@ -256,14 +280,16 @@ public class PaperServiceImpl implements PaperService {
                         .uid(paper.getDiary().getWriter().getUid())
                         .commentCount(paper.getCommentCount())
                         .likeCount(paper.getLikeCount())
-                        .myHeart(myHeartPapers.stream().anyMatch(heartPaper -> heartPaper.getId() == paper.getId()))
+                        .name(paper.getDiary().getWriter().getName())
+                        .myHeart(myHeartPapers.stream().anyMatch(heartPaper -> heartPaper.getId()
+                            .equals(paper.getId())))
                         .date(paper.getDate())
                         .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                         .open(paper.isOpen())
                         .condition(String.format("%d",conditionRepository.findByUserAndDate(paper.getDiary()
                                 .getWriter(), paper.getDate()).orElseGet(Condition::new).getCondition()))
                         .images(paper.getImages().stream().map(
-                                image -> image.getPath()
+                            Image::getPath
                         ).collect(Collectors.toList()))
                         .symptomList(
                                 paper.getPaperHasSymptoms().stream().map(
@@ -311,7 +337,7 @@ public class PaperServiceImpl implements PaperService {
                         .condition(String.format("%d",conditionRepository.findByUserAndDate(paper.getDiary()
                                 .getWriter(), paper.getDate()).orElseGet(Condition::new).getCondition()))
                         .images(paper.getImages().stream().map(
-                                image -> image.getPath()
+                            Image::getPath
                         ).collect(Collectors.toList()))
                         .symptomList(
                                 paper.getPaperHasSymptoms().stream().map(

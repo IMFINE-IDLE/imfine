@@ -3,6 +3,8 @@ package com.idle.imfine.service;
 import com.idle.imfine.data.dto.image.UploadFile;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,14 +19,23 @@ public class FileStore {
     private String fileDir;
 
     public String getFullPath(String filename) {
+        try {
+            String osSystem = InetAddress.getLocalHost().getHostName();
+            if (!osSystem.substring(0, 7).equals("DESKTOP")) {
+                fileDir = "/home/ubuntu/resource";
+            }
+        } catch (UnknownHostException e) {
+            throw new RuntimeException("지원하지 않는 OS입니다.");
+        }
         return fileDir + filename;
     }
-
     public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
         List<UploadFile> storeFileResult = new ArrayList<>();
-        for (MultipartFile multipartFile : multipartFiles) {
-            if (!multipartFile.isEmpty()) {
-                storeFileResult.add(storeFile(multipartFile));
+        if (multipartFiles != null) {
+            for (MultipartFile multipartFile : multipartFiles) {
+                if (!multipartFile.isEmpty()) {
+                    storeFileResult.add(storeFile(multipartFile));
+                }
             }
         }
         return storeFileResult;

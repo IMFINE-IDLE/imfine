@@ -62,7 +62,7 @@ public class PaperController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Result> getPaperList(@LoginUser String uid, @PageableDefault(sort = "date", direction = Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Result> getPaperList(@LoginUser String uid, @PageableDefault(sort = "date", direction = Direction.DESC, size = 10) Pageable pageable) {
         List<ResponsePaperDto> responseDto = paperService.getPaperList(uid, pageable);
         return ResponseEntity.ok().body(responseService.getListResult(responseDto));
     }
@@ -84,4 +84,5 @@ public class PaperController {
                 , uid);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
+
 }

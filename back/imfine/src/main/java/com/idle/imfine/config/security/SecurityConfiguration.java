@@ -41,7 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests() // 리퀘스트에 대한 사용권한 체크
-                .antMatchers("/user/sign-up", "/user/sign-in", "/user/refresh", "/user/check/**").permitAll() // 가입 및 로그인 주소는 허용
+                .antMatchers("/user/sign-up", "/user/sign-in", "/user/refresh", "/user/check/**", "/user/find-id/**", "/user/find-password/**").permitAll() // 가입 및 로그인 주소는 허용
                 .antMatchers("**exception**").permitAll()
                 .anyRequest().hasAnyRole("USER", "ADMIN") // 나머지 요청은 인증된 USER, ADMIN만 접근 가능
 
@@ -59,7 +59,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("http://i8a809.p.ssafy.io", "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
