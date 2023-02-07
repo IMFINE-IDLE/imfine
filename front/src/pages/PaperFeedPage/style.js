@@ -21,9 +21,9 @@ const BoxNoPaperFeed = styled.div`
 
 const BigCircle = styled(BoxGrad)`
   position: fixed;
-  width: 200vw;
-  height: 60vh;
-  top: 18%;
+  width: 200%;
+  height: 600px;
+  top: 15%;
   left: -50%;
   border-radius: 60%;
   z-index: -1;

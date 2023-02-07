@@ -9,6 +9,15 @@ import SearchUser from '../../components/Search/SearchUser/SearchUser';
 import Tabs from '../../components/Tabs/Tabs';
 import { addSearchHistory } from '../../store/slice/userInfoSlice';
 import { BigCircle } from '../PaperFeedPage/style';
+import {
+  BoxClover,
+  BoxInner,
+  BoxRecentQuery,
+  QueryItem,
+  TitleRecent,
+} from './style';
+import TabBar from '../../components/TabBar/TabBar';
+import { Clover } from '../../components/common/Clover/Clover';
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,7 +56,6 @@ function SearchPage() {
 
     let trimmedQuery = currentQuery.trim();
     setKeyword(trimmedQuery);
-    dispatch(addSearchHistory(trimmedQuery));
     setKeywordResult(trimmedQuery);
   }, [dispatch, searchParams]);
 
@@ -58,23 +66,29 @@ function SearchPage() {
         setKeyword={setKeyword}
         handleSearch={handleSearch}
       />
+      <BoxClover>
+        <Clover code={'1'} width={'80px'} height={'80px'} />
+      </BoxClover>
       {searchParams.get('query') ? (
         <div>
           <SearchResult keywordResult={keywordResult} />
           <Tabs tabArr={tabArr} btnWidth={'6.2em'} />
-          {/* <TabBar /> */}
         </div>
       ) : (
-        <div>
-          <h2>최근 검색어</h2>
-          <div>
+        <BoxRecentQuery>
+          <TitleRecent>최근 검색어</TitleRecent>
+          <BoxInner>
             {searchHistory.map((searchItem, idx) => (
-              <div key={idx}>{searchItem}</div>
+              <QueryItem key={idx}>
+                {searchItem}
+                <span>X</span>
+              </QueryItem>
             ))}
-          </div>
+          </BoxInner>
           <BigCircle />
-        </div>
+        </BoxRecentQuery>
       )}
+      <TabBar />
     </>
   );
 }
