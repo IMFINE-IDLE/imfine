@@ -13,7 +13,13 @@ function SearchNavBar({ query, setQuery, handleSearch }) {
 
   const onKeyPress = (e) => {
     if (e.key === 'Enter') {
-      handleSearch(query);
+      const trimmedString = e.target.value.trim();
+      if (trimmedString === '' || trimmedString === null) {
+        alert('검색어를 입력해주세요.');
+        return;
+      }
+      setQuery(trimmedString);
+      handleSearch(trimmedString);
     }
   };
 
