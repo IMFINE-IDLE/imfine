@@ -22,7 +22,7 @@ public class FileStore {
         try {
             String osSystem = InetAddress.getLocalHost().getHostName();
             if (!osSystem.substring(0, 7).equals("DESKTOP")) {
-                fileDir = "/home/ubuntu/resource";
+                fileDir = "/home/ubuntu/resource/";
             }
         } catch (UnknownHostException e) {
             throw new RuntimeException("지원하지 않는 OS입니다.");
