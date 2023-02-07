@@ -1,10 +1,12 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+// import { useOutletContext } from 'react-router-dom';
 import Tabs from '../../Tabs/Tabs';
 import StatusCalendar from '../../StatusCalendar/StatusCalendar';
 
 const ProfileContent = () => {
   const state = useSelector((state) => state);
+  // const { uid } = useOutletContext();
 
   const tabArr = [
     {

@@ -7,7 +7,8 @@ const BoxPaperDetail = styled(BoxNoShad)`
 `;
 
 const BoxBottomDetail = styled(BoxBottom)`
-  justify-content: ${(props) => (props.isMine ? 'space-between' : 'flex-end')};
+  justify-content: ${(props) =>
+    props.userStatus ? 'space-between' : 'flex-end'};
 `;
 
 export { BoxPaperDetail, BoxBottomDetail };

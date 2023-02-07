@@ -14,18 +14,42 @@ import {
   TopDiv,
   BottomDiv,
 } from './style';
-
-function BambooDetailHeader({ bambooId, content, leafCount, likeCount }) {
+import BambooBtnReport from '../BambooBtnReport/BambooBtnReport';
+import { BsFillHeartFill } from 'react-icons/bs';
+function BambooDetailHeader({
+  bambooId,
+  content,
+  leafCount,
+  likeCount,
+  likeBamboo,
+  removeLikeBamboo,
+  heart,
+}) {
+  const fillHeart = heart ? 'var(--red-color)' : 'none';
+  console.log('booleanstatus', heart);
   return (
     <BoxHeader>
       <TopDiv>
-        <FiMoreVertical />
+        <BambooBtnReport />
       </TopDiv>
       <Content>{content}</Content>
       <BottomDiv>
         <BambooImg />
         <LabelOuter>
-          <FiHeart />
+          <FiHeart
+            style={{
+              color: 'var(--red-color)',
+              fill: fillHeart,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (heart) {
+                removeLikeBamboo(bambooId);
+              } else {
+                likeBamboo(bambooId);
+              }
+            }}
+          />
           <LabelStatus>{likeCount}</LabelStatus>
           <FiMessageCircle />
           <LabelStatus>{leafCount}</LabelStatus>

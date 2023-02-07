@@ -5,21 +5,24 @@ import App from './App';
 import { iconStyle, GlobalStyle } from './styles/globalStyle';
 import { IconContext } from 'react-icons';
 import { Provider } from 'react-redux';
-import store from './store';
+import store, { persistor } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
     <Provider store={store}>
-      <GlobalStyle />
-      <IconContext.Provider
-        value={{
-          style: iconStyle,
-        }}
-      >
-        <App />
-      </IconContext.Provider>
+      <PersistGate loading={null} persistor={persistor}>
+        <GlobalStyle />
+        <IconContext.Provider
+          value={{
+            style: iconStyle,
+          }}
+        >
+          <App />
+        </IconContext.Provider>
+      </PersistGate>
     </Provider>
   </BrowserRouter>
   // </React.StrictMode>,
