@@ -13,7 +13,7 @@ const TopDiv = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: baseline;
-  line-height: 2.5em;
+  line-height: 2.3em;
   padding-left: 1.2em;
   background-color: var(--main-color);
 `;
