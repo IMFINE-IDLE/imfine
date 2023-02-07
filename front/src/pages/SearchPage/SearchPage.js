@@ -34,7 +34,7 @@ function SearchPage() {
       <div>
         <SearchResult query={query} />
         <Tabs tabArr={tabArr} btnWidth={'6.2em'} />
-        <TabBar />
+        {/* <TabBar /> */}
       </div>
     </>
   );
