@@ -9,13 +9,15 @@ import { BigCircle } from '../PaperFeedPage/style';
 
 function SearchPage() {
   const [isSearching, setIsSearching] = useState(false);
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(''); // 검색창에 검색하는 쿼리
+  const [queryResult, setQueryResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
 
   const handleSearch = async (query) => {
     try {
       // query 가지고 서치 api 요청
       console.log('제출');
       setIsSearching(true);
+      setQueryResult(query);
     } catch (err) {
       console.log(err);
     }
@@ -35,7 +37,7 @@ function SearchPage() {
       />
       {isSearching ? (
         <div>
-          <SearchResult query={query} />
+          <SearchResult queryResult={queryResult} />
           <Tabs tabArr={tabArr} btnWidth={'6.2em'} />
           {/* <TabBar /> */}
         </div>
