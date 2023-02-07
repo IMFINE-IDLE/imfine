@@ -123,7 +123,7 @@ public class JwtTokenProvider {
         if (authorization == null || authorization.isEmpty()) {
             LOGGER.info("[resolveToken] HTTP 헤더에서 Token 없음");
             throw new TokenNotFoundException();
-        } else if (!Pattern.matches("Bearer%.*", authorization)) {
+        } else if (!Pattern.matches("Bearer .*", authorization)) {
             LOGGER.info("[resolveToken] HTTP 헤더에서 Token 타입 잘못됨.");
             throw new WrongTypeTokenException();
         }
