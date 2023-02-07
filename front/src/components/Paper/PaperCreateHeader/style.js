@@ -1,14 +1,6 @@
 import styled from 'styled-components';
-import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
-import { DropDownR25 } from '../../common/DropDownR25/DropDownR25';
-import { InputGray } from '../../common/InputGray/InputGray';
 
-const BoxPaperDetail = styled(BoxNoShad)`
-  min-height: 100px;
-  border-radius: 0px 0px 50px 50px;
-  padding: 1em 1em 1em 1em;
-  background-color: var(--main-color);
-`;
+import { InputGray } from '../../common/InputGray/InputGray';
 
 const Title = styled.h1`
   color: var(--icon-color);
@@ -60,12 +52,4 @@ const BottomDiv = styled.div`
   background-color: var(--main-color);
 `;
 
-export {
-  BoxPaperDetail,
-  Title,
-  TopDiv,
-  CenterDiv,
-  BottomDiv,
-  SelectContainer,
-  Options,
-};
+export { Title, TopDiv };
