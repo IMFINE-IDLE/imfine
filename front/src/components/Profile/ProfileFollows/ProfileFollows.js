@@ -147,8 +147,8 @@ const ProfileFollows = () => {
           </FlexDiv>
           <FlexDiv padding="1.2em">
             <FlexDiv justify="end" onClick={() => setFollowType('팔로잉')}>
-              <ProfileItemSpan>팔로잉</ProfileItemSpan>
-              <ProfileItemSpan>
+              <ProfileItemSpan pointer={true}>팔로잉</ProfileItemSpan>
+              <ProfileItemSpan pointer={true}>
                 {followingCount >= 1000
                   ? parseInt(followingCount / 1000) + 'k'
                   : followingCount}
@@ -160,8 +160,8 @@ const ProfileFollows = () => {
             <ProfileItemSpan></ProfileItemSpan>
 
             <FlexDiv justify="start" onClick={() => setFollowType('팔로워')}>
-              <ProfileItemSpan>팔로워</ProfileItemSpan>
-              <ProfileItemSpan>
+              <ProfileItemSpan pointer={true}>팔로워</ProfileItemSpan>
+              <ProfileItemSpan pointer={true}>
                 {followerCount >= 1000
                   ? parseInt(followerCount / 1000) + 'k'
                   : followerCount}
