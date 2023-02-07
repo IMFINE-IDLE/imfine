@@ -17,6 +17,7 @@ import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
 import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
 import DiaryFeedPage from './pages/DiaryFeedPage/DiaryFeedPage';
+import NotificationPage from './pages/NotificationPage/NotificationPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -56,6 +57,7 @@ function App() {
       <Route path="/profile-config" element={<ProfileConfigPage />} />
       <Route path="/change-name" element={<ChangeName />} />
       <Route path="/change-symptom" element={<ChangeSymptom />} />
+      <Route path="/noti" element={<NotificationPage />} />
     </Routes>
     // </Wrapper>
   );

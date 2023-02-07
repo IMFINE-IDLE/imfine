@@ -8,6 +8,7 @@ const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
+const NOTIFICATION = '/notification';
 
 const api = {
   user: {
@@ -60,6 +61,9 @@ const api = {
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
+  },
+  notifications: {
+    getEvent: () => URL + NOTIFICATION + '/subscribe',
   },
 };
 
