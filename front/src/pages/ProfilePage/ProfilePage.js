@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../api/api';
@@ -7,6 +7,8 @@ import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import TabBar from '../../components/TabBar/TabBar';
 import ProfileInfo from '../../components/Profile/ProfileInfo/ProfileInfo';
+import Tabs from '../../components/Tabs/Tabs';
+import StatusCalendar from '../../components/StatusCalendar/StatusCalendar';
 
 function ProfilePage() {
   //////////// Hooks //////////////
@@ -34,6 +36,17 @@ function ProfilePage() {
   //////////// Views //////////////
   if (!userInfo) return null;
 
+  // Tabs 자리에 표시할 각 탭별 렌더링 컴포넌트
+  const tabArr = [
+    {
+      idx: 0,
+      tabName: '달력',
+      tabContent: <StatusCalendar uid={uid} />,
+    },
+    { idx: 1, tabName: '일기장', tabContent: <span>일기장</span> },
+    { idx: 2, tabName: '구독중', tabContent: <span>구독중</span> },
+  ];
+
   return (
     <div>
       <NavBarBasic />
@@ -46,7 +59,9 @@ function ProfilePage() {
         relation={userInfo.relation}
         uid={uid}
       />
-      <Outlet context={{ uid }} />
+
+      <Tabs tabArr={tabArr} btnWidth="6.25em"></Tabs>
+
       <BtnFloat />
       <TabBar />
     </div>

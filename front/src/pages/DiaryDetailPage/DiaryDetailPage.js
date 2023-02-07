@@ -16,16 +16,10 @@ import SymptomGraph from '../../components/SymptomGraph/SymptomGraph';
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
   const [diaryInfo, setDiaryInfo] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [showGraph, setShowGraph] = useState(false);
 
   const fetchGetDiaryInfo = async () => {
     try {
-      setError(null);
-      setDiaryInfo(null);
-      setLoading(true);
-
       const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
@@ -52,8 +46,6 @@ const DiaryDetailPage = () => {
     } catch (err) {
       console.error(err);
     }
-
-    setLoading(false);
   };
 
   const fetchUpdateSubscribeStatus = async (status) => {
@@ -81,8 +73,6 @@ const DiaryDetailPage = () => {
     fetchGetDiaryInfo();
   }, []);
 
-  if (loading) return <div>로딩중..</div>;
-  if (error) return <div>에러가 발생했습니다</div>;
   if (!diaryInfo) return null;
 
   // const isMine = diaryInfo.uid === localStorage.getItem('uid') ? true : false;
@@ -222,8 +212,7 @@ const DiaryDetailPage = () => {
           </BoxShad>
         )}
 
-        <StatusCalendar uid={'user12'} />
-        {/* <StatusCalendar uid={diaryInfo.uid} /> */}
+        <StatusCalendar uid={diaryInfo.uid} />
       </DiaryBoxGrad>
     </>
   );

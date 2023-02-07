@@ -35,7 +35,7 @@ const Tabs = ({ tabArr, idx, setType, btnWidth, btnHeight }) => {
             <TabBtn
               onClick={() => {
                 setCurrentTab(idx);
-                setType(tab.tabName);
+                if (setType) setType(tab.tabName);
               }}
               key={tab.tabName}
               color={currentTab.idx === idx ? 'main' : 'gray'}

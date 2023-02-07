@@ -10,7 +10,7 @@ const FollowList = ({ users, type }) => {
       <FollowListContainer>
         {users?.map((user) => (
           <FollowUser
-            cloverCode={'0'}
+            cloverCode={user.condition}
             name={user.name}
             type={type}
             followStatus={user.relation}

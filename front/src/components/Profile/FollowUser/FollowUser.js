@@ -3,7 +3,7 @@ import { Clover } from '../../common/Clover/Clover';
 import { FollowUserBtn, FollowUserContainer, FollowUserWrapper } from './style';
 
 const FollowUser = ({ cloverCode, name, type, followStatus }) => {
-  if (type === 'following')
+  if (type === '팔로잉')
     return (
       <FollowUserContainer>
         <FollowUserWrapper>
@@ -17,7 +17,7 @@ const FollowUser = ({ cloverCode, name, type, followStatus }) => {
         )}
       </FollowUserContainer>
     );
-  else if (type === 'follower')
+  else if (type === '팔로워')
     return (
       <FollowUserContainer>
         <FollowUserWrapper>
