@@ -7,12 +7,15 @@ import com.idle.imfine.data.dto.diary.request.RequestDiaryFilterDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryModifyDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryPostDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
+import com.idle.imfine.data.dto.diary.request.RequestSymptomChartDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
+import com.idle.imfine.data.dto.symptom.response.ResponseSymptomScoreDto;
 import com.idle.imfine.service.diary.DiaryService;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,11 +71,19 @@ public class DiaryController {
         return ResponseEntity.ok().body(responseService.getSingleResult(resoponseDtos));
     }
 
-    @GetMapping("/{diary-id}/symptoms")
-    public ResponseEntity<Result> getDiaryDetailSymptomRecords(@PathVariable(value = "diary-id") long diaryId) {
-        List<ResponseSymptomChartRecordDto> resoponseDtos = diaryService.getDiarySymptomsAll(diaryId);
+    @GetMapping("/{diary-id}/symptoms/{date}/{filter}")
+    public ResponseEntity<Result> getDiaryDetailSymptomRecords(@PathVariable("diary-id") long diaryId,
+            @PathVariable("date") String date, @PathVariable("filter") String filter) {
+
+        LOGGER.info("증상 차트 조회 들어옴");
+        List<ResponseSymptomChartRecordDto> responseDto = diaryService.getDiarySymptomsAll(
+                RequestSymptomChartDto.builder()
+                        .diaryId(diaryId)
+                        .date(date)
+                        .filter(filter)
+                        .build());
         return ResponseEntity.ok()
-                .body(responseService.getSingleResult(resoponseDtos));
+                .body(responseService.getSingleResult(responseDto));
     }
 
     @GetMapping("/{diary-id}/paper/{date}")

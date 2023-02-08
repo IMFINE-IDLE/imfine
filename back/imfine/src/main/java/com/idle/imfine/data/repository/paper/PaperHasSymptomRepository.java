@@ -1,19 +1,22 @@
 package com.idle.imfine.data.repository.paper;
 
+import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom, Long> {
 
-    List<PaperHasSymptom> findByPaper(Paper paper);
+//    List<PaperHasSymptom> findByPaper(Paper paper);
 
-    List<PaperHasSymptom> findPaperHasSymptomByPaperIn(List<Paper> papers);
+    @Query("select distinct phs from  PaperHasSymptom phs where phs.paper.diary=:diary and phs.paper.date between :startDate and :endDate")
+    List<PaperHasSymptom> findPaperHasSymptomByPaperIn(@Param("diary") Diary diary,
+            @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Modifying
     @Query("delete from PaperHasSymptom phs where phs.symptomId=:symptomId and phs.paper in :papers")
