@@ -16,16 +16,14 @@ const FollowUser = ({
 
   const fetchChangeFollowStatus = async () => {
     try {
+      // 내가 현재 팔로중이면 언팔로우 요청을 보내고 relation을 3으로 변경
       if (relation === 1) {
-        const res = await axiosInstance.delete(api.profile.unfollow(uid));
-
-        console.log('unf', res);
-        setRelation(2);
-      } else if (relation === 2) {
-        const res = await axiosInstance.post(api.profile.follow(), {
-          otherUid: uid,
-        });
-        console.log('fo', res);
+        await axiosInstance.delete(api.profile.unfollow(uid));
+        setRelation(3);
+      }
+      // 현재 팔로우하고 있지 않으면 팔로우 요청을 보니고 relation을 1로 변경
+      else if (relation === 3) {
+        await axiosInstance.post(api.profile.follow(), { uid });
         setRelation(1);
       }
     } catch (err) {
@@ -33,16 +31,16 @@ const FollowUser = ({
     }
   };
 
-  // api 물어봐야 함
-  const fetchUnfollow = async () => {
-    try {
-      const res = await axiosInstance.delete(api.profile.unfollow(uid));
-      console.log(res);
-      setTrigger((prev) => !prev);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // // api 물어봐야 함
+  // const fetchDeletefollower = async () => {
+  //   try {
+  //     const res = await axiosInstance.delete(api.profile.deleteFollower(uid));
+  //     console.log(res);
+  //     setTrigger((prev) => !prev);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   if (type === '팔로잉')
     return (
@@ -53,10 +51,10 @@ const FollowUser = ({
         </FollowUserWrapper>
         {relation === 0 || (
           <FollowUserBtn
-            color={relation === 1 ? 'gray' : 'main'}
+            color={relation === 3 ? 'main' : 'gray'}
             onClick={fetchChangeFollowStatus}
           >
-            {relation === 1 ? '팔로잉' : '팔로우'}
+            {relation === 1 ? '언팔로우' : relation === 2 ? '요청됨' : '팔로우'}
           </FollowUserBtn>
         )}
       </FollowUserContainer>
