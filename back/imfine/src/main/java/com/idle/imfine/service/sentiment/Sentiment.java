@@ -1,4 +1,4 @@
-package com.idle.imfine.service;
+package com.idle.imfine.service.sentiment;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
