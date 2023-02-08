@@ -85,8 +85,8 @@ function PaperItem({ paper, likePaper, likePaperDelete }) {
             <div>
               {symptomList?.map((symptom) => {
                 return (
-                  <Symptom key={symptom.symptomId}>
-                    {symptom.symptomName} {symptom.score}
+                  <Symptom key={symptom?.symptomId}>
+                    {symptom?.symptomName} {symptom?.score}
                   </Symptom>
                 );
               })}
