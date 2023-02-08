@@ -41,12 +41,13 @@ import com.idle.imfine.errors.code.SubscribeErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.diary.DiaryService;
+import com.idle.imfine.service.notification.NotificationService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,6 +71,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final Common common;
     private final Logger LOGGER = LoggerFactory.getLogger(DiaryService.class);
     private final ConditionRepository conditionRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -202,13 +204,7 @@ public class DiaryServiceImpl implements DiaryService {
             crtDate = crtDate.plusDays(1);
         }
 
-
         LOGGER.info("증상 목록 정렬 완료 ");
-//        papers.stream().forEach(
-//                paper -> recordDtos.add(ResponseSymptomChartRecordDto.builder()
-//                        .date(paper.getDate().toString())
-//        );
-
         return responseDto;
     }
 
@@ -260,6 +256,7 @@ public class DiaryServiceImpl implements DiaryService {
             .build());
         diary.setSubscribeCount(diary.getSubscribeCount() + 1);
         diaryRepository.save(diary);
+        notificationService.send(userId, diary.getWriter().getId(), 1, diary.getId(), 1);
     }
 
     @Override
@@ -287,7 +284,7 @@ public class DiaryServiceImpl implements DiaryService {
         List<MedicalCode> medicalCodes = medicalCodeRepository.findByIdIn(
                 requestDiaryFilterDto.getMedicalId());
 
-        Page<Diary> diaryPage;
+        Slice<Diary> diaryPage;
         if (requestDiaryFilterDto.getMedicalId().size() == 0
                 && requestDiaryFilterDto.getSymptomId().size() == 0) {
             diaryPage = diaryRepository.findAllByOpenTrue(pageable);
@@ -309,6 +306,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .image(diary.getImage())
                 .subscribeCount(diary.getSubscribeCount())
                 .paperCount(diary.getPaperCount())
+                .hasNext(diaryPage.hasNext())
                 .build()
         ).collect(Collectors.toList());
     }
@@ -414,9 +412,38 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ResponseDiaryListDto> getDiarySubscribe(String uid) {
         User user = common.getUserByUid(uid);
         List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(user);
-        return null;
+        return diaries.stream().map(
+                diary -> ResponseDiaryListDto.builder()
+                        .diaryId(diary.getId())
+                        .title(diary.getTitle())
+                        .medicalName(diary.getMedicalCode().getName())
+                        .name(diary.getWriter().getName())
+                        .paperCount(diary.getPaperCount())
+                        .subscribeCount(diary.getSubscribeCount())
+                        .image(diary.getImage())
+                        .build()
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ResponseDiaryListDto> getDiaryMyWrite(String uid) {
+        User user = common.getUserByUid(uid);
+        List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(user);
+        return diaries.stream().map(
+                diary -> ResponseDiaryListDto.builder()
+                        .diaryId(diary.getId())
+                        .title(diary.getTitle())
+                        .medicalName(diary.getMedicalCode().getName())
+                        .name(diary.getWriter().getName())
+                        .paperCount(diary.getPaperCount())
+                        .subscribeCount(diary.getSubscribeCount())
+                        .image(diary.getImage())
+                        .build()
+        ).collect(Collectors.toList());
     }
 }
