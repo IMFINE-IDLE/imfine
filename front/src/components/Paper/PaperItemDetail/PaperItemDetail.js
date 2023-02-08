@@ -10,7 +10,13 @@ import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
 import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
-import { BoxBottemLeft, BoxBottomDetail, BoxPaperDetail } from './style';
+import {
+  AudioPlayer,
+  BoxBottemLeft,
+  BoxBottomDetail,
+  BoxPaperDetail,
+  BoxTopAudio,
+} from './style';
 
 function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
   const navigate = useNavigate();
@@ -26,6 +32,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     likeCount,
     commentCount,
     createdAt,
+    musicURL,
   } = paper;
 
   // 일기 삭제 함수
@@ -67,6 +74,8 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     }
   }
 
+  console.log(musicURL);
+
   return (
     <>
       <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
@@ -87,6 +96,18 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
               <div>
                 <DiaryTitle title={title} />
               </div>
+              <BoxTopAudio>
+                {musicURL && (
+                  <AudioPlayer
+                    src={musicURL}
+                    controls
+                    controlsList="nodownload noplaybackrate"
+                    // onPlay={handlePlay}
+                    // onPause={handlePause}
+                  />
+                )}
+                {/* {isPlaying ? <p>Playing...</p> : <p>Paused</p>} */}
+              </BoxTopAudio>
             </div>
             <BtnReport paperId={paperId} />
           </BoxRight>
