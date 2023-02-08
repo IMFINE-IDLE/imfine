@@ -64,6 +64,8 @@ const api = {
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
+    getDiaryPaperItem: (params) =>
+      URL + DIARY + `/${params.diaryId}/paper/${params.date}`,
   },
 };
 

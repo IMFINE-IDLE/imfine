@@ -12,41 +12,46 @@ import DiaryTitle from '../../components/Paper/DiaryTitle/DiaryTitle';
 import { ReactComponent as BookmarkSvg } from './bookmark.svg';
 import PickedItemList from '../../components/PickedItemList/PickedItemList';
 import SymptomGraph from '../../components/SymptomGraph/SymptomGraph';
+import { axiosInstance } from '../../api/axiosInstance';
+import moment from 'moment';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
   const [diaryInfo, setDiaryInfo] = useState(null);
   const [showGraph, setShowGraph] = useState(false);
+  const [isMine, setIsMine] = useState(null);
 
+  // 일기장 정보 가져오기
   const fetchGetDiaryInfo = async () => {
     try {
       const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
 
+      // 내가 쓴 다이어리면 isMine = ture 로 변경
+      if (res.data.data.uid === localStorage.getItem('uid')) {
+        setIsMine(true);
+      }
+
       console.log(res.data.data);
       setDiaryInfo(res.data.data);
-
-      // const {
-      //   data: {
-      //     data: {
-      //       userId,
-      //       userStatus,
-      //       title,
-      //       description,
-      //       userName,
-      //       medicalName,
-      //       beginDate,
-      //       endedDate,
-      //       diaryHasSymptoms,
-      //     },
-      //   },
-      // } = res;
-      // console.log('title', title);
     } catch (err) {
       console.error(err);
     }
   };
+
+  // const fetchGetDiaryPaperItem = async (diaryId, date) => {
+  //   try {
+  //     const params = {
+  //       diaryId,
+  //       date: moment(date).format('YYYY-MM-DD'),
+  //     };
+
+  //     const res = await axiosInstance.get(api.diary.getDiaryPaperItem(params));
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const fetchUpdateSubscribeStatus = async (status) => {
     try {
@@ -76,7 +81,7 @@ const DiaryDetailPage = () => {
   if (!diaryInfo) return null;
 
   // const isMine = diaryInfo.uid === localStorage.getItem('uid') ? true : false;
-  const isMine = false;
+  // const isMine = false;
 
   const medicalList = [
     {
@@ -212,7 +217,7 @@ const DiaryDetailPage = () => {
           </BoxShad>
         )}
 
-        <StatusCalendar uid={diaryInfo.uid} />
+        <StatusCalendar uid={diaryInfo.uid} diaryId={diaryId} />
       </DiaryBoxGrad>
     </>
   );
