@@ -2,8 +2,8 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
-import { updateCode } from '../../store/slice/userInfoSlice';
 import api from '../../api/api';
+import { updateCode } from '../../store/slice/userInfoSlice';
 import { Clover } from '../common/Clover/Clover';
 import { CloverStatusContainer, CloverWrap } from './style';
 
@@ -13,7 +13,7 @@ const CloverModal = ({
   setCurrentClover,
   setCloversOpen,
   fetchProfileCalendar,
-  center,
+  isCenter,
 }) => {
   const statusList = [
     ['0', '두근'],
@@ -31,14 +31,25 @@ const CloverModal = ({
   const dispatch = useDispatch();
 
   // props로 받은 date 날짜의 컨디션 변경
+  const updateCondition = (newCondition) => {
+    fetchUpdateCondition(newCondition); // 서버에 유저의 새로운 컨디션 저장
+    setCurrentClover(newCondition); // 클로버 상태 업데이트
+    setCloversOpen((prev) => !prev); // 클로버 선택 모달 닫기
+
+    if (date.getDate() !== new Date().getDate()) return; // 날짜가 오늘일 경우에만
+    dispatch(updateCode(newCondition)); // 유저의 오늘 컨디션 store에 저장
+  };
+
+  // api 요청: props로 받은 date 날짜의 컨디션 변경
   const fetchUpdateCondition = async (newCondition) => {
     try {
       // 컨디션 최초 설정이면 post 요청, 수정이면 put 요청
       const method = currentClover === '-1' ? 'post' : 'put';
       console.log('method', method);
-      if (date > new Date()) return;
+      console.log('newcon', newCondition);
+      console.log('date', date);
 
-      const res = await axios({
+      await axios({
         method: method,
         url: api.user.setCondition(),
         data: {
@@ -50,22 +61,12 @@ const CloverModal = ({
         },
       });
 
+      // 변경되었으니 달력 재렌더링
       fetchProfileCalendar();
     } catch (e) {
       console.error(e);
     }
   };
-
-  const updateCondition = (newCondition) => {
-    fetchUpdateCondition(newCondition); // 서버에 유저의 새로운 컨디션 저장
-    setCurrentClover(newCondition); // 클로버 상태 업데이트
-    setCloversOpen((prev) => !prev); // 클로버 선택 모달 닫기
-
-    if (date !== new Date()) return; // 날짜가 오늘일 경우에만
-    dispatch(updateCode(newCondition)); // 유저의 오늘 컨디션 store에 저장
-  };
-
-  console.log();
 
   return (
     <CloverStatusContainer
@@ -74,7 +75,7 @@ const CloverModal = ({
       radius="25px"
       shadX="0"
       shadY="0"
-      center={center}
+      isCenter={isCenter}
     >
       <CloverWrap>
         {statusList.map((status, idx) => (
@@ -93,13 +94,3 @@ const CloverModal = ({
 };
 
 export default CloverModal;
-
-{
-  /* <CloverStatusContainer width="18.75em" height="11em" radius="25px">
-<CloverModal
-  currentClover={currentClover}
-  setCurrentClover={setCurrentClover}
-  setCloversOpen={setCloversOpen}
-/>
-</CloverStatusContainer> */
-}

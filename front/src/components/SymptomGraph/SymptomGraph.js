@@ -10,6 +10,19 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+// 응답 방식
+// data: [
+//   {
+//     date: date,
+//     sypmtoms: [
+//       {
+//         sytmptom1: 1,
+//         sypmtom2: 2
+//       }
+//     ]
+//   }
+//  ]
+
 const data = [
   // {
   //   name: '1/27',

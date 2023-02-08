@@ -1,11 +1,8 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import api from '../../../api/api';
+import { useNavigate } from 'react-router-dom';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import DiaryItem from '../DiaryItem/DiaryItem';
 
-const DiaryListGrid = ({ diaryList, setType }) => {
+const DiaryListGrid = ({ diaryList }) => {
   const navigate = useNavigate();
 
   return (
