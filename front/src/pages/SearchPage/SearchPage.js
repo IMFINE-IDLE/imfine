@@ -27,6 +27,8 @@ function SearchPage() {
   const [keyword, setKeyword] = useState(''); // 검색창에 검색하는 쿼리
   const [keywordResult, setKeywordResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
 
+  const [paperList, setPaperList] = useState([]);
+
   const handleSearch = async (trimmedKeyword) => {
     if (trimmedKeyword === '' || trimmedKeyword === null) {
       return;
@@ -43,7 +45,13 @@ function SearchPage() {
   };
 
   const tabArr = [
-    { idx: 0, tabName: '일기', tabContent: <SearchPaper /> },
+    {
+      idx: 0,
+      tabName: '일기',
+      tabContent: (
+        <SearchPaper paperList={paperList} setPaperList={setPaperList} />
+      ),
+    },
     { idx: 1, tabName: '일기장', tabContent: <SearchDiary /> },
     { idx: 2, tabName: '유저', tabContent: <SearchUser /> },
   ];
