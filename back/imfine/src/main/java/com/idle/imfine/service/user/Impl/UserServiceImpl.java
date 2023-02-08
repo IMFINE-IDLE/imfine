@@ -10,10 +10,12 @@ import com.idle.imfine.data.dto.user.request.SignInRequestDto;
 import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
+import com.idle.imfine.data.entity.FollowWait;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.UserHasMedical;
 import com.idle.imfine.data.entity.medical.MedicalCode;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
+import com.idle.imfine.data.repository.user.FollowWaitRepository;
 import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.MedicalErrorCode;
@@ -22,12 +24,11 @@ import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.errors.token.TokenNotFoundException;
 import com.idle.imfine.service.Common;
+import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.regex.Pattern;
 import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +46,11 @@ public class UserServiceImpl implements UserService {
     private final Common common;
     private final UserRepository userRepository;
     private final UserHasMedicalRepository userHasMedicalRepository;
+    private final FollowWaitRepository followWaitRepository;
     private final MedicalCodeRepository medicalCodeRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final FollowService followService;
 
     @Override
     public Map<String, Object> signUp(SignUpRequestDto requestDto) {
@@ -256,7 +259,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyUserOpen(String uid, ModifyUserOepnRequestDto requestDto) {
         User user = common.getUserByUid(uid);
-        user.setOpen(requestDto.isOpen());
+        boolean beforeState = user.isOpen();
+        boolean afterState = requestDto.isOpen();
+        user.setOpen(afterState);
+
+        if (!beforeState && afterState) {
+            LOGGER.info("[UserService.modifyUserOpen] 팔로우 요청 수락 시작");
+            List<FollowWait> followWaitList = followWaitRepository.findAllByReceiver(user);
+            LOGGER.info("[UserService.modifyUserOpen] 팔로우 요청 목록 가져오기 완료");
+            for (FollowWait followWait : followWaitList) {
+                User requester = followWait.getRequester();
+                LOGGER.info("[UserService.modifyUserOpen] {}의 요청 수락 시작", requester);
+                followService.allowUserRequest(uid, requester.getUid());
+            }
+            LOGGER.info("[UserService.modifyUserOpen] 요청 모두 수락 완료");
+        }
+
         userRepository.save(user);
     }
 
