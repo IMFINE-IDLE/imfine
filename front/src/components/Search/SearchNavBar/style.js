@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 const BoxNavBar = styled.div`
+  position: fixed;
   width: 100%;
-  height: 65px;
+  height: var(--nav-height);
   display: flex;
   align-items: center;
   padding: 0 1em;
