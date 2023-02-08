@@ -6,6 +6,7 @@ import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.image.UploadFile;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
+import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
@@ -121,7 +122,7 @@ public class PaperServiceImpl implements PaperService {
                     .paper(savedPaper)
                     .build()
             );
-
+        diary.setPaperCount(diary.getPaperCount() + 1);
         paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
     }
 
@@ -133,6 +134,9 @@ public class PaperServiceImpl implements PaperService {
         Paper foundPaper = paperRepository.findById(paperId)
             .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
         paperHasSymptomRepository.deleteByPaper(foundPaper.getId());
+
+        Diary paperDiary = foundPaper.getDiary();
+        paperDiary.setPaperCount(paperDiary.getPaperCount() - 1);
         paperRepository.deleteById(paperId);
     }
 
@@ -209,9 +213,9 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ResponsePaperDtoOnlyMainPage> getPaperList(String uid, Pageable pageable) {
+    public ResponseMainPage getPaperList(String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);
-        LOGGER.info("여긴가");
+        LOGGER.info("메인페이지: 일기 목록 조회 service");
 
         Slice<Paper> papers = paperRepository.getMainPagePaperByHs(user.getId(), pageable);
         List<Paper> paperList = papers.getContent();
@@ -226,52 +230,38 @@ public class PaperServiceImpl implements PaperService {
 
         Map<Integer, Symptom> symptomIdByName = symptoms.stream().collect(Collectors.toMap(Symptom::getId, Function.identity()));
 
-        return papers.stream().map(
-                paper -> ResponsePaperDtoOnlyMainPage.builder()
-                        .diaryId(paper.getDiary().getId())
-                        .title(paper.getDiary().getTitle())
-                        .content(paper.getContent())
-                        .paperId(paper.getId())
-                        .uid(paper.getDiary().getWriter().getUid())
-                        .commentCount(paper.getCommentCount())
-                        .likeCount(paper.getLikeCount())
-                        .name(paper.getDiary().getWriter().getName())
-                        .myHeart(myHeartPapers.contains(paper.getId()))
-                        .date(paper.getDate())
-                        .createdAt(common.convertDateAllType(paper.getCreatedAt()))
-                        .open(paper.isOpen())
-                        .condition(papersCondition.get(paper.getId()) != null ? papersCondition.get(paper.getId()).toString() : "0")
-                        .image(imageHasPaper.contains(paper.getId()))
-                        .hasNext(papers.hasNext())
-                        .symptomList(
-                                map.get(paper.getId()).stream().map(
-                                        paperHasSymptom ->
-                                            ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
-                                                    .id(paperHasSymptom.getSymptomId())
-                                                    .name(symptomIdByName.get(paperHasSymptom.getSymptomId()).getName())
-                                                    .score(paperHasSymptom.getScore())
-                                            .build()
+        return ResponseMainPage.builder()
+                .hasNext(papers.hasNext())
+                .list(papers.stream().map(
+                        paper -> ResponsePaperDtoOnlyMainPage.builder()
+                                .diaryId(paper.getDiary().getId())
+                                .title(paper.getDiary().getTitle())
+                                .content(paper.getContent())
+                                .paperId(paper.getId())
+                                .uid(paper.getDiary().getWriter().getUid())
+                                .commentCount(paper.getCommentCount())
+                                .likeCount(paper.getLikeCount())
+                                .name(paper.getDiary().getWriter().getName())
+                                .myHeart(myHeartPapers.contains(paper.getId()))
+                                .date(paper.getDate())
+                                .createdAt(common.convertDateAllType(paper.getCreatedAt()))
+                                .open(paper.isOpen())
+                                .condition(papersCondition.get(paper.getId()) != null ? papersCondition.get(paper.getId()).toString() : "0")
+                                .image(imageHasPaper.contains(paper.getId()))
+                                .hasNext(papers.hasNext())
+                                .symptomList(
+                                        map.get(paper.getId()).stream().map(
+                                                paperHasSymptom ->
+                                                        ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
+                                                                .id(paperHasSymptom.getSymptomId())
+                                                                .name(symptomIdByName.get(paperHasSymptom.getSymptomId()).getName())
+                                                                .score(paperHasSymptom.getScore())
+                                                                .build()
 
-                                ).collect(Collectors.toList()))
-//                                paper.getPaperHasSymptoms().stream().map(
-//                                        paperHasSymptom -> {
-//                                            ResponsePaperSymptomRecordDto element = null;
-//                                            for (DiaryHasSymptom diaryHasSymptom: paper.getDiary().getDiaryHasSymptoms()) {
-//                                                if (paperHasSymptom.getSymptomId() == diaryHasSymptom.getSymptom().getId()) {
-//                                                    element = ResponsePaperSymptomRecordDto.builder()
-//                                                            .symptomName(diaryHasSymptom.getSymptom().getName())
-//                                                            .score(paperHasSymptom.getScore())
-//                                                            .symptomId(
-//                                                                    paperHasSymptom.getSymptomId())
-//                                                            .build();
-//                                                    break;
-//                                                }
-//                                            }
-//                                            return element;
-//                                        }
-//                                ).collect(Collectors.toList())
-                        .build()
-        ).collect(Collectors.toList());
+                                        ).collect(Collectors.toList()))
+                                .build()
+                ).collect(Collectors.toList()))
+                .build();
     }
 
     @Override
