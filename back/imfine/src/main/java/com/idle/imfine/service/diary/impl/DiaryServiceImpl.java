@@ -41,7 +41,6 @@ import com.idle.imfine.errors.code.SubscribeErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.diary.DiaryService;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -147,7 +146,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, List<ResponseSymptomScoreDto>> getDiarySymptomsAll(RequestSymptomChartDto requestDto) {
+    public List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(RequestSymptomChartDto requestDto) {
         LOGGER.info("일기장 증상 차트 조회");
         LocalDate date = common.convertDateType(requestDto.getDate());
         int minusDays = date.getDayOfWeek().getValue();
@@ -210,7 +209,7 @@ public class DiaryServiceImpl implements DiaryService {
 //                        .date(paper.getDate().toString())
 //        );
 
-        return responsePureDto;
+        return responseDto;
     }
 
     @Override

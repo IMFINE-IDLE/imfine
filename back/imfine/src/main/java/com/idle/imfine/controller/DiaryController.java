@@ -76,7 +76,7 @@ public class DiaryController {
             @PathVariable("date") String date, @PathVariable("filter") String filter) {
 
         LOGGER.info("증상 차트 조회 들어옴");
-        Map<String, List<ResponseSymptomScoreDto>> responseDto = diaryService.getDiarySymptomsAll(
+        List<ResponseSymptomChartRecordDto> responseDto = diaryService.getDiarySymptomsAll(
                 RequestSymptomChartDto.builder()
                         .diaryId(diaryId)
                         .date(date)
