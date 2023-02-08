@@ -47,7 +47,7 @@ function PaperCreatePage() {
   const [uploadedImage, setUploadedImage] = useState(null); // 이미지 서버 업로드
   const [isOpen, setIsOpen] = useState(true); // 공개.비공개 state
   const [symptoms, setSymptoms] = useState([]); // 증상받아오기
-
+  const [symptomScore, setSymptomScore] = useState([]); // 증상점수저장하는 State
   // API 처리부분
   // 사용자가 작성한 다이어리 정보 받아오기
   const getDiaries = async () => {
@@ -86,7 +86,7 @@ function PaperCreatePage() {
     }
   }, [diaryId]);
 
-  // 일기장 선택될때마다 해당 일기장 정보끌고오기
+  // 일기장 선택될때마다 해당 일기장의 Symptom 정보끌고오기
   useEffect(() => {
     setSymptoms(diary.diaryHasSymptoms);
     console.log('symptoms', symptoms);
@@ -130,7 +130,11 @@ function PaperCreatePage() {
         <ContentLabel>증상을 체크해주세요.</ContentLabel>
       </TopDiv>
       <BoxContent>
-        <SymptomRating symptomList={symptoms} />
+        <SymptomRating
+          symptomList={symptoms}
+          value={symptomScore}
+          state={setSymptomScore}
+        />
       </BoxContent>
       <RightDiv>
         <FiArrowRight />
