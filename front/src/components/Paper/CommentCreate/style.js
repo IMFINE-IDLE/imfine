@@ -10,12 +10,17 @@ const BoxCommentCreate = styled.div`
   border-radius: 25px 25px 0 0;
   padding: 1em;
   input {
-    background-color: white;
     width: 100%;
-    border-radius: 50px;
-    padding: 0.5em;
-    margin-right: 1em;
   }
 `;
 
-export { BoxCommentCreate };
+const FormInput = styled.form`
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  width: 100%;
+  border-radius: 50px;
+  padding: 0.5em 1em 0.5em 0.5em;
+`;
+
+export { BoxCommentCreate, FormInput };

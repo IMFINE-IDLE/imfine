@@ -101,7 +101,12 @@ const BtnSymptom = styled.span`
   margin: 0 0.3em;
 `;
 
-const BtnLeftTap = styled(BoxRT25)`
+const BoxBtnTap = styled.div`
+  display: flex;
+`;
+
+const BtnTap = styled(BoxRT25)`
+  border-radius: 25px 25px 0 0;
   width: 50%;
   text-align: center;
 `;
@@ -128,6 +133,7 @@ export {
   BoxSymptom,
   BtnSymptom,
   BoxPickMenu,
-  BtnLeftTap,
+  BoxBtnTap,
+  BtnTap,
   TitleSmall,
 };
