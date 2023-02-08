@@ -1,5 +1,5 @@
-const URL = 'http://localhost:8080';
-// const URL = 'http://i8A809.p.ssafy.io:8080';
+// const URL = 'http://localhost:8080/api';
+const URL = 'http://i8A809.p.ssafy.io/api';
 
 const USERS = '/user';
 const DIARY = '/diary';
@@ -22,7 +22,7 @@ const api = {
     updateOpenStatus: () => URL + USERS + '/open',
   },
   paper: {
-    paperFeed: () => URL + PAPER + '/list',
+    paperFeed: (page) => URL + PAPER + `/list?page=${page}&tab=date`,
     paperDetail: (paperId) => URL + PAPER + `/${paperId}`,
     paperReport: (paperId) => URL + REPORT + PAPER + `/${paperId}`,
     paperLikePost: () => URL + PAPER + '/like',
@@ -38,6 +38,10 @@ const api = {
     getUserInfo: (params) => URL + USERS + `/${params}`,
     getMonthCondition: (params) =>
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
+    getFollowingList: (params) => URL + USERS + `/${params}/following`,
+    getFollowerList: (params) => URL + USERS + `/${params}/follower`,
+    follow: () => URL + USERS + '/follow',
+    unfollow: (params) => URL + USERS + `/follow/${params}`,
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,
@@ -61,6 +65,7 @@ const api = {
     getDiaryInfo: (params) => URL + DIARY + `/${params}`,
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
+    getDiaries: () => URL + DIARY + '/list/paper-post',
   },
 };
 

@@ -1,39 +1,60 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
 import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
+import { Clover } from '../../components/common/Clover/Clover';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItem from '../../components/Paper/PaperItem/PaperItem';
 import TabBar from '../../components/TabBar/TabBar';
-import { BoxPaperFeed, Circle } from './style';
-import { res } from './tmp';
+import {
+  BigCircle,
+  BoxInner,
+  BoxNoPaperFeed,
+  BoxPaperFeed,
+  Circle,
+  TextBubble,
+} from './style';
 
 function PaperFeedPage() {
-  const accessToken = useSelector((state) => {
-    return state.accessToken;
-  });
   const [paperList, setPaperList] = useState([]);
+  const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const observerRef = useRef();
+  const observer = (element) => {
+    if (isLoading) return;
 
-  const fetchPaperFeed = async () => {
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting) {
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    element && observerRef.current.observe(element);
+  };
+
+  // 일기 피드 조회
+  const fetchPaperFeed = async (pagination) => {
     try {
-      const res = await axios.get(api.paper.paperFeed(), {
+      const res = await axios.get(api.paper.paperFeed(pagination), {
         // headers: {
         //   Authorization: accessToken,
         // },
         // headers: { Authorization: localStorage.getItem('accessToken') },
       });
       console.log(res.data);
-      setPaperList(res.data.data);
+      setIsLoading(false);
+      setPaperList((prev) => prev.concat(res.data.data));
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err.response);
     }
   };
-  useEffect(() => {
-    fetchPaperFeed();
 
-    // setPaperList(res.data);
-  }, []);
+  useEffect(() => {
+    fetchPaperFeed(page);
+  }, [page]);
 
   const likePaper = async (paperId) => {
     try {
@@ -68,23 +89,44 @@ function PaperFeedPage() {
   return (
     <>
       <NavBarBasic />
-      <BoxPaperFeed>
-        {paperList?.map((paper) => {
-          return (
-            <PaperItem
-              paper={paper}
-              key={paper.paperId}
-              myHeart={paper.myHeart}
-              likeCount={paper.likeCount}
-              likePaper={likePaper}
-              likePaperDelete={likePaperDelete}
-            />
-          );
-        })}
-        <BtnFloat />
-        <Circle small />
-        <Circle />
-      </BoxPaperFeed>
+      {paperList?.length === 0 ? (
+        <BoxNoPaperFeed>
+          <BoxInner>
+            <TextBubble>
+              <p>볼 수 있는 일기가 없네요!</p>
+              <p>더 많은 일기장을 구독 해볼까요?</p>
+            </TextBubble>
+            <div>
+              <Clover code={'1'} width={'150'} height={'150'} />
+            </div>
+          </BoxInner>
+          <BigCircle />
+          <BtnFloat />
+        </BoxNoPaperFeed>
+      ) : (
+        <>
+          <BoxPaperFeed>
+            {paperList?.map((paper) => {
+              return (
+                <PaperItem
+                  paper={paper}
+                  key={paper.paperId}
+                  myHeart={paper.myHeart}
+                  likeCount={paper.likeCount}
+                  likePaper={likePaper}
+                  likePaperDelete={likePaperDelete}
+                />
+              );
+            })}
+            <BtnFloat />
+            <Circle small />
+            <Circle />
+          </BoxPaperFeed>
+          <div ref={observer} />
+          {isLoading && <p>로딩중...</p>}
+        </>
+      )}
+
       <TabBar />
     </>
   );

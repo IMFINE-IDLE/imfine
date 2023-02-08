@@ -10,13 +10,21 @@ import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
 import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
-import { BoxBottomDetail, BoxPaperDetail } from './style';
+import {
+  AudioPlayer,
+  BoxBottemLeft,
+  BoxBottomDetail,
+  BoxPaperDetail,
+  BoxTopAudio,
+} from './style';
 
 function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
   const navigate = useNavigate();
   const {
     condition,
+    uid,
     name,
+    diaryId,
     title,
     symptomList,
     content,
@@ -25,6 +33,8 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     myHeart,
     likeCount,
     commentCount,
+    createdAt,
+    musicURL,
   } = paper;
 
   // 일기 삭제 함수
@@ -33,6 +43,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
       const res = await axios.delete(api.paper.paperDetail(paperId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
+      navigate('/home');
     } catch (err) {
       console.log(err.response.data.message);
     }
@@ -40,18 +51,47 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
 
   // 일기 삭제 모달
   const [modalOpen, setModalOpen] = useState(false);
-  console.log(symptomList);
+
+  // 게시글 시간 표시 함수
+  function getTimeDifference(timeString) {
+    let currentTime = new Date();
+    let providedTime = new Date(createdAt);
+    let milli = currentTime.getTime() - providedTime.getTime();
+    let timeGap = parseInt(milli / 60000);
+    // console.log(paperId, timeGap);
+
+    if (timeGap < 60) {
+      return `${timeGap}분전`;
+    } else if (timeGap >= 60 && timeGap < 60 * 24) {
+      return `${parseInt(timeGap / 60)}시간전`;
+    } else if (timeGap >= 60 * 24) {
+      if (currentTime.getFullYear() - providedTime.getFullYear()) {
+        return `${providedTime.getFullYear()}년 ${
+          providedTime.getMonth() + 1
+        }월 ${providedTime.getDate()}일`;
+      } else {
+        return `${providedTime.getMonth() + 1}월 ${providedTime.getDate()}일`;
+      }
+    }
+  }
+
+  console.log(diaryId);
   return (
     <>
       <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
         <BoxTop>
           <BoxLeft>
             <img
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/profile/${uid}`);
+              }}
               src={`/assets/clovers/clover${condition}.svg`}
               alt=""
-              width={'50px'}
-              height={'50px'}
+              width={'70px'}
+              height={'70px'}
             />
+            <span>프로필 보기</span>
           </BoxLeft>
           <BoxRight>
             <div>
@@ -59,8 +99,20 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                 <p style={{ fontWeight: '700' }}>{name}</p>
               </div>
               <div>
-                <DiaryTitle title={title} />
+                <DiaryTitle title={title} diaryId={diaryId} />
               </div>
+              <BoxTopAudio>
+                {musicURL && (
+                  <AudioPlayer
+                    src={musicURL}
+                    controls
+                    controlsList="nodownload noplaybackrate"
+                    // onPlay={handlePlay}
+                    // onPause={handlePause}
+                  />
+                )}
+                {/* {isPlaying ? <p>Playing...</p> : <p>Paused</p>} */}
+              </BoxTopAudio>
             </div>
             <BtnReport paperId={paperId} />
           </BoxRight>
@@ -70,11 +122,10 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
           {content}
         </BoxContent>
         <BoxBottomDetail userStatus={Boolean(!userStatus)}>
-          <div>
+          <BoxBottemLeft>
             {Boolean(!userStatus) && (
-              <div>
+              <>
                 <FiEdit
-                  style={{ marginRight: '.5em' }}
                   onClick={() => {
                     navigate('/paper/create');
                   }}
@@ -84,9 +135,12 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                     setModalOpen(true);
                   }}
                 />
-              </div>
+              </>
             )}
-          </div>
+            <span style={{ fontSize: '14px' }}>
+              {getTimeDifference(createdAt)}
+            </span>
+          </BoxBottemLeft>
           <LikeComment
             id={paperId}
             myHeart={myHeart}

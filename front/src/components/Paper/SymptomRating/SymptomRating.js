@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactStars from 'react-rating-stars-component';
 import {
   BoxSymptomRating,
   DivSymptom,
@@ -9,16 +10,25 @@ import {
 function SymptomRating({ symptomList }) {
   return (
     <BoxSymptomRating>
-      <div>
-        {symptomList?.map((symptom) => {
-          return (
-            <DivSymptom key={symptom.symptomId}>
-              <LabelSymptom>{symptom.symptomName}</LabelSymptom>
-              <RateSymptom>{symptom.score}</RateSymptom>
-            </DivSymptom>
-          );
-        })}
-      </div>
+      {symptomList?.map(({ symptomId, symptomName, score }) => {
+        return (
+          <DivSymptom key={symptomId}>
+            <LabelSymptom>{symptomName}</LabelSymptom>
+            <RateSymptom>
+              <ReactStars
+                count={5}
+                size={25}
+                value={parseFloat(score / 2)}
+                activeColor="#A9D7D0"
+                // activeColor="#FDE3E3" light pink
+                isHalf={true}
+                edit={false}
+                char={'●'}
+              />
+            </RateSymptom>
+          </DivSymptom>
+        );
+      })}
     </BoxSymptomRating>
   );
 }

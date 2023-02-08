@@ -4,9 +4,7 @@ import { Btn } from '../common/Btn/Btn';
 
 const BoxBtnFloat = styled.div`
   position: fixed;
-  width: 60%;
-  min-width: 200px;
-  max-width: 320px;
+  width: 75px;
   bottom: 90px;
   right: 30px;
   display: flex;
@@ -28,6 +26,9 @@ const CircleFloat = styled.div`
 
 const BtnLink = styled(Link)`
   ${Btn}
+  width: 100%;
+  min-width: 200px;
+  max-width: 320px;
 `;
 
 export { BoxBtnFloat, CircleFloat, BtnLink };

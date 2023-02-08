@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { Clover } from '../../common/Clover/Clover';
 import {
@@ -12,18 +13,34 @@ import {
 
 const ProfileInfo = ({
   condition,
+  uid,
   name,
   open,
   followingCount,
   followerCount,
   relation,
 }) => {
-  const state = useSelector((state) => state);
+  const navigate = useNavigate();
+  // 내 프로필인지 여부를 체크해서 내 프로필일 때는 store에서 컨디션을 가져와서 렌더링
+  const isMine = useRef(uid === localStorage.getItem('uid') ? true : false);
+  const { cloverCode } = useSelector((state) => state.userInfo);
+
+  const infoToFollowPage = {
+    name,
+    open,
+    followingCount,
+    followerCount,
+    condition,
+  };
 
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
       <ProfileInfoContainer>
-        <Clover code={state.userInfo.cloverCode} width="4.2em" height="4.2em" />
+        <Clover
+          code={isMine.current ? cloverCode : condition}
+          width="4.2em"
+          height="4.2em"
+        />
 
         <ProfileInfoWrapper>
           <ProfileNickNameWrapper>
@@ -51,16 +68,44 @@ const ProfileInfo = ({
           </ProfileNickNameWrapper>
 
           <div>
-            <ProfileItemSpan>팔로잉</ProfileItemSpan>
-            <ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  state: { ...infoToFollowPage, type: '팔로잉' },
+                })
+              }
+            >
+              팔로잉
+            </ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  state: { ...infoToFollowPage, type: '팔로잉' },
+                })
+              }
+            >
               {followingCount >= 1000
                 ? parseInt(followingCount / 1000) + 'k'
                 : followingCount}
             </ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
-            <ProfileItemSpan>팔로워</ProfileItemSpan>
-            <ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  state: { ...infoToFollowPage, type: '팔로워' },
+                })
+              }
+            >
+              팔로워
+            </ProfileItemSpan>
+            <ProfileItemSpan
+              onClick={() =>
+                navigate(`/profile/${uid}/follows`, {
+                  state: { ...infoToFollowPage, type: '팔로워' },
+                })
+              }
+            >
               {followerCount >= 1000
                 ? parseInt(followerCount / 1000) + 'k'
                 : followerCount}
