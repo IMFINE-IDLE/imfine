@@ -263,4 +263,11 @@ public class UserController {
                 .body(responseService.getSuccessResult());
     }
 
+    @DeleteMapping("/follow/block/{uid}")
+    public ResponseEntity<Result> blockFollower(@LoginUser String loginUid, @PathVariable String uid) {
+        followService.blockFollower(loginUid, uid);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
 }

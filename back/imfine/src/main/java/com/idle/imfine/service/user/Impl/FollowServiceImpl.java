@@ -126,6 +126,24 @@ public class FollowServiceImpl implements FollowService {
         LOGGER.info("[FollowService.declineUserRequest] 팔로우 요청을 거절했습니다.");
     }
 
+    @Override
+    public void blockFollower(String uid, String otherUid) {
+        LOGGER.info("팔로워 차단하기 시작");
+        User user = common.getUserByUid(uid);
+        User other = common.getUserByUid(otherUid);
+        LOGGER.info("유저 정보 조회 완료");
+
+        if (!followRepository.existsByFollowingUserAndFollowedUser(other, user)) {
+            LOGGER.info("상대가 이미 팔로우하고 있지않습니다.");
+            throw new ErrorException(FollowErrorCode.NOT_ALREADY_FOLLOWING);
+        }
+
+        common.decreaseFollowingCount(other);
+        common.decreaseFollowerCount(user);
+        followRepository.deleteByFollowingUserAndFollowedUser(other, user);
+        LOGGER.info("팔로워 차단이 완료되었습니다.");
+    }
+
 
     @Override
     public List<FollowResponseDto> searchFollowingList(String uid, String targetUid) {

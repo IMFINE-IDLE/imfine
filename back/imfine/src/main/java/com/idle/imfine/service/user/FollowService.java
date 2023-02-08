@@ -14,6 +14,8 @@ public interface FollowService {
 
     void declineUserRequest(String uid, String otherUid);
 
+    void blockFollower(String uid, String otherUid);
+
     List<FollowResponseDto> searchFollowingList(String uid, String otherUid);
 
     List<FollowResponseDto> searchFollowerList(String uid, String otherUid);
