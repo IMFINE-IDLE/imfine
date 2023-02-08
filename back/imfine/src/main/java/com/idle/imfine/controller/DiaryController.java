@@ -7,12 +7,14 @@ import com.idle.imfine.data.dto.diary.request.RequestDiaryFilterDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryModifyDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryPostDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
+import com.idle.imfine.data.dto.diary.request.RequestSymptomChartDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import com.idle.imfine.service.diary.DiaryService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +22,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/diary")
@@ -56,23 +64,36 @@ public class DiaryController {
     }
     @GetMapping("/subscribe")
     public ResponseEntity<Result> getDiarySubscribe(@LoginUser String uid) {
-        LOGGER.info("내가 구독한 일기장 조회 api들어옴 {}", uid);
+        LOGGER.info("내가 구독한 일기장 조회 api {}", uid);
         List<ResponseDiaryListDto> responseDto = diaryService.getDiarySubscribe(uid);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
-
+    @GetMapping("/my-write")
+    public ResponseEntity<Result> getDiaryMyWrite(@LoginUser String uid) {
+        LOGGER.info("내가 작성한 일기장 조회 api {}", uid);
+        List<ResponseDiaryListDto> responseDto = diaryService.getDiaryMyWrite(uid);
+        return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
+    }
     @GetMapping("/{diary-id}")
     public ResponseEntity<Result> getDiaryDetail(@PathVariable(value = "diary-id") long diaryId, @LoginUser String uid) {
-        LOGGER.info("일기장 상세조회 api들어옴 {}", diaryId);
+        LOGGER.info("일기장 상세조회 api {}", diaryId);
         ResponseDiaryDetailDto resoponseDtos = diaryService.getDiaryDetail(diaryId, uid);
         return ResponseEntity.ok().body(responseService.getSingleResult(resoponseDtos));
     }
 
-    @GetMapping("/{diary-id}/symptoms")
-    public ResponseEntity<Result> getDiaryDetailSymptomRecords(@PathVariable(value = "diary-id") long diaryId) {
-        List<ResponseSymptomChartRecordDto> resoponseDtos = diaryService.getDiarySymptomsAll(diaryId);
+    @GetMapping("/{diary-id}/symptoms/{date}/{filter}")
+    public ResponseEntity<Result> getDiaryDetailSymptomRecords(@PathVariable("diary-id") long diaryId,
+            @PathVariable("date") String date, @PathVariable("filter") String filter) {
+
+        LOGGER.info("증상 차트 조회 들어옴");
+        List<ResponseSymptomChartRecordDto> responseDto = diaryService.getDiarySymptomsAll(
+                RequestSymptomChartDto.builder()
+                        .diaryId(diaryId)
+                        .date(date)
+                        .filter(filter)
+                        .build());
         return ResponseEntity.ok()
-                .body(responseService.getSingleResult(resoponseDtos));
+                .body(responseService.getSingleResult(responseDto));
     }
 
     @GetMapping("/{diary-id}/paper/{date}")
@@ -85,7 +106,7 @@ public class DiaryController {
 
     @PostMapping("/subscribe")
     public ResponseEntity<Result> postDiarySubscribe(@RequestBody long diaryId, @LoginUser String uid) {
-        LOGGER.info("일기장 구독 등록 api들어옴 {}", diaryId);
+        LOGGER.info("일기장 구독 등록 api {}", diaryId);
 
         diaryService.saveSubscribe(RequestDiarySubscribeDto.builder()
             .diaryId(diaryId)
@@ -97,7 +118,7 @@ public class DiaryController {
     
     @DeleteMapping("/{diary-id}/subscribe")
     public ResponseEntity<Result> deleteDiarySubscribe(@PathVariable(value = "diary-id") long diaryId, @LoginUser String uid) {
-        LOGGER.info("일기장 구독 삭제 api들어옴 {}", diaryId);
+        LOGGER.info("일기장 구독 삭제 api {}", diaryId);
         diaryService.deleteSubscribe(RequestDiarySubscribeDto.builder()
             .diaryId(diaryId)
             .uid(uid)
@@ -109,14 +130,14 @@ public class DiaryController {
     @PutMapping()
     public ResponseEntity<Result> putDiary(@RequestBody RequestDiaryModifyDto requestDiaryModifyDto, @LoginUser String uid) {
         diaryService.modifyDiary(requestDiaryModifyDto, uid);
-        LOGGER.info("일기장 수정 api들어옴 {}", requestDiaryModifyDto);
+        LOGGER.info("일기장 수정 api {}", requestDiaryModifyDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @DeleteMapping("/{diary-id}")
     public ResponseEntity<Result> deleteDiary(@PathVariable(value = "diary-id") long diaryId, @LoginUser String uid) {
-        LOGGER.info("일기장 삭제 api들어옴 {}", diaryId);
+        LOGGER.info("일기장 삭제 api {}", diaryId);
         diaryService.deleteDiary(diaryId, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
@@ -125,14 +146,14 @@ public class DiaryController {
     @PostMapping("/symptom")
     public ResponseEntity<Result> postSymptom(@RequestBody RequestSymptomRegistrationDto requestSymptomRegistrationDto, @LoginUser String uid) {
         diaryService.addDairyHasSymptom(requestSymptomRegistrationDto, uid);
-        LOGGER.info("일기장 증상 추가 api들어옴 {}", requestSymptomRegistrationDto);
+        LOGGER.info("일기장 증상 추가 api {}", requestSymptomRegistrationDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @DeleteMapping("/symptom/{symptom-id}")
     public ResponseEntity<Result> deleteDiarySymptom(@PathVariable(value = "symptom-id") int diaryHasSymptomId, @LoginUser String uid) {
-        LOGGER.info("일기장 증상 삭제 api들어옴 symptomid : {}", diaryHasSymptomId);
+        LOGGER.info("일기장 증상 삭제 api symptomId : {}", diaryHasSymptomId);
         diaryService.deleteDiaryHasSymptom(diaryHasSymptomId, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());

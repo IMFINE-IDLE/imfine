@@ -4,6 +4,7 @@ import com.idle.imfine.data.dto.diary.request.RequestDiaryFilterDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryModifyDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiaryPostDto;
 import com.idle.imfine.data.dto.diary.request.RequestDiarySubscribeDto;
+import com.idle.imfine.data.dto.diary.request.RequestSymptomChartDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryPostPaper;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
@@ -17,7 +18,7 @@ import org.springframework.data.domain.Pageable;
 public interface DiaryService {
     long save(RequestDiaryPostDto diary, String uId);
     ResponseDiaryDetailDto getDiaryDetail(long diaryId, String uid);
-    List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(long diaryId);
+    List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(RequestSymptomChartDto requestDto);
     ResponsePaperDto getPaper(long diary, String date);
     void saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto);
 
@@ -38,4 +39,6 @@ public interface DiaryService {
     ResponsePutMedicalSymptomsDto getDiaryMedicalAndSymptom(long diaryId, String uid);
 
     List<ResponseDiaryListDto> getDiarySubscribe(String uid);
+
+    List<ResponseDiaryListDto> getDiaryMyWrite(String uid);
 }

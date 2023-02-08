@@ -13,6 +13,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
@@ -62,7 +63,8 @@ public class PaperController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Result> getPaperList(@LoginUser String uid, @PageableDefault(sort = "date", direction = Direction.DESC, size = 10) Pageable pageable) {
+    public ResponseEntity<Result> getPaperList(@LoginUser String uid, @RequestParam("page") int page, @RequestParam("tab") String filter) {
+        Pageable pageable = PageRequest.of(page, 10, Direction.DESC, filter);
         List<ResponsePaperDto> responseDto = paperService.getPaperList(uid, pageable);
         return ResponseEntity.ok().body(responseService.getListResult(responseDto));
     }
