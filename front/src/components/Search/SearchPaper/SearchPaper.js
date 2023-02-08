@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import PaperItem from '../../Paper/PaperItem/PaperItem';
 
-function SearchPaper() {
+function SearchPaper({ paperList, setPaperList }) {
   return (
     <div>
       SearchPaper

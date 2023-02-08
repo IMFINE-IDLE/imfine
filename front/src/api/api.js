@@ -20,7 +20,7 @@ const api = {
     updateOpenStatus: () => URL + USERS + '/open',
   },
   paper: {
-    paperFeed: () => URL + PAPER + '/list',
+    paperFeed: (page) => URL + PAPER + `/list?page=${page}&tab=date`,
     paperDetail: (paperId) => URL + PAPER + `/${paperId}`,
     paperReport: (paperId) => URL + REPORT + PAPER + `/${paperId}`,
     paperLikePost: () => URL + PAPER + '/like',
