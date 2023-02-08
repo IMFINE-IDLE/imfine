@@ -2,11 +2,11 @@ import axios from 'axios';
 import api from '../../api/api';
 import React, { useState, useEffect } from 'react';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import { BoxPaperDetail } from './style';
+import { BoxPaperDetail, BoxContent } from './style';
 import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCreateHeader';
 import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropdown';
 import DateDropdown from '../../components/Paper/DateDropdown/DateDropdown';
-
+import SymptomRating from '../../components/Paper/SymptomRating/SymptomRating';
 function PaperCreatePage() {
   const now = new Date();
   const [diaries, setDiaries] = useState([]);
@@ -54,6 +54,9 @@ function PaperCreatePage() {
         />
         <DateDropdown value={form} state={setForm} />
       </BoxPaperDetail>
+      <BoxContent>
+        <SymptomRating />
+      </BoxContent>
     </>
   );
 }

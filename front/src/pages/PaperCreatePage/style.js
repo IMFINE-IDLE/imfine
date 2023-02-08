@@ -7,4 +7,10 @@ const BoxPaperDetail = styled(BoxNoShad)`
   background-color: var(--main-color);
 `;
 
-export { BoxPaperDetail };
+const BoxContent = styled.div`
+  padding: 1em 0;
+  line-height: 1.2em;
+  color: var(--icon-color);
+`;
+
+export { BoxPaperDetail, BoxContent };
