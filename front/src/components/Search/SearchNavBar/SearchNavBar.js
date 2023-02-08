@@ -11,7 +11,7 @@ import {
 function SearchNavBar({ keyword, setKeyword, handleSearch }) {
   const navigate = useNavigate();
 
-  const onKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       const trimmedString = e.target.value.trim();
       if (trimmedString === '' || trimmedString === null) {
@@ -42,7 +42,7 @@ function SearchNavBar({ keyword, setKeyword, handleSearch }) {
           autoFocus
           placeholder="검색어를 입력하세요"
           type="text"
-          onKeyPress={onKeyPress}
+          onKeyDown={handleKeyDown}
         />
       </BoxSearchInput>
     </BoxNavBar>
