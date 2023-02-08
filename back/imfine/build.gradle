@@ -31,6 +31,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'com.amazonaws:aws-java-sdk-comprehend:1.11.759'
 }
 
 tasks.named('test') {
