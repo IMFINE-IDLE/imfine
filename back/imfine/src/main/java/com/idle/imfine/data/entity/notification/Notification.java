@@ -37,6 +37,9 @@ public class Notification extends BaseCreatedEntity {
     @Column
     private long contentsId;
 
+    @Column(nullable = false)
+    private int type;
+
     @Column(columnDefinition="tinyint(1) default 1")
     private boolean isCheck;
 

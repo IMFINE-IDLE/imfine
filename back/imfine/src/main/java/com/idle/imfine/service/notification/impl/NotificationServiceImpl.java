@@ -33,6 +33,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
+    private final Common common;
 
     @Override
     public List<ResponseNotification> showList(String uid, Pageable pageable) {
@@ -43,15 +44,24 @@ public class NotificationServiceImpl implements NotificationService {
         boolean isOpen = user.isOpen();
 
         for (Notification n : all) {
-            String userId = userRepository.getById(n.getSenderId()).getName();
-            if (n.getContentsCodeId() == 6 && !isOpen) {
+            User sender = userRepository.getById(n.getSenderId());
+            User receiver = userRepository.getById(n.getRecieverId());
+            String userId = sender.getName();
+
+            if (n.getContentsCodeId() == 6
+                    && common.getFollowRelation(sender, receiver) == 2) { //type 6
+                // common. 팔로우 관계 가져와서 > (메시지 보내는 사람, 받는사람)
+                // 1: 팔로우 수락된건가야 > FALSE 수락 완료 표시
+                // 2: 팔로우 관계가 아닌거니깐 > TRUE 수락 버튼 만들기
                 ResponseNotification notification = ResponseNotification.builder()
                         .notificationId(n.getId())
                         .senderUid(userId)
                         .contentsCodeId(n.getContentsCodeId())
                         .contentsId(n.getContentsId())
+                        .type(n.getType())
                         .isCheck(n.isCheck())
                         .showButton(true)
+                        .msg(makeMessage(userId, n.getContentsCodeId() ,n.getType()))
                         .build();
                 responseNotificationList.add(notification);
             } else {
@@ -60,8 +70,10 @@ public class NotificationServiceImpl implements NotificationService {
                         .senderUid(userId)
                         .contentsCodeId(n.getContentsCodeId())
                         .contentsId(n.getContentsId())
+                        .type(n.getType())
                         .isCheck(n.isCheck())
                         .showButton(false)
+                        .msg(makeMessage(userId, n.getContentsCodeId() ,n.getType()))
                         .build();
                 responseNotificationList.add(notification);
             }
@@ -69,6 +81,34 @@ public class NotificationServiceImpl implements NotificationService {
         return responseNotificationList;
     }
 
+    private String makeMessage(String senderId, int contentsCodeId, int type) {
+        String msg = "";
+
+        if (type == 1) {
+            msg = senderId + "님이 당신의 일기장을 구독했습니다.";
+        } else if (type == 2) {
+            msg = senderId + "님이 당신의 일기에 댓글을 달았습니다.";
+        } else if (type == 3) {
+            if (contentsCodeId == 2) {
+                msg = senderId + "님이 당신의 일기를 좋아합니다.";
+            } else if (contentsCodeId == 3) {
+                msg = senderId + "님이 당신의 댓글을 좋아합니다.";
+            } else if (contentsCodeId == 4) {
+                msg = "누군가가 당신의 대나무를 좋아합니다.";
+            } else if (contentsCodeId == 5) {
+                msg = "누군가가 당신의 대나무 잎을 좋아합니다.";
+            }
+        } else if (type == 4) {
+            msg = "누군가가 당신의 대나무에 대나무 잎을 달았습니다.";
+        } else if (type == 5) {
+            msg = senderId + "님이 당신을 팔로우 했습니다.";
+        } else if (type == 6) {
+            msg = senderId + "님이 당신을 팔로우 하고 싶어합니다.";
+        } else if (type == 7) {
+            msg = senderId + "님의 팔로우 요청을 수락했습니다. ";
+        }
+        return msg;
+    }
     @Override
     public ResponseNotificationDetail showNotification(long notificationId) {
         Notification notification = notificationRepository.getById(notificationId);
@@ -117,11 +157,11 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
-    public void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId) {
+    public void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
 //        User user = userRepository.getByUid(uid);
         LOGGER.info("에바다3");
         String id = String.valueOf(recieverId);
-        Notification notification = saveNotification(senderId, recieverId, contenstsCodeId, contentsId);
+        Notification notification = saveNotification(senderId, recieverId, contenstsCodeId, contentsId, type);
 
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
         sseEmitters.forEach(
@@ -132,7 +172,7 @@ public class NotificationServiceImpl implements NotificationService {
         );
     }
 
-    private Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId) {
+    private Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
 //        User user = userRepository.getByUid(uid);
 
         Notification notification = Notification.builder()
@@ -140,6 +180,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .recieverId(recieverId)
                 .contentsCodeId(contenstsCodeId)
                 .contentsId(contentsId)
+                .type(type)
                 .build();
 
         notificationRepository.save(notification);

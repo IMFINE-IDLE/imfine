@@ -148,7 +148,7 @@ public class BambooServiceImpl implements BambooService {
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
 
         if (LocalDateTime.now().isAfter(endShowTime)) {
-            LOGGER.info("24시간 지난 밤부-----------------------------------------------------");
+            LOGGER.info("24시간 지난 밤부");
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
@@ -205,7 +205,7 @@ public class BambooServiceImpl implements BambooService {
             bamboo.setLikeCount(bamboo.getLikeCount() + 1);
             bambooRepository.save(bamboo);
 
-            notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId());
+            notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 3);
         }
     }
 
