@@ -33,7 +33,10 @@ public class SentimentAnalysis {
     private String AWS_SECRET_KEY;
 
     @Async
-    public void analyzeText(Long paperId, String text) {
+    public void analyzeText(Paper paper) {
+        String text = paper.getContent();
+
+        log.info("[SentimentAnalysis.analyzeText] AWS Comprehend 연결 시작");
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(AWS_ACCESS_KEY, AWS_SECRET_KEY);
 
         AmazonComprehend comprehendClient =
@@ -41,25 +44,27 @@ public class SentimentAnalysis {
                         .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                         .withRegion("ap-northeast-2")
                         .build();
+        log.info("[SentimentAnalysis.analyzeText] AWS Comprehend 연결 완료");
 
-        log.info("[SentimentAnalysis] 감정 분석 시작");
+        log.info("[SentimentAnalysis.analyzeText] 감정 분석 시작");
         DetectSentimentRequest detectSentimentRequest = new DetectSentimentRequest().withText(text)
                 .withLanguageCode("ko");
         DetectSentimentResult detectSentimentResult = comprehendClient.detectSentiment(detectSentimentRequest);
         String result = detectSentimentResult.getSentiment();
-        log.info("[SentimentAnalysis] 감정 분석 완료 > {}", result);
+        log.info("[SentimentAnalysis.analyzeText] 감정 분석 완료 > {}", result);
 
         Sentiment sentiment = Sentiment.valueOf(result);
         log.info(sentiment.name(), sentiment.getValue(), sentiment.getName());
 
-        log.info("[SentimentAnalysis] 분석된 감정을 일기에 저장 시작");
-        Paper paper = paperRepository.findById(paperId).orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
+        log.info("[SentimentAnalysis.analyzeText] 분석된 감정을 일기에 저장 시작");
+        paper.setSentiment(sentiment.getValue());
         // sentiment.getValue()를 일기 페이지에 저장
         paperRepository.save(paper);
-        log.info("[SentimentAnalysis] 분석된 감정을 일기에 저장 완료");
+        log.info("[SentimentAnalysis.analyzeText] 분석된 감정을 일기에 저장 완료");
     }
 
     public String getMusic(int value) {
+        log.info("[SentimentAnalysis.getMusic] Music URL 생성 시작");
         Sentiment[] arr = Sentiment.values();
         String sentiment = arr[value].getName();
         String path = S3_BUCKET_PATH + "/music/" + sentiment + "/";
@@ -69,7 +74,7 @@ public class SentimentAnalysis {
 
         String fullPath = path + filename;
 
-        log.info("play music > {}", fullPath);
+        log.info("[SentimentAnalysis.getMusic] Music URL 생성 완료");
         return fullPath;
     }
 

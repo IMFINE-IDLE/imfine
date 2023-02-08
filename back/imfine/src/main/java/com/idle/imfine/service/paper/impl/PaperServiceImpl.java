@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.idle.imfine.service.sentiment.SentimentAnalysis;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +65,9 @@ public class PaperServiceImpl implements PaperService {
     private final ConditionRepository conditionRepository;
     private final FileStore fileStore;
     private final CommentRepository commentRepository;
+
+    private final SentimentAnalysis sentimentAnalysis;
+
     static final Logger LOGGER = LoggerFactory.getLogger(PaperServiceImpl.class);
 
     @Override
@@ -88,6 +93,10 @@ public class PaperServiceImpl implements PaperService {
                 .open(requestPaperPostDto.isOpen())
                 .date(date)
                 .build());
+
+        LOGGER.info("[PaperService.save] 감정 분석 > 비동기 처리");
+        sentimentAnalysis.analyzeText(savedPaper);
+
         List<UploadFile> storeImageFiles;
         storeImageFiles = fileStore.storeFiles(requestPaperPostDto.getImages());
         diary.paperAdd();
@@ -109,6 +118,7 @@ public class PaperServiceImpl implements PaperService {
                     .paper(savedPaper)
                     .build()
             );
+
         paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
     }
 
@@ -132,6 +142,10 @@ public class PaperServiceImpl implements PaperService {
 
         paper.setContent(requestPaperPutDto.getContents());
         paper.setOpen(requestPaperPutDto.isOpen());
+
+        LOGGER.info("[PaperService.modifyPaper] 감정 분석 >> 비동기 처리");
+        sentimentAnalysis.analyzeText(paper);
+
         List<PaperHasSymptom> symptoms = paper.getPaperHasSymptoms();
         for (PaperHasSymptom symptom : symptoms) {
             for (ResponseSymptomRecordDto putSymptom : requestPaperPutDto.getSymptomList()) {
@@ -234,6 +248,16 @@ public class PaperServiceImpl implements PaperService {
                         .condition(String.valueOf(commentConditions.getOrDefault(comment.getWriter().getId(), 0)))
                         .build()
         ).collect(Collectors.toList());
+
+        int sentiment = paper.getSentiment();
+        LOGGER.info("[PaperService.getPaperDetail] Sentiment: {}", sentiment);
+        String musicURL = null;
+
+        if (sentiment != -1) {
+            musicURL = sentimentAnalysis.getMusic(sentiment);
+        }
+        LOGGER.info("[PaperService.getPaperDetail] Music URL: {}", musicURL);
+
         return ResponsePaperDetailDto.builder()
                 .diaryId(paperDiary.getId())
                 .title(paperDiary.getTitle())
@@ -254,6 +278,7 @@ public class PaperServiceImpl implements PaperService {
                 .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(
                         user.getId(), 2, paper.getId()))
                 .comments(comments)
+                .musicURL(musicURL)
                 .build();
 
     }
