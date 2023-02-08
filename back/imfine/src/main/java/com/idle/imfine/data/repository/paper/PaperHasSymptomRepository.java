@@ -5,6 +5,7 @@ import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,9 @@ public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom
     @Modifying
     @Query("delete from PaperHasSymptom phs where phs.paper.id=:paperId")
     void deleteByPaper(@Param("paperId") long paperId);
+
+    @Query("SELECT phs.paper.id, phs FROM PaperHasSymptom phs where phs.paper in :papers GROUP BY phs.paper")
+    List<Object[]> findPaperHasSymptomByPaperInMap(@Param("papers")List<Paper> paperList);
 //
 //    @Modifying
 //    @Query("update PaperHasSymptom phs set phs.score=:score where phs.id=:phsId")

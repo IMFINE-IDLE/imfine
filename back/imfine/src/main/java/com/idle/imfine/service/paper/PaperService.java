@@ -5,6 +5,7 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
+import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,7 @@ public interface PaperService {
 
     ResponsePaperDetailDto getPaperDetail(long paperId, String uid);
 
-    List<ResponsePaperDto> getPaperList(String uid, Pageable pageable);
+    List<ResponsePaperDtoOnlyMainPage> getPaperList(String uid, Pageable pageable);
 
     List<ResponsePaperDto> getAllPaperByDate(String uid, String date);
 }

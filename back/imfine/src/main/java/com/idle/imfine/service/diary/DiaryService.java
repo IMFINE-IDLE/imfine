@@ -19,7 +19,7 @@ public interface DiaryService {
     long save(RequestDiaryPostDto diary, String uId);
     ResponseDiaryDetailDto getDiaryDetail(long diaryId, String uid);
     List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(RequestSymptomChartDto requestDto);
-    ResponsePaperDto getPaper(long diary, String date);
+    ResponsePaperDto getPaper(long diary, String date, String uid);
     void saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto);
 
     void deleteSubscribe(RequestDiarySubscribeDto build);

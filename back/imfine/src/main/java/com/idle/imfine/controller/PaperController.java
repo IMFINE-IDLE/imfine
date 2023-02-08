@@ -8,6 +8,7 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
+import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.service.paper.PaperService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,7 @@ public class PaperController {
     @GetMapping("/list")
     public ResponseEntity<Result> getPaperList(@LoginUser String uid, @RequestParam("page") int page, @RequestParam("tab") String filter) {
         Pageable pageable = PageRequest.of(page, 10, Direction.DESC, filter);
-        List<ResponsePaperDto> responseDto = paperService.getPaperList(uid, pageable);
+        List<ResponsePaperDtoOnlyMainPage> responseDto = paperService.getPaperList(uid, pageable);
         return ResponseEntity.ok().body(responseService.getListResult(responseDto));
     }
 

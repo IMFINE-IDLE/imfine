@@ -28,6 +28,7 @@ import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
 import com.idle.imfine.data.entity.symptom.Symptom;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.diary.SubscribeRepository;
+import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
@@ -72,6 +73,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final Logger LOGGER = LoggerFactory.getLogger(DiaryService.class);
     private final ConditionRepository conditionRepository;
     private final NotificationService notificationService;
+    private final HeartRepository heartRepository;
 
     @Override
     @Transactional
@@ -210,23 +212,32 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional(readOnly = true)
-    public ResponsePaperDto getPaper(long diaryId, String date) {
+    public ResponsePaperDto getPaper(long diaryId, String date, String uid) {
+        User user = common.getUserByUid(uid);
         Diary diary = diaryRepository.findById(diaryId)
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
-        Paper paper = paperRepository.getByDiary_IdAndDate(diary.getId(), common.convertDateType(date));
-
+        Optional<Paper> OptionalPaper = paperRepository.getByDiary_IdAndDate(diary.getId(), common.convertDateType(date));
+        if (OptionalPaper.isEmpty()) {
+            return null;
+        }
+        Paper paper = OptionalPaper.get();
         return ResponsePaperDto.builder()
+                .diaryId(diaryId)
+                .title(diary.getTitle())
                 .paperId(paper.getId())
+                .uid(diary.getWriter().getUid())
+                .name(diary.getWriter().getName())
+                .content(paper.getContent())
+                .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, paper.getId()))
                 .commentCount(paper.getCommentCount())
                 .likeCount(paper.getLikeCount())
                 .date(paper.getDate())
+                .createdAt(paper.getCreatedAt().toString())
                 .condition(String.format("%d", conditionRepository.findByUserAndDate(diary.getWriter(), paper.getDate()).orElseGet(
                         Condition::new).getCondition()))
                 .open(paper.isOpen())
-                .images(paper.getImages().stream().map(
-                    Image::getPath
-                ).collect(Collectors.toList()))
+                .image(paper.getImages().size() != 0)
                 .symptomList(paper.getPaperHasSymptoms().stream().map(
                         symptom ->
                                 ResponsePaperSymptomRecordDto.builder()

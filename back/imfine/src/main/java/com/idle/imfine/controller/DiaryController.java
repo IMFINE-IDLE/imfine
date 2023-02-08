@@ -98,8 +98,10 @@ public class DiaryController {
 
     @GetMapping("/{diary-id}/paper/{date}")
     public ResponseEntity<Result> getPaper(@PathVariable(value = "diary-id") long diaryId
-                                                    ,@PathVariable(value = "date") String date){
-        ResponsePaperDto resoponseDtos = diaryService.getPaper(diaryId, date);
+            , @PathVariable(value = "date") String date
+            , @LoginUser String uid) {
+
+        ResponsePaperDto resoponseDtos = diaryService.getPaper(diaryId, date, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(resoponseDtos));
     }
