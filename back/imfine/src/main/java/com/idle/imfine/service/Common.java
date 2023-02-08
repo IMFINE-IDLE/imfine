@@ -88,7 +88,7 @@ public class Common {
             return 0;
         } else if (followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
             return 1;
-        } else if (followWaitRepository.existsByRequesterAndReceiver(other, user)) {
+        } else if (followWaitRepository.existsByRequesterAndReceiver(user, other)) {
             return 2;
         }
         return 3;
