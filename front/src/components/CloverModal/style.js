@@ -3,10 +3,10 @@ import { BoxShad } from '../common/BoxShad/BoxShad';
 
 // 클로버 상태창 모달 전체 감싸는 컴포넌트
 const CloverStatusContainer = styled(BoxShad)`
-  ${({ width, center }) => css`
-    position: absolute;
+  ${({ width, isCenter }) => css`
+    position: ${isCenter ? 'absolute' : 'fixed'};
     left: calc(50% - ${width} / 2);
-    bottom: ${center ? 'calc(50% - 5.5em)' : '5.2em'};
+    bottom: ${isCenter ? 'calc(50% - 5.5em)' : '5.2em'};
   `}
 `;
 

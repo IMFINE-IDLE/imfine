@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Calendar from 'react-calendar';
@@ -14,20 +14,21 @@ import { Clover } from '../common/Clover/Clover';
 import { CalendarStatusModifyBtn } from './style';
 
 const StatusCalendar = ({ uid }) => {
-  // 클로버 모달 관련 state
-  const [cloverOfDayClicked, setCloverOfDayClicked] = useState('-1');
-  const [cloversOpen, setCloversOpen] = useState(false);
+  // 내 프로필인지 여부를 체크해서 내 프로필일 때만 상태변경 버튼 표시
+  const isMine = useRef(uid === localStorage.getItem('uid') ? true : false);
 
   // 달력 관련 state
   const [date, onChange] = useState(new Date());
   const [monthCondition, setMonthCondition] = useState(null);
+  console.log('date state', date);
 
-  // api 처리 위해 필요한 state
+  // 클로버 상태 변경 관련 state
+  const [cloverOfDayClicked, setCloverOfDayClicked] = useState('-1');
+  const [cloversOpen, setCloversOpen] = useState(false);
   const [dayClicked, setDayClicked] = useState(date);
-  console.log('dayclicked', dayClicked);
 
   // 해당 달의 컨디션 정보 불러오기
-  const fetchProfileCalendar = async () => {
+  const fetchProfileCalendar = async (date) => {
     try {
       const params = {
         uid,
@@ -41,20 +42,20 @@ const StatusCalendar = ({ uid }) => {
       setMonthCondition({ ...res.data.data });
       setCloverOfDayClicked(res.data.data[moment(date).format('D')]);
       // setCloverOfDayClicked(monthCondition[])
-      console.log('res', res.data.data);
-      console.log('data', monthCondition);
-      console.log('dayclicked', dayClicked);
-      console.log('cloverOfDayClicked', cloverOfDayClicked);
+      // console.log('res', res.data.data);
+      // console.log('data', monthCondition);
+      // console.log('dayclicked', dayClicked);
+      // console.log('cloverOfDayClicked', cloverOfDayClicked);
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    fetchProfileCalendar();
+    fetchProfileCalendar(date);
   }, []);
 
-  // 날짜 선택했을 때
+  // 날짜 선택했을 때 날짜와 클로버 상태 저장
   const onClickDay = (value, event) => {
     setDayClicked(value);
     const cloverOfDayClicked =
@@ -62,16 +63,11 @@ const StatusCalendar = ({ uid }) => {
     setCloverOfDayClicked(cloverOfDayClicked);
   };
 
-  useEffect(() => {
-    console.log('dayclicked', dayClicked);
-    console.log('cloverOfDayClicked', cloverOfDayClicked);
-  });
-
   if (!monthCondition) return null;
 
   return (
-    <div style={{ position: 'relative' }}>
-      <BoxShad style={{ minWidth: '22.875em' }} height="auto">
+    <div style={{ width: '21em', position: 'relative', padding: '0 0.5em' }}>
+      <BoxShad height="auto">
         <Calendar
           onChange={onChange}
           value={date}
@@ -84,6 +80,10 @@ const StatusCalendar = ({ uid }) => {
           prev2Label={null} // 연간 이동 삭제
           next2Label={null} // 연간 이동 삭제
           navigationLabel={({ date }) => moment(date).format('YYYY.MM')} // 내비게이션 표기형식 설정
+          onActiveStartDateChange={({ activeStartDate, value, view }) => {
+            // 월 이동시 해당월 데이터 받아오기
+            fetchProfileCalendar(activeStartDate);
+          }}
           onClickDay={onClickDay} // 특정 날짜 선택했을 때 일기 불러올 함수
           tileContent={({ date }) => {
             return (
@@ -105,17 +105,22 @@ const StatusCalendar = ({ uid }) => {
           setCurrentClover={setCloverOfDayClicked}
           setCloversOpen={setCloversOpen}
           fetchProfileCalendar={fetchProfileCalendar}
-          center={true}
+          isCenter={true}
         />
       )}
-      <CalendarStatusModifyBtn
-        color="light"
-        height="3em"
-        margin="1em 0"
-        onClick={() => setCloversOpen((prev) => !prev)}
-      >
-        이 날짜의 컨디션 변경하기
-      </CalendarStatusModifyBtn>
+
+      {isMine.current && (
+        <CalendarStatusModifyBtn
+          color="light"
+          height="3em"
+          margin="1em 0"
+          onClick={() => {
+            if (date <= new Date()) setCloversOpen((prev) => !prev);
+          }}
+        >
+          이 날짜의 컨디션 변경하기
+        </CalendarStatusModifyBtn>
+      )}
     </div>
   );
 };
