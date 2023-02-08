@@ -90,7 +90,13 @@ function SearchPage() {
             <TitleRecent>최근 검색어</TitleRecent>
             <BoxInner>
               {searchHistory.map((searchItem, idx) => (
-                <QueryItem key={idx}>
+                <QueryItem
+                  key={idx}
+                  onClick={() => {
+                    console.log(searchItem);
+                    handleSearch(searchItem);
+                  }}
+                >
                   {searchItem}
                   <span>X</span>
                 </QueryItem>

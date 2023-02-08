@@ -28,7 +28,7 @@ function SearchNavBar({ keyword, setKeyword, handleSearch }) {
     <BoxNavBar>
       <BoxChevronLeft
         onClick={() => {
-          navigate(-1);
+          navigate('/search');
         }}
         justify="left"
       >
