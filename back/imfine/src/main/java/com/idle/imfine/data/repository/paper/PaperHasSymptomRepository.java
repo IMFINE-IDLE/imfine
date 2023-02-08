@@ -27,7 +27,7 @@ public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom
     @Query("delete from PaperHasSymptom phs where phs.paper.id=:paperId")
     void deleteByPaper(@Param("paperId") long paperId);
 
-    @Query("SELECT phs.paper, phs FROM PaperHasSymptom phs where phs.paper in :papers GROUP BY phs.paper")
+    @Query("SELECT phs.paper.id, phs FROM PaperHasSymptom phs where phs.paper in :papers GROUP BY phs.paper")
     List<Object[]> findPaperHasSymptomByPaperInMap(@Param("papers")List<Paper> paperList);
 //
 //    @Modifying

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponsePaperDto {
+public class ResponsePaperDtoOnlyMainPage {
     private long diaryId;
     private String title;
     private long paperId;
@@ -29,5 +29,5 @@ public class ResponsePaperDto {
     private boolean hasNext;
     private String createdAt;
     private boolean image;
-    List<ResponsePaperSymptomRecordDto> symptomList;
+    List<ResponsePaperSymptomRecordDtoOnlyMainPage> symptomList;
 }

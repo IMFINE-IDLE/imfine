@@ -237,9 +237,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .condition(String.format("%d", conditionRepository.findByUserAndDate(diary.getWriter(), paper.getDate()).orElseGet(
                         Condition::new).getCondition()))
                 .open(paper.isOpen())
-                .images(paper.getImages().stream().map(
-                    Image::getPath
-                ).collect(Collectors.toList()))
+                .image(paper.getImages().size() != 0)
                 .symptomList(paper.getPaperHasSymptoms().stream().map(
                         symptom ->
                                 ResponsePaperSymptomRecordDto.builder()
