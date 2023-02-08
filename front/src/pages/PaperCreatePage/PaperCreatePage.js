@@ -36,6 +36,7 @@ function PaperCreatePage() {
   const [diaryId, setDiaryId] = useState(''); // dropdown 선택 시 일기장 아이디값 저장
   const [diary, setDiary] = useState(''); // 일기장 상세정보
   const [value, setValue] = useState(''); // 일기내용
+  // 날짜 저장하는 state 객체
   const [form, setForm] = useState({
     year: now.getFullYear(),
     month: '01',
@@ -44,7 +45,10 @@ function PaperCreatePage() {
 
   const [files, setFiles] = useState([]); // 이미지미리뵈기
   const [uploadedImage, setUploadedImage] = useState(null); // 이미지 서버 업로드
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(true); // 공개.비공개 state
+  const [symptoms, setSymptoms] = useState([]); // 증상받아오기
+
+  // API 처리부분
   // 사용자가 작성한 다이어리 정보 받아오기
   const getDiaries = async () => {
     try {
@@ -82,6 +86,12 @@ function PaperCreatePage() {
     }
   }, [diaryId]);
 
+  // 일기장 선택될때마다 해당 일기장 정보끌고오기
+  useEffect(() => {
+    setSymptoms(diary.diaryHasSymptoms);
+    console.log('symptoms', symptoms);
+  }, [diary]);
+
   // 이미지 서버에 업로드 시키기
   const handleUploadImage = () => {
     const data = new FormData();
@@ -97,19 +107,6 @@ function PaperCreatePage() {
     } else {
       alert('You can only select up to 3 images');
     }
-    /*
-    for (let i = 0; i < e.target.files.length; i++) {
-      if (newFiles.length < 3) {
-        newFiles.push(e.target.previewImage[i]);
-      } else {
-        break;
-      }
-      const fileReader = new FileReader();
-      fileReader.addEventListener('load', () => {
-        setFiles(fileReader.result);
-      });
-      fileReader.readAsDataURL(newFiles);
-    }*/
   };
 
   // 이미지 삭제하기
@@ -133,7 +130,7 @@ function PaperCreatePage() {
         <ContentLabel>증상을 체크해주세요.</ContentLabel>
       </TopDiv>
       <BoxContent>
-        <SymptomRating />
+        <SymptomRating symptomList={symptoms} />
       </BoxContent>
       <RightDiv>
         <FiArrowRight />
