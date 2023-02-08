@@ -21,4 +21,5 @@ public class ResponseDiaryListDto {
     private String image;
     private String name;
     private String title;
+    private boolean hasNext;
 }
