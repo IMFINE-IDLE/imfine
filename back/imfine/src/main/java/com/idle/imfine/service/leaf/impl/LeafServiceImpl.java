@@ -86,7 +86,7 @@ public class LeafServiceImpl implements LeafService {
             heartRepository.save(heart);
             leaf.setLikeCount(leaf.getLikeCount() + 1);
             leafRepository.save(leaf);
-            notificationService.send(user.getId(), leaf.getWriter().getId(), 5, leaf.getId(), 3);
+            notificationService.send(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
         }
     }
 
