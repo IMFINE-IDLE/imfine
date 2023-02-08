@@ -15,6 +15,7 @@ import com.idle.imfine.errors.code.PaperErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.comment.CommentService;
+import com.idle.imfine.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final PaperRepository paperRepository;
     private final Common common;
     private final HeartRepository heartRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -42,6 +44,8 @@ public class CommentServiceImpl implements CommentService {
                 .build());
         paper.setCommentCount(paper.getCommentCount() + 1);
         paperRepository.save(paper);
+        notificationService.send(user.getId(), paper.getDiary().getWriter().getId(), 2,
+                paper.getId(), 2);
     }
 
     @Override
@@ -78,6 +82,8 @@ public class CommentServiceImpl implements CommentService {
                 .build());
         comment.setLikeCount(comment.getLikeCount() + 1);
         commentRepository.save(comment);
+        notificationService.send(user.getId(), comment.getWriter().getId(), 3, comment.getId(),
+                3);
     }
 
     @Override

@@ -41,6 +41,7 @@ import com.idle.imfine.errors.code.SubscribeErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.diary.DiaryService;
+import com.idle.imfine.service.notification.NotificationService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -70,6 +71,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final Common common;
     private final Logger LOGGER = LoggerFactory.getLogger(DiaryService.class);
     private final ConditionRepository conditionRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -254,6 +256,7 @@ public class DiaryServiceImpl implements DiaryService {
             .build());
         diary.setSubscribeCount(diary.getSubscribeCount() + 1);
         diaryRepository.save(diary);
+        notificationService.send(userId, diary.getWriter().getId(), 1, diary.getId(), 1);
     }
 
     @Override

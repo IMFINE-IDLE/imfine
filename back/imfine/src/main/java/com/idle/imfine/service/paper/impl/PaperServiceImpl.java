@@ -33,6 +33,7 @@ import com.idle.imfine.errors.code.PaperErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.FileStore;
+import com.idle.imfine.service.notification.NotificationService;
 import com.idle.imfine.service.paper.PaperService;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -67,6 +68,7 @@ public class PaperServiceImpl implements PaperService {
     private final CommentRepository commentRepository;
 
     private final SentimentAnalysis sentimentAnalysis;
+    private final NotificationService notificationService;
 
     static final Logger LOGGER = LoggerFactory.getLogger(PaperServiceImpl.class);
 
@@ -177,6 +179,7 @@ public class PaperServiceImpl implements PaperService {
         foundPaper.addLikeCount();
         paperRepository.save(foundPaper);
         heartRepository.save(heart);
+        notificationService.send(user.getId(), foundPaper.getDiary().getWriter().getId(), 2, foundPaper.getId(), 3);
     }
 
     @Override
