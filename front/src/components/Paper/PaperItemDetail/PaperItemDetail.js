@@ -24,6 +24,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     condition,
     uid,
     name,
+    diaryId,
     title,
     symptomList,
     content,
@@ -74,6 +75,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     }
   }
 
+  console.log(diaryId);
   return (
     <>
       <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
@@ -97,7 +99,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                 <p style={{ fontWeight: '700' }}>{name}</p>
               </div>
               <div>
-                <DiaryTitle title={title} />
+                <DiaryTitle title={title} diaryId={diaryId} />
               </div>
               <BoxTopAudio>
                 {musicURL && (
