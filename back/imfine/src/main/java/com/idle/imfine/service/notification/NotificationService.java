@@ -13,6 +13,6 @@ public interface NotificationService {
     List<ResponseNotification> showList(String uid, Pageable pageable);
     ResponseNotificationDetail showNotification(long notificationId);
     SseEmitter subscribe(String uid, String lastEventId);
-    void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId);
+    void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type);
 
 }
