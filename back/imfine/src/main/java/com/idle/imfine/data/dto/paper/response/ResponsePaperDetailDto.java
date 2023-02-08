@@ -29,4 +29,5 @@ public class ResponsePaperDetailDto {
     private List<ResponsePaperSymptomRecordDto> symptomList;
     private List<String> images;
     private List<ResponseCommentDto> comments;
+    private String musicURL;
 }
