@@ -13,6 +13,7 @@ import {
   BoxClover,
   BoxInner,
   BoxRecentQuery,
+  BoxSearchResult,
   QueryItem,
   TitleRecent,
 } from './style';
@@ -66,27 +67,30 @@ function SearchPage() {
         setKeyword={setKeyword}
         handleSearch={handleSearch}
       />
-      <BoxClover>
-        <Clover code={'1'} width={'80px'} height={'80px'} />
-      </BoxClover>
+
       {searchParams.get('query') ? (
-        <div>
+        <BoxSearchResult>
           <SearchResult keywordResult={keywordResult} />
           <Tabs tabArr={tabArr} btnWidth={'6.2em'} />
-        </div>
+        </BoxSearchResult>
       ) : (
-        <BoxRecentQuery>
-          <TitleRecent>최근 검색어</TitleRecent>
-          <BoxInner>
-            {searchHistory.map((searchItem, idx) => (
-              <QueryItem key={idx}>
-                {searchItem}
-                <span>X</span>
-              </QueryItem>
-            ))}
-          </BoxInner>
-          <BigCircle />
-        </BoxRecentQuery>
+        <>
+          <BoxClover>
+            <Clover code={'1'} width={'65px'} height={'65px'} />
+          </BoxClover>
+          <BoxRecentQuery>
+            <TitleRecent>최근 검색어</TitleRecent>
+            <BoxInner>
+              {searchHistory.map((searchItem, idx) => (
+                <QueryItem key={idx}>
+                  {searchItem}
+                  <span>X</span>
+                </QueryItem>
+              ))}
+            </BoxInner>
+            <BigCircle />
+          </BoxRecentQuery>
+        </>
       )}
       <TabBar />
     </>
