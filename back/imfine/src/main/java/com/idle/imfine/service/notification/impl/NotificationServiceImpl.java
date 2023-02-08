@@ -41,7 +41,6 @@ public class NotificationServiceImpl implements NotificationService {
 
         List<ResponseNotification> responseNotificationList = new ArrayList<>();
         Page<Notification> all = notificationRepository.findByRecieverId(user.getId(), pageable);
-        boolean isOpen = user.isOpen();
 
         for (Notification n : all) {
             User sender = userRepository.getById(n.getSenderId());
@@ -49,7 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
             String userId = sender.getName();
 
             if (n.getContentsCodeId() == 6
-                    && common.getFollowRelation(sender, receiver) == 2) { //type 6
+                    && common.getFollowRelation(receiver, sender) == 2) { //type 6
                 // common. 팔로우 관계 가져와서 > (메시지 보내는 사람, 받는사람)
                 // 1: 팔로우 수락된건가야 > FALSE 수락 완료 표시
                 // 2: 팔로우 관계가 아닌거니깐 > TRUE 수락 버튼 만들기
@@ -88,16 +87,14 @@ public class NotificationServiceImpl implements NotificationService {
             msg = senderId + "님이 당신의 일기장을 구독했습니다.";
         } else if (type == 2) {
             msg = senderId + "님이 당신의 일기에 댓글을 달았습니다.";
-        } else if (type == 3) {
-            if (contentsCodeId == 2) {
-                msg = senderId + "님이 당신의 일기를 좋아합니다.";
-            } else if (contentsCodeId == 3) {
-                msg = senderId + "님이 당신의 댓글을 좋아합니다.";
-            } else if (contentsCodeId == 4) {
-                msg = "누군가가 당신의 대나무를 좋아합니다.";
-            } else if (contentsCodeId == 5) {
-                msg = "누군가가 당신의 대나무 잎을 좋아합니다.";
-            }
+        } else if (type == 31) {
+            msg = senderId + "님이 당신의 일기를 좋아합니다.";
+        } else if (type == 33) {
+            msg = senderId + "님이 당신의 댓글을 좋아합니다.";
+        } else if (type == 34) {
+            msg = "누군가가 당신의 대나무를 좋아합니다.";
+        } else if (type == 35) {
+            msg = "누군가가 당신의 대나무 잎을 좋아합니다.";
         } else if (type == 4) {
             msg = "누군가가 당신의 대나무에 대나무 잎을 달았습니다.";
         } else if (type == 5) {
@@ -105,7 +102,9 @@ public class NotificationServiceImpl implements NotificationService {
         } else if (type == 6) {
             msg = senderId + "님이 당신을 팔로우 하고 싶어합니다.";
         } else if (type == 7) {
-            msg = senderId + "님의 팔로우 요청을 수락했습니다. ";
+            msg = senderId + "님의 팔로우 요청을 수락했습니다.";
+        } else if (type == 8) {
+            msg = senderId + "님의 팔로우 요청을 거절했습니다.";
         }
         return msg;
     }
