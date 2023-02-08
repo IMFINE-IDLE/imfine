@@ -18,6 +18,7 @@ import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
 import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
 import DiaryFeedPage from './pages/DiaryFeedPage/DiaryFeedPage';
 import SearchPage from './pages/SearchPage/SearchPage';
+import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -47,6 +48,7 @@ function App() {
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreatePage />} />
         <Route path="/paper/:paperId" element={<PaperDetailPage />} />
+        <Route path="/paper/symptom" element={<PaperSymptomPage />} />
       </Route>
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
