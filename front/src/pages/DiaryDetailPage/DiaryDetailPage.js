@@ -53,6 +53,7 @@ const DiaryDetailPage = () => {
   //   }
   // };
 
+  // 해당 일기장 구독 설정 및 해제
   const fetchUpdateSubscribeStatus = async (status) => {
     try {
       const fetchUrl = status
@@ -79,42 +80,6 @@ const DiaryDetailPage = () => {
   }, []);
 
   if (!diaryInfo) return null;
-
-  // const isMine = diaryInfo.uid === localStorage.getItem('uid') ? true : false;
-  // const isMine = false;
-
-  const medicalList = [
-    {
-      medicalId: 1,
-      medicalName: `${diaryInfo.medicalName}`,
-    },
-  ];
-  const diaryHasSymptoms = [
-    {
-      symptomId: 16,
-      symptomName: '두통',
-    },
-    {
-      symptomId: 17,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 18,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 19,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 14,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 15,
-      symptomName: '어지러움',
-    },
-  ];
 
   return (
     <>
@@ -164,13 +129,13 @@ const DiaryDetailPage = () => {
               title="질병/수술"
               isIcon={true}
               type="medical"
-              medicals={medicalList}
+              medicals={diaryInfo.medicals}
             />
             <PickedItemList
               title="증상"
               isIcon={true}
               type="symptom"
-              symptoms={diaryHasSymptoms}
+              symptoms={diaryInfo.diaryHasSymptoms}
               canModify={false}
               color="light-pink"
             />
@@ -224,3 +189,37 @@ const DiaryDetailPage = () => {
 };
 
 export default DiaryDetailPage;
+
+// 더미데이터
+// const medicalList = [
+//   {
+//     medicalId: 1,
+//     medicalName: `${diaryInfo.medicalName}`,
+//   },
+// ];
+// const diaryHasSymptoms = [
+//   {
+//     symptomId: 16,
+//     symptomName: '두통',
+//   },
+//   {
+//     symptomId: 17,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 18,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 19,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 14,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 15,
+//     symptomName: '어지러움',
+//   },
+// ];

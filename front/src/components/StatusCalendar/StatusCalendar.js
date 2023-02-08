@@ -48,7 +48,6 @@ const StatusCalendar = ({ uid, diaryId }) => {
 
       setMonthCondition({ ...res.data.data });
       setCloverOfDayClicked(res.data.data[moment(date).format('D')]);
-      // setCloverOfDayClicked(monthCondition[])
       // console.log('res', res.data.data);
       // console.log('data', monthCondition);
       // console.log('dayclicked', dayClicked);
@@ -58,9 +57,9 @@ const StatusCalendar = ({ uid, diaryId }) => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchProfileCalendar(date);
-  // }, []);
+  useEffect(() => {
+    fetchProfileCalendar(date);
+  }, []);
 
   // 선택한 날짜의 일기 불러오기
   const fetchGetDiaryPaperItem = async (diaryId, date) => {
@@ -90,14 +89,11 @@ const StatusCalendar = ({ uid, diaryId }) => {
   };
 
   useEffect(() => {
-    fetchProfileCalendar(date);
-  }, []);
-
-  useEffect(() => {
     fetchGetDiaryPaperItem(diaryId, dayClicked);
   }, [dayClicked]);
 
   if (!monthCondition) return null;
+  // if (!paperInfo) return null;
 
   return (
     <div style={{ position: 'relative' }}>
