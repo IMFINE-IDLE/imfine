@@ -10,7 +10,7 @@ import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
 import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
-import { BoxBottomDetail, BoxPaperDetail } from './style';
+import { BoxBottemLeft, BoxBottomDetail, BoxPaperDetail } from './style';
 
 function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
   const navigate = useNavigate();
@@ -25,6 +25,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     myHeart,
     likeCount,
     commentCount,
+    createdAt,
   } = paper;
 
   // 일기 삭제 함수
@@ -42,6 +43,30 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
   // 일기 삭제 모달
   const [modalOpen, setModalOpen] = useState(false);
   console.log(symptomList);
+
+  // 게시글 시간 표시 함수
+  function getTimeDifference(timeString) {
+    let currentTime = new Date();
+    let providedTime = new Date(createdAt);
+    let milli = currentTime.getTime() - providedTime.getTime();
+    let timeGap = parseInt(milli / 60000);
+    // console.log(paperId, timeGap);
+
+    if (timeGap < 60) {
+      return `${timeGap}분전`;
+    } else if (timeGap >= 60 && timeGap < 60 * 24) {
+      return `${parseInt(timeGap / 60)}시간전`;
+    } else if (timeGap >= 60 * 24) {
+      if (currentTime.getFullYear() - providedTime.getFullYear()) {
+        return `${providedTime.getFullYear()}년 ${
+          providedTime.getMonth() + 1
+        }월 ${providedTime.getDate()}일`;
+      } else {
+        return `${providedTime.getMonth() + 1}월 ${providedTime.getDate()}일`;
+      }
+    }
+  }
+
   return (
     <>
       <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
@@ -71,11 +96,10 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
           {content}
         </BoxContent>
         <BoxBottomDetail userStatus={Boolean(!userStatus)}>
-          <div>
+          <BoxBottemLeft>
             {Boolean(!userStatus) && (
-              <div>
+              <>
                 <FiEdit
-                  style={{ marginRight: '.5em' }}
                   onClick={() => {
                     navigate('/paper/create');
                   }}
@@ -85,9 +109,12 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                     setModalOpen(true);
                   }}
                 />
-              </div>
+              </>
             )}
-          </div>
+            <span style={{ fontSize: '14px' }}>
+              {getTimeDifference(createdAt)}
+            </span>
+          </BoxBottemLeft>
           <LikeComment
             id={paperId}
             myHeart={myHeart}

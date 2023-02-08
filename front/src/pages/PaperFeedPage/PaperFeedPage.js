@@ -48,7 +48,7 @@ function PaperFeedPage() {
       setIsLoading(false);
       setPaperList((prev) => prev.concat(res.data.data));
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err.response);
     }
   };
 

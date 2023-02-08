@@ -7,8 +7,16 @@ const BoxPaperDetail = styled(BoxNoShad)`
 `;
 
 const BoxBottomDetail = styled(BoxBottom)`
-  justify-content: ${(props) =>
-    props.userStatus ? 'space-between' : 'flex-end'};
+  color: var(--icon-color);
+  justify-content: space-between;
+  /* justify-content: ${(props) =>
+    props.userStatus ? 'space-between' : 'flex-end'}; */
 `;
 
-export { BoxPaperDetail, BoxBottomDetail };
+const BoxBottemLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0 0.3em;
+`;
+
+export { BoxPaperDetail, BoxBottomDetail, BoxBottemLeft };
