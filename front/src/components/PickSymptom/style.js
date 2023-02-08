@@ -30,6 +30,7 @@ const BoxToggle = styled.div`
 const ToggleContainer = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 1em;
 `;
 
 const ToggleText = styled.span`

@@ -21,7 +21,13 @@ import { FiArrowRight } from 'react-icons/fi';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
 import PreviewImage from '../../components/Paper/PreviewImage/PreviewImage';
-
+import {
+  ToggleContainer,
+  ToggleText,
+  ToggleWrapper,
+  Toggle,
+  ToggleLabel,
+} from '../../components/PickSymptom/style';
 function PaperCreatePage() {
   const navigate = useNavigate();
   // 이미지 업로드 개수 3개까지 MAX
@@ -38,7 +44,7 @@ function PaperCreatePage() {
 
   const [files, setFiles] = useState([]); // 이미지미리뵈기
   const [uploadedImage, setUploadedImage] = useState(null); // 이미지 서버 업로드
-
+  const [isOpen, setIsOpen] = useState(true);
   // 사용자가 작성한 다이어리 정보 받아오기
   const getDiaries = async () => {
     try {
@@ -154,7 +160,7 @@ function PaperCreatePage() {
       <TopDiv>
         <ContentLabel>사진 등록하기.</ContentLabel>
       </TopDiv>
-      <FlexDiv direction="column">
+      <FlexDiv direction="column" margin="0.3em 1.5em">
         <InputContainer>
           <StyledInput type="file" multiple onChange={handleSelectImage} />
           <FlexDiv>
@@ -167,6 +173,21 @@ function PaperCreatePage() {
             ))}
           </FlexDiv>
         </InputContainer>
+      </FlexDiv>
+      <FlexDiv direction="row" justify="flex-start">
+        <ContentLabel> 일기 비공개 설정하기</ContentLabel>
+        <ToggleContainer>
+          <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
+          <ToggleWrapper isOpen={isOpen}>
+            <Toggle
+              id="toggle"
+              type="checkbox"
+              onChange={() => setIsOpen((prev) => !prev)}
+              checked={isOpen}
+            />
+            <ToggleLabel htmlFor="toggle" />
+          </ToggleWrapper>
+        </ToggleContainer>
       </FlexDiv>
       <FlexDiv>
         <BtnUpdate color={'gray'} onClick={'aaa'}>
