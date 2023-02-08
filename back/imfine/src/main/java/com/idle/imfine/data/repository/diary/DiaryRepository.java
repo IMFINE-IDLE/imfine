@@ -4,6 +4,7 @@ import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.medical.MedicalCode;
 import com.idle.imfine.data.entity.symptom.DiaryHasSymptom;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -22,8 +23,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByIdAndWriter(long diaryId, User user);
     List<Diary> findAllByWriterIn(List<User> users);
     List<Diary> findAllByWriter(User writer);
-    @Query("select distinct d from Diary d join fetch Paper p on p.diary=d join fetch DiaryHasSymptom dhs on dhs.diary=d Where d.id=:diaryId")
-    Optional<Diary> findDiaryByIdFetchPaper(@Param("diaryId") long diaryId);
+    @Query("select distinct d from Diary d join fetch Paper p on p.diary=d  Where d.id=:diaryId and p.date between :startDate and :endDate")
+    Optional<Diary> findDiaryByIdFetchPaper(@Param("diaryId") long diaryId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     @Query("select distinct d from Diary d join fetch d.diaryHasSymptoms join fetch d.writer join fetch d.medicalCode where d.id=:diaryId")
     Optional<Diary> findDiaryByIdFetchDetail(@Param("diaryId") long diaryId);
     @Query("SELECT distinct d FROM Diary d join fetch Subscribe s on d=s.diary where s.userId=:id")

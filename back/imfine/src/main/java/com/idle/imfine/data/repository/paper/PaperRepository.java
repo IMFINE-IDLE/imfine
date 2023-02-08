@@ -15,6 +15,10 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     Paper getByDiary_IdAndDate(long diaryId, LocalDate date);
     Optional<Paper> findByDiaryAndDate(Diary diary, LocalDate date);
     List<Paper> findAllByDiaryInAndDate(List<Diary> diaries, LocalDate date);
+//and p.date between :startDate and :endDate
+    @Query("select p from Paper p where p.diary=:diary and p.date between :startDate and :endDate")
+    List<Paper> findPapersByDiaryAndDateBetween(@Param("diary") Diary diary,
+            @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     @Query("select p from Paper p where p.diary=:diary and p.date=:date")
     Paper getByDiary_IdAndDateJPQL(@Param("diary") Diary diary, @Param("date") LocalDate date);
     @Query("select DISTINCT p from Paper p left join fetch p.paperHasSymptoms phs where p.diary = :diary")
