@@ -15,7 +15,31 @@ const BoxTop = styled.div`
 `;
 
 const BoxLeft = styled.div`
+  position: relative;
   text-align: center;
+  img {
+    cursor: pointer;
+  }
+  span {
+    visibility: hidden;
+    width: 5em;
+    background-color: var(--gray-color);
+    color: var(--main-color);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    bottom: 90%;
+    left: 50%;
+    margin-left: -2.5em;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    /* z-index: 1; */
+  }
+
+  :hover span {
+    visibility: visible;
+  }
 `;
 
 const BoxRight = styled.div`
