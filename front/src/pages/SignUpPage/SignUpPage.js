@@ -382,7 +382,7 @@ function SignUpPage() {
         </div>
       ) : (
         <>
-          <PickSymptom />
+          <PickSymptom showMedical showSymptom />
           <div style={{ width: '80%', margin: '0 auto' }}>
             <BtnSignup type="button" onClick={() => navigate('/home')}>
               건강해지러 가기!
