@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -244,6 +245,20 @@ public class UserController {
     public ResponseEntity<Result> unfollowUser(@LoginUser String loginUid, @PathVariable String uid) {
         followService.unfollowUser(loginUid, uid);
 
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
+    @PostMapping("/follow/allow")
+    public ResponseEntity<Result> allowUserRequest(@LoginUser String loginUid, @RequestBody followUserRequestDto requestDto) {
+        followService.allowUserRequest(loginUid, requestDto.getUid());
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
+    @DeleteMapping("/follow/decline/{uid}")
+    public ResponseEntity<Result> declineuserRequest(@LoginUser String loginUid, @PathVariable String uid) {
+        followService.declineUserRequest(loginUid, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }

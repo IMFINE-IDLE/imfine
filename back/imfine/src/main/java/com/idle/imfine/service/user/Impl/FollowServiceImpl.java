@@ -2,8 +2,10 @@ package com.idle.imfine.service.user.Impl;
 
 import com.idle.imfine.data.dto.user.response.FollowResponseDto;
 import com.idle.imfine.data.entity.Follow;
+import com.idle.imfine.data.entity.FollowWait;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.FollowRepository;
+import com.idle.imfine.data.repository.user.FollowWaitRepository;
 import com.idle.imfine.errors.code.FollowErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
@@ -27,6 +29,7 @@ public class FollowServiceImpl implements FollowService {
     private final Logger LOGGER = LoggerFactory.getLogger(FollowServiceImpl.class);
     private final Common common;
     private final FollowRepository followRepository;
+    private final FollowWaitRepository followWaitRepository;
     private final NotificationService notificationService;
 
 
@@ -48,8 +51,15 @@ public class FollowServiceImpl implements FollowService {
             LOGGER.info("이미 팔로우하고 있습니다.");
             throw new ErrorException(FollowErrorCode.ALREADY_FOLLOWING);
         } else if (!other.isOpen() && !followRepository.existsByFollowingUserAndFollowedUser(other, user)) {
-            LOGGER.info("상대방이 비공개이므로 팔로우 신청을 보냈습니다.");
-            throw new ErrorException(FollowErrorCode.FOLLOWED_PRIVATE_USER);
+            LOGGER.info("비공개 유저에게 팔로우를 신청했습니다.");
+            FollowWait followWait = FollowWait.builder()
+                    .requester(user)
+                    .receiver(other)
+                    .build();
+            followWaitRepository.save(followWait);
+//            notificationService.send(user.getId(), other.getId(), 6, user.getId(), 6);
+            LOGGER.info("상대방에게 팔로우 요청을 보냈습니다.");
+            return;
         }
 
         Follow follow = Follow.builder()
@@ -60,7 +70,7 @@ public class FollowServiceImpl implements FollowService {
         common.increaseFollowingCount(user);
         common.increaseFollwerCount(other);
         followRepository.save(follow);
-        notificationService.send(user.getId(), other.getId(), 6, user.getId());
+//        notificationService.send(user.getId(), other.getId(), 6, user.getId(), 5);
         LOGGER.info("팔로우가 완료되었습니다.");
     }
 
@@ -81,6 +91,41 @@ public class FollowServiceImpl implements FollowService {
         followRepository.deleteByFollowingUserAndFollowedUser(user, other);
         LOGGER.info("언팔로우가 완료되었습니다.");
     }
+
+    @Override
+    public void allowUserRequest(String uid, String otherUid) {
+        User user = common.getUserByUid(uid);
+        User requester = common.getUserByUid(otherUid);
+        LOGGER.info("[FollowService.allowUserRequest] 유저 정보 조회 완료");
+
+        Follow follow = Follow.builder()
+                .followingUser(requester)
+                .followedUser(user)
+                .build();
+
+        common.increaseFollowingCount(requester);
+        common.increaseFollwerCount(user);
+
+        followRepository.save(follow);
+        followWaitRepository.deleteByRequesterAndReceiver(requester, user);
+
+
+//        notificationService.send(user.getId(), other.getId(), 6, user.getId(), 5);
+        LOGGER.info("[FollowService.allowUserRequest] 팔로우 요청을 수락했습니다.");
+    }
+
+    @Override
+    public void declineUserRequest(String uid, String otherUid) {
+        User user = common.getUserByUid(uid);
+        User requester = common.getUserByUid(otherUid);
+        LOGGER.info("[FollowService.declineUserRequest] 유저 정보 조회 완료");
+
+        followWaitRepository.deleteByRequesterAndReceiver(requester, user);
+
+//        notificationService.send(user.getId(), other.getId(), 6, user.getId(), 5);
+        LOGGER.info("[FollowService.declineUserRequest] 팔로우 요청을 거절했습니다.");
+    }
+
 
     @Override
     public List<FollowResponseDto> searchFollowingList(String uid, String targetUid) {

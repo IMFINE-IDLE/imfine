@@ -8,6 +8,7 @@ import com.idle.imfine.data.entity.notification.Notification;
 import com.idle.imfine.data.repository.notification.NotificationRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
+import com.idle.imfine.data.repository.user.FollowWaitRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
@@ -28,6 +29,7 @@ public class Common {
     private final UserRepository userRepository;
     private final ConditionRepository conditionRepository;
     private final FollowRepository followRepository;
+    private final FollowWaitRepository followWaitRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final NotificationRepository notificationRepository;
 
@@ -86,8 +88,10 @@ public class Common {
             return 0;
         } else if (followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
             return 1;
+        } else if (followWaitRepository.existsByRequesterAndReceiver(other, user)) {
+            return 2;
         }
-        return 2;
+        return 3;
     }
 
     public void increaseFollowingCount(User user) {
