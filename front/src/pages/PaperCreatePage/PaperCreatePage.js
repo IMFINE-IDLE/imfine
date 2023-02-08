@@ -190,7 +190,7 @@ function PaperCreatePage() {
         </ToggleContainer>
       </FlexDiv>
       <FlexDiv>
-        <BtnUpdate color={'gray'} onClick={'aaa'}>
+        <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
           취소하기
         </BtnUpdate>
         <BtnUpdate onClick={handleUploadImage}>일기쓰기</BtnUpdate>
