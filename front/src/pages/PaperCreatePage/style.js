@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { BoxNoShad } from '../../components/common/BoxNoShad/BoxNoShad';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
+import { Btn } from '../../components/common/Btn/Btn';
 const BoxPaperDetail = styled(BoxNoShad)`
   min-height: 100px;
   border-radius: 0px 0px 50px 50px;
@@ -33,4 +34,40 @@ const ContentLabel = styled.label`
   margin: ${(props) => props.margin || '1.5em 0 1.5em 2em'};
 `;
 
-export { BoxPaperDetail, BoxContent, TopDiv, ContentLabel, RightDiv };
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const StyledInput = styled.input`
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  outline: none;
+  cursor: pointer;
+  &:focus {
+    border-color: #aaa;
+  }
+`;
+
+const BtnUpdate = styled.button`
+  ${Btn}
+  width: 20em;
+  margin-top: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  display: inline-block;
+`;
+export {
+  BoxPaperDetail,
+  BoxContent,
+  TopDiv,
+  ContentLabel,
+  RightDiv,
+  InputContainer,
+  StyledInput,
+  BtnUpdate,
+};
