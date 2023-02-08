@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
@@ -9,36 +8,24 @@ import TabBar from '../../components/TabBar/TabBar';
 import ProfileInfo from '../../components/Profile/ProfileInfo/ProfileInfo';
 import Tabs from '../../components/Tabs/Tabs';
 import StatusCalendar from '../../components/StatusCalendar/StatusCalendar';
-import { axiosInstance } from '../../api/axiosInstance';
+// import { axiosInstance } from '../../api/axiosInstance';
 
 function ProfilePage() {
-  //////////// Hooks //////////////
-  const [userInfo, setUserInfo] = useState(null);
   const { uid } = useParams();
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     fetchUserInfo();
   }, []);
 
-  // 프로필에 표시한 유저 정보를 가져와서 userInfo state에 저장
-  // axiosInstance 사용하도록 변경
-  // 기존
-  // const fetchUserInfo = async () => {
-  //   try {
-  //     const response = await axios.get(api.profile.getUserInfo(uid), {
-  //       headers: { Authorization: localStorage.getItem('accessToken') },
-  //     });
-
-  //     setUserInfo(response.data.data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-  // 변경
+  // userInfo 가져오기
   const fetchUserInfo = async () => {
     try {
-      const res = await axiosInstance.get(api.profile.getUserInfo(uid));
-      setUserInfo(res.data.data);
+      const response = await axios.get(api.profile.getUserInfo(uid), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+
+      setUserInfo(response.data.data);
     } catch (err) {
       console.error(err);
     }

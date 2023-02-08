@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components';
 import { Btn } from '../../common/Btn/Btn';
 
 const ProfileInfoContainer = styled.div`
-  min-width: 22em;
   width: 100%;
   display: flex;
   align-items: start;

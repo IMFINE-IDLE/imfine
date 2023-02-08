@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
@@ -20,17 +20,10 @@ const ProfileInfo = ({
   followerCount,
   relation,
 }) => {
-  const { cloverCode } = useSelector((state) => state.userInfo);
-  // console.log(cloverCode);
   const navigate = useNavigate();
-  // const [type, setType] = useState('팔로잉');
-
-  // const isMine = uid === localStorage.getItem('uid') ? true : false;
-  // if (isMine) {
-  //   const [code, setCode] = useState(cloverCode);
-  // } else {
-  //   const code = condition;
-  // }
+  // 내 프로필인지 여부를 체크해서 내 프로필일 때는 store에서 컨디션을 가져와서 렌더링
+  const isMine = useRef(uid === localStorage.getItem('uid') ? true : false);
+  const { cloverCode } = useSelector((state) => state.userInfo);
 
   const infoToFollowPage = {
     name,
@@ -43,7 +36,11 @@ const ProfileInfo = ({
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
       <ProfileInfoContainer>
-        <Clover code={condition} width="4.2em" height="4.2em" />
+        <Clover
+          code={isMine.current ? cloverCode : condition}
+          width="4.2em"
+          height="4.2em"
+        />
 
         <ProfileInfoWrapper>
           <ProfileNickNameWrapper>
