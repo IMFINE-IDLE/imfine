@@ -18,9 +18,9 @@ import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomScoreDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.Subscribe;
 import com.idle.imfine.data.entity.User;
-import com.idle.imfine.data.entity.image.Image;
 import com.idle.imfine.data.entity.medical.MedicalCode;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
@@ -38,6 +38,7 @@ import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.DiaryErrorCode;
 import com.idle.imfine.errors.code.DiaryHasSymptomErrorCode;
+import com.idle.imfine.errors.code.FollowErrorCode;
 import com.idle.imfine.errors.code.SubscribeErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
@@ -424,28 +425,42 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseDiaryListDto> getDiarySubscribe(String uid) {
+    public List<ResponseDiaryListDto> getDiarySubscribe(String uid, String otherUid) {
         User user = common.getUserByUid(uid);
-        List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(user);
-        return diaries.stream().map(
-                diary -> ResponseDiaryListDto.builder()
-                        .diaryId(diary.getId())
-                        .title(diary.getTitle())
-                        .medicalName(diary.getMedicalCode().getName())
-                        .name(diary.getWriter().getName())
-                        .paperCount(diary.getPaperCount())
-                        .subscribeCount(diary.getSubscribeCount())
-                        .image(diary.getImage())
-                        .build()
+        User other = common.getUserByUid(otherUid);
+        int relation = common.getFollowRelation(user, other);
+        if (relation > 1 && !other.isOpen()) {
+            throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
+        }
+        List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(other);
+        return diaries.stream()
+                .filter(Diary::isOpen)
+                .map(
+                    diary -> ResponseDiaryListDto.builder()
+                            .diaryId(diary.getId())
+                            .title(diary.getTitle())
+                            .medicalName(diary.getMedicalCode().getName())
+                            .name(diary.getWriter().getName())
+                            .paperCount(diary.getPaperCount())
+                            .subscribeCount(diary.getSubscribeCount())
+                            .image(diary.getImage())
+                            .build()
         ).collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ResponseDiaryListDto> getDiaryMyWrite(String uid) {
+    public List<ResponseDiaryListDto> getDiaryMyWrite(String uid, String otherUid) {
         User user = common.getUserByUid(uid);
+        User other = common.getUserByUid(otherUid);
+        int relation = common.getFollowRelation(user, other);
+        if (relation > 1 && !other.isOpen()) {
+            throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
+        }
         List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(user);
-        return diaries.stream().map(
+        return diaries.stream()
+                .filter(Diary::isOpen)
+                .map(
                 diary -> ResponseDiaryListDto.builder()
                         .diaryId(diary.getId())
                         .title(diary.getTitle())
