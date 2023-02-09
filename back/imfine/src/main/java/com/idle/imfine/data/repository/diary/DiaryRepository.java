@@ -17,10 +17,13 @@ import org.springframework.data.repository.query.Param;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     Slice<Diary> findAllByOpenTrue(Pageable pageable);
-    Slice<Diary> findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(List<MedicalCode> medicalCode,
-        List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Slice<Diary> findByDiaryHasSymptomsInAndOpenTrue(List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    Slice<Diary> findByMedicalCodeInAndOpenTrue(List<MedicalCode> medicalCode, Pageable pageable);
+    @Query("select distinct d from MedicalCode m join Diary d on d.medicalCode=m join DiaryHasSymptom dhs on dhs.diary=d where dhs in :diaryHasSymptom or m in :medicalCode")
+    Slice<Diary> findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(@Param("medicalCode") List<MedicalCode> medicalCode,
+            @Param("diaryHasSymptom") List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
+    @Query("select distinct d from Diary d join DiaryHasSymptom dhs on dhs.diary=d where dhs.symptom in :diaryHasSymptom")
+    Slice<Diary> findByDiaryHasSymptomsInAndOpenTrue(@Param("diaryHasSymptom") List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
+    @Query("select distinct d from Diary d join MedicalCode m on m=d.medicalCode where m in :medicalCode")
+    Slice<Diary> findByMedicalCodeInAndOpenTrue(@Param("medicalCode") List<MedicalCode> medicalCode, Pageable pageable);
     Optional<Diary> findByIdAndWriter(long diaryId, User user);
     List<Diary> findAllByWriterIn(List<User> users);
     List<Diary> findAllByWriter(User writer);

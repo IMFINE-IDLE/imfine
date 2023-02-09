@@ -380,7 +380,7 @@ public class PaperServiceImpl implements PaperService {
                         .open(paper.isOpen())
                         .condition(String.format("%d",conditionRepository.findByUserAndDate(paper.getDiary()
                                 .getWriter(), paper.getDate()).orElseGet(Condition::new).getCondition()))
-                        .image(imageRepository.existsByPaperId(paper))
+                        .image(imageRepository.findByPaperId(paper).isPresent())
                         .symptomList(
                                 paper.getPaperHasSymptoms().stream().map(
                                         paperHasSymptom -> {

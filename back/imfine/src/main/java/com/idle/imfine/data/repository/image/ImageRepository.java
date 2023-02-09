@@ -4,6 +4,7 @@ import com.idle.imfine.data.entity.image.Image;
 import com.idle.imfine.data.entity.paper.Paper;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,6 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     @Query("SELECT p.id FROM Image i join Paper p on i.paperId=p.id where p in :paperList")
     Set<Long> existsByPaperIds(@Param("paperList") List<Paper> paperList);
 
-    @Query("select p.id from Image i join Paper p on p.id=i.paperId where p=:paper")
-    boolean existsByPaperId(@Param("paper") Paper paper);
+    @Query("select p from Image i join Paper p on p.id=i.paperId where p=:paper")
+    Optional<Paper> findByPaperId(@Param("paper") Paper paper);
 }
