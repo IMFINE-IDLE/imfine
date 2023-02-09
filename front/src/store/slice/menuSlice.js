@@ -35,64 +35,64 @@ const initialState = {
     {
       id: 1,
       name: '가정의학과 & 내과',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 2,
       name: '가정의학과',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 3,
       name: '내과',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 4,
       name: '가정의학과 & 내과',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 5,
       name: '가정의학과',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 6,
       name: '내과',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
   ],
   symptomMenuList: [
     {
       id: 1,
       name: '머리',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 2,
       name: '목',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 3,
       name: '어깨',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 4,
       name: '가슴',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 5,
       name: '배',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
     {
       id: 6,
       name: '등, 허리',
-      imgSrc: '/assets/icons/가정의학과.png',
+      image: '/assets/icons/가정의학과.png',
     },
   ],
 };
