@@ -10,6 +10,7 @@ import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
 import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
 import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
 import DiaryModifyPage from './pages/Diary/DiaryModifyPage/DiaryModifyPage';
+import DiaryAddSymptomPage from './pages/Diary/DiaryAddSymptomPage/DiaryAddSymptomPage';
 import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
 import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
@@ -48,7 +49,10 @@ function App() {
         <Route index element={<DiaryFeedPage />} />
         <Route path=":diaryId" element={<DiaryDetailPage />} />
         <Route path="create" element={<DiaryCreatePage />} />
-        <Route path="modify" element={<DiaryModifyPage />} />
+        <Route path=":diaryId/modify">
+          <Route index element={<DiaryModifyPage />} />
+          <Route path="symptom" element={<DiaryAddSymptomPage />} />
+        </Route>
       </Route>
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreatePage />} />
