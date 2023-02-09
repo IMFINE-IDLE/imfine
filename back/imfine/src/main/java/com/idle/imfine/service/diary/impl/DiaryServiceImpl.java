@@ -120,14 +120,14 @@ public class DiaryServiceImpl implements DiaryService {
 
         for (DiaryHasSymptom forEachHasSyomptom : diaryHasSymptoms) {
             responseSymptomDtos.add(ResponseSymptomDto.builder()
-                    .symptomId(forEachHasSyomptom.getId())
-                    .symptomName(forEachHasSyomptom.getSymptom().getName())
+                    .id(forEachHasSyomptom.getId())
+                    .name(forEachHasSyomptom.getSymptom().getName())
                     .build());
         }
         List<ResponseMedicalListDto> medicals = new ArrayList<>();
         medicals.add(ResponseMedicalListDto.builder()
-                .medicalId(foundDiary.getMedicalCode().getId())
-                .medicalName(foundDiary.getMedicalCode().getName())
+                .id(foundDiary.getMedicalCode().getId())
+                .name(foundDiary.getMedicalCode().getName())
                 .build());
 
         return ResponseDiaryDetailDto.builder()
@@ -413,13 +413,13 @@ public class DiaryServiceImpl implements DiaryService {
 
         return ResponsePutMedicalSymptomsDto.builder()
                 .medical(ResponseMedicalListDto.builder()
-                        .medicalId(diary.getMedicalCode().getId())
-                        .medicalName(diary.getMedicalCode().getName())
+                        .id(diary.getMedicalCode().getId())
+                        .name(diary.getMedicalCode().getName())
                         .build())
                 .symptomList(diary.getDiaryHasSymptoms().stream().map(
                         diaryHasSymptom -> ResponseSymptomDto.builder()
-                                .symptomId(diaryHasSymptom.getSymptom().getId())
-                                .symptomName(diaryHasSymptom.getSymptom().getName())
+                                .id(diaryHasSymptom.getSymptom().getId())
+                                .name(diaryHasSymptom.getSymptom().getName())
                                 .build()
                 ).collect(Collectors.toList()))
                 .build();

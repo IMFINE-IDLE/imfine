@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ResponseSymptomDto {
-    private int symptomId;
-    private String symptomName;
+    private int id;
+    private String name;
 }
