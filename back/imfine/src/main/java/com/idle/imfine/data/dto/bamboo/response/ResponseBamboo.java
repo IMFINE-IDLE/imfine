@@ -21,6 +21,7 @@ public class ResponseBamboo {
     private int likeCount;
     private int leafCount;
     private boolean isHeart = false;
+    private boolean hasNext;
 
 //    public ResponseBamboo(Bamboo entity) {
 //        this.bambooId = entity.getBambooId();

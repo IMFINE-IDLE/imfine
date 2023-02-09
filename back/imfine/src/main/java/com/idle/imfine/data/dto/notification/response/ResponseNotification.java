@@ -19,5 +19,6 @@ public class ResponseNotification {
     private String senderUid;
     private boolean isCheck;
     private boolean showButton;
+    private boolean hasNext;
     private String msg;
 }

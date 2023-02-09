@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -40,7 +41,7 @@ public class NotificationServiceImpl implements NotificationService {
         User user = userRepository.getByUid(uid);
 
         List<ResponseNotification> responseNotificationList = new ArrayList<>();
-        Page<Notification> all = notificationRepository.findByRecieverId(user.getId(), pageable);
+        Slice<Notification> all = notificationRepository.findByRecieverId(user.getId(), pageable);
 
         for (Notification n : all) {
             User sender = userRepository.getById(n.getSenderId());
@@ -60,6 +61,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .contentsId(n.getContentsId())
                         .isCheck(n.isCheck())
                         .showButton(true)
+                        .hasNext(all.hasNext())
                         .msg(makeMessage(userName, n.getType()))
                         .build();
                 responseNotificationList.add(notification);
@@ -71,6 +73,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .contentsId(n.getContentsId())
                         .isCheck(n.isCheck())
                         .showButton(false)
+                        .hasNext(all.hasNext())
                         .msg(makeMessage(userName, n.getType()))
                         .build();
                 responseNotificationList.add(notification);
