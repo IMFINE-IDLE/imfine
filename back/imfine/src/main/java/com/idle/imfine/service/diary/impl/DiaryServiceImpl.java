@@ -416,7 +416,7 @@ public class DiaryServiceImpl implements DiaryService {
                         .build())
                 .symptomList(diary.getDiaryHasSymptoms().stream().map(
                         diaryHasSymptom -> ResponseSymptomDto.builder()
-                                .symptomId(diaryHasSymptom.getId())
+                                .symptomId(diaryHasSymptom.getSymptom().getId())
                                 .symptomName(diaryHasSymptom.getSymptom().getName())
                                 .build()
                 ).collect(Collectors.toList()))
@@ -434,7 +434,7 @@ public class DiaryServiceImpl implements DiaryService {
         }
         List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(other);
         return diaries.stream()
-                .filter(Diary::isOpen)
+                .filter(diary -> diary.isOpen() || relation == 0)
                 .map(
                     diary -> ResponseDiaryListDto.builder()
                             .diaryId(diary.getId())
@@ -459,7 +459,7 @@ public class DiaryServiceImpl implements DiaryService {
         }
         List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(user);
         return diaries.stream()
-                .filter(Diary::isOpen)
+                .filter(diary -> diary.isOpen() || relation == 0)
                 .map(
                 diary -> ResponseDiaryListDto.builder()
                         .diaryId(diary.getId())
