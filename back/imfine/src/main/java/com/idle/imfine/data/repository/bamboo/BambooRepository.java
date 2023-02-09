@@ -1,5 +1,6 @@
 package com.idle.imfine.data.repository.bamboo;
 
+import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.bamboo.Bamboo;
 import com.idle.imfine.data.entity.leaf.Leaf;
 import java.util.List;
@@ -39,7 +40,9 @@ public interface BambooRepository extends JpaRepository<Bamboo, Long> {
     void deleteByDeleteAtBefore(@Param("now") LocalDateTime now);
 
 //    @Query("select distinct b from Bamboo b where b.leaves in :leaves and b.createdAt between :start and :end")
-    @Query("select distinct b from Bamboo b join Leaf l on l.bamboo=b where l in :leaves and b.createdAt between :start and :end")
-    Page<Bamboo> findByLeaves(@Param("leaves") List<Leaf> leaves, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
+//    @Query("select distinct b from Bamboo b join Leaf l on l.bamboo=b where l in :leaves and b.createdAt between :start and :end")
+//    Page<Bamboo> findByLeaves(@Param("leaves") List<Leaf> leaves, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 
+    @Query("select distinct b from Bamboo b join Leaf l on l.bamboo=b where l.writer.id=:writerId and b.createdAt between :start and :end")
+    Page<Bamboo> findByLeaves(@Param("writerId") long writerId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 }
