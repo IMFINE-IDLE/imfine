@@ -25,8 +25,8 @@ const SettingsPage = () => {
         <ProfileConfigOptionBtn onClick={() => navigate('/logout')}>
           <span>로그아웃하기</span>
         </ProfileConfigOptionBtn>
-        <ProfileConfigOptionBtn>
-          <span onClick={() => setModalOpen(true)}>탈퇴하기</span>
+        <ProfileConfigOptionBtn onClick={() => setModalOpen(true)}>
+          <span>탈퇴하기</span>
         </ProfileConfigOptionBtn>
       </ProfileConfigContainer>
 
