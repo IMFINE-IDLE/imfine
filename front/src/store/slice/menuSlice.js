@@ -1,9 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+import api from '../../api/api';
 
-export const fetchMenuList = createAsyncThunk(
-  'menuSlice/fetchMenuList',
+export const fetchSymptomList = createAsyncThunk(
+  'menuSlice/fetchSymptomList',
   async () => {
     try {
+      const res = await axios.get(api.symptom.getSymptomList(), {
+        headers: localStorage.getItem('accessToken'),
+      });
+      return res.data;
+    } catch (err) {
+      return err;
+    }
+  }
+);
+
+export const fetchMedicalList = createAsyncThunk(
+  'menuSlice/fetchMedicalList',
+  async () => {
+    try {
+      const res = await axios.get(api.medical.getMedicaList(), {
+        headers: localStorage.getItem('accessToken'),
+      });
+      return res.data;
     } catch (err) {
       return err;
     }
@@ -16,151 +36,31 @@ const initialState = {
       id: 1,
       name: '가정의학과 & 내과',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 2,
       name: '가정의학과',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 3,
       name: '내과',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 4,
       name: '가정의학과 & 내과',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 5,
       name: '가정의학과',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 6,
       name: '내과',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
   ],
   symptomMenuList: [
@@ -168,151 +68,31 @@ const initialState = {
       id: 1,
       name: '머리',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 2,
       name: '목',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 3,
       name: '어깨',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 4,
       name: '가슴',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 5,
       name: '배',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
     {
       id: 6,
       name: '등, 허리',
       imgSrc: '/assets/icons/가정의학과.png',
-      submenu: [
-        '코로나',
-        '독감',
-        '고지혈증',
-        '고혈압',
-        '당뇨',
-        '단백뇨',
-        '감기',
-        '영양제',
-        '알레르기',
-        '만성피로',
-        '변비',
-        '소화불량',
-        '만성피로',
-        '식중독',
-        '폐암',
-        '위암',
-        '간암',
-        '갑상선암',
-      ],
     },
   ],
 };
@@ -322,10 +102,19 @@ const menuSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchMenuList.fulfilled, (state, action) => {
-      state.medicalMenuList = action.payload.medicalMenuList;
-      state.symptomMenuList = action.payload.symptomMenuList;
-    });
+    builder
+      .addCase(fetchSymptomList.fulfilled, (state, action) => {
+        state.symptomMenuList = action.payload.symptomMenuList;
+      })
+      .addCase(fetchSymptomList.rejected, (state, action) => {
+        console.log(action.payload.response);
+      })
+      .addCase(fetchMedicalList.fulfilled, (state, action) => {
+        state.medicalMenuList = action.payload.medicalMenuList;
+      })
+      .addCase(fetchMedicalList.rejected, (state, action) => {
+        console.log(action.payload.response);
+      });
   },
 });
 

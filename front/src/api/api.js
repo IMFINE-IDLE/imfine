@@ -68,8 +68,12 @@ const api = {
     getDiaries: () => URL + DIARY + '/list/paper-post',
   },
   symptom: {
-    getSymptoms: () => URL + SYMPTOM + '/symptom-codes',
+    getSymptomList: () => URL + SYMPTOM + '/list',
     getSymptomDetail: (symptomId) => URL + SYMPTOM + symptomId,
+  },
+  medical: {
+    getMedicalList: () => URL + MEDICAL + '/list',
+    getMedicalDetail: (medicalId) => URL + MEDICAL + medicalId,
   },
 };
 
