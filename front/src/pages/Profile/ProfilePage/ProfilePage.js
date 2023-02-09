@@ -39,7 +39,7 @@ function ProfilePage() {
     {
       idx: 0,
       tabName: '달력',
-      tabContent: <StatusCalendar uid={uid} />,
+      tabContent: <StatusCalendar uid={uid} isProfile={true} />,
     },
     {
       idx: 1,

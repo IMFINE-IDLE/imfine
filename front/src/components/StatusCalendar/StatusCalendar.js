@@ -55,19 +55,33 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
   // 선택한 날짜의 일기 불러오기
   const fetchGetDiaryPaperItem = async (diaryId, date) => {
     try {
-      const params = {
-        diaryId,
-        date: moment(date).format('YYYY-MM-DD'),
-      };
+      if (isProfile) {
+        const params = { uid, date: moment(date).format('YYYY-MM-DD') };
 
-      const res = await axiosInstance.get(api.diary.getDiaryPaperItem(params));
+        const res = await axiosInstance.get(
+          api.profile.getUserPaperItem(params)
+        );
 
-      await setPaperInfo(res.data.data);
-      console.log('diarypaper res', res.data.data);
-      // console.log('res', res.data.data);
-      // console.log('data', monthCondition);
-      // console.log('dayclicked', dayClicked);
-      // console.log('cloverOfDayClicked', cloverOfDayClicked);
+        await setPaperInfo(res.data.data);
+        console.log('p res', res.data.data);
+        console.log('p', paperInfo);
+      } else {
+        const params = {
+          diaryId,
+          date: moment(date).format('YYYY-MM-DD'),
+        };
+
+        const res = await axiosInstance.get(
+          api.diary.getDiaryPaperItem(params)
+        );
+
+        await setPaperInfo(res.data.data);
+        console.log('diarypaper res', res.data.data);
+        // console.log('res', res.data.data);
+        // console.log('data', monthCondition);
+        // console.log('dayclicked', dayClicked);
+        // console.log('cloverOfDayClicked', cloverOfDayClicked);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -75,17 +89,19 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
 
   useEffect(() => {
     fetchProfileCalendar(date);
-    fetchGetDiaryPaperItem(diaryId, date);
   }, []);
+
+  useEffect(() => {
+    fetchGetDiaryPaperItem(diaryId, date);
+  }, [date]);
 
   // 날짜 선택했을 때 날짜와 클로버 상태 저장
   // 선택한 날짜의 일기 불러오기
-  const onClickDay = (value, event) => {
-    setDate(value);
-    const cloverOfDayClicked =
-      monthCondition[moment(value).format('D')] || '-1';
+  const onClickDay = async (date, event) => {
+    setDate(date);
+    const cloverOfDayClicked = monthCondition[moment(date).format('D')] || '-1';
     setCloverOfDayClicked(cloverOfDayClicked);
-    fetchGetDiaryPaperItem(diaryId, value);
+    // fetchGetDiaryPaperItem(diaryId, date);
   };
 
   if (!monthCondition) return null;
@@ -111,7 +127,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
               // 월 이동시 해당월 데이터 받아오기
               fetchProfileCalendar(activeStartDate);
             }}
-            onClickDay={onClickDay} // 특정 날짜 선택했을 때 일기 불러올 함수
+            onClickDay={() => onClickDay(date)} // 특정 날짜 선택했을 때 일기 불러올 함수
             tileContent={({ date }) => {
               return (
                 <Clover
@@ -171,10 +187,17 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
           </FlexDiv>
         )}
 
-        <DiaryPaperItem
-          paperInfo={paperInfo}
-          fetchGetDiaryPaperItem={fetchGetDiaryPaperItem}
-        />
+        {isProfile ? (
+          paperInfo?.map((paper) => {
+            console.log('paper', paper);
+            return <DiaryPaperItem paperInfo={paper} />;
+          })
+        ) : (
+          <DiaryPaperItem
+            paperInfo={paperInfo}
+            fetchGetDiaryPaperItem={fetchGetDiaryPaperItem}
+          />
+        )}
       </FlexDiv>
     </div>
   );

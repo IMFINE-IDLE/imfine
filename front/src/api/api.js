@@ -1,5 +1,5 @@
 // const URL = 'http://localhost:8080/api';
-const URL = 'http://i8A809.p.ssafy.io/api';
+const URL = 'http://i8A809.p.ssafy.io:8080/api';
 
 const USERS = '/user';
 const DIARY = '/diary';
@@ -36,12 +36,14 @@ const api = {
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
-    getMonthCondition: (params) =>
-      URL + USERS + `/${params.uid}/condition/month/${params.date}`,
     getFollowingList: (params) => URL + USERS + `/${params}/following`,
     getFollowerList: (params) => URL + USERS + `/${params}/follower`,
     follow: () => URL + USERS + '/follow',
     unfollow: (params) => URL + USERS + `/follow/${params}`,
+    getMonthCondition: (params) =>
+      URL + USERS + `/${params.uid}/condition/month/${params.date}`,
+    getUserPaperItem: (params) =>
+      URL + USERS + `/${params.uid}/paper/${params.date}`,
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,

@@ -8,79 +8,68 @@ import LikeComment from '../../Paper/LikeComment/LikeComment';
 import axios from 'axios';
 import api from '../../../api/api';
 
-const DiaryPaperItem = ({
-  commentCount,
-  condition,
-  content,
-  createdAt,
-  date,
-  diaryId,
-  images,
-  likeCount,
-  myHeart,
-  name,
-  open,
-  paperId,
-  symptomList,
-  title,
-  uid,
-  fetchGetDiaryPaperItem,
-  // diaryId,
-  // dayClicked,
-}) => {
-  // 일기 좋아요 등록
-  const likePaper = async (paperId) => {
-    try {
-      const res = await axios.post(
-        api.paper.paperLikePost(),
-        {
-          contentId: paperId,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
-      console.log(res);
-      fetchGetDiaryPaperItem(diaryId, createdAt);
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
+const DiaryPaperItem = ({ paperInfo, fetchGetDiaryPaperItem }) => {
+  console.log('props', paperInfo);
 
-  // 일기 좋아요 취소
-  const likePaperDelete = async (paperId) => {
-    try {
-      const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log(res);
-      fetchGetDiaryPaperItem(diaryId, createdAt);
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
+  // // 일기 좋아요 등록
+  // const likePaper = async (paperId) => {
+  //   try {
+  //     const res = await axios.post(
+  //       api.paper.paperLikePost(),
+  //       {
+  //         contentId: paperId,
+  //       },
+  //       { headers: { Authorization: localStorage.getItem('accessToken') } }
+  //     );
+  //     console.log(res);
+  //     fetchGetDiaryPaperItem(diaryId, createdAt);
+  //   } catch (err) {
+  //     console.log(err.response.data);
+  //   }
+  // };
 
-  console.log(symptomList);
+  // // 일기 좋아요 취소
+  // const likePaperDelete = async (paperId) => {
+  //   try {
+  //     const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
+  //       headers: { Authorization: localStorage.getItem('accessToken') },
+  //     });
+  //     console.log(res);
+  //     fetchGetDiaryPaperItem(diaryId, createdAt);
+  //   } catch (err) {
+  //     console.log(err.response.data);
+  //   }
+  // };
+
+  // console.log(symptomList);
 
   // 댓글 작업 필요
 
   return (
     <>
-      <FlexDiv>
-        <Clover />
-        <BoxLT50R25>
+      <FlexDiv margin="5em">
+        <Clover width="4em" height="4em" />
+        <BoxLT50R25 height="auto">
           <FlexDiv>
-            <span>{symptomList}</span>
-            <span>{moment(createdAt).locale('ko').format('MM.DD ddd')}</span>
+            {paperInfo.symptomList?.map((symptom) => (
+              <span>{symptom.name}</span>
+            ))}
+            <span>
+              {moment(new Date(paperInfo.date))
+                .locale('ko')
+                .format('MM.DD ddd')}
+            </span>
           </FlexDiv>
-          <span>{content}</span>
+          <span>{paperInfo.content}</span>
           {/* <img /> */}
           <FlexDiv>
             <LikeComment
-              id={paperId}
-              myHeart={myHeart}
-              likeCount={likeCount}
-              commentCount={commentCount}
-              like={likePaper}
-              likeDelete={likePaperDelete}
+              id={paperInfo.paperId}
+              myHeart={paperInfo.myHeart}
+              likeCount={paperInfo.likeCount}
+              commentCount={paperInfo.commentCount}
+              like={paperInfo.likePaper}
+              likeDelete={paperInfo.likePaperDelete}
             />
           </FlexDiv>
         </BoxLT50R25>
