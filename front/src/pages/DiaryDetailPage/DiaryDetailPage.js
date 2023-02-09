@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../api/api';
+import { axiosInstance } from '../../api/axiosInstance';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import StatusCalendar from '../../components/StatusCalendar/StatusCalendar';
 import { BoxShad } from '../../components/common/BoxShad/BoxShad';
@@ -18,6 +19,7 @@ const DiaryDetailPage = () => {
   const [diaryInfo, setDiaryInfo] = useState(null);
   const [showGraph, setShowGraph] = useState(false);
 
+  // 일기장 상세정보 가져오기
   const fetchGetDiaryInfo = async () => {
     try {
       const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
@@ -26,44 +28,24 @@ const DiaryDetailPage = () => {
 
       console.log(res.data.data);
       setDiaryInfo(res.data.data);
-
-      // const {
-      //   data: {
-      //     data: {
-      //       userId,
-      //       userStatus,
-      //       title,
-      //       description,
-      //       userName,
-      //       medicalName,
-      //       beginDate,
-      //       endedDate,
-      //       diaryHasSymptoms,
-      //     },
-      //   },
-      // } = res;
-      // console.log('title', title);
     } catch (err) {
       console.error(err);
     }
   };
 
+  // 일기장 구독 상태 변경
   const fetchUpdateSubscribeStatus = async (status) => {
     try {
-      const fetchUrl = status
-        ? api.diary.deleteDiarySubscribe()
-        : api.diary.setDiarySubscribe(status);
-      const method = status ? 'delete' : 'post';
-      const res = await axios({
-        url: fetchUrl,
-        method: method,
-        data: { diaryId: diaryId },
-        headers: {
-          Authorization: localStorage.getItem('accessToken'),
-        },
-      });
-
-      console.log('bookmark', res.data);
+      // 구독중이면 구독 취소 요청
+      if (status) {
+        await axiosInstance.delete(api.diary.deleteDiarySubscribe(diaryId));
+      }
+      // 구독중이 아니면 구독 요청
+      else {
+        await axiosInstance.post(api.diary.setDiarySubscribe(), {
+          diaryId,
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -75,41 +57,7 @@ const DiaryDetailPage = () => {
 
   if (!diaryInfo) return null;
 
-  // const isMine = diaryInfo.uid === localStorage.getItem('uid') ? true : false;
-  const isMine = false;
-
-  const medicalList = [
-    {
-      medicalId: 1,
-      medicalName: `${diaryInfo.medicalName}`,
-    },
-  ];
-  const diaryHasSymptoms = [
-    {
-      symptomId: 16,
-      symptomName: '두통',
-    },
-    {
-      symptomId: 17,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 18,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 19,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 14,
-      symptomName: '어지러움',
-    },
-    {
-      symptomId: 15,
-      symptomName: '어지러움',
-    },
-  ];
+  const isMine = Boolean(diaryInfo.uid === localStorage.getItem('uid'));
 
   return (
     <>
@@ -127,10 +75,12 @@ const DiaryDetailPage = () => {
                 />
               ) : (
                 <BookmarkSvg
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     fetchUpdateSubscribeStatus(diaryInfo.subscribe);
-                    // setDiaryInfo({subscribe} => !prev.subscribe);
+                    setDiaryInfo((prev) => ({
+                      ...prev,
+                      subscribe: !{ ...prev }.subscribe,
+                    }));
                   }}
                   fill={
                     diaryInfo.subscribe
@@ -159,19 +109,18 @@ const DiaryDetailPage = () => {
               title="질병/수술"
               isIcon={true}
               type="medical"
-              medicals={medicalList}
+              medicals={diaryInfo.medicals}
             />
             <PickedItemList
               title="증상"
               isIcon={true}
               type="symptom"
-              symptoms={diaryHasSymptoms}
+              symptoms={diaryInfo.diaryHasSymptoms}
               canModify={false}
               color="light-pink"
             />
           </FlexDiv>
           <FlexDiv>
-            {/* <FlexDiv width="50%"> */}
             <DiaryDateSpan width="15%" bold={true}>
               시작일
             </DiaryDateSpan>
@@ -183,7 +132,6 @@ const DiaryDetailPage = () => {
               {diaryInfo.endDate || '-'}
             </DiaryDateSpan>
           </FlexDiv>
-          {/* <FlexDiv>{diaryInfo.description}</FlexDiv> */}
           <DiaryDateSpan textAlign="start" padding="0 0.2em">
             {diaryInfo.description || '일기장 설명이 없어요'}
           </DiaryDateSpan>
@@ -219,3 +167,37 @@ const DiaryDetailPage = () => {
 };
 
 export default DiaryDetailPage;
+
+// 더미데이터
+// const medicalList = [
+//   {
+//     medicalId: 1,
+//     medicalName: `${diaryInfo.medicalName}`,
+//   },
+// ];
+// const diaryHasSymptoms = [
+//   {
+//     symptomId: 16,
+//     symptomName: '두통',
+//   },
+//   {
+//     symptomId: 17,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 18,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 19,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 14,
+//     symptomName: '어지러움',
+//   },
+//   {
+//     symptomId: 15,
+//     symptomName: '어지러움',
+//   },
+// ];
