@@ -17,7 +17,6 @@ public class ResponseNotification {
     //팔로우 경우 팔로우 아이디가 contentsId
     private long contentsId;
     private String senderUid;
-    private int type;
     private boolean isCheck;
     private boolean showButton;
     private String msg;

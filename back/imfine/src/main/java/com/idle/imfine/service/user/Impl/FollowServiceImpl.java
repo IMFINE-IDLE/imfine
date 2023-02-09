@@ -100,11 +100,6 @@ public class FollowServiceImpl implements FollowService {
         User requester = common.getUserByUid(otherUid);
         LOGGER.info("[FollowService.allowUserRequest] 유저 정보 조회 완료");
 
-        if (followWaitRepository.existsByRequesterAndReceiver(requester, user)) {
-            LOGGER.info("[FollowService.allowUserRequest] 이미 팔로우 요청 중입니다.");
-            throw new ErrorException(FollowErrorCode.ALREADY_FOLLOW_REQUEST);
-        }
-
         Follow follow = Follow.builder()
                 .followingUser(requester)
                 .followedUser(user)
@@ -116,10 +111,10 @@ public class FollowServiceImpl implements FollowService {
         followRepository.save(follow);
         followWaitRepository.deleteByRequesterAndReceiver(requester, user);
 
-        Notification notification = notificationRepository.getByRecieverIdAndSenderIdAndContentsCodeId(
+        Notification notification = notificationRepository.getByRecieverIdAndSenderIdAndType(
                 user.getId(), requester.getId(), 6);
         notification.setType(7);
-//        notificationService.send(user.getId(), other.getId(), 6, user.getId(), 5);
+
         LOGGER.info("[FollowService.allowUserRequest] 팔로우 요청을 수락했습니다.");
     }
 
@@ -136,10 +131,10 @@ public class FollowServiceImpl implements FollowService {
 
         followWaitRepository.deleteByRequesterAndReceiver(requester, user);
 
-        Notification notification = notificationRepository.getByRecieverIdAndSenderIdAndContentsCodeId(
+        Notification notification = notificationRepository.getByRecieverIdAndSenderIdAndType(
                 user.getId(), requester.getId(), 6);
         notification.setType(8);
-//        notificationService.send(user.getId(), other.getId(), 6, user.getId(), 5);
+
         LOGGER.info("[FollowService.declineUserRequest] 팔로우 요청을 거절했습니다.");
     }
 
