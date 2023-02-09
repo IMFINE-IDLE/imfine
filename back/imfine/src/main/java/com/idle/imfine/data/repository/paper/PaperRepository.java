@@ -40,4 +40,5 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     @Query("select p.id from Paper p join Heart h on h.contentsId=p.id where p in :papers and h.senderId=:userId and h.contentsCodeId=2")
     Set<Long> findHeartPaperByUserIdAAndDiaryIn(@Param("userId") long userId,
             @Param("papers") List<Paper> papers);
+    Slice<Paper> findByContentContainingIgnoreCaseAndOpenTrue(String query, Pageable pageable);
 }
