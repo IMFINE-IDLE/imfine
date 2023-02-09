@@ -3,42 +3,23 @@ package com.idle.imfine.controller;
 import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
-import com.idle.imfine.data.dto.user.request.ChangePasswordRequestDto;
-import com.idle.imfine.data.dto.user.request.ConditionRequestDto;
-import com.idle.imfine.data.dto.user.request.InitProfileRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserMedicalListRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserNameRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserOepnRequestDto;
-import com.idle.imfine.data.dto.user.request.SignInRequestDto;
-import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
-import com.idle.imfine.data.dto.user.request.followUserRequestDto;
-import com.idle.imfine.data.dto.user.response.ConditionResponseDto;
-import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
-import com.idle.imfine.data.dto.user.response.FollowResponseDto;
-import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
-import com.idle.imfine.data.dto.user.response.TokenResponseDto;
+import com.idle.imfine.data.dto.user.request.*;
+import com.idle.imfine.data.dto.user.response.*;
 import com.idle.imfine.service.paper.impl.PaperServiceImpl;
 import com.idle.imfine.service.user.ConditionService;
+import com.idle.imfine.service.user.EmailService;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.UserService;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -47,6 +28,7 @@ public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final EmailService emailService;
     private final FollowService followService;
     private final ConditionService conditionService;
     private final ResponseService responseService;
@@ -93,6 +75,20 @@ public class UserController {
     @PutMapping("/profile")
     public ResponseEntity<Result> initProfile(@LoginUser String loginUid, @RequestBody InitProfileRequestDto requestDto) {
         userService.initProfile(loginUid, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
+    @PostMapping("/check/email/send")
+    public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequestDto requestDto) {
+        emailService.sendEmail(requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
+    @PostMapping("/check/email/confirm")
+    public ResponseEntity<?> confirmEmail(@RequestBody ConfirmEmailRequestDto requestDto) {
+        emailService.confirmEmail(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
