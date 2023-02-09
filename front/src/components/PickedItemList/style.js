@@ -19,6 +19,9 @@ const PickedDivision = styled.span`
 const PickedContentWrapper = styled(FlexDiv)`
   overflow: scroll;
   white-space: nowrap;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }

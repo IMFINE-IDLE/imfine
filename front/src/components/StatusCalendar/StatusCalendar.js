@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import moment from 'moment';
@@ -16,9 +16,10 @@ import DiaryPaperItem from '../Diary/DiaryPaperItem/DiaryPaperItem';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../api/axiosInstance';
 
-const StatusCalendar = ({ uid, diaryId, isProfile }) => {
-  // 내 프로필인지 여부를 체크해서 내 프로필일 때만 상태변경 버튼 표시
-  const isMine = useRef(uid === localStorage.getItem('uid') ? true : false);
+const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
+  /*
+   * Hooks
+   */
 
   // 달력 관련 state
   const [date, setDate] = useState(new Date());
@@ -32,6 +33,10 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
   const [paperInfo, setPaperInfo] = useState(null);
 
   const navigate = useNavigate();
+
+  /*
+   * Functions
+   */
 
   // 해당 달의 컨디션 정보 불러오기
   const fetchProfileCalendar = async (date) => {
@@ -77,10 +82,6 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
 
         await setPaperInfo(res.data.data);
         console.log('diarypaper res', res.data.data);
-        // console.log('res', res.data.data);
-        // console.log('data', monthCondition);
-        // console.log('dayclicked', dayClicked);
-        // console.log('cloverOfDayClicked', cloverOfDayClicked);
       }
     } catch (err) {
       console.error(err);
@@ -91,12 +92,12 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
     fetchProfileCalendar(date);
   }, []);
 
+  // 날짜를 새로 선택할 때마다 개별 일기 정보를 불러오기
   useEffect(() => {
     fetchGetDiaryPaperItem(diaryId, date);
   }, [date]);
 
-  // 날짜 선택했을 때 날짜와 클로버 상태 저장
-  // 선택한 날짜의 일기 불러오기
+  // 날짜 선택했을 때 날짜와 클로버 상태 업데이트
   const onClickDay = async (date, event) => {
     setDate(date);
     const cloverOfDayClicked = monthCondition[moment(date).format('D')] || '-1';
@@ -105,7 +106,6 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
   };
 
   if (!monthCondition) return null;
-  // if (!paperInfo) return null;
 
   return (
     <div style={{ position: 'relative' }}>
@@ -131,7 +131,12 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
             tileContent={({ date }) => {
               return (
                 <Clover
-                  code={monthCondition[moment(date).format('D') || '-1']}
+                  // code={monthCondition[moment(date).format('D') || '-1']}
+                  code={
+                    moment(date).isAfter(new Date())
+                      ? 'blank'
+                      : monthCondition[moment(date).format('D') || '-1']
+                  }
                   width="2.7em"
                   height="2.7em"
                   pointer={true}
@@ -152,7 +157,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
           />
         )}
 
-        {isMine.current && (
+        {isMine && (
           <FlexDiv>
             <CalendarStatusModifyBtn
               color="light"
@@ -188,15 +193,11 @@ const StatusCalendar = ({ uid, diaryId, isProfile }) => {
         )}
 
         {isProfile ? (
-          paperInfo?.map((paper) => {
-            console.log('paper', paper);
-            return <DiaryPaperItem paperInfo={paper} />;
-          })
+          paperInfo?.map((paper) => (
+            <DiaryPaperItem paperInfo={paper} key={paper.id} />
+          ))
         ) : (
-          <DiaryPaperItem
-            paperInfo={paperInfo}
-            fetchGetDiaryPaperItem={fetchGetDiaryPaperItem}
-          />
+          <DiaryPaperItem paperInfo={paperInfo} />
         )}
       </FlexDiv>
     </div>

@@ -39,7 +39,7 @@ function ProfilePage() {
     {
       idx: 0,
       tabName: '달력',
-      tabContent: <StatusCalendar uid={uid} isProfile={true} />,
+      tabContent: <StatusCalendar uid={uid} isProfile={true} isMine={isMine} />,
     },
     {
       idx: 1,
@@ -71,7 +71,7 @@ function ProfilePage() {
 
       <Tabs tabArr={tabArr} btnWidth="6.25em"></Tabs>
 
-      <BtnFloat />
+      {/* <BtnFloat /> */}
       <TabBar />
     </div>
   );

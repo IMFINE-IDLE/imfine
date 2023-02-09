@@ -175,6 +175,7 @@ const DiaryDetailPage = () => {
           uid={diaryInfo.uid}
           diaryId={diaryId}
           isProfile={false}
+          isMine={isMine}
         />
       </DiaryBoxGrad>
     </>

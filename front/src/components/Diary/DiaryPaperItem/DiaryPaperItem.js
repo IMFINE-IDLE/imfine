@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Clover } from '../../common/Clover/Clover';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import { BoxLT50R25 } from '../../common/BoxLT50R25/BoxLT50R25';
 import moment from 'moment';
 import 'moment/locale/ko';
 import LikeComment from '../../Paper/LikeComment/LikeComment';
-import axios from 'axios';
-import api from '../../../api/api';
 
-const DiaryPaperItem = ({ paperInfo, fetchGetDiaryPaperItem }) => {
+import {
+  DiaryPaperSpan,
+  DiaryPaperSymptomWrapper,
+  DiaryPaperSymptomDiv,
+} from './style';
+
+const DiaryPaperItem = ({ paperInfo }) => {
   console.log('props', paperInfo);
 
   // // 일기 좋아요 등록
@@ -47,22 +51,44 @@ const DiaryPaperItem = ({ paperInfo, fetchGetDiaryPaperItem }) => {
 
   return (
     <>
-      <FlexDiv margin="5em">
-        <Clover width="4em" height="4em" />
+      <FlexDiv margin="1em 0" align="start">
+        <Clover width="4em" height="4em" code={paperInfo.condition} />
         <BoxLT50R25 height="auto">
-          <FlexDiv>
-            {paperInfo.symptomList?.map((symptom) => (
-              <span>{symptom.name}</span>
-            ))}
-            <span>
+          <FlexDiv justify="start">
+            <DiaryPaperSpan
+              size="0.75em"
+              bold={true}
+              style={{
+                paddingLeft: '1em',
+                marginRight: '1em',
+              }}
+            >
               {moment(new Date(paperInfo.date))
                 .locale('ko')
                 .format('MM.DD ddd')}
-            </span>
+            </DiaryPaperSpan>
+            <DiaryPaperSymptomWrapper
+              width="60%"
+              justify="start"
+              align="center"
+            >
+              {paperInfo.symptomList?.map((symptom) => (
+                <DiaryPaperSymptomDiv key={symptom.id}>
+                  <DiaryPaperSpan color="gray800">
+                    {symptom.name}
+                  </DiaryPaperSpan>
+                  <DiaryPaperSpan color="gray800">
+                    {symptom.score}
+                  </DiaryPaperSpan>
+                </DiaryPaperSymptomDiv>
+              ))}
+            </DiaryPaperSymptomWrapper>
           </FlexDiv>
-          <span>{paperInfo.content}</span>
+          <FlexDiv padding="0.5em 0" style={{ lineHeight: '1.3em' }}>
+            <DiaryPaperSpan>{paperInfo.content}</DiaryPaperSpan>
+          </FlexDiv>
           {/* <img /> */}
-          <FlexDiv>
+          <FlexDiv justify="end">
             <LikeComment
               id={paperInfo.paperId}
               myHeart={paperInfo.myHeart}
