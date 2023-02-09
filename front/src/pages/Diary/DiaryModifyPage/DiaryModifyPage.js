@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { BsArrowRightShort } from 'react-icons/bs';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import Modal from '../../../components/Modal/Modal';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import PickedItemList from '../../../components/PickedItemList/PickedItemList';
 import { BoxToggle } from '../../../components/PickSymptom/style';
-import { BsArrowRightShort } from 'react-icons/bs';
 import {
   ToggleContainer,
   ToggleText,
@@ -19,25 +20,33 @@ import {
   DiaryCreateTextarea,
   SubmitBtn,
 } from '../DiaryCreatePage/style';
-import { useNavigate, useParams } from 'react-router-dom';
 
 const DiaryModifyPage = () => {
-  // 임시. 나중에 앞 페이지에서 받아올 것
-  // const {medicalPick, symptomPickList} = useLocation();
-  const medicals = [{ id: 1, name: '질병명' }];
-  const symptoms = [
-    { id: 1, name: '증상1' },
-    { id: 2, name: '증상2' },
-  ];
-  // 임시. 나중에 앞 페이지에서 받아올 것
-  const [diaryInfo, setDiaryInfo] = useState({
-    title: '기존 일기장 제목',
-    description: '기존 일기장 설명',
-  });
-  // 임시
-  const [isOpen, setIsOpen] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
+  // // 임시. 나중에 앞 페이지에서 받아올 것
+  // const [diaryInfo, setDiaryInfo] = useState({
+  //   title: '기존 일기장 제목',
+  //   description: '기존 일기장 설명',
+  // });
+  // const medicals = [{ id: 1, name: '질병명' }];
+  // const symptoms = [
+  //   { id: 1, name: '증상1' },
+  //   { id: 2, name: '증상2' },
+  // ];
+  // const [isOpen, setIsOpen] = useState(true);
+  // // 임시
+
   const { diaryId } = useParams();
+  const { title, description, medicals, diaryHasSymptoms, open } =
+    useLocation().state;
+  const [diaryInfo, setDiaryInfo] = useState({
+    title,
+    description,
+  });
+  const [symptoms, setSymptoms] = useState(diaryHasSymptoms);
+  const [isOpen, setIsOpen] = useState(open);
+
+  const [diaryDeleteModalOpen, setdiaryDeleteModalOpen] = useState(false);
+  const [symptomDeleteModalOpen, setsymptomDeleteModalOpen] = useState(false);
   const navigate = useNavigate();
 
   // 입력값을 diaryInfo state에 저장
@@ -144,7 +153,7 @@ const DiaryModifyPage = () => {
                 paddingTop: '1em',
                 cursor: 'pointer',
               }}
-              onClick={() => setModalOpen(true)}
+              onClick={() => setdiaryDeleteModalOpen(true)}
             >
               일기장 삭제
             </span>
@@ -152,11 +161,11 @@ const DiaryModifyPage = () => {
         </form>
       </DiaryBoxGrad>
 
-      {modalOpen && (
+      {diaryDeleteModalOpen && (
         <Modal
           type={'일기장'}
           action={'삭제'}
-          setModalOpen={setModalOpen}
+          setModalOpen={setdiaryDeleteModalOpen}
           apiFunc={fetchDeleteDiary}
         />
       )}

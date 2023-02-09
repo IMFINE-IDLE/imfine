@@ -63,7 +63,29 @@ const DiaryDetailPage = () => {
 
   if (!diaryInfo) return null;
 
+  // 내 일기장인지 여부 확인
   const isMine = Boolean(diaryInfo.uid === localStorage.getItem('uid'));
+
+  // 일기장 수정 페이지로 넘길 데이터
+  // const infoToModifyPage = {
+  //   title: diaryInfo.title,
+  //   description: diaryInfo.description,
+  //   medicals: diaryInfo.medicals,
+  //   diaryHasSymptoms: diaryInfo.diaryHasSymptoms,
+  //   open: diaryInfo.open,
+  // };
+
+  // 테스트용
+  const infoToModifyPage = {
+    title: 'diaryInfotitle',
+    description: 'diaryInfodescription',
+    medicals: [{ id: 1, name: '질병명' }],
+    diaryHasSymptoms: [
+      { id: 1, name: '증상1' },
+      { id: 2, name: '증상2' },
+    ],
+    open: true,
+  };
 
   return (
     <>
@@ -78,7 +100,10 @@ const DiaryDetailPage = () => {
                   src="/assets/icons/edit.svg"
                   alt="edit"
                   style={{ padding: '0.8125em 0' }}
-                  onClick={() => navigate(`/diary/${diaryId}/modify`)}
+                  onClick={
+                    (() => navigate(`/diary/${diaryId}/modify`),
+                    { state: infoToModifyPage })
+                  }
                 />
               ) : (
                 <BookmarkSvg
