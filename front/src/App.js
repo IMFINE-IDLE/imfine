@@ -9,7 +9,6 @@ import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
-import ProfileContent from './components/Profile/ProfileContent/ProfileContent';
 import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
 import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
@@ -18,6 +17,7 @@ import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
 import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
 import DiaryFeedPage from './pages/DiaryFeedPage/DiaryFeedPage';
 import SearchPage from './pages/SearchPage/SearchPage';
+import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -47,14 +47,13 @@ function App() {
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreatePage />} />
         <Route path="/paper/:paperId" element={<PaperDetailPage />} />
+        <Route path="/paper/symptom" element={<PaperSymptomPage />} />
       </Route>
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
       <Route path="/bamboo/:bambooId" element={<BambooDetailPage />}></Route>
-      <Route path="/profile/:uid" element={<ProfilePage />}>
-        <Route index element={<ProfileContent />} />
-        <Route path="follows" element={<ProfileFollows />} />
-      </Route>
+      <Route path="/profile/:uid" element={<ProfilePage />}></Route>
+      <Route path="/profile/:uid/follows" element={<ProfileFollows />} />
       <Route path="/profile-config" element={<ProfileConfigPage />} />
       <Route path="/change-name" element={<ChangeName />} />
       <Route path="/change-symptom" element={<ChangeSymptom />} />

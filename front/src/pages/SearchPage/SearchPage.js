@@ -9,6 +9,16 @@ import SearchUser from '../../components/Search/SearchUser/SearchUser';
 import Tabs from '../../components/Tabs/Tabs';
 import { addSearchHistory } from '../../store/slice/userInfoSlice';
 import { BigCircle } from '../PaperFeedPage/style';
+import {
+  BoxClover,
+  BoxInner,
+  BoxRecentQuery,
+  BoxSearchResult,
+  QueryItem,
+  TitleRecent,
+} from './style';
+import TabBar from '../../components/TabBar/TabBar';
+import { Clover } from '../../components/common/Clover/Clover';
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,6 +26,8 @@ function SearchPage() {
   const searchHistory = useSelector((state) => state.userInfo.searchHistory);
   const [keyword, setKeyword] = useState(''); // 검색창에 검색하는 쿼리
   const [keywordResult, setKeywordResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
+
+  const [paperList, setPaperList] = useState([]);
 
   const handleSearch = async (trimmedKeyword) => {
     if (trimmedKeyword === '' || trimmedKeyword === null) {
@@ -33,7 +45,13 @@ function SearchPage() {
   };
 
   const tabArr = [
-    { idx: 0, tabName: '일기', tabContent: <SearchPaper /> },
+    {
+      idx: 0,
+      tabName: '일기',
+      tabContent: (
+        <SearchPaper paperList={paperList} setPaperList={setPaperList} />
+      ),
+    },
     { idx: 1, tabName: '일기장', tabContent: <SearchDiary /> },
     { idx: 2, tabName: '유저', tabContent: <SearchUser /> },
   ];
@@ -47,7 +65,6 @@ function SearchPage() {
 
     let trimmedQuery = currentQuery.trim();
     setKeyword(trimmedQuery);
-    dispatch(addSearchHistory(trimmedQuery));
     setKeywordResult(trimmedQuery);
   }, [dispatch, searchParams]);
 
@@ -58,23 +75,32 @@ function SearchPage() {
         setKeyword={setKeyword}
         handleSearch={handleSearch}
       />
+
       {searchParams.get('query') ? (
-        <div>
+        <BoxSearchResult>
           <SearchResult keywordResult={keywordResult} />
           <Tabs tabArr={tabArr} btnWidth={'6.2em'} />
-          {/* <TabBar /> */}
-        </div>
+        </BoxSearchResult>
       ) : (
-        <div>
-          <h2>최근 검색어</h2>
-          <div>
-            {searchHistory.map((searchItem, idx) => (
-              <div key={idx}>{searchItem}</div>
-            ))}
-          </div>
-          <BigCircle />
-        </div>
+        <>
+          <BoxClover>
+            <Clover code={'1'} width={'65px'} height={'65px'} />
+          </BoxClover>
+          <BoxRecentQuery>
+            <TitleRecent>최근 검색어</TitleRecent>
+            <BoxInner>
+              {searchHistory.map((searchItem, idx) => (
+                <QueryItem key={idx}>
+                  {searchItem}
+                  <span>X</span>
+                </QueryItem>
+              ))}
+            </BoxInner>
+            <BigCircle />
+          </BoxRecentQuery>
+        </>
       )}
+      <TabBar />
     </>
   );
 }

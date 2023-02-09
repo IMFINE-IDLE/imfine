@@ -20,6 +20,7 @@ function PaperItem({ paper, likePaper, likePaperDelete }) {
   const userId = useSelector((state) => {
     return state.user.uid;
   });
+
   const navigate = useNavigate();
   const {
     paperId,
@@ -67,6 +68,10 @@ function PaperItem({ paper, likePaper, likePaperDelete }) {
       <BoxTop>
         <BoxLeft>
           <img
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/profile/${uid}`);
+            }}
             src={
               condition !== null
                 ? `/assets/clovers/clover${condition}.svg`
@@ -85,8 +90,8 @@ function PaperItem({ paper, likePaper, likePaperDelete }) {
             <div>
               {symptomList?.map((symptom) => {
                 return (
-                  <Symptom key={symptom.symptomId}>
-                    {symptom.symptomName} {symptom.score}
+                  <Symptom key={symptom?.symptomId}>
+                    {symptom?.symptomName} {symptom?.score}
                   </Symptom>
                 );
               })}

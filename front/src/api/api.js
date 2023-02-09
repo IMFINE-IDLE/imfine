@@ -20,7 +20,7 @@ const api = {
     updateOpenStatus: () => URL + USERS + '/open',
   },
   paper: {
-    paperFeed: () => URL + PAPER + '/list',
+    paperFeed: (page) => URL + PAPER + `/list?page=${page}&tab=date`,
     paperDetail: (paperId) => URL + PAPER + `/${paperId}`,
     paperReport: (paperId) => URL + REPORT + PAPER + `/${paperId}`,
     paperLikePost: () => URL + PAPER + '/like',
@@ -38,6 +38,8 @@ const api = {
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
     getFollowingList: (params) => URL + USERS + `/${params}/following`,
     getFollowerList: (params) => URL + USERS + `/${params}/follower`,
+    follow: () => URL + USERS + '/follow',
+    unfollow: (params) => URL + USERS + `/follow/${params}`,
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,
@@ -62,6 +64,8 @@ const api = {
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
+    getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
+    getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
   },
 };
 

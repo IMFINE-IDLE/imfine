@@ -1,4 +1,3 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
@@ -12,21 +11,35 @@ import {
 } from './style';
 
 const ProfileInfo = ({
-  condition,
+  isMine,
   uid,
+  condition,
   name,
   open,
   followingCount,
   followerCount,
   relation,
 }) => {
-  const state = useSelector((state) => state);
   const navigate = useNavigate();
+  const { cloverCode } = useSelector((state) => state.userInfo);
+
+  const infoToFollowPage = {
+    name,
+    open,
+    followingCount,
+    followerCount,
+    condition,
+  };
 
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
       <ProfileInfoContainer>
-        <Clover code={state.userInfo.cloverCode} width="4.2em" height="4.2em" />
+        <Clover
+          // 내 프로필일 때는 store에서 컨디션을 가져와서 렌더링
+          code={isMine ? cloverCode : condition}
+          width="4.2em"
+          height="4.2em"
+        />
 
         <ProfileInfoWrapper>
           <ProfileNickNameWrapper>
@@ -57,8 +70,7 @@ const ProfileInfo = ({
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  // state: { type: 'following', idx: 0 },
-                  state: 'following',
+                  state: { ...infoToFollowPage, type: '팔로잉' },
                 })
               }
             >
@@ -67,7 +79,7 @@ const ProfileInfo = ({
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  state: 'following',
+                  state: { ...infoToFollowPage, type: '팔로잉' },
                 })
               }
             >
@@ -80,7 +92,7 @@ const ProfileInfo = ({
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  state: 'follower',
+                  state: { ...infoToFollowPage, type: '팔로워' },
                 })
               }
             >
@@ -89,7 +101,7 @@ const ProfileInfo = ({
             <ProfileItemSpan
               onClick={() =>
                 navigate(`/profile/${uid}/follows`, {
-                  state: 'follower',
+                  state: { ...infoToFollowPage, type: '팔로워' },
                 })
               }
             >
