@@ -50,10 +50,11 @@ public class DiaryController {
     public ResponseEntity<Result> getDiaryList(@RequestParam(value = "tab") String tab
         , @RequestParam(value = "medical-id") List<Integer> medicalId
         , @RequestParam(value = "symptom-id") List<Integer> symptomId
-        , @RequestParam(value = "page") int page){
-        String sort = tab.equals("popular") ? "subscribeCount" : "postedAt";
+        , @RequestParam(value = "page") int page, @LoginUser String uid){
+        String sort = tab.equals("popular") ? "d.subscribeCount" : "d.postedAt";
         Pageable pageable = PageRequest.of(page, 12, Direction.DESC, sort);
         List<ResponseDiaryListDto> responseDto = diaryService.getDiaryList(RequestDiaryFilterDto.builder()
+                        .uid(uid)
                         .tab(tab)
                         .medicalId(medicalId)
                         .symptomId(symptomId)

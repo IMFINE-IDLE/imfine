@@ -292,6 +292,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional(readOnly = true)
     public List<ResponseDiaryListDto> getDiaryList(RequestDiaryFilterDto requestDiaryFilterDto,
             Pageable pageable) {
+        User user = common.getUserByUid(requestDiaryFilterDto.getUid());
         List<Symptom> symptoms = symptomRepository.findByIdIn(requestDiaryFilterDto.getSymptomId());
         List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.getDiaryHasSymptomBySymptomIn(
                 symptoms);
@@ -310,18 +311,21 @@ public class DiaryServiceImpl implements DiaryService {
             diaryPage = diaryRepository.findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(medicalCodes,
                     diaryHasSymptoms, pageable);
         }
-
-        return diaryPage.stream().map(
-            diary -> ResponseDiaryListDto.builder()
-                .diaryId(diary.getId())
-                .title(diary.getTitle())
-                .medicalName(diary.getMedicalCode().getName())
-                .name(diary.getWriter().getName())
-                .image(diary.getImage())
-                .subscribeCount(diary.getSubscribeCount())
-                .paperCount(diary.getPaperCount())
-                .hasNext(diaryPage.hasNext())
-                .build()
+        Set<Long> subscribeDiaryIds = subscribeRepository.getDiaryIdsByDiaries(diaryPage.getContent(), user.getId());
+        return diaryPage.stream()
+                .map(
+                    diary -> ResponseDiaryListDto.builder()
+                        .diaryId(diary.getId())
+                        .title(diary.getTitle())
+                        .medicalName(diary.getMedicalCode().getName())
+                        .name(diary.getWriter().getName())
+                        .image(diary.getImage())
+                        .subscribeCount(diary.getSubscribeCount())
+                        .paperCount(diary.getPaperCount())
+                        .open(diary.isOpen())
+                        .mySubscribe(subscribeDiaryIds.contains(diary.getId()))
+                        .hasNext(diaryPage.hasNext())
+                        .build()
         ).collect(Collectors.toList());
     }
 
