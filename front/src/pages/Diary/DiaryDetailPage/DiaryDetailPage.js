@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import api from '../../api/api';
-import { axiosInstance } from '../../api/axiosInstance';
-import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import StatusCalendar from '../../components/StatusCalendar/StatusCalendar';
-import { BoxShad } from '../../components/common/BoxShad/BoxShad';
-import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
+import api from '../../../api/api';
+import { axiosInstance } from '../../../api/axiosInstance';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
+import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
+import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import { DiaryBoxGrad } from '../DiaryCreatePage/style';
 import { DiaryInfoContainer, DiaryDateSpan } from './style';
-import DiaryTitle from '../../components/Paper/DiaryTitle/DiaryTitle';
+import DiaryTitle from '../../../components/Paper/DiaryTitle/DiaryTitle';
 import { ReactComponent as BookmarkSvg } from './bookmark.svg';
-import PickedItemList from '../../components/PickedItemList/PickedItemList';
-import SymptomGraph from '../../components/SymptomGraph/SymptomGraph';
+import PickedItemList from '../../../components/PickedItemList/PickedItemList';
+import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Btn } from '../../components/common/Btn/Btn';
+import { Btn } from '../../../components/common/Btn/Btn';
 
 const ProfileConfigOptionBtn = styled.button`
   ${Btn}

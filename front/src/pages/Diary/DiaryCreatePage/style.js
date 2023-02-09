@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
-import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
-import { TitleSmall, BtnSymptom } from '../../components/PickSymptom/style';
+import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
+import { TitleSmall, BtnSymptom } from '../../../components/PickSymptom/style';
 
 const DiaryBoxGrad = styled(BoxGrad)`
   height: calc(100vh - var(--nav-height));
