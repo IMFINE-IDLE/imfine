@@ -18,7 +18,6 @@ import com.idle.imfine.data.dto.symptom.response.ResponseSymptomDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomScoreDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
-import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.Subscribe;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.medical.MedicalCode;
@@ -38,7 +37,6 @@ import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.DiaryErrorCode;
 import com.idle.imfine.errors.code.DiaryHasSymptomErrorCode;
-import com.idle.imfine.errors.code.FollowErrorCode;
 import com.idle.imfine.errors.code.SubscribeErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
@@ -242,9 +240,9 @@ public class DiaryServiceImpl implements DiaryService {
                 .symptomList(paper.getPaperHasSymptoms().stream().map(
                         symptom ->
                                 ResponsePaperSymptomRecordDto.builder()
-                                        .symptomId(symptom.getSymptomId())
+                                        .id(symptom.getSymptomId())
                                         .score(symptom.getScore())
-                                        .symptomName(
+                                        .name(
                                                 symptomRepository.getById(symptom.getSymptomId())
                                                         .getName())
                                         .build()
