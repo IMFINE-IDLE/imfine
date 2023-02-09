@@ -8,6 +8,7 @@ import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
 import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
 import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
 import DiaryModifyPage from './pages/Diary/DiaryModifyPage/DiaryModifyPage';
+import DiaryAddSymptomPage from './pages/Diary/DiaryAddSymptomPage/DiaryAddSymptomPage';
 import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
 import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
@@ -17,8 +18,8 @@ import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
 import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
 import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
-import ChangeName from './pages/ChangeName/ChangeName';
-import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
+import ChangeName from './pages/Profile/ChangeName/ChangeName';
+import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
 import LogOutPage from './pages/LogOutPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -46,7 +47,10 @@ function App() {
         <Route index element={<DiaryFeedPage />} />
         <Route path=":diaryId" element={<DiaryDetailPage />} />
         <Route path="create" element={<DiaryCreatePage />} />
-        <Route path="modify" element={<DiaryModifyPage />} />
+        <Route path=":diaryId/modify">
+          <Route index element={<DiaryModifyPage />} />
+          <Route path="symptom" element={<DiaryAddSymptomPage />} />
+        </Route>
       </Route>
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreatePage />} />
@@ -59,10 +63,10 @@ function App() {
       <Route path="/profile/:uid">
         <Route index element={<ProfilePage />} />
         <Route path="follows" element={<ProfileFollowsPage />} />
+        <Route path="config" element={<ProfileConfigPage />} />
+        <Route path="change-name" element={<ChangeName />} />
+        <Route path="change-symptom" element={<ChangeSymptom />} />
       </Route>
-      <Route path="/profile-config" element={<ProfileConfigPage />} />
-      <Route path="/change-name" element={<ChangeName />} />
-      <Route path="/change-symptom" element={<ChangeSymptom />} />
     </Routes>
     // </Wrapper>
   );
