@@ -129,7 +129,7 @@ const DiaryDetailPage = () => {
               title="질병/수술"
               isIcon={true}
               type="medical"
-              medicals={diaryInfo.medicals}
+              medicals={diaryInfo.medicalList}
             />
             <PickedItemList
               title="증상"
@@ -193,33 +193,33 @@ export default DiaryDetailPage;
 // 더미데이터
 // const medicalList = [
 //   {
-//     medicalId: 1,
-//     medicalName: `${diaryInfo.medicalName}`,
+//     id: 1,
+//     name: `코로나`,
 //   },
 // ];
 // const diaryHasSymptoms = [
 //   {
-//     symptomId: 16,
-//     symptomName: '두통',
+//     id: 16,
+//     name: '두통',
 //   },
 //   {
-//     symptomId: 17,
-//     symptomName: '어지러움',
+//     id: 17,
+//     name: '어지러움',
 //   },
 //   {
-//     symptomId: 18,
-//     symptomName: '어지러움',
+//     id: 18,
+//     name: '어지러움',
 //   },
 //   {
-//     symptomId: 19,
-//     symptomName: '어지러움',
+//     id: 19,
+//     name: '어지러움',
 //   },
 //   {
-//     symptomId: 14,
-//     symptomName: '어지러움',
+//     id: 14,
+//     name: '어지러움',
 //   },
 //   {
-//     symptomId: 15,
-//     symptomName: '어지러움',
+//     id: 15,
+//     name: '어지러움',
 //   },
 // ];

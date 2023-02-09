@@ -21,13 +21,12 @@ const StatusCalendar = ({ uid, diaryId }) => {
   const isMine = useRef(uid === localStorage.getItem('uid') ? true : false);
 
   // 달력 관련 state
-  const [date, onChange] = useState(new Date());
+  const [date, setDate] = useState(new Date());
   const [monthCondition, setMonthCondition] = useState(null);
 
   // 클로버 상태 변경 관련 state
   const [cloverOfDayClicked, setCloverOfDayClicked] = useState('-1');
   const [cloversOpen, setCloversOpen] = useState(false);
-  const [dayClicked, setDayClicked] = useState(date);
 
   // 개별 날짜의 일기 정보
   const [paperInfo, setPaperInfo] = useState(null);
@@ -48,18 +47,10 @@ const StatusCalendar = ({ uid, diaryId }) => {
 
       setMonthCondition({ ...res.data.data });
       setCloverOfDayClicked(res.data.data[moment(date).format('D')]);
-      // console.log('res', res.data.data);
-      // console.log('data', monthCondition);
-      // console.log('dayclicked', dayClicked);
-      // console.log('cloverOfDayClicked', cloverOfDayClicked);
     } catch (err) {
       console.error(err);
     }
   };
-
-  useEffect(() => {
-    fetchProfileCalendar(date);
-  }, []);
 
   // 선택한 날짜의 일기 불러오기
   const fetchGetDiaryPaperItem = async (diaryId, date) => {
@@ -71,26 +62,31 @@ const StatusCalendar = ({ uid, diaryId }) => {
 
       const res = await axiosInstance.get(api.diary.getDiaryPaperItem(params));
 
-      setPaperInfo(res.data.data);
+      await setPaperInfo(res.data.data);
       console.log('diarypaper res', res.data.data);
+      // console.log('res', res.data.data);
+      // console.log('data', monthCondition);
+      // console.log('dayclicked', dayClicked);
+      // console.log('cloverOfDayClicked', cloverOfDayClicked);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // 날짜 선택했을 때 날짜와 클로버 상태 저장'
+  useEffect(() => {
+    fetchProfileCalendar(date);
+    fetchGetDiaryPaperItem(diaryId, date);
+  }, []);
+
+  // 날짜 선택했을 때 날짜와 클로버 상태 저장
   // 선택한 날짜의 일기 불러오기
   const onClickDay = (value, event) => {
-    setDayClicked(value);
+    setDate(value);
     const cloverOfDayClicked =
       monthCondition[moment(value).format('D')] || '-1';
     setCloverOfDayClicked(cloverOfDayClicked);
     fetchGetDiaryPaperItem(diaryId, value);
   };
-
-  useEffect(() => {
-    fetchGetDiaryPaperItem(diaryId, dayClicked);
-  }, [dayClicked]);
 
   if (!monthCondition) return null;
   // if (!paperInfo) return null;
@@ -100,7 +96,7 @@ const StatusCalendar = ({ uid, diaryId }) => {
       <FlexDiv direction="column">
         <BoxShad height="auto">
           <Calendar
-            onChange={onChange}
+            onChange={setDate}
             value={date}
             calendarType="US" // 일요일부터 시작
             showNeighboringMonth={false} // 앞뒤 달에 속한 날짜들 안 보이게 설정
@@ -131,7 +127,7 @@ const StatusCalendar = ({ uid, diaryId }) => {
 
         {cloversOpen && (
           <CloverModal
-            date={dayClicked}
+            date={date}
             currentClover={cloverOfDayClicked}
             setCurrentClover={setCloverOfDayClicked}
             setCloversOpen={setCloversOpen}
@@ -177,8 +173,7 @@ const StatusCalendar = ({ uid, diaryId }) => {
 
         <DiaryPaperItem
           paperInfo={paperInfo}
-          diaryId={diaryId}
-          dayClicked={dayClicked}
+          fetchGetDiaryPaperItem={fetchGetDiaryPaperItem}
         />
       </FlexDiv>
     </div>
