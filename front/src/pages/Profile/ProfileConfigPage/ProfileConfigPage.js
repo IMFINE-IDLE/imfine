@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import api from '../../../api/api';
 import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
@@ -15,6 +15,7 @@ import {
 
 const ProfileConfigPage = () => {
   const navigate = useNavigate();
+  const { uid } = useParams();
   const { open } = useLocation();
   const [isOpen, setIsOpen] = useState(open);
 
@@ -35,10 +36,14 @@ const ProfileConfigPage = () => {
       <NavBarBasic Back={true} Text="프로필 수정" />
 
       <BoxGrad radius="0" height="calc(100vh - 71px)">
-        <ProfileConfigOptionBtn onClick={() => navigate('/change-name')}>
+        <ProfileConfigOptionBtn
+          onClick={() => navigate(`/profile/${uid}/change-name`)}
+        >
           <span>닉네임 변경하기</span>
         </ProfileConfigOptionBtn>
-        <ProfileConfigOptionBtn onClick={() => navigate('/change-symptom')}>
+        <ProfileConfigOptionBtn
+          onClick={() => navigate(`/profile/${uid}/change-symptom`)}
+        >
           <span>관심 질병/수술 설정하기</span>
         </ProfileConfigOptionBtn>
         <ProfileConfigOptionBtn
