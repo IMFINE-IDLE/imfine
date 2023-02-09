@@ -4,9 +4,8 @@ import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.declaration.request.RequestDeclarationDto;
+import com.idle.imfine.data.dto.notification.request.RequestNotificationDetailDto;
 import com.idle.imfine.data.dto.notification.response.ResponseNotification;
-import com.idle.imfine.data.dto.notification.response.ResponseNotificationDetail;
-import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.notification.NotificationService;
 import java.util.List;
@@ -17,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -66,11 +63,12 @@ public class NotificationController {
 
     }
 
-    @GetMapping("/{notification-id}")
-    public ResponseEntity<Result> getNotificationDetail(@PathVariable("notification-id") Long notificationId, @LoginUser String uid) {
-        LOGGER.info("알림 상세 api 들어옴");
-        ResponseNotificationDetail responseNotificationDetail = notificationService.showNotification(notificationId);
+    @PostMapping("/check")
+    public ResponseEntity<Result> getNotificationCheck(@RequestBody RequestNotificationDetailDto requestNotificationDetail,
+            @LoginUser String uid) {
+        LOGGER.info("알림 확인 api 들어옴");
+        notificationService.checkNotification(requestNotificationDetail, uid);
         return ResponseEntity.ok()
-                .body(responseService.getSingleResult(responseNotificationDetail));
+                .body(responseService.getSuccessResult());
     }
 }
