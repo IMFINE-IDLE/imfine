@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const BoxPickMenu = styled.div`
   width: 100%;
-  margin-top: -2.5em;
+  /* margin-top: -2.5em; */
   padding: 0 1em 1em;
   /* background-color: var(--gray-color); */
   display: grid;
@@ -12,4 +12,10 @@ const BoxPickMenu = styled.div`
   /* align-items: center; */
 `;
 
-export { BoxPickMenu };
+const BtnRequest = styled.a`
+  margin-top: 1em;
+  font-size: 12px;
+  color: var(--icon-color);
+`;
+
+export { BoxPickMenu, BtnRequest };

@@ -4,7 +4,7 @@ import { Btn } from '../common/Btn/Btn';
 
 const TabContainer = styled(BoxLT50)`
   position: relative;
-  top: -3.125em;
+  top: ${(props) => props.minusTop || '-3.125em'};
   background-color: #ffffff;
 `;
 
@@ -15,7 +15,7 @@ const TabBtnContainer = styled.div`
 
 const TabBtn = styled.button`
   ${Btn}
-  ${({ width, height, fontColor }) => css`
+  ${({ width, height, fontColor, radius }) => css`
     width: ${width || '8.75em'};
     height: ${height || '3.125em'};
     padding: 0;
@@ -25,6 +25,7 @@ const TabBtn = styled.button`
     top: ${height
       ? 'calc(-1em - ' + height.split('em')[0] / 2 + 'em)'
       : '-2.5625em'};
+    border-radius: ${radius};
   `}
 `;
 

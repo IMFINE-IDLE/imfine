@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchMedicalList,
+  fetchSymptomList,
+} from '../../store/slice/menuSlice';
 import PickedItemList from '../PickedItemList/PickedItemList';
 import PickMenu from '../PickMenu/PickMenu';
 import Tabs from '../Tabs/Tabs';
@@ -27,7 +31,6 @@ function PickSymptom({ showMedical, showSymptom, medicals, symptoms }) {
    */
 
   const [isOpen, setIsOpen] = useState(true);
-  // const [tabArr, setTabArr] = useState([]);
   const [pickedMedicalList, setPickedMedicalList] = useState([]);
   const [pickedSymptomList, setPickedSymptomList] = useState([]);
   const medicalMenuList = useSelector((state) => {
@@ -36,6 +39,7 @@ function PickSymptom({ showMedical, showSymptom, medicals, symptoms }) {
   const symptomMenuList = useSelector((state) => {
     return state.menu.symptomMenuList;
   });
+  const dispatch = useDispatch();
 
   const ToggleSymptom = (type, itemId, itemName) => {
     let prevList;
@@ -59,33 +63,6 @@ function PickSymptom({ showMedical, showSymptom, medicals, symptoms }) {
     }
   };
 
-  // const tabArr = [
-  //   {
-  //     idx: 0,
-  //     tabName: '질병/수술 선택',
-  //     tabContent: (
-  //       <PickMenu
-  //         type={'medical'}
-  //         dataList={medicalMenuList}
-  //         setIsOpen={setIsOpen}
-  //         ToggleSymptom={ToggleSymptom}
-  //       />
-  //     ),
-  //   },
-  //   {
-  //     idx: 1,
-  //     tabName: '증상 선택',
-  //     tabContent: (
-  //       <PickMenu
-  //         type={'symptom'}
-  //         dataList={symptomMenuList}
-  //         setIsOpen={setIsOpen}
-  //         ToggleSymptom={ToggleSymptom}
-  //       />
-  //     ),
-  //   },
-  // ];
-
   let tabArr = [];
   // 메뉴 버튼 showMedical, showSymptom 여부에 따라 넣기
   if (showMedical) {
@@ -102,21 +79,6 @@ function PickSymptom({ showMedical, showSymptom, medicals, symptoms }) {
         />
       ),
     });
-    // setTabArr([
-    //   ...tabArr,
-    //   {
-    //     idx: 0,
-    //     tabName: '질병/수술 선택',
-    //     tabContent: (
-    //       <PickMenu
-    //         type={'medical'}
-    //         dataList={medicalMenuList}
-    //         setIsOpen={setIsOpen}
-    //         ToggleSymptom={ToggleSymptom}
-    //       />
-    //     ),
-    //   },
-    // ]);
   }
   if (showSymptom) {
     tabArr.push({
@@ -131,27 +93,19 @@ function PickSymptom({ showMedical, showSymptom, medicals, symptoms }) {
         />
       ),
     });
-    // setTabArr([
-    //   ...tabArr,
-    //   {
-    //     idx: 1,
-    //     tabName: '증상 선택',
-    //     tabContent: (
-    //       <PickMenu
-    //         type={'symptom'}
-    //         dataList={symptomMenuList}
-    //         setIsOpen={setIsOpen}
-    //         ToggleSymptom={ToggleSymptom}
-    //       />
-    //     ),
-    //   },
-    // ]);
   }
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (showMedical) {
+      dispatch(fetchMedicalList());
+    }
+    if (showSymptom) {
+      dispatch(fetchSymptomList());
+    }
+  }, [dispatch, showMedical, showSymptom]);
 
   return (
-    <div>
+    <>
       <Title>계정 기본 설정</Title>
       <BoxTopArea>
         <BoxToggle>
@@ -173,33 +127,41 @@ function PickSymptom({ showMedical, showSymptom, medicals, symptoms }) {
         </BoxToggle>
         <BoxSymptom>
           <TitleSmall>관심있는 질병 혹은 수술을 선택해주세요.</TitleSmall>
+          {/* 선택한 질병, 증상 보여주는 영역 */}
+          {showMedical && (
+            <PickedItemList
+              title="질병/수술"
+              isIcon={true}
+              type="medical"
+              canModify={true}
+              medicals={pickedMedicalList}
+              ToggleSymptom={ToggleSymptom}
+            />
+          )}
+          {showSymptom && (
+            <PickedItemList
+              title="증상"
+              isIcon={true}
+              type="symptom"
+              symptoms={pickedSymptomList}
+              canModify={true}
+              color="light-pink"
+              ToggleSymptom={ToggleSymptom}
+            />
+          )}
         </BoxSymptom>
-
-        {/* 선택한 질병, 증상 보여주는 영역 */}
-        {showMedical && (
-          <PickedItemList
-            title="질병/수술"
-            isIcon={true}
-            type="medical"
-            canModify={true}
-            medicals={pickedMedicalList}
-            ToggleSymptom={ToggleSymptom}
-          />
-        )}
-        {showSymptom && (
-          <PickedItemList
-            title="증상"
-            isIcon={true}
-            type="symptom"
-            symptoms={pickedSymptomList}
-            canModify={true}
-            color="light-pink"
-            ToggleSymptom={ToggleSymptom}
-          />
-        )}
       </BoxTopArea>
-      <BoxPickArea>{tabArr !== [] && <Tabs tabArr={tabArr} />}</BoxPickArea>
-    </div>
+      <BoxPickArea>
+        {tabArr !== [] && (
+          <Tabs
+            tabArr={tabArr}
+            minusTop={'0'}
+            btnWidth={'45%'}
+            radius={'25px 25px 0 0'}
+          />
+        )}
+      </BoxPickArea>
+    </>
   );
 }
 

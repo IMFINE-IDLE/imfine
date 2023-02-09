@@ -122,7 +122,7 @@ const BoxPickMenu = styled.div`
 `;
 
 const BoxPickArea = styled.div`
-  padding-top: 4em;
+  padding: 1em 0 2em;
 `;
 
 export {

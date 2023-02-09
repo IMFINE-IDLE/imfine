@@ -24,12 +24,20 @@ import {
 //   { idx: 2, tabName: '구독중', tabContent: <Subscribe /> },
 // ];
 
-const Tabs = ({ tabArr, idx, setType, btnWidth, btnHeight }) => {
+const Tabs = ({
+  tabArr,
+  idx,
+  setType,
+  btnWidth,
+  btnHeight,
+  minusTop,
+  radius,
+}) => {
   const { currentTab, setCurrentTab } = useTabs(idx || 0, tabArr);
 
   return (
     <div>
-      <TabContainer>
+      <TabContainer minusTop={minusTop}>
         <TabBtnContainer>
           {tabArr.map((tab, idx) => (
             <TabBtn
@@ -42,6 +50,7 @@ const Tabs = ({ tabArr, idx, setType, btnWidth, btnHeight }) => {
               fontColor={currentTab.idx === idx ? 'white' : null}
               width={btnWidth}
               height={btnHeight}
+              radius={radius}
             >
               {tab.tabName}
             </TabBtn>

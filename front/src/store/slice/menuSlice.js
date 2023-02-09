@@ -7,8 +7,11 @@ export const fetchSymptomList = createAsyncThunk(
   async () => {
     try {
       const res = await axios.get(api.symptom.getSymptomList(), {
-        headers: localStorage.getItem('accessToken'),
+        headers: {
+          Authorization: localStorage.getItem('accessToken'),
+        },
       });
+      console.log(res.data);
       return res.data;
     } catch (err) {
       return err;
@@ -20,8 +23,10 @@ export const fetchMedicalList = createAsyncThunk(
   'menuSlice/fetchMedicalList',
   async () => {
     try {
-      const res = await axios.get(api.medical.getMedicaList(), {
-        headers: localStorage.getItem('accessToken'),
+      const res = await axios.get(api.medical.getMedicalList(), {
+        headers: {
+          Authorization: localStorage.getItem('accessToken'),
+        },
       });
       return res.data;
     } catch (err) {
@@ -59,6 +64,36 @@ const initialState = {
     },
     {
       id: 6,
+      name: '내과',
+      image: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 7,
+      name: '내과',
+      image: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 8,
+      name: '내과',
+      image: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 9,
+      name: '내과',
+      image: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 10,
+      name: '내과',
+      image: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 11,
+      name: '내과',
+      image: '/assets/icons/가정의학과.png',
+    },
+    {
+      id: 12,
       name: '내과',
       image: '/assets/icons/가정의학과.png',
     },
@@ -107,13 +142,13 @@ const menuSlice = createSlice({
         state.symptomMenuList = action.payload.symptomMenuList;
       })
       .addCase(fetchSymptomList.rejected, (state, action) => {
-        console.log(action.payload.response);
+        console.log(action.payload.response.data);
       })
       .addCase(fetchMedicalList.fulfilled, (state, action) => {
         state.medicalMenuList = action.payload.medicalMenuList;
       })
       .addCase(fetchMedicalList.rejected, (state, action) => {
-        console.log(action.payload.response);
+        console.log(action.payload.response.data);
       });
   },
 });
