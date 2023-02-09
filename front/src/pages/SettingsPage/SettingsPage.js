@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Modal from '../../components/Modal/Modal';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import {
   ProfileConfigContainer,
@@ -8,6 +9,7 @@ import {
 
 const SettingsPage = () => {
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
 
   // 탈퇴 요청
   const fetchWithdraw = () => {};
@@ -24,9 +26,17 @@ const SettingsPage = () => {
           <span>로그아웃하기</span>
         </ProfileConfigOptionBtn>
         <ProfileConfigOptionBtn>
-          <span>탈퇴하기</span>
+          <span onClick={() => setModalOpen(true)}>탈퇴하기</span>
         </ProfileConfigOptionBtn>
       </ProfileConfigContainer>
+
+      {modalOpen && (
+        <Modal
+          type={'탈퇴'}
+          setModalOpen={setModalOpen}
+          apiFunc={fetchWithdraw}
+        />
+      )}
     </>
   );
 };
