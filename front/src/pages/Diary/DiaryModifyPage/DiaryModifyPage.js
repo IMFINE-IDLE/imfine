@@ -22,32 +22,50 @@ import {
 } from '../DiaryCreatePage/style';
 
 const DiaryModifyPage = () => {
-  // // 임시. 나중에 앞 페이지에서 받아올 것
-  // const [diaryInfo, setDiaryInfo] = useState({
-  //   title: '기존 일기장 제목',
-  //   description: '기존 일기장 설명',
-  // });
-  // const medicals = [{ id: 1, name: '질병명' }];
-  // const symptoms = [
-  //   { id: 1, name: '증상1' },
-  //   { id: 2, name: '증상2' },
-  // ];
-  // const [isOpen, setIsOpen] = useState(true);
-  // // 임시
+  /*
+   * Hooks
+   */
+  // 임시. 나중에 앞 페이지에서 받아올 것
+  const [diaryInfo, setDiaryInfo] = useState({
+    title: '기존 일기장 제목',
+    description: '기존 일기장 설명',
+  });
+  const medicals = [{ id: 1, name: '질병명' }];
+  const symptoms = [
+    { id: 1, name: '증상1' },
+    { id: 2, name: '증상2' },
+  ];
+  const [isOpen, setIsOpen] = useState(true);
+  // 임시
 
   const { diaryId } = useParams();
-  const { title, description, medicals, diaryHasSymptoms, open } =
-    useLocation().state;
-  const [diaryInfo, setDiaryInfo] = useState({
-    title,
-    description,
-  });
-  const [symptoms, setSymptoms] = useState(diaryHasSymptoms);
-  const [isOpen, setIsOpen] = useState(open);
+  // const { title, description, medicals, diaryHasSymptoms, open } =
+  //   useLocation().state;
+  // const [diaryInfo, setDiaryInfo] = useState({
+  //   title,
+  //   description,
+  // });
+  // const [symptoms, setSymptoms] = useState(diaryHasSymptoms);
+  // const [isOpen, setIsOpen] = useState(open);
 
   const [diaryDeleteModalOpen, setdiaryDeleteModalOpen] = useState(false);
-  const [symptomDeleteModalOpen, setsymptomDeleteModalOpen] = useState(false);
+  const [symptomDeleteModalOpen, setSymptomDeleteModalOpen] = useState(false);
+  const [symptomToDelete, setSymptomToDelete] = useState(null);
   const navigate = useNavigate();
+
+  /*
+   * Functions
+   */
+  // 일기장 수정 요청
+  const fetchUpdateDiary = () => {};
+
+  // 일기장 삭제 요청
+  const fetchDeleteDiary = () => {};
+
+  // 증상 기록 삭제 요청
+  const fetchDeleteSymptomRecord = () => {
+    // symptomToDelete 에 저장된 증상을 지운다
+  };
 
   // 입력값을 diaryInfo state에 저장
   const handleDiaryInfoChange = (e) => {
@@ -58,8 +76,11 @@ const DiaryModifyPage = () => {
     });
   };
 
-  // 일기장 삭제 요청
-  const fetchDeleteDiary = () => {};
+  // 증상 삭제 클릭시 확인 모달 띄우기
+  const handleDeleteAllRecord = (id, name) => {
+    setSymptomDeleteModalOpen(true);
+    setSymptomToDelete({ id, name });
+  };
 
   return (
     <>
@@ -69,7 +90,7 @@ const DiaryModifyPage = () => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            // fetchPostDiary();
+            fetchUpdateDiary();
           }}
         >
           <DiaryCreateTitleText>
@@ -104,6 +125,8 @@ const DiaryModifyPage = () => {
               symptoms={symptoms}
               color="light-pink"
               canModify={true}
+              deleteAllRecord={true}
+              handleDeleteAllRecord={handleDeleteAllRecord}
             />
             <FlexDiv justify="end">
               <span
@@ -167,6 +190,14 @@ const DiaryModifyPage = () => {
           action={'삭제'}
           setModalOpen={setdiaryDeleteModalOpen}
           apiFunc={fetchDeleteDiary}
+        />
+      )}
+
+      {symptomDeleteModalOpen && (
+        <Modal
+          type={'증상기록삭제'}
+          setModalOpen={setSymptomDeleteModalOpen}
+          apiFunc={fetchDeleteSymptomRecord}
         />
       )}
     </>
