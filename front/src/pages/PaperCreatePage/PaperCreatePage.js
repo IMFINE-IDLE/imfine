@@ -114,16 +114,21 @@ function PaperCreatePage() {
       symptomId: item.symptomId,
       score: scores[index],
     }));
-    console.log('result', symptomScore);
-    console.log('filesdata', files);
+
     data.append('diaryId', diaryId);
     data.append('contents', value);
     data.append('open', isOpen);
     data.append('date', calendar);
-    files.forEach((f, index) => {
-      data.append('images', f, `images_${index}.png`);
-    });
+    //data.append('images', files);
+    // files.forEach((f, index) => {
+    //   data.append('images', f, `images_${index}.png`);
+    // });
+    for (let i = 0; i < files.length; i++) {
+      const blob = await new Blob([files[i]], { type: files[i].type });
+      data.append(`images[${i}]`, blob, files[i].name);
+    }
     data.append('symptoms', JSON.stringify(symptomScore));
+    //data.append('symptoms', symptomScore);
     // (key: contents) value : 일기장내용
     // (key: open) isOpen: 공개/비공개 여부
     // (key: date) calendar: 날짜
@@ -145,7 +150,7 @@ function PaperCreatePage() {
       // 일단 알림
       alert('업로드성공..');
     } catch (err) {
-      console.log('err', err);
+      console.error(err);
     }
   };
 
