@@ -8,6 +8,8 @@ const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
+const SYMPTOM = '/symptom';
+const MEDICAL = '/medical';
 
 const api = {
   user: {
@@ -64,6 +66,10 @@ const api = {
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
+  },
+  symptom: {
+    getSymptoms: () => URL + SYMPTOM + '/symptom-codes',
+    getSymptomDetail: (symptomId) => URL + SYMPTOM + symptomId,
   },
 };
 
