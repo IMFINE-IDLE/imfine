@@ -55,6 +55,12 @@ const ErrorMsg = styled.p`
   margin: 0.5em 0 0;
 `;
 
+const GuideMsg = styled.p`
+  font-size: 12px;
+  color: orange;
+  margin: 0.5em 0 0;
+`;
+
 const DivEmail = styled.div`
   display: flex;
   justify-content: space-between;
@@ -85,6 +91,7 @@ export {
   InputSignUp,
   BtnSignup,
   ErrorMsg,
+  GuideMsg,
   DivEmail,
   BtnEmailCheck,
 };
