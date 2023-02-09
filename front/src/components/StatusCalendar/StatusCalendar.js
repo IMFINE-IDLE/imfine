@@ -16,7 +16,7 @@ import DiaryPaperItem from '../Diary/DiaryPaperItem/DiaryPaperItem';
 import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../../api/axiosInstance';
 
-const StatusCalendar = ({ uid, diaryId }) => {
+const StatusCalendar = ({ uid, diaryId, isProfile }) => {
   // 내 프로필인지 여부를 체크해서 내 프로필일 때만 상태변경 버튼 표시
   const isMine = useRef(uid === localStorage.getItem('uid') ? true : false);
 

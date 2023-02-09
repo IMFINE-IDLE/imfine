@@ -62,7 +62,7 @@ const CloverModal = ({
       });
 
       // 변경되었으니 달력 재렌더링
-      fetchProfileCalendar();
+      fetchProfileCalendar(date);
     } catch (e) {
       console.error(e);
     }

@@ -58,6 +58,7 @@ const DiaryDetailPage = () => {
     fetchGetDiaryInfo();
   }, []);
 
+  // 작성자 클릭시 해당 유저의 프로필로 이동
   const onClickUserName = () => {
     console.log(diaryInfo.uid);
     navigate(`/profile/${diaryInfo.uid}`);
@@ -170,7 +171,11 @@ const DiaryDetailPage = () => {
           </BoxShad>
         )}
 
-        <StatusCalendar uid={diaryInfo.uid} diaryId={diaryId} />
+        <StatusCalendar
+          uid={diaryInfo.uid}
+          diaryId={diaryId}
+          isProfile={false}
+        />
       </DiaryBoxGrad>
     </>
   );
