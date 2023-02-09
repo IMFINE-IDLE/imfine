@@ -187,7 +187,10 @@ public class PaperServiceImpl implements PaperService {
         foundPaper.addLikeCount();
         paperRepository.save(foundPaper);
         heartRepository.save(heart);
-        notificationService.send(user.getId(), foundPaper.getDiary().getWriter().getId(), 2, foundPaper.getId(), 3);
+
+        if (user.getId() != foundPaper.getDiary().getWriter().getId()) {
+            notificationService.send(user.getId(), foundPaper.getDiary().getWriter().getId(), 2, foundPaper.getId(), 31);
+        }
     }
 
     @Override

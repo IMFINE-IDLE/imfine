@@ -61,7 +61,9 @@ public class LeafServiceImpl implements LeafService {
         bambooRepository.save(bamboo);
         LOGGER.info("{} {} {}", user.getId(), bamboo.getWriter().getId(), bamboo.getId());
 //        common.saveNotification(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId());
-        notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 4);
+        if (user.getId() != bamboo.getWriter().getId()) {
+            notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 4);
+        }
     }
 
     @Override
@@ -86,7 +88,10 @@ public class LeafServiceImpl implements LeafService {
             heartRepository.save(heart);
             leaf.setLikeCount(leaf.getLikeCount() + 1);
             leafRepository.save(leaf);
-            notificationService.send(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
+
+            if (user.getId() != leaf.getWriter().getId()) {
+                notificationService.send(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
+            }
         }
     }
 

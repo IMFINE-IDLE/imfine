@@ -44,8 +44,10 @@ public class CommentServiceImpl implements CommentService {
                 .build());
         paper.setCommentCount(paper.getCommentCount() + 1);
         paperRepository.save(paper);
-        notificationService.send(user.getId(), paper.getDiary().getWriter().getId(), 2,
-                paper.getId(), 2);
+        if (user.getId() != paper.getDiary().getWriter().getId()) {
+            notificationService.send(user.getId(), paper.getDiary().getWriter().getId(), 2,
+                    paper.getId(), 2);
+        }
     }
 
     @Override
@@ -82,8 +84,10 @@ public class CommentServiceImpl implements CommentService {
                 .build());
         comment.setLikeCount(comment.getLikeCount() + 1);
         commentRepository.save(comment);
-        notificationService.send(user.getId(), comment.getWriter().getId(), 3, comment.getId(),
-                3);
+        if (user.getId() != comment.getWriter().getId()) {
+            notificationService.send(user.getId(), comment.getWriter().getId(), 2, comment.getPaperId(),
+                    33);
+        }
     }
 
     @Override
