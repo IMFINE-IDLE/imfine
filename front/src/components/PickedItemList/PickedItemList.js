@@ -31,6 +31,8 @@ const PickedItemList = ({
   canModify,
   // 아래로 필요한 함수나 값 넘겨서 사용
   ToggleSymptom,
+  deleteAllRecord,
+  handleDeleteAllRecord,
   textPointer,
   onClickUserName,
 }) => {
@@ -71,7 +73,10 @@ const PickedItemList = ({
               <PickedIconBtn
                 color={color}
                 pointer={canModify ? true : false}
-                onClick={() => ToggleSymptom('symptom', id, name)}
+                onClick={() => {
+                  if (deleteAllRecord) handleDeleteAllRecord(id, name);
+                  else ToggleSymptom('symptom', id, name);
+                }}
                 key={id}
               >
                 {name}
