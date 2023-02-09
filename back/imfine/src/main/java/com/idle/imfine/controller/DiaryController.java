@@ -107,13 +107,10 @@ public class DiaryController {
     }
 
     @PostMapping("/subscribe")
-    public ResponseEntity<Result> postDiarySubscribe(@RequestBody long diaryId, @LoginUser String uid) {
-        LOGGER.info("일기장 구독 등록 api {}", diaryId);
-
-        diaryService.saveSubscribe(RequestDiarySubscribeDto.builder()
-            .diaryId(diaryId)
-            .uid(uid)
-            .build());
+    public ResponseEntity<Result> postDiarySubscribe(@RequestBody RequestDiarySubscribeDto requestDto, @LoginUser String uid) {
+        LOGGER.info("일기장 구독 등록 api {}", requestDto);
+        requestDto.setUid(uid);
+        diaryService.saveSubscribe(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
