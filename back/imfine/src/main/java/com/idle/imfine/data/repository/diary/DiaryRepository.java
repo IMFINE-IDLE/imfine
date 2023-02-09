@@ -39,4 +39,5 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByFetchSymptom(@Param("diaryId") long diaryId);
     @Query("select distinct d from Diary d join fetch d.writer join fetch d.medicalCode join Subscribe s on s.diary=d where d.writer=:user")
     List<Diary> findAllByWriterAndSubscribe(@Param("user") User user);
+    Slice<Diary> findByTitleContainingIgnoreCaseAndOpenTrue(String query, Pageable pageable);
 }

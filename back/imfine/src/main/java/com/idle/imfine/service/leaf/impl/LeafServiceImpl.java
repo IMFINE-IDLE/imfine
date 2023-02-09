@@ -60,8 +60,10 @@ public class LeafServiceImpl implements LeafService {
         bamboo.setLeafCount(bamboo.getLeafCount() + 1);
         bambooRepository.save(bamboo);
         LOGGER.info("{} {} {}", user.getId(), bamboo.getWriter().getId(), bamboo.getId());
-//        common.saveNotification(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId());
-        if (user.getId() != bamboo.getWriter().getId()) {
+
+        Long userId = user.getId();
+        Long otherId = bamboo.getWriter().getId();
+        if (!userId.equals(otherId)) {
             notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 4);
         }
     }
@@ -89,7 +91,9 @@ public class LeafServiceImpl implements LeafService {
             leaf.setLikeCount(leaf.getLikeCount() + 1);
             leafRepository.save(leaf);
 
-            if (user.getId() != leaf.getWriter().getId()) {
+            Long userId = user.getId();
+            Long otherId = bamboo.getWriter().getId();
+            if (!userId.equals(otherId)) {
                 notificationService.send(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
             }
         }
