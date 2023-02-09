@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../../api/api';
-import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
-import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
+import api from '../../../api/api';
+import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import {
   ProfileConfigOptionBtn,
   ToggleContainer,
