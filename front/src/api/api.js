@@ -8,6 +8,8 @@ const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
+const SYMPTOM = '/symptom';
+const MEDICAL = '/medical';
 
 const api = {
   user: {
@@ -66,6 +68,16 @@ const api = {
     getDiaries: () => URL + DIARY + '/list/paper-post',
     getDiaryPaperItem: (params) =>
       URL + DIARY + `/${params.diaryId}/paper/${params.date}`,
+    getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
+    getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
+  },
+  symptom: {
+    getSymptomList: () => URL + SYMPTOM + '/list',
+    getSymptomDetail: (symptomId) => URL + SYMPTOM + symptomId,
+  },
+  medical: {
+    getMedicalList: () => URL + MEDICAL + '/list',
+    getMedicalDetail: (medicalId) => URL + MEDICAL + medicalId,
   },
 };
 

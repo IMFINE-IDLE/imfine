@@ -86,18 +86,18 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../../api/api';
-import NavBarBasic from '../../NavBarBasic/NavBarBasic';
-import FollowList from '../FollowList/FollowList';
-import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
-import { Clover } from '../../common/Clover/Clover';
-import { ProfileItemSpan } from '../ProfileInfo/style';
+import FollowList from '../../../components/Profile/FollowList/FollowList';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
+import { Clover } from '../../../components/common/Clover/Clover';
+import { ProfileItemSpan } from '../../../components/Profile/ProfileInfo/style';
 import {
   ProfileFollowContainer,
   ProfileFollowListContainer,
   ProfileFollowListWrapper,
 } from './style';
 
-const ProfileFollows = () => {
+const ProfileFollowsPage = () => {
   const { uid } = useParams();
   const { name, open, condition, type, followingCount, followerCount } =
     useLocation().state;
@@ -188,4 +188,4 @@ const ProfileFollows = () => {
   );
 };
 
-export default ProfileFollows;
+export default ProfileFollowsPage;
