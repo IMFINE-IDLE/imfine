@@ -121,6 +121,10 @@ const BoxPickMenu = styled.div`
   /* align-items: center; */
 `;
 
+const BoxPickArea = styled.div`
+  padding-top: 4em;
+`;
+
 export {
   Title,
   BoxTopArea,
@@ -136,4 +140,5 @@ export {
   BoxBtnTap,
   BtnTap,
   TitleSmall,
+  BoxPickArea,
 };
