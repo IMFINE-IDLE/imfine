@@ -43,7 +43,7 @@ function PaperFeedPage() {
         // headers: {
         //   Authorization: accessToken,
         // },
-        headers: { Authorization: localStorage.getItem('accessToken') },
+        // headers: { Authorization: localStorage.getItem('accessToken') },
       });
       console.log(res.data);
       setIsLoading(false);
@@ -65,7 +65,9 @@ function PaperFeedPage() {
         {
           contentId: paperId,
         },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
+        {
+          headers: { Authorization: localStorage.getItem('accessToken') },
+        }
       );
       console.log(res);
       fetchPaperFeed();
