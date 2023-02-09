@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
-import { DiaryItemSpan } from './style';
+import { DiaryItemContainer, DiaryItemPrivate, DiaryItemSpan } from './style';
 
 const DiaryItem = ({
   diaryId,
@@ -11,15 +11,18 @@ const DiaryItem = ({
   name,
   paperCount,
   subscribeCount,
+  open,
   title,
 }) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      style={{ width: '30%', cursor: 'pointer' }}
-      onClick={() => navigate(`/diary/${diaryId}`)}
+    <DiaryItemContainer
+      onClick={() => {
+        if (open) navigate(`/diary/${diaryId}`);
+      }}
     >
+      {open || <DiaryItemPrivate />}
       <BoxNoShad radius="20px 20px 0 0" color="gray" height="6em">
         <FlexDiv height="auto" align="start">
           <FlexDiv>
@@ -52,7 +55,7 @@ const DiaryItem = ({
           <DiaryItemSpan fontSize="0.7em">{name}</DiaryItemSpan>
         </FlexDiv>
       </BoxNoShad>
-    </div>
+    </DiaryItemContainer>
   );
 };
 
