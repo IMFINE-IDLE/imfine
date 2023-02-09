@@ -17,8 +17,8 @@ import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
 import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
 import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
-import ChangeName from './pages/ChangeName/ChangeName';
-import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
+import ChangeName from './pages/Profile/ChangeName/ChangeName';
+import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
 import LogOutPage from './pages/LogOutPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -59,10 +59,10 @@ function App() {
       <Route path="/profile/:uid">
         <Route index element={<ProfilePage />} />
         <Route path="follows" element={<ProfileFollowsPage />} />
+        <Route path="config" element={<ProfileConfigPage />} />
+        <Route path="change-name" element={<ChangeName />} />
+        <Route path="change-symptom" element={<ChangeSymptom />} />
       </Route>
-      <Route path="/profile-config" element={<ProfileConfigPage />} />
-      <Route path="/change-name" element={<ChangeName />} />
-      <Route path="/change-symptom" element={<ChangeSymptom />} />
     </Routes>
     // </Wrapper>
   );
