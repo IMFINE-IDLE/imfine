@@ -15,6 +15,8 @@ import {
   InputSignUp,
   BtnSignup,
   ErrorMsg,
+  DivEmail,
+  BtnEmailCheck,
 } from './style';
 
 function SignUpPage() {
@@ -304,18 +306,21 @@ function SignUpPage() {
               {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
 
               <Label htmlFor="emailInput">이메일</Label>
-              <InputSignUp
-                value={email}
-                id="emailInput"
-                type="email"
-                required
-                onChange={(e) => inputEvent({ email: e.target.value })}
-                style={
-                  emailErrorMsg
-                    ? { border: '1px solid var(--red-color)' }
-                    : null
-                }
-              />
+              <DivEmail>
+                <InputSignUp
+                  value={email}
+                  id="emailInput"
+                  type="email"
+                  required
+                  onChange={(e) => inputEvent({ email: e.target.value })}
+                  style={
+                    emailErrorMsg
+                      ? { border: '1px solid var(--red-color)' }
+                      : null
+                  }
+                />
+                <BtnEmailCheck>인증</BtnEmailCheck>
+              </DivEmail>
               {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
 
               <Label htmlFor="passwordInput">비밀번호</Label>

@@ -54,6 +54,26 @@ const ErrorMsg = styled.p`
   margin: 0.5em 0 0;
 `;
 
+const DivEmail = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3em;
+  gap: 1em;
+`;
+
+const BtnEmailCheck = styled.span`
+  ${Btn}
+  right: 0;
+  bottom: 0;
+  margin-top: 1em;
+  cursor: pointer;
+  background-color: var(--main-color);
+  width: 5em;
+  height: 3em;
+  text-align: center;
+`;
+
 export {
   BoxSignUp,
   TitleSignUp,
@@ -64,4 +84,6 @@ export {
   InputSignUp,
   BtnSignup,
   ErrorMsg,
+  DivEmail,
+  BtnEmailCheck,
 };

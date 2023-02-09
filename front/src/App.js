@@ -19,10 +19,7 @@ import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollow
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
-import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
 import LogOutPage from './pages/LogOutPage';
-import DiaryFeedPage from './pages/DiaryFeedPage/DiaryFeedPage';
-import SearchPage from './pages/SearchPage/SearchPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
