@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../api/api';
 import { axiosInstance } from '../../api/axiosInstance';
@@ -18,6 +18,7 @@ const DiaryDetailPage = () => {
   const { diaryId } = useParams();
   const [diaryInfo, setDiaryInfo] = useState(null);
   const [showGraph, setShowGraph] = useState(false);
+  const navigate = useNavigate();
 
   // 일기장 상세정보 가져오기
   const fetchGetDiaryInfo = async () => {
@@ -54,6 +55,11 @@ const DiaryDetailPage = () => {
   useEffect(() => {
     fetchGetDiaryInfo();
   }, []);
+
+  const onClickUserName = () => {
+    console.log(diaryInfo.uid);
+    navigate(`/profile/${diaryInfo.uid}`);
+  };
 
   if (!diaryInfo) return null;
 
@@ -104,6 +110,8 @@ const DiaryDetailPage = () => {
               isIcon={false}
               type="text"
               text={diaryInfo.name}
+              onClickUserName={onClickUserName}
+              textPointer={true}
             />
             <PickedItemList
               title="질병/수술"

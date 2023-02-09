@@ -25,8 +25,11 @@ const PickedContentWrapper = styled(FlexDiv)`
 `;
 
 const PickedText = styled.span`
-  color: var(--icon-color);
-  font-weight: 700;
+  ${({ textPointer }) => css`
+    color: var(--icon-color);
+    font-weight: 700;
+    cursor: ${textPointer ? 'pointer' : 'default'};
+  `}
 `;
 
 const PickedIconBtn = styled.button`
