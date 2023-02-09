@@ -1,7 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import LoginPage from './pages/LoginPage/LoginPage';
+import LogOutPage from './pages/LogOutPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import SearchPage from './pages/SearchPage/SearchPage';
 import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
@@ -19,7 +21,6 @@ import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollow
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/Profile/ChangeName/ChangeName';
 import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
-import LogOutPage from './pages/LogOutPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -40,6 +41,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/logout" element={<LogOutPage />} />
       <Route path="/signup" element={<SignUpPage />} />
+      <Route path="settings" element={<SettingsPage />} />
       <Route path="/home" element={<PaperFeedPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/diary">
