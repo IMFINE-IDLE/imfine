@@ -3,7 +3,7 @@ import DiaryListGrid from '../../Diary/DiaryListGrid/DiaryListGrid';
 import { axiosInstance } from '../../../api/axiosInstance';
 import api from '../../../api/api';
 
-const ProfileUserDiary = ({ uid }) => {
+const ProfileUserDiary = ({ uid, isMine }) => {
   const [diaryList, setDiaryList] = useState(null);
 
   // 유저가 쓴 일기장 목록 가져오기

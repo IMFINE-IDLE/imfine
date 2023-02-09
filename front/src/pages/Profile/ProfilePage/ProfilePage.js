@@ -41,7 +41,11 @@ function ProfilePage() {
       tabName: '달력',
       tabContent: <StatusCalendar uid={uid} />,
     },
-    { idx: 1, tabName: '일기장', tabContent: <ProfileUserDiary uid={uid} /> },
+    {
+      idx: 1,
+      tabName: '일기장',
+      tabContent: <ProfileUserDiary uid={uid} isMine={isMine} />,
+    },
     {
       idx: 2,
       tabName: '구독중',
