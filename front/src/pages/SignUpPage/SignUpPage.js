@@ -30,6 +30,7 @@ function SignUpPage() {
     pwErrorMsg: '',
     confirmPwErrorMsg: '',
   });
+  const [emailVerify, setEmailVerify] = useState(false);
   const [isNext, setIsNext] = useState(false);
 
   const [inputValue, inputEvent] = useReducer(
@@ -157,6 +158,9 @@ function SignUpPage() {
               setErrMsg((prev) => {
                 return { ...prev, emailErrorMsg: '' };
               });
+
+              // 이메일 인증 버튼 활성화
+              setEmailVerify(true);
             } catch (err) {
               console.log(err.response.data);
               setErrMsg((prev) => {
@@ -245,6 +249,16 @@ function SignUpPage() {
     if (isNext) setIsNext(false);
   }
 
+  const sendVerifyEmail = async (emailState) => {
+    try {
+      const data = { email: emailState };
+      const res = await axios.post(api.user.verifyEmail(emailState), data);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const signUpByData = async () => {
     const userData = {
       uid: id,
@@ -319,7 +333,22 @@ function SignUpPage() {
                       : null
                   }
                 />
-                <BtnEmailCheck>인증</BtnEmailCheck>
+                {emailVerify ? (
+                  <BtnEmailCheck
+                    onClick={() => {
+                      sendVerifyEmail(email);
+                    }}
+                  >
+                    인증
+                  </BtnEmailCheck>
+                ) : (
+                  <BtnEmailCheck
+                    disabled
+                    style={{ background: 'var(--gray700-color)' }}
+                  >
+                    인증
+                  </BtnEmailCheck>
+                )}
               </DivEmail>
               {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
 
@@ -356,9 +385,6 @@ function SignUpPage() {
               {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
               {isValid ? (
                 <BtnSignup
-                  margin={'0'}
-                  padding={'1em'}
-                  fontSize={'1em'}
                   type="submit"
                   onClick={(e) => {
                     e.preventDefault();
@@ -371,9 +397,6 @@ function SignUpPage() {
                 </BtnSignup>
               ) : (
                 <BtnSignup
-                  margin={'0'}
-                  padding={'1em'}
-                  fontSize={'1em'}
                   type="button"
                   color={'gray700'}
                   disabled

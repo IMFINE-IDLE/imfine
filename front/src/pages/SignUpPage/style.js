@@ -45,6 +45,7 @@ const InputSignUp = styled(InputGray)`
 const BtnSignup = styled.button`
   ${Btn}
   margin-top: 2em;
+  padding: 1em;
   display: inline-block;
 `;
 
@@ -62,7 +63,7 @@ const DivEmail = styled.div`
   gap: 1em;
 `;
 
-const BtnEmailCheck = styled.span`
+const BtnEmailCheck = styled.button`
   ${Btn}
   right: 0;
   bottom: 0;

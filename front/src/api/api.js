@@ -2,6 +2,7 @@
 const URL = 'http://i8a809.p.ssafy.io:8080/api';
 
 const USERS = '/user';
+const CHECK = '/check';
 const DIARY = '/diary';
 const PAPER = '/paper';
 const COMMENT = '/comment';
@@ -14,9 +15,11 @@ const MEDICAL = '/medical';
 const api = {
   user: {
     signUp: () => URL + USERS + '/sign-up',
-    checkId: (params) => URL + USERS + `/check/uid/${params}`,
-    checkName: (params) => URL + USERS + `/check/name/${params}`,
-    checkEmail: (params) => URL + USERS + `/check/email/${params}`,
+    checkId: (params) => URL + USERS + CHECK + `/uid/${params}`,
+    checkName: (params) => URL + USERS + CHECK + `/name/${params}`,
+    checkEmail: (params) => URL + USERS + CHECK + `/email/${params}`,
+    verifyEmail: () => URL + USERS + CHECK + '/email/send',
+    confirmEmail: () => URL + USERS + CHECK + '/email/confirm',
     login: () => URL + USERS + '/sign-in',
     logout: () => URL + USERS + '/sign-out',
     refresh: () => URL + USERS + '/refresh',
