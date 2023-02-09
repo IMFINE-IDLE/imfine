@@ -230,6 +230,7 @@ public class PaperServiceImpl implements PaperService {
 
         Map<Integer, Symptom> symptomIdByName = symptoms.stream().collect(Collectors.toMap(Symptom::getId, Function.identity()));
 
+
         return ResponseMainPage.builder()
                 .hasNext(papers.hasNext())
                 .list(papers.stream().map(
@@ -250,7 +251,7 @@ public class PaperServiceImpl implements PaperService {
                                 .image(imageHasPaper.contains(paper.getId()))
                                 .hasNext(papers.hasNext())
                                 .symptomList(
-                                        map.get(paper.getId()).stream().map(
+                                        map.containsKey(paper.getId()) ? map.get(paper.getId()).stream().map(
                                                 paperHasSymptom ->
                                                         ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
                                                                 .id(paperHasSymptom.getSymptomId())
@@ -258,7 +259,8 @@ public class PaperServiceImpl implements PaperService {
                                                                 .score(paperHasSymptom.getScore())
                                                                 .build()
 
-                                        ).collect(Collectors.toList()))
+                                        ).collect(Collectors.toList()) :
+                                        new ArrayList<>())
                                 .build()
                 ).collect(Collectors.toList()))
                 .build();
