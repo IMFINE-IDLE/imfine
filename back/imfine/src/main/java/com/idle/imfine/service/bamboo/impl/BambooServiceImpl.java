@@ -204,8 +204,9 @@ public class BambooServiceImpl implements BambooService {
             heartRepository.save(heart);
             bamboo.setLikeCount(bamboo.getLikeCount() + 1);
             bambooRepository.save(bamboo);
-
-            notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
+            if (user.getId() != bamboo.getWriter().getId()) {
+                notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
+            }
         }
     }
 
