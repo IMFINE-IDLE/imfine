@@ -62,16 +62,16 @@ public class DiaryController {
         LOGGER.info("왜 안되는 거지{}", pageable);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
-    @GetMapping("/subscribe")
-    public ResponseEntity<Result> getDiarySubscribe(@LoginUser String uid) {
+    @GetMapping("/subscribe/{other-uid}")
+    public ResponseEntity<Result> getDiarySubscribe(@LoginUser String uid, @PathVariable("other-uid") String otherUid) {
         LOGGER.info("내가 구독한 일기장 조회 api {}", uid);
-        List<ResponseDiaryListDto> responseDto = diaryService.getDiarySubscribe(uid);
+        List<ResponseDiaryListDto> responseDto = diaryService.getDiarySubscribe(uid, otherUid);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
-    @GetMapping("/my-write")
-    public ResponseEntity<Result> getDiaryMyWrite(@LoginUser String uid) {
+    @GetMapping("/my-write/{other-uid}")
+    public ResponseEntity<Result> getDiaryMyWrite(@LoginUser String uid, @PathVariable("other-uid") String otherUid) {
         LOGGER.info("내가 작성한 일기장 조회 api {}", uid);
-        List<ResponseDiaryListDto> responseDto = diaryService.getDiaryMyWrite(uid);
+        List<ResponseDiaryListDto> responseDto = diaryService.getDiaryMyWrite(uid, otherUid);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
     @GetMapping("/{diary-id}")
