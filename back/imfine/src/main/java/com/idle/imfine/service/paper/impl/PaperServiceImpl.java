@@ -289,8 +289,8 @@ public class PaperServiceImpl implements PaperService {
             for (PaperHasSymptom paperHasSymptom : paperHasSymptoms) {
                 if (paperHasSymptom.getSymptomId() == diaryHasSymptom.getSymptom().getId()) {
                     responsePaperSymptomRecordDtos.add(ResponsePaperSymptomRecordDto.builder()
-                            .symptomId(paperHasSymptom.getSymptomId())
-                            .symptomName(diaryHasSymptom.getSymptom().getName())
+                            .id(paperHasSymptom.getSymptomId())
+                            .name(diaryHasSymptom.getSymptom().getName())
                             .score(paperHasSymptom.getScore())
                             .build());
                     break;
@@ -388,10 +388,9 @@ public class PaperServiceImpl implements PaperService {
                                             for (DiaryHasSymptom diaryHasSymptom: paper.getDiary().getDiaryHasSymptoms()) {
                                                 if (paperHasSymptom.getSymptomId() == diaryHasSymptom.getSymptom().getId()) {
                                                     element = ResponsePaperSymptomRecordDto.builder()
-                                                            .symptomName(diaryHasSymptom.getSymptom().getName())
+                                                            .name(diaryHasSymptom.getSymptom().getName())
                                                             .score(paperHasSymptom.getScore())
-                                                            .symptomId(
-                                                                    paperHasSymptom.getSymptomId())
+                                                            .id(paperHasSymptom.getSymptomId())
                                                             .build();
                                                     break;
                                                 }
