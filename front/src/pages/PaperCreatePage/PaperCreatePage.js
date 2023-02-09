@@ -116,10 +116,13 @@ function PaperCreatePage() {
     }));
     console.log('result', symptomScore);
     console.log('filesdata', files);
+    data.append('diaryId', diaryId);
     data.append('contents', value);
     data.append('open', isOpen);
     data.append('date', calendar);
-    data.append('images', files);
+    files.forEach((f, index) => {
+      data.append('images', f, `images_${index}.png`);
+    });
     data.append('symptoms', JSON.stringify(symptomScore));
     // (key: contents) value : 일기장내용
     // (key: open) isOpen: 공개/비공개 여부
@@ -139,8 +142,8 @@ function PaperCreatePage() {
       console.log('upload success', res);
 
       // 업로드성공하면 일기상세화면으로 넘어가야해용
-      // 일단 뒤로가기 설정해놓음
-      navigate(-1);
+      // 일단 알림
+      alert('업로드성공..');
     } catch (err) {
       console.log('err', err);
     }
