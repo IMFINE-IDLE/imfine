@@ -1,4 +1,4 @@
-package com.idle.imfine.data.dto.search.request;
+package com.idle.imfine.data.dto.search.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,6 @@ import lombok.ToString;
 @ToString
 @Getter
 @Builder
-public class RequestSearchDto {
-    private String searcherId;
+public class ResponseMySearchList {
     private String query;
-    public void setSearcherId(String searcherId) {
-        this.searcherId = searcherId;
-    }
 }

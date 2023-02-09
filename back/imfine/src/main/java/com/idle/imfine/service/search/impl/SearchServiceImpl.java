@@ -4,8 +4,11 @@ import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDtoOnlyMainPage;
+import com.idle.imfine.data.dto.search.request.RequestSearchDto;
+import com.idle.imfine.data.dto.search.response.ResponseMySearchList;
 import com.idle.imfine.data.dto.user.response.SearchUserListResponseDto;
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.Search;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
@@ -15,6 +18,7 @@ import com.idle.imfine.data.repository.diary.SubscribeRepository;
 import com.idle.imfine.data.repository.image.ImageRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
+import com.idle.imfine.data.repository.search.SearchRepository;
 import com.idle.imfine.data.repository.symptom.SymptomRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
@@ -49,12 +53,39 @@ public class SearchServiceImpl implements SearchService {
     private final PaperHasSymptomRepository paperHasSymptomRepository;
     private final ImageRepository imageRepository;
     private final SymptomRepository symptomRepository;
-
+    private final SearchRepository searchRepository;
     @Override
-    public void showMySearchList() {
+    public void save(RequestSearchDto requestSearchDto) {
+        User user = common.getUserByUid(requestSearchDto.getSearcherId());
 
+        Search search = Search.builder()
+                .searcherId(user.getId())
+                .query(requestSearchDto.getQuery())
+                .build();
+
+        Search savedSearch = searchRepository.save(search);
+        System.out.println(savedSearch.toString());
+    }
+    @Override
+    public List<ResponseMySearchList> showMySearhList(String uid) {
+        User user = common.getUserByUid(uid);
+        List<Search> searches = searchRepository.findBySearcherId(user.getId());
+        List<ResponseMySearchList> searchList = new ArrayList<>();
+        for (Search s : searches) {
+            ResponseMySearchList responseMySearchList = ResponseMySearchList.builder()
+                    .query(s.getQuery())
+                    .build();
+            searchList.add(responseMySearchList);
+        }
+        return searchList;
     }
 
+    @Override
+    public void deleteMySearch(long id, String uid) {
+        LOGGER.info("내 검색 기록 삭제");
+        User user = common.getUserByUid(uid);
+        searchRepository.deleteByIdAndAndSearcherId(id, user.getId());
+    }
     @Override
     public List<ResponseDiaryListDto> showDiarySearchList(String query, String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);

@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,7 +75,7 @@ public class BambooServiceImpl implements BambooService {
 
         User user = userRepository.getByUid(uid);
         List<ResponseBamboo> responseBambooList = new ArrayList<>();
-        Page<Bamboo> all = null;
+        Slice<Bamboo> all = null;
 
         if (filter.equals("popular")) {
             all = bambooRepository.findByCreatedAtBetweenOrderByLikeCountDesc(start, end, pageable);
@@ -96,6 +97,7 @@ public class BambooServiceImpl implements BambooService {
                     .likeCount(b.getLikeCount())
                     .leafCount(b.getLeafCount())
                     .isHeart(heartBamboos.stream().anyMatch(bamboo -> b.getId() == bamboo.getId()))
+                    .hasNext(all.hasNext())
                     .build();
             responseBambooList.add(responseBamboo);
         }
@@ -112,7 +114,7 @@ public class BambooServiceImpl implements BambooService {
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();
 
-        Page<Bamboo> all = null;
+        Slice<Bamboo> all = null;
 
         if(filter.equals("write")) {
             all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
@@ -134,6 +136,7 @@ public class BambooServiceImpl implements BambooService {
                     .likeCount(b.getLikeCount())
                     .leafCount(b.getLeafCount())
                     .isHeart(heartBamboos.stream().anyMatch(bamboo -> b.getId() == bamboo.getId()))
+                    .hasNext(all.hasNext())
                     .build();
             responseBambooList.add(responseBamboo);
         }
