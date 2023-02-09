@@ -85,19 +85,19 @@ function PaperCreatePage() {
   // 일기장 선택될때마다 해당 일기장의 Symptom 정보끌고오기
   useEffect(() => {
     if (diary) {
-      console.log('diaryInfo', diary.diaryHasSymptoms.length);
+      console.log('diaryInfo', diary.diaryHasSymptoms);
       setSymptoms(
         diary.diaryHasSymptoms.map((item) => ({
-          symptomId: item.symptomId,
+          symptomId: item.id,
           name: item.name,
         }))
       );
       setScores(Array(diary.diaryHasSymptoms.length).fill(0));
-      console.log('증상값 모음', scores);
-      console.log('setSymptoms', symptoms);
     }
     //setSymptomScore(diary.diaryHasSymptoms.symptomId);
   }, [diary]);
+  console.log('증상값 모음', scores);
+  console.log('setSymptoms', symptoms);
 
   useEffect(() => {
     if (symptoms) {
@@ -105,27 +105,27 @@ function PaperCreatePage() {
   }, [symptoms]);
 
   // 이미지 서버에 업로드 시키기
+  // multipart 업로드
   const handleUploadImage = async () => {
     const data = new FormData();
     const calendar = form.year + '-' + form.month + '-' + form.day;
 
-    const symptomScore = symptoms.map((symptom, index) => ({
-      symptomId: symptom.symptomId,
+    const symptomScore = symptoms.map((item, index) => ({
+      symptomId: item.symptomId,
       score: scores[index],
     }));
-
+    console.log('result', symptomScore);
+    console.log('filesdata', files);
     data.append('contents', value);
     data.append('open', isOpen);
     data.append('date', calendar);
-    data.append('image', files);
+    data.append('images', files);
     data.append('symptoms', JSON.stringify(symptomScore));
     // (key: contents) value : 일기장내용
     // (key: open) isOpen: 공개/비공개 여부
     // (key: date) calendar: 날짜
     // (key: image) image 파일
     // symptomScore : 증상점수 업로드
-
-    // multipart 업로드
 
     try {
       const config = {
@@ -146,24 +146,6 @@ function PaperCreatePage() {
     }
   };
 
-  const makeApiCall = async (value, isOpen, calendar, data, symptomScore) => {
-    return await axios.post(
-      api.paper.paperWrite(),
-      {
-        value,
-        isOpen,
-        calendar,
-        image: data,
-        symptomScore,
-      },
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: localStorage.getItem('accessToken'),
-        },
-      }
-    );
-  };
   // 이미지 화면상에 업로드하기
   const handleSelectImage = (e) => {
     const newFiles = [...e.target.files];

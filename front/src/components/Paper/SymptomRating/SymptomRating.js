@@ -12,21 +12,19 @@ function SymptomRating({ symptomList, values, state }) {
   console.log('value', values);
   return (
     <BoxSymptomRating>
-      {symptomList?.map((score, item, idx) => {
-        console.log('idx', idx);
+      {values?.map((v, index) => {
+        console.log('idx', index);
         return (
-          <DivSymptom key={item.id}>
-            <LabelSymptom>{item.name}</LabelSymptom>
+          <DivSymptom key={index}>
+            <LabelSymptom>{symptomList[index].name}</LabelSymptom>
             <RateSymptom>
               <ReactStars
                 count={5}
                 size={25}
                 onChange={(newScore) =>
-                  state(
-                    values.map((score, i) => (i === idx ? newScore : score))
-                  )
+                  state(values.map((v, i) => (i === index ? newScore : v)))
                 }
-                value={score}
+                value={v}
                 activeColor="#A9D7D0"
                 isHalf={true}
                 edit={true}
