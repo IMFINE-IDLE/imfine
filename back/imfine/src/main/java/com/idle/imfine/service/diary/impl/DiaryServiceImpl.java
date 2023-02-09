@@ -257,8 +257,8 @@ public class DiaryServiceImpl implements DiaryService {
     public void saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto) {
         Diary diary = diaryRepository.findById(requestDiarySubscribeDto.getDiaryId())
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
-        long userId = common.getUserByUid(requestDiarySubscribeDto.getUid()).getId();
-
+        User user = common.getUserByUid(requestDiarySubscribeDto.getUid());
+        long userId = user.getId();
         if (subscribeRepository.existsByDiaryAndUserId(diary, userId)) {
             throw new ErrorException(SubscribeErrorCode.SUBSCRIBE_DUPLICATE_DIARY);
         }
@@ -268,7 +268,11 @@ public class DiaryServiceImpl implements DiaryService {
             .build());
         diary.setSubscribeCount(diary.getSubscribeCount() + 1);
         diaryRepository.save(diary);
-        notificationService.send(userId, diary.getWriter().getId(), 1, diary.getId(), 1);
+
+        long otherId = diary.getWriter().getId();
+        if(otherId != userId) {
+            notificationService.send(userId, diary.getWriter().getId(), 1, diary.getId(), 1);
+        }
     }
 
     @Override

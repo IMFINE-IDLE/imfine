@@ -188,7 +188,9 @@ public class PaperServiceImpl implements PaperService {
         paperRepository.save(foundPaper);
         heartRepository.save(heart);
 
-        if (user.getId() != foundPaper.getDiary().getWriter().getId()) {
+        Long userId = user.getId();
+        Long otherId = foundPaper.getDiary().getWriter().getId();
+        if (!userId.equals(otherId)) {
             notificationService.send(user.getId(), foundPaper.getDiary().getWriter().getId(), 2, foundPaper.getId(), 31);
         }
     }
