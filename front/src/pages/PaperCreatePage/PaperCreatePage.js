@@ -119,6 +119,7 @@ function PaperCreatePage() {
     data.append('contents', value);
     data.append('open', isOpen);
     data.append('date', calendar);
+
     //data.append('images', files);
     // files.forEach((f, index) => {
     //   data.append('images', f, `images_${index}.png`);
@@ -127,6 +128,7 @@ function PaperCreatePage() {
       const blob = await new Blob([files[i]], { type: files[i].type });
       data.append(`images[${i}]`, blob, files[i].name);
     }
+
     data.append('symptoms', JSON.stringify(symptomScore));
     //data.append('symptoms', symptomScore);
     // (key: contents) value : 일기장내용
