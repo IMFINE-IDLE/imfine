@@ -254,8 +254,8 @@ public class PaperServiceImpl implements PaperService {
                                         map.containsKey(paper.getId()) ? map.get(paper.getId()).stream().map(
                                                 paperHasSymptom ->
                                                         ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
-                                                                .id(paperHasSymptom.getSymptomId())
-                                                                .name(symptomIdByName.get(paperHasSymptom.getSymptomId()).getName())
+                                                                .symptomId(paperHasSymptom.getSymptomId())
+                                                                .symptomName(symptomIdByName.get(paperHasSymptom.getSymptomId()).getName())
                                                                 .score(paperHasSymptom.getScore())
                                                                 .build()
 

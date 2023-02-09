@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ResponsePaperSymptomRecordDtoOnlyMainPage {
-    private int id;
-    private String name;
+    private int symptomId;
+    private String symptomName;
     private int score;
 }
