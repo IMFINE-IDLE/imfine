@@ -78,6 +78,7 @@ const DiaryDetailPage = () => {
                   src="/assets/icons/edit.svg"
                   alt="edit"
                   style={{ padding: '0.8125em 0' }}
+                  onClick={() => navigate(`/diary/${diaryId}/modify`)}
                 />
               ) : (
                 <BookmarkSvg
