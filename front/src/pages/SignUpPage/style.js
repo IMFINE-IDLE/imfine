@@ -45,6 +45,7 @@ const InputSignUp = styled(InputGray)`
 const BtnSignup = styled.button`
   ${Btn}
   margin-top: 2em;
+  padding: 1em;
   display: inline-block;
 `;
 
@@ -52,6 +53,32 @@ const ErrorMsg = styled.p`
   font-size: 12px;
   color: var(--red-color);
   margin: 0.5em 0 0;
+`;
+
+const GuideMsg = styled.p`
+  font-size: 12px;
+  color: orange;
+  margin: 0.5em 0 0;
+`;
+
+const DivEmail = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3em;
+  gap: 1em;
+`;
+
+const BtnEmailCheck = styled.button`
+  ${Btn}
+  right: 0;
+  bottom: 0;
+  margin-top: 1em;
+  cursor: pointer;
+  background-color: var(--main-color);
+  width: 5em;
+  height: 3em;
+  text-align: center;
 `;
 
 export {
@@ -64,4 +91,7 @@ export {
   InputSignUp,
   BtnSignup,
   ErrorMsg,
+  GuideMsg,
+  DivEmail,
+  BtnEmailCheck,
 };

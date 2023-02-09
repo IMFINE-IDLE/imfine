@@ -2,17 +2,17 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../../api/api';
-import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import { BoxSymptom, BoxToggle } from '../../components/PickSymptom/style';
-import { SubmitBtn } from '../ChangeName/style';
+import api from '../../../api/api';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import { BoxSymptom, BoxToggle } from '../../../components/PickSymptom/style';
+import { SubmitBtn } from '../../ChangeName/style';
 import {
   ToggleContainer,
   ToggleText,
   ToggleWrapper,
   Toggle,
   ToggleLabel,
-} from '../ProfileConfigPage/style';
+} from '../../Profile/ProfileConfigPage/style';
 import {
   DiaryBoxGrad,
   DiaryCreateTitleText,

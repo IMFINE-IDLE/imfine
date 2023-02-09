@@ -1,23 +1,25 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
-import DiaryCreatePage from './pages/DiaryCreatePage/DiaryCreatePage';
 import LoginPage from './pages/LoginPage/LoginPage';
-import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
-import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
-import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
-import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
-import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
-import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
-import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
+import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
+import SearchPage from './pages/SearchPage/SearchPage';
+import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
+import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
+import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
+import DiaryModifyPage from './pages/Diary/DiaryModifyPage/DiaryModifyPage';
+import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
 import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
-import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
+import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
+import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
+import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
+import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
+import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
+import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
+import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/ChangeName/ChangeName';
 import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
-import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
-import DiaryFeedPage from './pages/DiaryFeedPage/DiaryFeedPage';
-import SearchPage from './pages/SearchPage/SearchPage';
-import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
+import LogOutPage from './pages/LogOutPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -36,13 +38,15 @@ function App() {
       <Route index element={<PaperFeedPage />} />
       {/* <Route index element={<Login />} /> */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/logout" element={<LogOutPage />} />
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/home" element={<PaperFeedPage />} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/diary">
         <Route index element={<DiaryFeedPage />} />
-        <Route path="create" element={<DiaryCreatePage />} />
         <Route path=":diaryId" element={<DiaryDetailPage />} />
+        <Route path="create" element={<DiaryCreatePage />} />
+        <Route path="modify" element={<DiaryModifyPage />} />
       </Route>
       <Route path="/paper">
         <Route path="/paper/create" element={<PaperCreatePage />} />
@@ -52,8 +56,10 @@ function App() {
       <Route path="/bamboo" element={<BambooFeedPage />}></Route>
       <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
       <Route path="/bamboo/:bambooId" element={<BambooDetailPage />}></Route>
-      <Route path="/profile/:uid" element={<ProfilePage />}></Route>
-      <Route path="/profile/:uid/follows" element={<ProfileFollows />} />
+      <Route path="/profile/:uid">
+        <Route index element={<ProfilePage />} />
+        <Route path="follows" element={<ProfileFollowsPage />} />
+      </Route>
       <Route path="/profile-config" element={<ProfileConfigPage />} />
       <Route path="/change-name" element={<ChangeName />} />
       <Route path="/change-symptom" element={<ChangeSymptom />} />

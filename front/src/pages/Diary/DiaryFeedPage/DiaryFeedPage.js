@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import api from '../../api/api';
-import BtnFloat from '../../components/BtnFloat/BtnFloat';
-import DiaryInfo from '../../components/Diary/DiaryInfo/DiaryInfo';
-import DiaryListGrid from '../../components/Diary/DiaryListGrid/DiaryListGrid';
-import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import TabBar from '../../components/TabBar/TabBar';
-import Tabs from '../../components/Tabs/Tabs';
+import api from '../../../api/api';
+import BtnFloat from '../../../components/BtnFloat/BtnFloat';
+import DiaryInfo from '../../../components/Diary/DiaryInfo/DiaryInfo';
+import DiaryListGrid from '../../../components/Diary/DiaryListGrid/DiaryListGrid';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import TabBar from '../../../components/TabBar/TabBar';
+import Tabs from '../../../components/Tabs/Tabs';
 
 const DiaryFeedPage = () => {
   // 필터 적용 관련 states

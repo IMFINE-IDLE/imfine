@@ -44,10 +44,10 @@ function PaperCreatePage() {
   });
 
   const [files, setFiles] = useState([]); // 이미지미리뵈기
-  const [uploadedImage, setUploadedImage] = useState(null); // 이미지 서버 업로드
   const [isOpen, setIsOpen] = useState(true); // 공개.비공개 state
   const [symptoms, setSymptoms] = useState([]); // 증상받아오기
-  const [symptomScore, setSymptomScore] = useState([]); // 증상점수저장하는 State
+  const [scores, setScores] = useState([]); // 증상점수저장하는 State
+
   // API 처리부분
   // 사용자가 작성한 다이어리 정보 받아오기
   const getDiaries = async () => {
@@ -61,12 +61,7 @@ function PaperCreatePage() {
       console.log('err', res.data);
     }
   };
-  useEffect(() => {
-    getDiaries();
-  }, [diaryId]);
 
-  console.log('selected diaryid', diaryId);
-  console.log('file info: ', files);
   // 해당 다이어리의 정보 불러오기
   const getDiaryInfos = async () => {
     try {
@@ -81,6 +76,7 @@ function PaperCreatePage() {
   };
 
   useEffect(() => {
+    getDiaries();
     if (diaryId != '') {
       getDiaryInfos();
     }
@@ -88,15 +84,66 @@ function PaperCreatePage() {
 
   // 일기장 선택될때마다 해당 일기장의 Symptom 정보끌고오기
   useEffect(() => {
-    setSymptoms(diary.diaryHasSymptoms);
-    console.log('symptoms', symptoms);
+    if (diary) {
+      console.log('diaryInfo', diary.diaryHasSymptoms);
+      setSymptoms(
+        diary.diaryHasSymptoms.map((item) => ({
+          symptomId: item.id,
+          name: item.name,
+        }))
+      );
+      setScores(Array(diary.diaryHasSymptoms.length).fill(0));
+    }
+    //setSymptomScore(diary.diaryHasSymptoms.symptomId);
   }, [diary]);
+  console.log('증상값 모음', scores);
+  console.log('setSymptoms', symptoms);
+
+  useEffect(() => {
+    if (symptoms) {
+    }
+  }, [symptoms]);
 
   // 이미지 서버에 업로드 시키기
-  const handleUploadImage = () => {
+  // multipart 업로드
+  const handleUploadImage = async () => {
     const data = new FormData();
-    data.append('files[]', files);
-    // multipart 업로드
+    const calendar = form.year + '-' + form.month + '-' + form.day;
+
+    const symptomScore = symptoms.map((item, index) => ({
+      symptomId: item.symptomId,
+      score: scores[index],
+    }));
+    console.log('result', symptomScore);
+    console.log('filesdata', files);
+    data.append('contents', value);
+    data.append('open', isOpen);
+    data.append('date', calendar);
+    data.append('images', files);
+    data.append('symptoms', JSON.stringify(symptomScore));
+    // (key: contents) value : 일기장내용
+    // (key: open) isOpen: 공개/비공개 여부
+    // (key: date) calendar: 날짜
+    // (key: image) image 파일
+    // symptomScore : 증상점수 업로드
+
+    try {
+      const config = {
+        headers: {
+          Authorization: localStorage.getItem('accessToken'),
+          'Content-Type': 'multipart/form-data',
+        },
+      };
+
+      const res = await axios.post(api.paper.paperWrite(), data, config);
+      console.log('upload success', res);
+
+      // 업로드성공하면 일기상세화면으로 넘어가야해용
+      // 일단 뒤로가기 설정해놓음
+      navigate(-1);
+    } catch (err) {
+      console.log('err', err);
+    }
   };
 
   // 이미지 화면상에 업로드하기
@@ -105,7 +152,7 @@ function PaperCreatePage() {
     if (files.length + newFiles.length <= 3) {
       setFiles([...files, ...newFiles]);
     } else {
-      alert('You can only select up to 3 images');
+      alert('이미지는 최대 3개까지만 업로드 가능합니다');
     }
   };
 
@@ -131,9 +178,9 @@ function PaperCreatePage() {
       </TopDiv>
       <BoxContent>
         <SymptomRating
-          symptomList={symptoms}
-          value={symptomScore}
-          state={setSymptomScore}
+          symptomList={diary.diaryHasSymptoms}
+          values={scores}
+          state={setScores}
         />
       </BoxContent>
       <RightDiv>

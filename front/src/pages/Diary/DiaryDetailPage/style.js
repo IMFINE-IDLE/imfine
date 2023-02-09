@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { BoxShad } from '../../components/common/BoxShad/BoxShad';
+import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 
 const DiaryInfoContainer = styled(BoxShad)`
   display: flex;

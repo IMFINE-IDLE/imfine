@@ -15,6 +15,9 @@ import {
   InputSignUp,
   BtnSignup,
   ErrorMsg,
+  DivEmail,
+  BtnEmailCheck,
+  GuideMsg,
 } from './style';
 
 function SignUpPage() {
@@ -25,9 +28,12 @@ function SignUpPage() {
     idErrorMsg: '',
     nameErrorMsg: '',
     emailErrorMsg: '',
+    emailVerifyErrorMsg: '',
     pwErrorMsg: '',
     confirmPwErrorMsg: '',
   });
+  const [emailVerify, setEmailVerify] = useState(false);
+  const [doneVerify, setDoneVerify] = useState(false);
   const [isNext, setIsNext] = useState(false);
 
   const [inputValue, inputEvent] = useReducer(
@@ -155,6 +161,9 @@ function SignUpPage() {
               setErrMsg((prev) => {
                 return { ...prev, emailErrorMsg: '' };
               });
+
+              // 이메일 인증 버튼 활성화
+              setEmailVerify(true);
             } catch (err) {
               console.log(err.response.data);
               setErrMsg((prev) => {
@@ -171,6 +180,16 @@ function SignUpPage() {
             };
           });
         }
+      }
+
+      // 3-1. 이메일 인증 코드 검사
+      if (emailVerify) {
+        setErrMsg((prev) => {
+          return {
+            ...prev,
+            emailVerifyErrorMsg: '',
+          };
+        });
       }
 
       // 4. 비밀번호 유효성 검사
@@ -209,15 +228,17 @@ function SignUpPage() {
       id: '',
       name: '',
       email: '',
+      emailCode: '',
       password: '',
       confirmPassword: '',
     }
   );
-  const { id, name, email, password, confirmPassword } = inputValue;
+  const { id, name, email, emailCode, password, confirmPassword } = inputValue;
   const {
     idErrorMsg,
     nameErrorMsg,
     emailErrorMsg,
+    emailVerifyErrorMsg,
     pwErrorMsg,
     confirmPwErrorMsg,
   } = errorMsg;
@@ -243,6 +264,36 @@ function SignUpPage() {
     if (isNext) setIsNext(false);
   }
 
+  // 이메일 인증 코드 전송
+  const sendVerifyEmail = async (emailState) => {
+    try {
+      const data = { email: emailState };
+      const res = await axios.post(api.user.verifyEmail(emailState), data);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 이메일 인증 코드 확인
+  const asyncConfirmVerifyEmail = async () => {
+    const data = { email, confirm: emailCode };
+    try {
+      const res = await axios.post(api.user.confirmEmail(), data);
+      console.log(res);
+      setDoneVerify(true);
+    } catch (err) {
+      console.log(err);
+      setErrMsg((prev) => {
+        return {
+          ...prev,
+          emailVerifyErrorMsg: err.response.data.message,
+        };
+      });
+    }
+  };
+
+  // 최종 회원 가입
   const signUpByData = async () => {
     const userData = {
       uid: id,
@@ -278,7 +329,7 @@ function SignUpPage() {
                 value={id}
                 id="idInput"
                 type="text"
-                required
+                // required
                 autoFocus
                 // maxLength="12"
                 onChange={(e) => inputEvent({ id: e.target.value })}
@@ -294,7 +345,7 @@ function SignUpPage() {
                 value={name}
                 id="nameInput"
                 type="text"
-                required
+                // required
                 // maxLength="10"
                 onChange={(e) => inputEvent({ name: e.target.value })}
                 style={
@@ -304,19 +355,84 @@ function SignUpPage() {
               {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
 
               <Label htmlFor="emailInput">이메일</Label>
-              <InputSignUp
-                value={email}
-                id="emailInput"
-                type="email"
-                required
-                onChange={(e) => inputEvent({ email: e.target.value })}
-                style={
-                  emailErrorMsg
-                    ? { border: '1px solid var(--red-color)' }
-                    : null
-                }
-              />
+              <DivEmail>
+                <InputSignUp
+                  value={email}
+                  id="emailInput"
+                  type="email"
+                  // required
+                  onChange={(e) => inputEvent({ email: e.target.value })}
+                  style={
+                    emailErrorMsg
+                      ? { border: '1px solid var(--red-color)' }
+                      : null
+                  }
+                />
+                {emailVerify ? (
+                  <BtnEmailCheck
+                    type="button"
+                    onClick={() => {
+                      sendVerifyEmail(email);
+                    }}
+                  >
+                    인증
+                  </BtnEmailCheck>
+                ) : (
+                  <BtnEmailCheck
+                    type="button"
+                    disabled
+                    style={{ background: 'var(--gray700-color)' }}
+                  >
+                    인증
+                  </BtnEmailCheck>
+                )}
+              </DivEmail>
               {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
+
+              {emailVerify && !doneVerify ? (
+                <>
+                  <Label htmlFor="emailCodeInput">인증코드 입력</Label>
+                  <GuideMsg>이메일로 전송된 인증코드를 입력해주세요.</GuideMsg>
+                  <DivEmail>
+                    <InputSignUp
+                      value={emailCode}
+                      id="emailCodeInput"
+                      type="text"
+                      autoComplete="off"
+                      // required
+                      onChange={(e) =>
+                        inputEvent({ emailCode: e.target.value })
+                      }
+                      style={
+                        emailVerifyErrorMsg
+                          ? { border: '1px solid var(--red-color)' }
+                          : null
+                      }
+                    />
+                    {emailVerify ? (
+                      <BtnEmailCheck
+                        type="button"
+                        onClick={() => {
+                          asyncConfirmVerifyEmail();
+                        }}
+                      >
+                        인증
+                      </BtnEmailCheck>
+                    ) : (
+                      <BtnEmailCheck
+                        type="button"
+                        disabled
+                        style={{ background: 'var(--gray700-color)' }}
+                      >
+                        인증
+                      </BtnEmailCheck>
+                    )}
+                  </DivEmail>
+                  {emailVerifyErrorMsg && (
+                    <ErrorMsg>{emailVerifyErrorMsg}</ErrorMsg>
+                  )}
+                </>
+              ) : null}
 
               <Label htmlFor="passwordInput">비밀번호</Label>
               <InputSignUp
@@ -324,7 +440,7 @@ function SignUpPage() {
                 id="passwordInput"
                 type="password"
                 autoComplete="off"
-                required
+                // required
                 onChange={(e) => inputEvent({ password: e.target.value })}
                 style={
                   pwErrorMsg ? { border: '1px solid var(--red-color)' } : null
@@ -338,7 +454,7 @@ function SignUpPage() {
                 id="confirmPasswordInput"
                 type="password"
                 autoComplete="off"
-                required
+                // required
                 onChange={(e) =>
                   inputEvent({ confirmPassword: e.target.value })
                 }
@@ -351,9 +467,6 @@ function SignUpPage() {
               {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
               {isValid ? (
                 <BtnSignup
-                  margin={'0'}
-                  padding={'1em'}
-                  fontSize={'1em'}
                   type="submit"
                   onClick={(e) => {
                     e.preventDefault();
@@ -366,9 +479,6 @@ function SignUpPage() {
                 </BtnSignup>
               ) : (
                 <BtnSignup
-                  margin={'0'}
-                  padding={'1em'}
-                  fontSize={'1em'}
                   type="button"
                   color={'gray700'}
                   disabled

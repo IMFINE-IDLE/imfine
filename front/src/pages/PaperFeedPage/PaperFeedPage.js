@@ -19,6 +19,7 @@ function PaperFeedPage() {
   const [paperList, setPaperList] = useState([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
   const observerRef = useRef();
   const observer = (element) => {
     if (isLoading) return;
@@ -27,7 +28,7 @@ function PaperFeedPage() {
 
     observerRef.current = new IntersectionObserver((entries) => {
       const first = entries[0];
-      if (first.isIntersecting) {
+      if (first.isIntersecting && hasNext) {
         setPage((prev) => prev + 1);
       }
     });
@@ -42,11 +43,12 @@ function PaperFeedPage() {
         // headers: {
         //   Authorization: accessToken,
         // },
-        headers: { Authorization: localStorage.getItem('accessToken') },
+        // headers: { Authorization: localStorage.getItem('accessToken') },
       });
       console.log(res.data);
       setIsLoading(false);
-      setPaperList((prev) => prev.concat(res.data.data));
+      setPaperList((prev) => prev.concat(res.data.data.list));
+      setHasNext(res.data.data.hasNext);
     } catch (err) {
       console.log(err.response);
     }
@@ -63,7 +65,9 @@ function PaperFeedPage() {
         {
           contentId: paperId,
         },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
+        {
+          headers: { Authorization: localStorage.getItem('accessToken') },
+        }
       );
       console.log(res);
       fetchPaperFeed();
