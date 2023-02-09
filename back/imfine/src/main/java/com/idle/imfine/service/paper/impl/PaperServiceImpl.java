@@ -44,6 +44,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -88,9 +89,14 @@ public class PaperServiceImpl implements PaperService {
 
         LOGGER.info("date : {} requestDate{}",  requestPaperPostDto.getDiaryId(), requestPaperPostDto.getDate());
         LocalDate date = common.convertDateType(requestPaperPostDto.getDate());
-        Paper exist = paperRepository.getByDiary_IdAndDate(diary.getId(), date)
-                .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_DUPLICATE_DATE));
+        Optional<Paper> exist = paperRepository.getByDiary_IdAndDate(diary.getId(), date);
 
+        if (exist.isPresent()) {
+            throw new ErrorException(PaperErrorCode.PAPER_DUPLICATE_DATE);
+        }
+        if (user.getId() != diary.getWriter().getId()) {
+            throw new ErrorException(PaperErrorCode.PAPER_NOT_AUTHORIZED);
+        }
         Paper savedPaper = paperRepository.save(Paper.builder()
                 .diary(diary)
                 .content(requestPaperPostDto.getContents())

@@ -16,11 +16,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
+    @Query("select d from Diary d")
     Slice<Diary> findAllByOpenTrue(Pageable pageable);
-    @Query("select distinct d from MedicalCode m join Diary d on d.medicalCode=m join DiaryHasSymptom dhs on dhs.diary=d where dhs in :diaryHasSymptom or m in :medicalCode")
+    @Query("select distinct d from Diary d join MedicalCode m  on d.medicalCode=m join DiaryHasSymptom dhs on dhs.diary=d where dhs in :diaryHasSymptom or m in :medicalCode")
     Slice<Diary> findByOpenTrueOrMedicalCodeInAndOpenTrueOrDiaryHasSymptomsIn(@Param("medicalCode") List<MedicalCode> medicalCode,
             @Param("diaryHasSymptom") List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
-    @Query("select distinct d from Diary d join DiaryHasSymptom dhs on dhs.diary=d where dhs.symptom in :diaryHasSymptom")
+    @Query("select distinct d from Diary d join DiaryHasSymptom dhs on dhs.diary=d where dhs in :diaryHasSymptom")
     Slice<Diary> findByDiaryHasSymptomsInAndOpenTrue(@Param("diaryHasSymptom") List<DiaryHasSymptom> diaryHasSymptom, Pageable pageable);
     @Query("select distinct d from Diary d join MedicalCode m on m=d.medicalCode where m in :medicalCode")
     Slice<Diary> findByMedicalCodeInAndOpenTrue(@Param("medicalCode") List<MedicalCode> medicalCode, Pageable pageable);
