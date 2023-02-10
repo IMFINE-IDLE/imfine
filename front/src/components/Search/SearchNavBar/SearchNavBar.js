@@ -1,7 +1,6 @@
 import React from 'react';
 import { BiChevronLeft, BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router';
-import { useSearchParams } from 'react-router-dom';
 import {
   BoxChevronLeft,
   BoxNavBar,

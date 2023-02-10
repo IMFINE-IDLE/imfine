@@ -24,8 +24,9 @@ import axios from 'axios';
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const dispatch = useDispatch();
-  const searchHistory = useSelector((state) => state.userInfo.searchHistory);
+  // const dispatch = useDispatch();
+  // const searchHistory = useSelector((state) => state.userInfo.searchHistory);
+  const [searchHistory, setSearchHistory] = useState([]);
   const [keyword, setKeyword] = useState(''); // 검색창에 검색하는 쿼리
   const [keywordResult, setKeywordResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
 
@@ -38,12 +39,24 @@ function SearchPage() {
     }
     setSearchParams({ query: trimmedKeyword });
     setKeywordResult(trimmedKeyword);
-    dispatch(addSearchHistory(trimmedKeyword)); // 최근 검색어 저장
+    // dispatch(addSearchHistory(trimmedKeyword));
+    postSearchHistory(); // 최근 검색어에 저장
 
     try {
       // 첫 페이지 일기 검색
       const res = await axios.get(api.search.search('paper', trimmedKeyword));
       console.log(res.data.data.list);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 최근 검색어 불러오기
+  const getSearchHistory = async () => {
+    try {
+      const res = await axios.get(api.search.getSearchHistory());
+      console.log(res);
+      setSearchHistory(res.data.data.list);
     } catch (err) {
       console.log(err);
     }
@@ -80,6 +93,7 @@ function SearchPage() {
   ];
 
   useEffect(() => {
+    // 주소창 쳐서 들어올 경우
     let currentQuery = searchParams.get('query');
     if (currentQuery === '' || currentQuery === null) {
       setKeyword('');
@@ -89,7 +103,9 @@ function SearchPage() {
     let trimmedQuery = currentQuery.trim();
     setKeyword(trimmedQuery);
     setKeywordResult(trimmedQuery);
-  }, [dispatch, searchParams]);
+
+    getSearchHistory();
+  }, [searchParams]);
 
   return (
     <>
@@ -113,7 +129,7 @@ function SearchPage() {
           <BoxRecentQuery>
             <TitleRecent>최근 검색어</TitleRecent>
             <BoxInner>
-              {searchHistory.map((searchItem, idx) => (
+              {searchHistory?.map((searchItem, idx) => (
                 <QueryItem key={idx}>
                   <span
                     onClick={() => {
