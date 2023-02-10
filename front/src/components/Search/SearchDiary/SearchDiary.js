@@ -3,15 +3,13 @@ import React, { useEffect, useState } from 'react';
 import api from '../../../api/api';
 import DiaryListGrid from '../../Diary/DiaryListGrid/DiaryListGrid';
 
-function SearchDiary({ searchParams }) {
+function SearchDiary({ currentQuery }) {
   const [diaryList, setDiaryList] = useState([]);
 
   // 일기장 검색
   const handleDiarySearch = async () => {
     try {
-      const res = await axios.get(
-        api.search.search('diary', searchParams.get('query'))
-      );
+      const res = await axios.get(api.search.search('diary', currentQuery));
       console.log(res.data);
       setDiaryList(res.data.data);
     } catch (err) {

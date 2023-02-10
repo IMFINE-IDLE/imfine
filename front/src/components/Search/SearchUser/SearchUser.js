@@ -3,15 +3,13 @@ import React, { useEffect, useState } from 'react';
 import api from '../../../api/api';
 import FollowList from '../../Profile/FollowList/FollowList';
 
-function SearchUser({ searchParams }) {
+function SearchUser({ currentQuery }) {
   const [userList, setUserList] = useState([]);
 
   // 유저 검색
   const handleUserSearch = async () => {
     try {
-      const res = await axios.get(
-        api.search.search('user', searchParams.get('query'))
-      );
+      const res = await axios.get(api.search.search('user', currentQuery));
       console.log(res.data);
       setUserList(res.data.data);
     } catch (err) {

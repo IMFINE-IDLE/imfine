@@ -22,14 +22,27 @@ import axios from 'axios';
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentQuery = searchParams.get('query');
+
   const [searchHistory, setSearchHistory] = useState([]);
   const [keyword, setKeyword] = useState(''); // 검색창에 검색하는 쿼리
   const [keywordResult, setKeywordResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
 
   const [paperList, setPaperList] = useState([]);
 
+  // 일기 검색
+  const handlePaperSearch = async (keyword) => {
+    try {
+      const res = await axios.get(api.search.search('paper', keyword));
+      console.log(res.data.data.list);
+      setPaperList(res.data.data.list);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // 첫 페이지 일기 검색
-  const handlePaperSearch = async (trimmedKeyword) => {
+  const handleSearch = async (trimmedKeyword) => {
     if (trimmedKeyword === '' || trimmedKeyword === null) {
       return;
     }
@@ -37,12 +50,7 @@ function SearchPage() {
     setKeywordResult(trimmedKeyword);
     postSearchKeywordList(trimmedKeyword); // 최근 검색어에 저장
 
-    try {
-      const res = await axios.get(api.search.search('paper', trimmedKeyword));
-      console.log(res.data.data.list);
-    } catch (err) {
-      console.log(err);
-    }
+    handlePaperSearch(trimmedKeyword);
   };
 
   // 최근 검색어 저장
@@ -83,18 +91,22 @@ function SearchPage() {
       idx: 0,
       tabName: '일기',
       tabContent: (
-        <SearchPaper paperList={paperList} setPaperList={setPaperList} />
+        <SearchPaper
+          paperList={paperList}
+          currentQuery={currentQuery}
+          handlePaperSearch={handlePaperSearch}
+        />
       ),
     },
     {
       idx: 1,
       tabName: '일기장',
-      tabContent: <SearchDiary searchParams={searchParams} />,
+      tabContent: <SearchDiary currentQuery={currentQuery} />,
     },
     {
       idx: 2,
       tabName: '유저',
-      tabContent: <SearchUser searchParams={searchParams} />,
+      tabContent: <SearchUser currentQuery={currentQuery} />,
     },
   ];
 
@@ -102,7 +114,6 @@ function SearchPage() {
     getSearchKeywordList();
 
     // 주소창 쳐서 들어올 경우
-    let currentQuery = searchParams.get('query');
     if (currentQuery === '' || currentQuery === null) {
       setKeyword('');
       return;
@@ -117,7 +128,7 @@ function SearchPage() {
       <SearchNavBar
         keyword={keyword}
         setKeyword={setKeyword}
-        handlePaperSearch={handlePaperSearch}
+        handleSearch={handleSearch}
         searchParams={searchParams}
       />
 
@@ -138,7 +149,7 @@ function SearchPage() {
                 <QueryItem key={searchId}>
                   <span
                     onClick={() => {
-                      handlePaperSearch(query);
+                      handleSearch(query);
                     }}
                   >
                     {query}
