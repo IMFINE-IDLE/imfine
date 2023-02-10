@@ -10,6 +10,7 @@ export const onSilentRefresh = async () => {
     console.log(refresh);
   } catch (err) {
     console.log(err);
+    logOut();
   }
 };
 
