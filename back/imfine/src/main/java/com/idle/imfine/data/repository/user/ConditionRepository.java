@@ -28,4 +28,6 @@ public interface ConditionRepository extends JpaRepository<Condition, Long> {
 
     @Query("select new map(p.id as id, c.condition as condition) from Paper p join Condition c on c.user=p.diary.writer where p.date=c.date and p in :papers")
     Map<Long, Integer> findPaperConditionByPapers(@Param("papers") List<Paper> papers);
+    @Query("select c from Paper p join Condition c on c.user=p.diary.writer where p.date=c.date and p in :papers")
+    List<Condition> findPaperConditionByPapersList(@Param("papers") List<Paper> papers);
 }

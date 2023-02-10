@@ -7,6 +7,7 @@ import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDtoOnly
 import com.idle.imfine.data.dto.search.request.RequestSearchDto;
 import com.idle.imfine.data.dto.search.response.ResponseMySearchList;
 import com.idle.imfine.data.dto.user.response.SearchUserListResponseDto;
+import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Search;
 import com.idle.imfine.data.entity.User;
@@ -134,7 +135,7 @@ public class SearchServiceImpl implements SearchService {
         List<Paper> paperList = papers.getContent();
         Set<Long> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
                 paperList);
-        Map<Long, Integer> papersCondition = conditionRepository.findPaperConditionByPapers(
+        List<Condition> papersCondition = conditionRepository.findPaperConditionByPapersList(
                 paperList);
 
         Map<Long, List<PaperHasSymptom>> map = paperHasSymptomRepository.findPaperHasSymptomByPaperInMap(paperList).stream().collect(Collectors.groupingBy(x -> (Long) x[0], Collectors.mapping(x ->  (PaperHasSymptom) x[1], Collectors.toList())));
@@ -160,7 +161,10 @@ public class SearchServiceImpl implements SearchService {
                                 .date(paper.getDate())
                                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                                 .open(paper.isOpen())
-                                .condition(papersCondition.get(paper.getId()) != null ? papersCondition.get(paper.getId()).toString() : "0")
+                                .condition(String.valueOf(papersCondition.get(papersCondition.stream()
+                                        .filter(condition -> {
+                                            return condition.getDate() == paper.getDate();
+                                        }).findFirst().orElseGet(Condition::new).getCondition())))
                                 .image(imageHasPaper.contains(paper.getId()))
                                 .hasNext(papers.hasNext())
                                 .symptomList(

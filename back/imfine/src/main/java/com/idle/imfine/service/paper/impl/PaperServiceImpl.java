@@ -126,7 +126,7 @@ public class PaperServiceImpl implements PaperService {
         if (saveImage.size() != 0){
             imageRepository.saveAll(saveImage);
         }
-        if (requestPaperPostDto.getSymptoms().size() == 0) {
+        if (requestPaperPostDto.getSymptoms().size() != 0) {
             Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
                 symptomRecord -> PaperHasSymptom.builder()
                         .symptomId(symptomRecord.getSymptomId())
@@ -265,14 +265,13 @@ public class PaperServiceImpl implements PaperService {
         List<Paper> paperList = papers.getContent();
         Set<Long> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
                 paperList);
-//        List<Condition> papersCondition = conditionRepository.findPaperConditionByPapers(paperList);
+        List<Condition> papersCondition = conditionRepository.findPaperConditionByPapersList(paperList);
 
         Map<Long, List<PaperHasSymptom>> map = paperHasSymptomRepository.findPaperHasSymptomByPaperInMap(paperList).stream().collect(Collectors.groupingBy(x -> (Long) x[0], Collectors.mapping(x ->  (PaperHasSymptom) x[1], Collectors.toList())));
         Set<Long> imageHasPaper = imageRepository.existsByPaperIds(paperList);
         List<Symptom> symptoms = symptomRepository.getSymptomByPapers(paperList);
 
         Map<Integer, Symptom> symptomIdByName = symptoms.stream().collect(Collectors.toMap(Symptom::getId, Function.identity()));
-
 
         return ResponseMainPage.builder()
                 .hasNext(papers.hasNext())
@@ -290,20 +289,25 @@ public class PaperServiceImpl implements PaperService {
                                 .date(paper.getDate())
                                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                                 .open(paper.isOpen())
-//                                .condition(papersCondition.stream().filter(condition -> ).findFirst())
+                                .condition(String.valueOf(papersCondition.stream()
+                                        .filter(condition -> {
+                                            return condition.getDate() == paper.getDate();
+                                        }).findFirst().orElseGet(Condition::new).getCondition()))
                                 .image(imageHasPaper.contains(paper.getId()))
                                 .hasNext(papers.hasNext())
                                 .symptomList(
-                                        map.containsKey(paper.getId()) ? map.get(paper.getId()).stream().map(
-                                                paperHasSymptom ->
-                                                        ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
-                                                                .symptomId(paperHasSymptom.getSymptomId())
-                                                                .symptomName(symptomIdByName.get(paperHasSymptom.getSymptomId()).getName())
-                                                                .score(paperHasSymptom.getScore())
-                                                                .build()
-
-                                        ).collect(Collectors.toList()) :
-                                        new ArrayList<>())
+                                        map.containsKey(paper.getId()) ? map.get(paper.getId())
+                                                .stream().map(
+                                                        paperHasSymptom ->
+                                                                ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
+                                                                        .symptomId(
+                                                                                paperHasSymptom.getSymptomId())
+                                                                        .symptomName(
+                                                                                symptomIdByName.get(paperHasSymptom.getSymptomId())
+                                                                                        .getName())
+                                                                        .score(paperHasSymptom.getScore())
+                                                                        .build()
+                                                ).collect(Collectors.toList()):new ArrayList<>())
                                 .build()
                 ).collect(Collectors.toList()))
                 .build();

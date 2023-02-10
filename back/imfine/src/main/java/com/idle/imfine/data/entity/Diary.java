@@ -56,7 +56,7 @@ public class Diary extends BaseCreatedEntity{
     @Column(nullable = false)
     private String image;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean active;
 
     @Column(nullable = false)
