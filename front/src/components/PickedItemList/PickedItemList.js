@@ -14,8 +14,8 @@ import {
  * (String) type: 'text', 'medical', 'symptom' 중 하나.
  *                 type이 'medical' 또는 'symptom' 이면 아이콘으로 표시됨
  * (Any) text: type='text' 일 경우 표시될 내용
- * (Array) medicals: [{medicalId: Number, medicalName: String}] 형식의 배열
- * (Array) symptoms: [{symptomId: Number, symptomName: String}] 형식의 배열
+ * (Array) medicals: [{id: Number, name: String}] 형식의 배열
+ * (Array) symptoms: [{id: Number, name: String}] 형식의 배열
  * (String) color: 아이콘 색깔
  * (Boolean) canModify: true일 경우 수정 가능
  *
@@ -29,6 +29,12 @@ const PickedItemList = ({
   symptoms,
   color,
   canModify,
+  // 아래로 필요한 함수나 값 넘겨서 사용
+  ToggleSymptom,
+  deleteAllRecord,
+  handleDeleteAllRecord,
+  textPointer,
+  onClickUserName,
 }) => {
   return (
     <FlexDiv justify="start" padding="0.3em 0">
@@ -39,14 +45,14 @@ const PickedItemList = ({
           {!medicals || medicals.length === 0 ? (
             <></>
           ) : (
-            medicals.map((medical) => (
+            medicals.map(({ id, name }) => (
               <PickedIconBtn
                 color={color}
                 pointer={canModify ? true : false}
-                // onClick={() => ToggleSymptom(medical.id, medical.name)}
-                key={medical.medicalId}
+                onClick={() => ToggleSymptom('medical', id, name)}
+                key={id}
               >
-                {medical.medicalName}
+                {name}
                 {canModify && (
                   <img
                     src="/assets/icons/delete.svg"
@@ -63,14 +69,17 @@ const PickedItemList = ({
           {!symptoms || symptoms.length === 0 ? (
             <></>
           ) : (
-            symptoms.map((symptom) => (
+            symptoms.map(({ id, name }) => (
               <PickedIconBtn
                 color={color}
                 pointer={canModify ? true : false}
-                // onClick={() => ToggleSymptom(medical.id, medical.name)}
-                key={symptom.symptomId}
+                onClick={() => {
+                  if (deleteAllRecord) handleDeleteAllRecord(id, name);
+                  else ToggleSymptom('symptom', id, name);
+                }}
+                key={id}
               >
-                {symptom.symptomName}
+                {name}
                 {canModify && (
                   <img
                     src="/assets/icons/delete.svg"
@@ -83,7 +92,9 @@ const PickedItemList = ({
           )}
         </PickedContentWrapper>
       ) : (
-        <PickedText>{text}</PickedText>
+        <PickedText onClick={onClickUserName} textPointer={textPointer}>
+          {text}
+        </PickedText>
       )}
     </FlexDiv>
   );

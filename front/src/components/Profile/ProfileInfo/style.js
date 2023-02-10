@@ -1,8 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Btn } from '../../common/Btn/Btn';
 
 const ProfileInfoContainer = styled.div`
-  min-width: 22em;
   width: 100%;
   display: flex;
   align-items: start;
@@ -33,9 +32,12 @@ const ProfileFollowBtn = styled.button`
 `;
 
 const ProfileItemSpan = styled.span`
-  padding-right: 0.5em;
-  font-weight: 700;
-  display: inline-block;
+  ${({ pointer }) => css`
+    padding-right: 0.5em;
+    font-weight: 700;
+    display: inline-block;
+    cursor: ${pointer ? 'pointer' : 'default'};
+  `}
 `;
 
 export {

@@ -16,7 +16,7 @@ const FollowUserWrapper = styled.div`
 
 const FollowUserBtn = styled.button`
   ${Btn}
-  width: 7.5em;
+  width: 6.5em;
   height: 3em;
   padding: 0;
   color: var(--icon-color);
