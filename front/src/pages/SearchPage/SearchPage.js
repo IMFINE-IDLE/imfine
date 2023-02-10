@@ -31,6 +31,7 @@ function SearchPage() {
 
   const [paperList, setPaperList] = useState([]);
 
+  // 검색하기
   const handleSearch = async (trimmedKeyword) => {
     if (trimmedKeyword === '' || trimmedKeyword === null) {
       return;
@@ -43,6 +44,16 @@ function SearchPage() {
       // 첫 페이지 일기 검색
       const res = await axios.get(api.search.search('paper', trimmedKeyword));
       console.log(res.data.data.list);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 최근 검색어 삭제
+  const deleteSearchKeyword = async () => {
+    try {
+      const res = await axios.delete(api.search.deleteSearchHistory());
+      console.log(res);
     } catch (err) {
       console.log(err);
     }
@@ -103,15 +114,22 @@ function SearchPage() {
             <TitleRecent>최근 검색어</TitleRecent>
             <BoxInner>
               {searchHistory.map((searchItem, idx) => (
-                <QueryItem
-                  key={idx}
-                  onClick={() => {
-                    console.log(searchItem);
-                    handleSearch(searchItem);
-                  }}
-                >
-                  {searchItem}
-                  <span>X</span>
+                <QueryItem key={idx}>
+                  <span
+                    onClick={() => {
+                      console.log(searchItem);
+                      handleSearch(searchItem);
+                    }}
+                  >
+                    {searchItem}
+                  </span>
+                  <span
+                    onClick={() => {
+                      deleteSearchKeyword(searchItem.id);
+                    }}
+                  >
+                    X
+                  </span>
                 </QueryItem>
               ))}
             </BoxInner>
