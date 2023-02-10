@@ -7,6 +7,7 @@ import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
+import com.idle.imfine.data.dto.paper.response.ResponseModifyPaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
@@ -55,6 +56,14 @@ public class PaperController {
         LOGGER.info("일기장 삭제 {}", paperId);
         paperService.delete(paperId, uid);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
+    }
+
+    @GetMapping("/modify/{paper-id}")
+    public ResponseEntity<Result> getModifyPaper(@LoginUser String uid,
+            @PathVariable("paper-id") long paperId) {
+
+        ResponseModifyPaperDto responseDto = paperService.getModifyPaper(uid, paperId);
+        return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
 
     @PutMapping

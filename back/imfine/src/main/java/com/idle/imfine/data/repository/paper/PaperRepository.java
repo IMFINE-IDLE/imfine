@@ -14,8 +14,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface PaperRepository extends JpaRepository<Paper, Long> {
     Optional<Paper> getByDiary_IdAndDate(long diaryId, LocalDate date);
-    Optional<Paper> findByDiaryAndDate(Diary diary, LocalDate date);
     List<Paper> findAllByDiaryInAndDate(List<Diary> diaries, LocalDate date);
+
+    @Query("select p from Paper p join fetch Diary d on p.diary=d where p.id=:paperId")
+    Optional<Paper> findPaperByPaperIdJoinDiary(@Param("paperId") long paperId);
 //and p.date between :startDate and :endDate
     @Query("select p from Paper p where p.diary=:diary and p.date between :startDate and :endDate")
     List<Paper> findPapersByDiaryAndDateBetween(@Param("diary") Diary diary,

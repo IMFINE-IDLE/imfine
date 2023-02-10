@@ -16,5 +16,7 @@ public interface DiaryHasSymptomRepository extends JpaRepository<DiaryHasSymptom
             int symptomId);
     @Query("select s from DiaryHasSymptom dhs join fetch Symptom s on s.symptomCodeId=dhs.symptom.id where dhs.diary=:diary")
     List<Symptom> getAllByDiaryIdSymptomMap(@Param("diary") Diary diary);
+    @Query("select s from Diary d  join DiaryHasSymptom dhs on dhs.diary=d join Symptom s on s=dhs.symptom where d=:diary")
+    List<Symptom> findByDiaryToMap(@Param("diary") Diary diary);
 //    Map<Long, String>
 }

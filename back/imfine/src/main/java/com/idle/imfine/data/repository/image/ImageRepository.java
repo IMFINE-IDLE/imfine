@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -15,5 +16,9 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
     Set<Long> existsByPaperIds(@Param("paperList") List<Paper> paperList);
 
     @Query("select p from Image i join Paper p on p.id=i.paperId where p=:paper")
-    Optional<Paper> findByPaperId(@Param("paper") Paper paper);
+    List<Image> findByPaperId(@Param("paper") Paper paper);
+
+    @Modifying
+    @Query("delete from Image i where i.paperId=:paperId")
+    List<Image> deleteByPaper(@Param("paperId")long paperId);
 }

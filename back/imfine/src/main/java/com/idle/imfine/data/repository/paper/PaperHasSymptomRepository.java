@@ -13,12 +13,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom, Long> {
 
-//    List<PaperHasSymptom> findByPaper(Paper paper);
-
+    List<PaperHasSymptom> findByPaper(Paper paper);
     @Query("select distinct phs from  PaperHasSymptom phs where phs.paper.diary=:diary and phs.paper.date between :startDate and :endDate")
     List<PaperHasSymptom> findPaperHasSymptomByPaperIn(@Param("diary") Diary diary,
             @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-
     @Modifying
     @Query("delete from PaperHasSymptom phs where phs.symptomId=:symptomId and phs.paper in :papers")
     void deleteBySymptomId(@Param("symptomId") int symptomId, @Param("papers") List<Paper> paper);
@@ -29,8 +27,4 @@ public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom
 
     @Query("SELECT phs.paper.id, phs FROM PaperHasSymptom phs where phs.paper in :papers GROUP BY phs.paper")
     List<Object[]> findPaperHasSymptomByPaperInMap(@Param("papers")List<Paper> paperList);
-//
-//    @Modifying
-//    @Query("update PaperHasSymptom phs set phs.score=:score where phs.id=:phsId")
-//    void update
 }
