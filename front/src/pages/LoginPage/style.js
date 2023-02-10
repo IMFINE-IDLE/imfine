@@ -15,6 +15,12 @@ const BoxLogo = styled.div`
   /* margin: 2em 0; */
 `;
 
+const Label = styled.label`
+  padding-bottom: 1em;
+  font-weight: 700;
+  color: var(--icon-color);
+`;
+
 const BoxInnerLogin = styled.div`
   width: 100%;
   max-width: 280px;
@@ -49,4 +55,5 @@ export {
   BtnLogin,
   BoxOptions,
   SpanOption,
+  Label,
 };

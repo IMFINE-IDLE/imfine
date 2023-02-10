@@ -23,7 +23,6 @@ import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollow
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/Profile/ChangeName/ChangeName';
 import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
-import LogOutPage from './pages/LogOutPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
 import axios from 'axios';
 // 뷰포트 사이즈 결정 필요
