@@ -8,8 +8,14 @@ import {
   SearchInput,
 } from './style';
 
-function SearchNavBar({ keyword, setKeyword, handleSearch }) {
+function SearchNavBar({
+  keyword,
+  setKeyword,
+  handlePaperSearch,
+  searchParams,
+}) {
   const navigate = useNavigate();
+  const currentQuery = searchParams.get('query');
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -20,15 +26,15 @@ function SearchNavBar({ keyword, setKeyword, handleSearch }) {
         return;
       }
       setKeyword(trimmedString);
-      handleSearch(trimmedString);
+      handlePaperSearch(trimmedString);
     }
   };
 
   return (
-    <BoxNavBar>
+    <BoxNavBar color={currentQuery ? 'main' : null}>
       <BoxChevronLeft
         onClick={() => {
-          navigate(-1);
+          currentQuery ? navigate('/search') : navigate('/');
         }}
         justify="left"
       >

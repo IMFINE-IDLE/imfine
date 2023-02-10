@@ -7,11 +7,9 @@ import { IconContext } from 'react-icons';
 import { Provider } from 'react-redux';
 import store, { persistor } from './store';
 import axios from 'axios';
-import { onSilentRefresh } from './store/slice/userSlice';
 import { PersistGate } from 'redux-persist/integration/react';
 
 axios.defaults.withCredentials = true;
-onSilentRefresh();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

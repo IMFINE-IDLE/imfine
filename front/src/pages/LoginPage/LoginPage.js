@@ -4,7 +4,15 @@ import { useNavigate } from 'react-router';
 import { InputGray } from '../../components/common/InputGray/InputGray';
 import useInput from '../../hooks/useInput';
 import { logIn } from '../../store/slice/userSlice';
-import { BoxLogin, BoxInnerLogin, BoxInput, BtnLogin } from './style';
+import {
+  BoxLogin,
+  BoxInnerLogin,
+  BoxInput,
+  BtnLogin,
+  BoxOptions,
+  SpanOption,
+  Label,
+} from './style';
 
 function Login() {
   const dispatch = useDispatch();
@@ -32,7 +40,7 @@ function Login() {
       <BoxInnerLogin>
         <form action="">
           <BoxInput>
-            <label htmlFor="loginInput">로그인</label>
+            <Label htmlFor="loginInput">아이디</Label>
             <InputGray
               value={uid}
               onChange={setUid}
@@ -42,11 +50,12 @@ function Login() {
               autoFocus
               maxLength="12"
               padding={'1em'}
+              margin={'1em 0 0'}
               autoComplete="false"
             />
           </BoxInput>
           <BoxInput>
-            <label htmlFor="passwordInput">비밀번호</label>
+            <Label htmlFor="passwordInput">비밀번호</Label>
             <InputGray
               value={password}
               onChange={setPassword}
@@ -54,6 +63,7 @@ function Login() {
               type="password"
               required
               padding={'1em'}
+              margin={'1em 0'}
               autoComplete="false"
             />
           </BoxInput>
@@ -69,6 +79,13 @@ function Login() {
           >
             로그인하기
           </BtnLogin>
+          <BoxOptions>
+            <SpanOption>아이디 찾기</SpanOption>|
+            <SpanOption>비밀번호 찾기</SpanOption>|
+            <SpanOption onClick={() => navigate('/signup')}>
+              회원가입
+            </SpanOption>
+          </BoxOptions>
         </form>
       </BoxInnerLogin>
     </BoxLogin>
