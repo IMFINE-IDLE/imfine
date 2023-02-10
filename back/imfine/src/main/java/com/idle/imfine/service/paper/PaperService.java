@@ -15,7 +15,7 @@ public interface PaperService {
     void save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException;
     void delete(long paperId, String uid);
 
-    void modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid);
+    List<String> modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) throws IOException;
 
     void postPaperLike(RequestHeartDto requestLikeDto, String uid);
 

@@ -15,7 +15,6 @@ import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDtoOnlyMainPage;
 import com.idle.imfine.data.dto.symptom.response.ResponsePaperHasSymptomDto;
-import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Heart;
@@ -154,11 +153,11 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) {
+    public List<String> modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) throws IOException {
         LOGGER.info("일기 수정 service");
         User user = common.getUserByUid(uid);
 
-        Paper paper = paperRepository.findById(requestPaperPutDto.getPaperId())
+        Paper paper = paperRepository.findByIdFetchPaperSymptom(requestPaperPutDto.getPaperId())
             .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
 
         paper.setContent(requestPaperPutDto.getContents());
@@ -167,17 +166,42 @@ public class PaperServiceImpl implements PaperService {
         LOGGER.info("[PaperService.modifyPaper] 감정 분석 >> 비동기 처리");
         sentimentAnalysis.analyzeText(paper);
 
-        List<PaperHasSymptom> symptoms = paper.getPaperHasSymptoms();
-        for (PaperHasSymptom symptom : symptoms) {
-            for (ResponseSymptomRecordDto putSymptom : requestPaperPutDto.getSymptomList()) {
-                if (symptom.getSymptomId() == putSymptom.getSymptomId()) {
-                    symptom.setScore(putSymptom.getScore());
-                    break;
+        List<Long> symptomIds = new ArrayList<>();
+        Map<Long, Integer> symptomIdByScore = new HashMap<>();
+        requestPaperPutDto.getSymptomList().forEach(
+                responseSymptomRecordDto -> {
+                    symptomIds.add(responseSymptomRecordDto.getSymptomId());
+                    symptomIdByScore.put(responseSymptomRecordDto.getSymptomId(),
+                            responseSymptomRecordDto.getScore());
                 }
-            }
+        );
+
+        List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findByIdIn(symptomIds);
+        for (PaperHasSymptom phs : symptoms) {
+            phs.setScore(symptomIdByScore.get(phs.getId()));
+        }
+        List<Image> removeImage = imageRepository.findByIdIn(requestPaperPutDto.getRemoveImages());
+        imageRepository.deleteByIdInJPQL(requestPaperPutDto.getRemoveImages());
+
+        List<UploadFile> storeImageFiles;
+        storeImageFiles = fileStore.storeFiles(requestPaperPutDto.getPutImages());
+
+        List<Image> saveImage = storeImageFiles.stream().map(
+                path ->  Image.builder()
+                        .paperId(paper.getId())
+                        .path(path.getStoreFileName())
+                        .build()
+        ).collect(Collectors.toList());
+        if (saveImage.size() != 0){
+            imageRepository.saveAll(saveImage);
         }
 
-        List<Image> images = imageRepository.deleteByPaper(paper.getId());
+        paper.setContent(requestPaperPutDto.getContents());
+        paper.setOpen(requestPaperPutDto.isOpen());
+
+        return removeImage.stream().map(
+                Image::getPath
+        ).collect(Collectors.toList());
     }
 
     @Transactional
@@ -298,6 +322,7 @@ public class PaperServiceImpl implements PaperService {
         List<DiaryHasSymptom> diaryHasSymptoms = paperDiary.getDiaryHasSymptoms();
         List<PaperHasSymptom> paperHasSymptoms = paper.getPaperHasSymptoms();
         List<ResponsePaperSymptomRecordDto> responsePaperSymptomRecordDtos = new ArrayList<>();
+
         for (DiaryHasSymptom diaryHasSymptom : diaryHasSymptoms) {
             for (PaperHasSymptom paperHasSymptom : paperHasSymptoms) {
                 if (paperHasSymptom.getSymptomId() == diaryHasSymptom.getSymptom().getId()) {
@@ -450,6 +475,7 @@ public class PaperServiceImpl implements PaperService {
                             .build();
                 }
         ).collect(Collectors.toList());
+
 
         return ResponseModifyPaperDto.builder()
                 .paperId(paper.getId())

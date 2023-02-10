@@ -27,4 +27,6 @@ public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom
 
     @Query("SELECT phs.paper.id, phs FROM PaperHasSymptom phs where phs.paper in :papers GROUP BY phs.paper")
     List<Object[]> findPaperHasSymptomByPaperInMap(@Param("papers")List<Paper> paperList);
+
+    List<PaperHasSymptom> findByIdIn(List<Long> symptomIds);
 }

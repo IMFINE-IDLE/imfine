@@ -11,6 +11,7 @@ import com.idle.imfine.data.dto.paper.response.ResponseModifyPaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
+import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.paper.PaperService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class PaperController {
 
     private final PaperService paperService;
     private final ResponseService responseService;
+    private final FileStore fileStore;
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
     @PostMapping
     public ResponseEntity<Result> postPaper(@ModelAttribute RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
@@ -67,8 +69,14 @@ public class PaperController {
     }
 
     @PutMapping
-    public ResponseEntity<Result> putPaper(@RequestBody RequestPaperPutDto requestPaperPutDto, @LoginUser String uid){
-        paperService.modifyPaper(requestPaperPutDto, uid);
+    public ResponseEntity<Result> putPaper(@ModelAttribute RequestPaperPutDto requestPaperPutDto, @LoginUser String uid){
+        try {
+            List<String> removeImages = paperService.modifyPaper(requestPaperPutDto, uid);
+            fileStore.deleteImages(removeImages);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("이미지 삭제과정에서 에러가 발생했습니다.");
+        }
         LOGGER.info("일기 수정 {}, {}", requestPaperPutDto, requestPaperPutDto.getSymptomList().get(0).getSymptomId());
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
