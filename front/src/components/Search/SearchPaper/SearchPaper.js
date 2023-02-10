@@ -4,8 +4,8 @@ import PaperItem from '../../Paper/PaperItem/PaperItem';
 
 function SearchPaper({ paperList, setPaperList }) {
   return (
-    <div>
-      {paperList !== [] ? (
+    <>
+      {paperList.length > 1 ? (
         <BoxPaperFeed>
           {paperList?.map((paper) => {
             return (
@@ -21,9 +21,9 @@ function SearchPaper({ paperList, setPaperList }) {
           })}
         </BoxPaperFeed>
       ) : (
-        <span>'검색 결과를 찾을 수 없습니다.'</span>
+        <span>검색 결과를 찾을 수 없습니다.</span>
       )}
-    </div>
+    </>
   );
 }
 

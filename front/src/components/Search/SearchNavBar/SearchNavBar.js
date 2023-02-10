@@ -1,6 +1,7 @@
 import React from 'react';
 import { BiChevronLeft, BiSearch } from 'react-icons/bi';
 import { useNavigate } from 'react-router';
+import { useSearchParams } from 'react-router-dom';
 import {
   BoxChevronLeft,
   BoxNavBar,
@@ -10,6 +11,8 @@ import {
 
 function SearchNavBar({ keyword, setKeyword, handleSearch }) {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentQuery = searchParams.get('query');
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -28,7 +31,7 @@ function SearchNavBar({ keyword, setKeyword, handleSearch }) {
     <BoxNavBar>
       <BoxChevronLeft
         onClick={() => {
-          navigate('/search');
+          currentQuery ? navigate('/search') : navigate('/');
         }}
         justify="left"
       >
