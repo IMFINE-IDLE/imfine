@@ -15,12 +15,25 @@ import {
   TabContentContainer,
 } from './style';
 
-// (Number) tabCnt: 탭 개수, 1이면 하나만 표시
-// (String) type: 탭이 1개일 때 탭에 표시할 이름
-// (Array) medicals: 질병/수술 선택 결과를 담을 state, 상위 컴포넌트에서 useState로 선언
-//
+/* 프롭스 설명
+ *
+ * (Number) tabCnt: 탭 개수, 1이면 하나만 표시
+ * (String) title: 탭이 1개일 때 탭에 표시할 이름, '질병/수술', '증상' 중 하나
+ * (Function) setMedicals: 질병/수술 선택 결과 state 업데이트 함수, 상위 컴포넌트에서 useState로 선언
+ * (Function) setSymptoms: 증상 선택 결과를 state 업데이트 함수, 상위 컴포넌트에서 useState로 선언
+ * (Function) apiFunc: 선택 완료 버튼 클릭시 실행할 api 함수
+ *
+ */
 
-const PickMenuTab = ({ tabCnt, title, medicals, symptoms, idx, setType }) => {
+const PickMenuTab = ({
+  tabCnt,
+  title,
+  setMedicals,
+  setSymptoms,
+  apiFunc,
+  idx,
+  setType,
+}) => {
   // 임시 더미데이터
   // const sampleDataList = [
   //   {
@@ -42,6 +55,12 @@ const PickMenuTab = ({ tabCnt, title, medicals, symptoms, idx, setType }) => {
   //   { id: 12, name: '질병12', image: '/assets/clovers/clover1.svg' },
   // ];
 
+  // 메모
+  // 여기서 medicalList = useState(medicals)로 한 번 더 state 써서 사용하다가 마지막에 버튼 눌렀을 때만
+  // props로 받아온 setMedicals에 넣어주는 게 좋지 않을까...?
+  const [pickedMedicals, setPickedMedicals] = useState([]);
+  const [pickedSymptoms, setPickedSymptoms] = useState([]);
+
   const dispatch = useDispatch();
   // 질병/수술 목록과 증상 목록을 서버에서 받아와서 스토어에 저장
   useEffect(() => {
@@ -53,9 +72,8 @@ const PickMenuTab = ({ tabCnt, title, medicals, symptoms, idx, setType }) => {
   const { medicalMenuList, symptomMenuList } = useSelector(
     (state) => state.menu
   );
-  // const { medicalMenuList } = useSelector((state) => state.menu);
 
-  // 탭 하단에 표시할 질병/수술 또는 증상
+  // 탭 하단에 탭 컨텐츠로 표시할 질병/수술 또는 증상 목록들
   const tabArr =
     tabCnt === 1
       ? [
@@ -64,9 +82,17 @@ const PickMenuTab = ({ tabCnt, title, medicals, symptoms, idx, setType }) => {
             tabName: title,
             tabContent:
               title === '증상' ? (
-                <PickMenu dataList={symptomMenuList} />
+                <PickMenu
+                  type="symptom"
+                  dataList={symptomMenuList}
+                  setPickedSymptoms={setPickedSymptoms}
+                />
               ) : (
-                <PickMenu dataList={medicalMenuList} />
+                <PickMenu
+                  type="medical"
+                  dataList={medicalMenuList}
+                  setPickedMedicals={setPickedMedicals}
+                />
               ),
           },
         ]
@@ -74,19 +100,32 @@ const PickMenuTab = ({ tabCnt, title, medicals, symptoms, idx, setType }) => {
           {
             idx: 0,
             tabName: '질병/수술',
-            tabContent: <PickMenu dataList={medicalMenuList} />,
+            tabContent: (
+              <PickMenu
+                type="medical"
+                dataList={medicalMenuList}
+                setPickedMedicals={setPickedMedicals}
+              />
+            ),
           },
           {
             idx: 1,
             tabName: '증상',
-            tabContent: <PickMenu dataList={symptomMenuList} />,
+            tabContent: (
+              <PickMenu
+                type="symptom"
+                dataList={symptomMenuList}
+                setPickedSymptoms={setPickedSymptoms}
+              />
+            ),
           },
         ];
 
+  // useTabs Hooks 사용
   const { currentTab, setCurrentTab } = useTabs(idx || 0, tabArr);
 
   // 세부 항목 선택 모달창 띄우기
-  const [modalOpen, setModalOpen] = useState(false);
+  // const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <div>
@@ -95,20 +134,20 @@ const PickMenuTab = ({ tabCnt, title, medicals, symptoms, idx, setType }) => {
           <PickedItemList
             title={title}
             type={title === '증상' ? 'symptom' : 'medical'}
-            medicals={medicals}
-            symptoms={symptoms}
+            medicals={pickedMedicals}
+            symptoms={pickedSymptoms}
           />
         ) : (
           <>
             <PickedItemList
               title="질병/수술"
               type="medical"
-              medicals={medicals}
+              medicals={pickedMedicals}
             />
             <PickedItemList
               title="증상"
               type="symptom"
-              symptoms={symptoms}
+              symptoms={pickedSymptoms}
               color="light-pink"
             />
           </>

@@ -37,13 +37,17 @@ const PickMenuTabRight = styled(BoxRT25)`
   `}
 `;
 const PickMenuRowContainer = styled.section`
-  .subsubMenuOpen:last-child {
-    diaplay: block;
+  padding-bottom: 1em;
   }
 `;
 
 const PickMenuSubListContainer = styled(BoxRT50LB50)`
   display: none;
+`;
+
+const PickMenuDetailMenu = styled.span`
+  width: 42%;
+  font-size: 0.8em;
 `;
 
 // const TabBtn = styled.button`
@@ -84,6 +88,7 @@ export {
   PickMenuTabRight,
   PickMenuRowContainer,
   PickMenuSubListContainer,
+  PickMenuDetailMenu,
   TabContentContainer,
   BoxPickMenu,
 };
