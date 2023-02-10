@@ -54,6 +54,12 @@ public class FollowServiceImpl implements FollowService {
             throw new ErrorException(FollowErrorCode.ALREADY_FOLLOWING);
         } else if (!other.isOpen() && !followRepository.existsByFollowingUserAndFollowedUser(other, user)) {
             LOGGER.info("비공개 유저에게 팔로우를 신청했습니다.");
+
+            if (followWaitRepository.existsByRequesterAndReceiver(other, user)) {
+                LOGGER.info("이미 팔로우 요청 중입니다.");
+                throw new ErrorException(FollowErrorCode.ALREADY_FOLLOW_REQUEST);
+            }
+
             FollowWait followWait = FollowWait.builder()
                     .requester(user)
                     .receiver(other)
@@ -99,6 +105,14 @@ public class FollowServiceImpl implements FollowService {
         User user = common.getUserByUid(uid);
         User requester = common.getUserByUid(otherUid);
         LOGGER.info("[FollowService.allowUserRequest] 유저 정보 조회 완료");
+
+        if (!followWaitRepository.existsByRequesterAndReceiver(requester, user)) {
+            LOGGER.info("팔로우 요청이 없습니다.");
+            throw new ErrorException(FollowErrorCode.NOT_ALREADY_FOLLOW_REQUEST);
+        } else if (followRepository.existsByFollowingUserAndFollowedUser(requester, user)) {
+            LOGGER.info("이미 팔로워입니다.");
+            throw new ErrorException((FollowErrorCode.ALREADY_FOLLOWING));
+        }
 
         Follow follow = Follow.builder()
                 .followingUser(requester)
