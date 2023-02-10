@@ -9,8 +9,10 @@ const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
+const NOTIFICATION = '/notification';
 const SYMPTOM = '/symptom';
 const MEDICAL = '/medical';
+
 
 const api = {
   user: {
@@ -82,6 +84,9 @@ const api = {
   medical: {
     getMedicalList: () => URL + MEDICAL + '/list',
     getMedicalDetail: (medicalId) => URL + MEDICAL + medicalId,
+  },
+  notifications: {
+    getEvent: () => URL + NOTIFICATION + '/subscribe',
   },
 };
 

@@ -17,6 +17,7 @@ import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
 import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
 import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
 import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
+import NotificationPage from './pages/NotificationPage/NotificationPage';
 import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
 import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
