@@ -29,7 +29,7 @@ export const signUp = createAsyncThunk(
 
       localStorage.setItem('uid', userData.uid);
 
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000; // 30분
+      const JWT_EXPIRATION_TIME = 1 * 3600 * 1000; // 1시간
       setInterval(onSilentRefresh, JWT_EXPIRATION_TIME - 60000); // accessToken 만료되기 1분전 로그인 연장
 
       return saveData;
@@ -49,7 +49,7 @@ export const logIn = createAsyncThunk(
       console.log(resLogin);
 
       localStorage.setItem('uid', userData.uid);
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000; // 30분
+      const JWT_EXPIRATION_TIME = 1 * 3600 * 1000; // 1시간
       setInterval(onSilentRefresh, JWT_EXPIRATION_TIME - 60000); // accessToken 만료되기 1분전 로그인 연장
 
       return userData.uid;
