@@ -64,7 +64,7 @@ const PickedItemList = ({
   };
 
   return (
-    <FlexDiv justify="start" padding="0.3em 0">
+    <FlexDiv justify="start" padding="0.25em 0" height="2em">
       <PickedTitle>{title}</PickedTitle>
       <PickedDivision> | &nbsp; </PickedDivision>
       {type === 'medical' ? (

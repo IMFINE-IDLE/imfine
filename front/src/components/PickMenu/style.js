@@ -5,7 +5,7 @@ import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 
 const PickMenuTabContainer = styled(FlexDiv)`
   position: relative;
-  padding-bottom: 5em;
+  padding-bottom: 3em;
 `;
 
 const PickMenuTabLeft = styled(BoxRT25)`
