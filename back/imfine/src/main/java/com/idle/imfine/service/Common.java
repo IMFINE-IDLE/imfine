@@ -71,8 +71,8 @@ public class Common {
         ResponseCookie cookie = ResponseCookie.from(name, "Bearer%" + token)
                 .path("/")
                 .httpOnly(true)
-//                .secure(true)
-//                .sameSite("None")
+                .secure(true)
+                .sameSite("None")
                 .maxAge(maxAge)
                 .build();
         return cookie.toString();
