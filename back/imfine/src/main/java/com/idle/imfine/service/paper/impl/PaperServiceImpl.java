@@ -267,7 +267,13 @@ public class PaperServiceImpl implements PaperService {
                 paperList);
         List<Condition> papersCondition = conditionRepository.findPaperConditionByPapersList(paperList);
 
-        Map<Long, List<PaperHasSymptom>> map = paperHasSymptomRepository.findPaperHasSymptomByPaperInMap(paperList).stream().collect(Collectors.groupingBy(x -> (Long) x[0], Collectors.mapping(x ->  (PaperHasSymptom) x[1], Collectors.toList())));
+//
+        Map<Long, List<PaperHasSymptom>> map = paperHasSymptomRepository.findPaperHasSymptomByPaperInMap(
+                paperList).stream()
+                .collect(Collectors.groupingBy(
+                o -> ((Long) o[0]),
+                Collectors.mapping(o -> (PaperHasSymptom) o[1], Collectors.toList())
+        ));
         Set<Long> imageHasPaper = imageRepository.existsByPaperIds(paperList);
         List<Symptom> symptoms = symptomRepository.getSymptomByPapers(paperList);
 
@@ -293,7 +299,7 @@ public class PaperServiceImpl implements PaperService {
                                 .date(paper.getDate())
                                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                                 .open(paper.isOpen())
-                                .condition(String.valueOf(papersCondition.stream()
+                                .condition(papersCondition.size() == 0 ? "0" :String.valueOf(papersCondition.stream()
                                         .filter(condition -> {
                                             return condition.getDate() == paper.getDate();
                                         }).findFirst().orElseGet(Condition::new).getCondition()))
