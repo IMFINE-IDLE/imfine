@@ -118,10 +118,11 @@ public class DiaryServiceImpl implements DiaryService {
         List<ResponseSymptomDto> responseSymptomDtos = new ArrayList<>();
 
 
-        for (DiaryHasSymptom forEachHasSyomptom : diaryHasSymptoms) {
+        for (DiaryHasSymptom forEachHasSymptom : diaryHasSymptoms) {
             responseSymptomDtos.add(ResponseSymptomDto.builder()
-                    .id(forEachHasSyomptom.getId())
-                    .name(forEachHasSyomptom.getSymptom().getName())
+                    .id(forEachHasSymptom.getId())
+                    .symptomId(forEachHasSymptom.getSymptom().getId())
+                    .name(forEachHasSymptom.getSymptom().getName())
                     .build());
         }
         List<ResponseMedicalListDto> medicals = new ArrayList<>();
