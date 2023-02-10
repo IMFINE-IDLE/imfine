@@ -64,4 +64,13 @@ public class FileStore {
         int pos = originalFilename.lastIndexOf(".");
         return originalFilename.substring(pos + 1);
     }
+
+    public void deleteImages(List<String> removeImages) {
+        if (removeImages != null) {
+            for (String removeImage : removeImages) {
+                File removeFile = new File(getFullPath(removeImage));
+                boolean remove = removeFile.delete();
+            }
+        }
+    }
 }
