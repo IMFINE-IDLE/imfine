@@ -12,5 +12,6 @@ import lombok.ToString;
 @Getter
 @Builder
 public class ResponseMySearchList {
+    private long searchId;
     private String query;
 }

@@ -70,10 +70,11 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<ResponseMySearchList> showMySearhList(String uid) {
         User user = common.getUserByUid(uid);
-        List<Search> searches = searchRepository.findBySearcherId(user.getId());
+        List<Search> searches = searchRepository.findBySearcherIdOrderByCreatedAtDesc(user.getId());
         List<ResponseMySearchList> searchList = new ArrayList<>();
         for (Search s : searches) {
             ResponseMySearchList responseMySearchList = ResponseMySearchList.builder()
+                    .searchId(s.getId())
                     .query(s.getQuery())
                     .build();
             searchList.add(responseMySearchList);
