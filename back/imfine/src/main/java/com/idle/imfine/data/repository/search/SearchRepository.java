@@ -5,6 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SearchRepository extends JpaRepository<Search, Long> {
-    List<Search> findBySearcherId(long searcherId);
+    List<Search> findBySearcherIdOrderByCreatedAtDesc(long searcherId);
     void deleteByIdAndAndSearcherId(long id, long searcherId);
 }
