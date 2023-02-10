@@ -127,6 +127,7 @@ public class NotificationServiceImpl implements NotificationService {
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
         sendToClient(emitter, id, "EventStream Created. [userId=" + uid + "]");
+        LOGGER.info("EventStream Created {}", id);
 
         if (!lastEventId.isEmpty()) {
             Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByMemberId(String.valueOf(uid));
@@ -154,9 +155,11 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     public void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
-//        User user = userRepository.getByUid(uid);
+        //////
+        User user = userRepository.getById(recieverId);
         LOGGER.info("에바다3");
-        String id = String.valueOf(recieverId);
+        String id = String.valueOf(user.getUid());
+        LOGGER.info("id {}", id);
         Notification notification = saveNotification(senderId, recieverId, contenstsCodeId, contentsId, type);
 
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
@@ -166,6 +169,7 @@ public class NotificationServiceImpl implements NotificationService {
                     sendToClient(emitter, key, "알림이 왔습니다.");
                 }
         );
+        LOGGER.info("sseEmitter {}", sseEmitters.toString());
     }
 
     private Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {

@@ -56,6 +56,7 @@ public class SearchServiceImpl implements SearchService {
     private final SearchRepository searchRepository;
     @Override
     public void save(RequestSearchDto requestSearchDto) {
+        LOGGER.info("검색기록 저장 {}", requestSearchDto.getQuery());
         User user = common.getUserByUid(requestSearchDto.getSearcherId());
 
         Search search = Search.builder()
@@ -63,8 +64,7 @@ public class SearchServiceImpl implements SearchService {
                 .query(requestSearchDto.getQuery())
                 .build();
 
-        Search savedSearch = searchRepository.save(search);
-        System.out.println(savedSearch.toString());
+        searchRepository.save(search);
     }
     @Override
     public List<ResponseMySearchList> showMySearhList(String uid) {

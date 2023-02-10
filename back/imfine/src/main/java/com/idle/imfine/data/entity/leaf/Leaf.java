@@ -25,7 +25,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "leaf")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Leaf extends BaseCreatedEntity {
     @Id
