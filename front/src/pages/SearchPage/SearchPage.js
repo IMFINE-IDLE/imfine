@@ -19,6 +19,8 @@ import {
 } from './style';
 import TabBar from '../../components/TabBar/TabBar';
 import { Clover } from '../../components/common/Clover/Clover';
+import api from '../../api/api';
+import axios from 'axios';
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,7 +40,9 @@ function SearchPage() {
     dispatch(addSearchHistory(trimmedKeyword)); // 최근 검색어 저장
 
     try {
-      // query 가지고 서치 api 요청
+      // 첫 페이지 일기 검색
+      const res = await axios.get(api.search.search('paper', trimmedKeyword));
+      console.log(res.data.data.list);
     } catch (err) {
       console.log(err);
     }
@@ -52,8 +56,16 @@ function SearchPage() {
         <SearchPaper paperList={paperList} setPaperList={setPaperList} />
       ),
     },
-    { idx: 1, tabName: '일기장', tabContent: <SearchDiary /> },
-    { idx: 2, tabName: '유저', tabContent: <SearchUser /> },
+    {
+      idx: 1,
+      tabName: '일기장',
+      tabContent: <SearchDiary />,
+    },
+    {
+      idx: 2,
+      tabName: '유저',
+      tabContent: <SearchUser />,
+    },
   ];
 
   useEffect(() => {
