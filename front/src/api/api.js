@@ -9,8 +9,10 @@ const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
+const NOTIFICATION = '/notification';
 const SYMPTOM = '/symptom';
 const MEDICAL = '/medical';
+const SEARCH = '/search';
 
 const api = {
   user: {
@@ -39,6 +41,13 @@ const api = {
     commentDelete: (commentId) => URL + COMMENT + `/${commentId}`,
     commentLike: () => URL + COMMENT + '/like',
     commentLikeDelete: (commentId) => URL + COMMENT + `/like/${commentId}`,
+  },
+  search: {
+    search: (params, query) =>
+      URL + SEARCH + `/result?where=${params}&query=${query}`,
+    postSearchHistory: () => URL + SEARCH,
+    getSearchHistory: () => URL + SEARCH + '/mylist',
+    deleteSearchHistory: (keywordId) => URL + SEARCH + `/mylist/${keywordId}`,
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
@@ -86,6 +95,9 @@ const api = {
   medical: {
     getMedicalList: () => URL + MEDICAL + '/list',
     getMedicalDetail: (medicalId) => URL + MEDICAL + medicalId,
+  },
+  notifications: {
+    getEvent: () => URL + NOTIFICATION + '/subscribe',
   },
 };
 

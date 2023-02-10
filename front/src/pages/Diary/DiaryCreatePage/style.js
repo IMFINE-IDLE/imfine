@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
-import { TitleSmall, BtnSymptom } from '../../../components/PickSymptom/style';
+import { Btn } from '../../../components/common/Btn/Btn';
 
 const DiaryBoxGrad = styled(BoxGrad)`
   height: calc(100vh - var(--nav-height));
@@ -10,6 +10,7 @@ const DiaryCreateTitleText = styled.h2`
   color: var(--icon-color);
   font-size: 1em;
   font-weight: 700;
+  margin-bottom: 0.5em;
 `;
 
 const DiaryCreateInput = styled.input`
@@ -18,6 +19,7 @@ const DiaryCreateInput = styled.input`
   border-radius: 20px;
   outline: none;
   padding: 1em;
+  margin-bottom: 1.5em;
   width: 100%;
   height: 4.05em;
 `;
@@ -34,19 +36,8 @@ const DiaryCreateTextarea = styled.textarea`
   padding: 1em;
   height: 7em;
 `;
-
-const DiaryCreateTitleSmall = styled(TitleSmall)`
-  font-weight: 600;
-  color: var(--gray800-color);
-  display: inline;
-`;
-
-const DiaryCreateBtnSymptom = styled(BtnSymptom)`
-  ${({ color }) => css`
-    background-color: ${color
-      ? 'var(--' + color + '-color)'
-      : 'var(--main-color)'};
-  `}
+const SubmitBtn = styled.button`
+  ${Btn}
 `;
 
 export {
@@ -54,6 +45,5 @@ export {
   DiaryCreateTitleText,
   DiaryCreateInput,
   DiaryCreateTextarea,
-  DiaryCreateTitleSmall,
-  DiaryCreateBtnSymptom,
+  SubmitBtn,
 };

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function SearchDiary() {
+  const [diaryList, setDiaryList] = useState([]);
+
   return (
     <div>
       SearchDiary
