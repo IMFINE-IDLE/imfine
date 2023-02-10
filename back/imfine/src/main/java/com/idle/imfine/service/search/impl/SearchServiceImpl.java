@@ -27,8 +27,11 @@ import com.idle.imfine.data.repository.symptom.SymptomRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.errors.code.ConditionErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.search.SearchService;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,8 +62,6 @@ public class SearchServiceImpl implements SearchService {
     private final ImageRepository imageRepository;
     private final SymptomRepository symptomRepository;
     private final SearchRepository searchRepository;
-    private final UserHasMedicalRepository userHasMedicalRepository;
-    private final MedicalCodeRepository medicalCodeRepository;
     @Override
     public void save(RequestSearchDto requestSearchDto) {
         LOGGER.info("검색기록 저장 {}", requestSearchDto.getQuery());
@@ -123,22 +124,14 @@ public class SearchServiceImpl implements SearchService {
         List<SearchUserListResponseDto> userList = new ArrayList<>();
         for (User u : users) {
             int relation = common.getFollowRelation(user, u);
-            List<ResponseMedicalListDto> rml = new ArrayList<>();
-            List<UserHasMedical> userHasMedicals = userHasMedicalRepository.findAllByUser(u);
-            for (UserHasMedical uhm : userHasMedicals) {
-                ResponseMedicalListDto responseMedicalListDto = ResponseMedicalListDto.builder()
-                        .id(uhm.getId())
-                        .name(medicalCodeRepository.findById(uhm.getId()).getName())
-                        .build();
-                rml.add(responseMedicalListDto);
-            }
+            int condition = common.getTodayUserCondition(u);
 
             SearchUserListResponseDto responseDto = SearchUserListResponseDto.builder()
                     .id(u.getId())
                     .uid(u.getUid())
                     .name(u.getName())
                     .relation(relation)
-                    .medicalList(rml)
+                    .condition(condition)
                     .hasNext(users.hasNext())
                     .build();
             userList.add(responseDto);

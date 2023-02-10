@@ -20,5 +20,5 @@ public class SearchUserListResponseDto {
     private String name;
     private int relation;
     private boolean hasNext;
-    private List<ResponseMedicalListDto> medicalList;
+    private int condition;
 }
