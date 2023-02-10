@@ -9,9 +9,8 @@ import {
   SearchInput,
 } from './style';
 
-function SearchNavBar({ keyword, setKeyword, handleSearch }) {
+function SearchNavBar({ keyword, setKeyword, handleSearch, searchParams }) {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
   const currentQuery = searchParams.get('query');
 
   const handleKeyDown = (e) => {

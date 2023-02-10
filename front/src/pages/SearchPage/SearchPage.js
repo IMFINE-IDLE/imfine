@@ -86,6 +86,7 @@ function SearchPage() {
         keyword={keyword}
         setKeyword={setKeyword}
         handleSearch={handleSearch}
+        searchParams={searchParams}
       />
 
       {searchParams.get('query') ? (
