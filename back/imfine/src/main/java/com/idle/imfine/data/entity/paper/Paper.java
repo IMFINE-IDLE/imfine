@@ -63,7 +63,7 @@ public class Paper extends BaseCreatedEntity {
     @Column(nullable = false)
     private int declarationCount;
 
-    @Column(nullable = false, columnDefinition = "-1")
+    @Column(nullable = false, columnDefinition = "integer default -1")
     private int sentiment;
 
     @OneToMany(mappedBy = "paper",fetch = FetchType.LAZY)

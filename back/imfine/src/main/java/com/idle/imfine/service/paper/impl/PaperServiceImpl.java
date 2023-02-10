@@ -126,15 +126,17 @@ public class PaperServiceImpl implements PaperService {
         if (saveImage.size() != 0){
             imageRepository.saveAll(saveImage);
         }
-        Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
-            symptomRecord -> PaperHasSymptom.builder()
-                    .symptomId(symptomRecord.getSymptomId())
-                    .score(symptomRecord.getScore())
-                    .paper(savedPaper)
-                    .build()
-            );
+        if (requestPaperPostDto.getSymptoms().size() == 0) {
+            Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
+                symptomRecord -> PaperHasSymptom.builder()
+                        .symptomId(symptomRecord.getSymptomId())
+                        .score(symptomRecord.getScore())
+                        .paper(savedPaper)
+                        .build()
+                );
+            paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
+        }
         diary.setPaperCount(diary.getPaperCount() + 1);
-        paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
     }
 
     @Transactional
@@ -263,8 +265,7 @@ public class PaperServiceImpl implements PaperService {
         List<Paper> paperList = papers.getContent();
         Set<Long> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
                 paperList);
-        Map<Long, Integer> papersCondition = conditionRepository.findPaperConditionByPapers(
-                paperList);
+//        List<Condition> papersCondition = conditionRepository.findPaperConditionByPapers(paperList);
 
         Map<Long, List<PaperHasSymptom>> map = paperHasSymptomRepository.findPaperHasSymptomByPaperInMap(paperList).stream().collect(Collectors.groupingBy(x -> (Long) x[0], Collectors.mapping(x ->  (PaperHasSymptom) x[1], Collectors.toList())));
         Set<Long> imageHasPaper = imageRepository.existsByPaperIds(paperList);
@@ -289,7 +290,7 @@ public class PaperServiceImpl implements PaperService {
                                 .date(paper.getDate())
                                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                                 .open(paper.isOpen())
-                                .condition(papersCondition.get(paper.getId()) != null ? papersCondition.get(paper.getId()).toString() : "0")
+//                                .condition(papersCondition.stream().filter(condition -> ).findFirst())
                                 .image(imageHasPaper.contains(paper.getId()))
                                 .hasNext(papers.hasNext())
                                 .symptomList(

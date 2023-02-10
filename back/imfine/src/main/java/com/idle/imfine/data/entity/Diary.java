@@ -80,7 +80,7 @@ public class Diary extends BaseCreatedEntity{
     @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
     private List<Paper> papers;
 
-    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
     private List<DiaryHasSymptom> diaryHasSymptoms;
 
     public void paperAdd() {
