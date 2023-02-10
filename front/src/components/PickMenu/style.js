@@ -46,7 +46,7 @@ const PickMenuSubListContainer = styled(BoxRT50LB50)`
 `;
 
 const PickMenuDetailMenu = styled.span`
-  width: 42%;
+  width: 45%;
   font-size: 0.8em;
 `;
 

@@ -22,7 +22,7 @@ import {
  *
  */
 
-function PickMenu({ type, dataList, setPickedMedicals, setPickedSymptoms }) {
+function PickMenu({ type, dataList, ToggleSymptom }) {
   // dataList를 4개씩 잘라서 dataListModified에 넣기
   const dataListModified = [];
   // const rowCnt = Math.floor(dataList.length / 4);
@@ -93,13 +93,6 @@ function PickMenu({ type, dataList, setPickedMedicals, setPickedSymptoms }) {
     fetchDetailList(id);
   };
 
-  // 세부목록에서 질병/수술 또는 증상 하나 선택했을 때
-  const handleDetailMenuClick = (id, name) => {
-    if (type === 'medical') {
-      setPickedMedicals((prev) => [...prev, { id: 1, name: '질병1' }]);
-    }
-  };
-
   return (
     // <BoxPickMenu>
     //   {dataList?.map(({ id, name, image }) => (
@@ -132,15 +125,31 @@ function PickMenu({ type, dataList, setPickedMedicals, setPickedSymptoms }) {
             ))}
           </FlexDiv>
 
-          <PickMenuSubListContainer>
-            <FlexDiv wrap="wrap" gap="0.85em 0" padding="0 0 0 0.5em">
+          <PickMenuSubListContainer padding="1em 0">
+            <FlexDiv
+              justify="start"
+              wrap="wrap"
+              gap="0.85em 0"
+              padding="0 0 0 10%"
+            >
               {detailList?.map(({ id, name }) => (
-                <PickMenuDetailMenu key={id}>{name}</PickMenuDetailMenu>
+                <PickMenuDetailMenu
+                  key={id}
+                  onClick={() => ToggleSymptom(type, id, name)}
+                >
+                  {name}
+                </PickMenuDetailMenu>
               ))}
-              <PickMenuDetailMenu onClick={() => handleDetailMenuClick()}>
+              {/* <PickMenuDetailMenu
+                onClick={() => handleDetailMenuClick('medical', 1, 'test')}
+              >
                 질병하나
               </PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나이름이길어요</PickMenuDetailMenu>
+              <PickMenuDetailMenu
+                onClick={() => handleDetailMenuClick('symptom', 2, 'test')}
+              >
+                질병하나이름이길어요
+              </PickMenuDetailMenu>
               <PickMenuDetailMenu>질병둘</PickMenuDetailMenu>
               <PickMenuDetailMenu>질병하나세세</PickMenuDetailMenu>
               <PickMenuDetailMenu>질병하나꺅</PickMenuDetailMenu>
@@ -152,7 +161,7 @@ function PickMenu({ type, dataList, setPickedMedicals, setPickedSymptoms }) {
               <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
               <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
               <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu> */}
             </FlexDiv>
           </PickMenuSubListContainer>
         </PickMenuRowContainer>
