@@ -46,13 +46,14 @@ const PickMenuTab = ({ tabCnt, title, medicals, symptoms, idx, setType }) => {
   // 질병/수술 목록과 증상 목록을 서버에서 받아와서 스토어에 저장
   useEffect(() => {
     dispatch(fetchMedicalList());
-    // dispatch(fetchSymptomList());
+    dispatch(fetchSymptomList());
   }, []);
 
   // 스토어에서 질병/수술 목록과 증상 목록 가져오기
   const { medicalMenuList, symptomMenuList } = useSelector(
     (state) => state.menu
   );
+  // const { medicalMenuList } = useSelector((state) => state.menu);
 
   // 탭 하단에 표시할 질병/수술 또는 증상
   const tabArr =
