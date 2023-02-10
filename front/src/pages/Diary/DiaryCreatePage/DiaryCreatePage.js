@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
-import PickedItemList from '../../../components/PickedItemList/PickedItemList';
 import PickMenuTab from '../../../components/PickMenu/PickMenuTab';
 import { SubmitBtn } from '../DiaryCreateConfirmPage/style';
 
@@ -15,7 +13,7 @@ const DiaryCreatePage = () => {
     <>
       <NavBarBasic Back={true} Text="일기장 생성" />
 
-      <FlexDiv direction="column" padding="0 0 2.5em 0">
+      {/* <FlexDiv direction="column" padding="0 0 2.5em 0">
         <PickedItemList
           title="질병/수술"
           type="medical"
@@ -27,8 +25,15 @@ const DiaryCreatePage = () => {
           symptoms={symptomList}
           color="light-pink"
         />
-      </FlexDiv>
-      <PickMenuTab tabCnt={2} type="질병/수술" />
+      </FlexDiv> */}
+
+      <PickMenuTab
+        tabCnt={2}
+        title="질병/수술"
+        medicals={medicalList}
+        symptoms={symptomList}
+      />
+
       <SubmitBtn
         radius="20px"
         height="3.5em"

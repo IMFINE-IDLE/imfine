@@ -1,12 +1,6 @@
 import styled, { css } from 'styled-components';
-import { BoxLT50 } from '../common/BoxLT50/BoxLT50';
 import { BoxRT25 } from '../common/BoxRT25/BoxRT25';
-import { Btn } from '../common/Btn/Btn';
 import { FlexDiv } from '../common/FlexDiv/FlexDiv';
-
-// const TabContainer = styled(BoxLT50)`
-//   background-color: #ffffff;
-// `;
 
 const PickMenuTabContainer = styled(FlexDiv)`
   position: relative;
