@@ -7,27 +7,22 @@ import {
   RateSymptom,
 } from './style';
 
-function SymptomRating({ symptomList, values, state }) {
-  console.log('list', symptomList);
-  console.log('value', values);
+function SymptomRating({ symptomList }) {
   return (
     <BoxSymptomRating>
-      {values?.map((v, index) => {
-        console.log('idx', index);
+      {symptomList?.map(({ symptomId, symptomName, score }) => {
         return (
-          <DivSymptom key={index}>
-            <LabelSymptom>{symptomList[index].name}</LabelSymptom>
+          <DivSymptom key={symptomId}>
+            <LabelSymptom>{symptomName}</LabelSymptom>
             <RateSymptom>
               <ReactStars
                 count={5}
                 size={25}
-                onChange={(newScore) =>
-                  state(values.map((v, i) => (i === index ? newScore : v)))
-                }
-                value={v}
+                value={parseFloat(score / 2)}
                 activeColor="#A9D7D0"
+                // activeColor="#FDE3E3" light pink
                 isHalf={true}
-                edit={true}
+                edit={false}
                 char={'●'}
               />
             </RateSymptom>
