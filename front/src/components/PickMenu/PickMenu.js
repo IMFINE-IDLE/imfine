@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import api from '../../api/api';
 import { axiosInstance } from '../../api/axiosInstance';
 import { BoxRT50LB50 } from '../common/BoxRT50LB50/BoxRT50LB50';
@@ -34,6 +34,12 @@ function PickMenu({ type, dataList, ToggleSymptom }) {
   const subMenuSection = useRef([]);
   const clickedSubMenuSectionIdx = useRef(null);
   const clickedMenuId = useRef(null);
+
+  // useEffect(() => {
+  //   subMenuSection.current = [];
+  //   clickedSubMenuSectionIdx.current = null;
+  //   clickedMenuId.current = null;
+  // }, [type]);
 
   const [detailList, setDetailList] = useState(null);
 

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useTabs from '../../hooks/useTabs';
+import { SubmitBtn } from '../../pages/Diary/DiaryCreateConfirmPage/style';
 import {
   fetchMedicalList,
   fetchSymptomList,
@@ -34,9 +35,9 @@ const PickMenuTab = ({
   symptoms,
   setMedicals,
   setSymptoms,
-  apiFunc,
+  onSubmitBtnClick,
+  submitText,
   idx,
-  setType,
 }) => {
   // 임시 더미데이터
   // const sampleDataList = [
@@ -64,6 +65,8 @@ const PickMenuTab = ({
   // props로 받아온 setMedicals에 넣어주는 게 좋지 않을까...?
   const [pickedMedicals, setPickedMedicals] = useState(medicals || []);
   const [pickedSymptoms, setPickedSymptoms] = useState(symptoms || []);
+  // const [, updateState] = useState();
+  // const forceUpdate = useCallback(() => updateState({}), []);
 
   const dispatch = useDispatch();
   // 질병/수술 목록과 증상 목록을 서버에서 받아와서 스토어에 저장
@@ -193,10 +196,7 @@ const PickMenuTab = ({
           if (idx === 0)
             return (
               <PickMenuTabLeft
-                onClick={() => {
-                  setCurrentTab(idx);
-                  if (setType) setType(tab.tabName);
-                }}
+                onClick={() => setCurrentTab(idx)}
                 key={tab.tabName}
                 color={currentTab.idx === idx ? 'main' : 'light'}
                 fontColor={currentTab.idx === idx ? 'white' : null}
@@ -207,10 +207,7 @@ const PickMenuTab = ({
           else
             return (
               <PickMenuTabRight
-                onClick={() => {
-                  setCurrentTab(idx);
-                  if (setType) setType(tab.tabName);
-                }}
+                onClick={() => setCurrentTab(idx)}
                 key={tab.tabName}
                 color={currentTab.idx === idx ? 'main' : 'light'}
                 fontColor={currentTab.idx === idx ? 'white' : null}
@@ -222,6 +219,21 @@ const PickMenuTab = ({
       </PickMenuTabContainer>
 
       <TabContentContainer>{currentTab.tabContent}</TabContentContainer>
+      <FlexDiv>
+        <SubmitBtn
+          radius="20px"
+          width="calc(100% - 2em)"
+          height="3.5em"
+          type="submit"
+          onClick={() => {
+            setMedicals(pickedMedicals);
+            setSymptoms(pickedSymptoms);
+            onSubmitBtnClick();
+          }}
+        >
+          {submitText}
+        </SubmitBtn>
+      </FlexDiv>
     </div>
   );
 };
