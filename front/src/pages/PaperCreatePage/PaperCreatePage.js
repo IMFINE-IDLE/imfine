@@ -15,7 +15,7 @@ import {
 import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCreateHeader';
 import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropdown';
 import DateDropdown from '../../components/Paper/DateDropdown/DateDropdown';
-import SymptomRating from '../../components/Paper/SymptomRating/SymptomRating';
+import SymptomRating from '../../components/Paper/BoxSymptom/BoxSymptom';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
