@@ -88,12 +88,12 @@ function SearchPage() {
     {
       idx: 1,
       tabName: '일기장',
-      tabContent: <SearchDiary />,
+      tabContent: <SearchDiary searchParams={searchParams} />,
     },
     {
       idx: 2,
       tabName: '유저',
-      tabContent: <SearchUser />,
+      tabContent: <SearchUser searchParams={searchParams} />,
     },
   ];
 

@@ -36,7 +36,7 @@ const BoxInner = styled.div`
   position: fixed;
   top: calc(var(--nav-height) * 3);
   width: 90%;
-  padding: 2em 3em 6em;
+  padding: 2em 3em 17em;
   overflow-y: scroll;
   height: 100%;
   ::-webkit-scrollbar {
@@ -50,7 +50,7 @@ const BoxInner = styled.div`
   }
 
   ::-webkit-scrollbar-track {
-    background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
+    background: rgba(230, 240, 255, 0.2); /*스크롤바 뒷 배경 색상*/
     border-radius: 10px;
   }
 `;
@@ -61,6 +61,7 @@ const QueryItem = styled.div`
   align-items: center;
   margin-bottom: 1.5em;
   color: var(--icon-color);
+  gap: 0 1em;
 `;
 
 export {
