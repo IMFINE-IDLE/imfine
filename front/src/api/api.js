@@ -1,21 +1,30 @@
 // const URL = 'http://localhost:8080/api';
-const URL = 'http://i8A809.p.ssafy.io/api';
+const URL = 'https://i8a809.p.ssafy.io/api';
 
 const USERS = '/user';
+const CHECK = '/check';
 const DIARY = '/diary';
 const PAPER = '/paper';
 const COMMENT = '/comment';
 const BAMBOO = '/bamboo';
 const LEAF = '/leaf';
 const REPORT = '/report';
+const NOTIFICATION = '/notification';
+const SYMPTOM = '/symptom';
+const MEDICAL = '/medical';
+
 
 const api = {
   user: {
     signUp: () => URL + USERS + '/sign-up',
-    checkId: (params) => URL + USERS + `/check/uid/${params}`,
-    checkName: (params) => URL + USERS + `/check/name/${params}`,
-    checkEmail: (params) => URL + USERS + `/check/email/${params}`,
+    checkId: (params) => URL + USERS + CHECK + `/uid/${params}`,
+    checkName: (params) => URL + USERS + CHECK + `/name/${params}`,
+    checkEmail: (params) => URL + USERS + CHECK + `/email/${params}`,
+    verifyEmail: () => URL + USERS + CHECK + '/email/send',
+    confirmEmail: () => URL + USERS + CHECK + '/email/confirm',
     login: () => URL + USERS + '/sign-in',
+    logout: () => URL + USERS + '/sign-out',
+    refresh: () => URL + USERS + '/refresh',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },
@@ -25,6 +34,7 @@ const api = {
     paperReport: (paperId) => URL + REPORT + PAPER + `/${paperId}`,
     paperLikePost: () => URL + PAPER + '/like',
     paperLikeDelete: (paperId) => URL + PAPER + `/${paperId}/like`,
+    paperWrite: () => URL + PAPER,
   },
   comment: {
     commentCreate: () => URL + COMMENT,
@@ -64,6 +74,19 @@ const api = {
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
+    getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
+    getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
+  },
+  symptom: {
+    getSymptomList: () => URL + SYMPTOM + '/list',
+    getSymptomDetail: (symptomId) => URL + SYMPTOM + symptomId,
+  },
+  medical: {
+    getMedicalList: () => URL + MEDICAL + '/list',
+    getMedicalDetail: (medicalId) => URL + MEDICAL + medicalId,
+  },
+  notifications: {
+    getEvent: () => URL + NOTIFICATION + '/subscribe',
   },
 };
 

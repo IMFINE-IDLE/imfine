@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import api from '../../api/api';
-import BtnFloat from '../../components/BtnFloat/BtnFloat';
-import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import TabBar from '../../components/TabBar/TabBar';
-import ProfileInfo from '../../components/Profile/ProfileInfo/ProfileInfo';
-import Tabs from '../../components/Tabs/Tabs';
-import StatusCalendar from '../../components/StatusCalendar/StatusCalendar';
+import api from '../../../api/api';
+import BtnFloat from '../../../components/BtnFloat/BtnFloat';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import TabBar from '../../../components/TabBar/TabBar';
+import ProfileInfo from '../../../components/Profile/ProfileInfo/ProfileInfo';
+import Tabs from '../../../components/Tabs/Tabs';
+import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
+import ProfileUserDiary from '../../../components/Profile/ProfileUserDiary/ProfileUserDiary';
+import ProfileSubscribeDiary from '../../../components/Profile/ProfileSubscribeDiary/ProfileSubscribeDiary';
 // import { axiosInstance } from '../../api/axiosInstance';
 
 function ProfilePage() {
   const { uid } = useParams();
   const [userInfo, setUserInfo] = useState(null);
+  const isMine = Boolean(uid === localStorage.getItem('uid'));
 
   useEffect(() => {
     fetchUserInfo();
@@ -25,7 +28,7 @@ function ProfilePage() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
 
-      setUserInfo(response.data.data);
+      await setUserInfo(response.data.data);
     } catch (err) {
       console.error(err);
     }
@@ -38,8 +41,16 @@ function ProfilePage() {
       tabName: '달력',
       tabContent: <StatusCalendar uid={uid} />,
     },
-    { idx: 1, tabName: '일기장', tabContent: <span>일기장</span> },
-    { idx: 2, tabName: '구독중', tabContent: <span>구독중</span> },
+    {
+      idx: 1,
+      tabName: '일기장',
+      tabContent: <ProfileUserDiary uid={uid} isMine={isMine} />,
+    },
+    {
+      idx: 2,
+      tabName: '구독중',
+      tabContent: <ProfileSubscribeDiary uid={uid} />,
+    },
   ];
 
   if (!userInfo) return null;
@@ -48,6 +59,7 @@ function ProfilePage() {
     <div>
       <NavBarBasic />
       <ProfileInfo
+        isMine={isMine}
         condition={userInfo.condition}
         name={userInfo.name}
         open={userInfo.open}

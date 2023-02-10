@@ -1,23 +1,30 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
-import DiaryCreatePage from './pages/DiaryCreatePage/DiaryCreatePage';
 import LoginPage from './pages/LoginPage/LoginPage';
-import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
-import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
-import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
-import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
-import ProfilePage from './pages/ProfilePage/ProfilePage';
+import LogOutPage from './pages/LogOutPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
-import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
-import ProfileFollows from './components/Profile/ProfileFollows/ProfileFollows';
-import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
-import ProfileConfigPage from './pages/ProfileConfigPage/ProfileConfigPage';
-import ChangeName from './pages/ChangeName/ChangeName';
-import ChangeSymptom from './pages/ChangeSymptom/ChangeSymptom';
-import DiaryDetailPage from './pages/DiaryDetailPage/DiaryDetailPage';
-import DiaryFeedPage from './pages/DiaryFeedPage/DiaryFeedPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
+import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import SearchPage from './pages/SearchPage/SearchPage';
+import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
+import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
+import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
+import DiaryModifyPage from './pages/Diary/DiaryModifyPage/DiaryModifyPage';
+import DiaryAddSymptomPage from './pages/Diary/DiaryAddSymptomPage/DiaryAddSymptomPage';
+import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
+import PaperDetailPage from './pages/PaperDetailPage/PaperDetailPage';
 import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
+import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
+import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
+import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
+import NotificationPage from './pages/NotificationPage/NotificationPage';
+import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
+import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
+import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
+import ChangeName from './pages/Profile/ChangeName/ChangeName';
+import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
+import { PrivateRoute, PublicRoute } from './Route/Route';
+import axios from 'axios';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -29,34 +36,196 @@ import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
 //   }s
 // `;
 
+axios.defaults.withCredentials = true;
+
 function App() {
   return (
     // <Wrapper>
     <Routes>
-      <Route index element={<PaperFeedPage />} />
-      {/* <Route index element={<Login />} /> */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/home" element={<PaperFeedPage />} />
-      <Route path="/search" element={<SearchPage />} />
+      <Route
+        index
+        element={
+          <PrivateRoute>
+            <PaperFeedPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/logout"
+        element={
+          <PrivateRoute>
+            <LogOutPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <SignUpPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/home"
+        element={
+          <PrivateRoute>
+            <PaperFeedPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <PrivateRoute>
+            <SearchPage />
+          </PrivateRoute>
+        }
+      />
       <Route path="/diary">
-        <Route index element={<DiaryFeedPage />} />
-        <Route path="create" element={<DiaryCreatePage />} />
-        <Route path=":diaryId" element={<DiaryDetailPage />} />
+        <Route
+          index
+          element={
+            <PrivateRoute>
+              <DiaryFeedPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path=":diaryId"
+          element={
+            <PrivateRoute>
+              <DiaryDetailPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="create"
+          element={
+            <PrivateRoute>
+              <DiaryCreatePage />
+            </PrivateRoute>
+          }
+        />
+        <Route path=":diaryId/modify">
+          <Route
+            index
+            element={
+              <PrivateRoute>
+                <DiaryModifyPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="symptom"
+            element={
+              <PrivateRoute>
+                <DiaryAddSymptomPage />
+              </PrivateRoute>
+            }
+          />
+        </Route>
       </Route>
       <Route path="/paper">
-        <Route path="/paper/create" element={<PaperCreatePage />} />
-        <Route path="/paper/:paperId" element={<PaperDetailPage />} />
-        <Route path="/paper/symptom" element={<PaperSymptomPage />} />
+        <Route
+          path="/paper/create"
+          element={
+            <PrivateRoute>
+              <PaperCreatePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/paper/:paperId"
+          element={
+            <PrivateRoute>
+              <PaperDetailPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/paper/symptom"
+          element={
+            <PrivateRoute>
+              <PaperSymptomPage />
+            </PrivateRoute>
+          }
+        />
       </Route>
-      <Route path="/bamboo" element={<BambooFeedPage />}></Route>
-      <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
-      <Route path="/bamboo/:bambooId" element={<BambooDetailPage />}></Route>
-      <Route path="/profile/:uid" element={<ProfilePage />}></Route>
-      <Route path="/profile/:uid/follows" element={<ProfileFollows />} />
-      <Route path="/profile-config" element={<ProfileConfigPage />} />
-      <Route path="/change-name" element={<ChangeName />} />
-      <Route path="/change-symptom" element={<ChangeSymptom />} />
+      <Route
+        path="/bamboo"
+        element={
+          <PrivateRoute>
+            <BambooFeedPage />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route
+        path="/bamboo/create"
+        element={
+          <PrivateRoute>
+            <BambooCreatePage />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route
+        path="/bamboo/:bambooId"
+        element={
+          <PrivateRoute>
+            <BambooDetailPage />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route path="/profile/:uid">
+        <Route
+          index
+          element={
+            <PrivateRoute>
+              <ProfilePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="follows"
+          element={
+            <PrivateRoute>
+              <ProfileFollowsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="config"
+          element={
+            <PrivateRoute>
+              <ProfileConfigPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="change-name"
+          element={
+            <PrivateRoute>
+              <ChangeName />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="change-symptom"
+          element={
+            <PrivateRoute>
+              <ChangeSymptom />
+            </PrivateRoute>
+          }
+        />
+      </Route>
     </Routes>
     // </Wrapper>
   );

@@ -1,56 +1,53 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../../api/api';
-import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import { BoxSymptom, BoxToggle } from '../../components/PickSymptom/style';
-import { SubmitBtn } from '../ChangeName/style';
+import api from '../../../api/api';
+import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import PickedItemList from '../../../components/PickedItemList/PickedItemList';
+import { BoxToggle } from '../../../components/PickSymptom/style';
 import {
   ToggleContainer,
   ToggleText,
   ToggleWrapper,
   Toggle,
   ToggleLabel,
-} from '../ProfileConfigPage/style';
+} from '../../Profile/ProfileConfigPage/style';
 import {
   DiaryBoxGrad,
   DiaryCreateTitleText,
   DiaryCreateInput,
   DiaryCreateTextarea,
-  DiaryCreateTitleSmall,
-  DiaryCreateBtnSymptom,
+  SubmitBtn,
 } from './style';
 
 function DiaryCreatePage() {
   // 임시. 나중에 앞 페이지에서 프롭스로 받아올 것
   // const {medicalPick, symptomPickList} = useLocation();
-  const medicalPick = { id: 1, name: '질병명' };
-  const symptomPickList = [
+  const medicals = [{ id: 1, name: '질병명' }];
+  const symptoms = [
     { id: 1, name: '증상1' },
     { id: 2, name: '증상2' },
   ];
-
-  // const [title, setTitle] = useState('');
-  // const [description, setDescription] = useState('');
-  const navigate = useNavigate();
   const [diaryInfo, setDiaryInfo] = useState({
     title: '',
     description: '',
   });
   const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
 
+  // 일기장 생성 요청
   const fetchPostDiary = async () => {
     try {
       const res = await axios.post(
         api.diary.postDiary(),
         {
-          medicalId: medicalPick.id,
+          medicalId: medicals.id,
           open: isOpen,
           title: diaryInfo.title,
           description: diaryInfo.description,
           image: '1',
-          symptom: symptomPickList.map((symptom) => symptom.id),
+          symptom: symptoms?.map((symptom) => symptom.id),
         },
         { headers: { Authorization: localStorage.getItem('accessToken') } }
       );
@@ -61,6 +58,7 @@ function DiaryCreatePage() {
     }
   };
 
+  // 입력값을 diaryInfo state에 저장
   const handleDiaryInfoChange = (e) => {
     console.log(e.target.name);
     setDiaryInfo({
@@ -82,7 +80,7 @@ function DiaryCreatePage() {
 
   return (
     <>
-      <NavBarBasic Back={true} Text="일기장 생성" />
+      <NavBarBasic Back={true} Text="일기장 생성" BackgroundColor={'main'} />
       <DiaryBoxGrad radius="0" padding="2em">
         <form
           onSubmit={(e) => {
@@ -107,22 +105,25 @@ function DiaryCreatePage() {
             maxLength={100}
             onChange={handleDiaryInfoChange}
           ></DiaryCreateTextarea>
-          <BoxSymptom>
-            <DiaryCreateTitleSmall>
-              질병/수술 &nbsp; | &nbsp;
-            </DiaryCreateTitleSmall>
-            <DiaryCreateBtnSymptom>{medicalPick.name}</DiaryCreateBtnSymptom>
-          </BoxSymptom>
-          <BoxSymptom>
-            <DiaryCreateTitleSmall>증상 &nbsp; | &nbsp;</DiaryCreateTitleSmall>
-            {symptomPickList.map((symptom) => (
-              <DiaryCreateBtnSymptom color="light-pink" key={symptom.id}>
-                {symptom.name}
-              </DiaryCreateBtnSymptom>
-            ))}
-          </BoxSymptom>
+
+          <FlexDiv direction="column" padding="1em 0">
+            <PickedItemList
+              title="질병/수술"
+              type="medical"
+              medicals={medicals}
+            />
+            <PickedItemList
+              title="증상"
+              type="symptom"
+              symptoms={symptoms}
+              color="light-pink"
+            />
+          </FlexDiv>
+
+          {/* <img /> */}
+
           <BoxToggle>
-            <span>계정 공개/비공개 설정하기</span>
+            <span>일기장 공개/비공개 설정하기</span>
             <ToggleContainer>
               <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
               <ToggleWrapper isOpen={isOpen}>

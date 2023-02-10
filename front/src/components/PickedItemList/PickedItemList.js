@@ -29,7 +29,12 @@ const PickedItemList = ({
   symptoms,
   color,
   canModify,
+  // 아래로 필요한 함수나 값 넘겨서 사용
   ToggleSymptom,
+  deleteAllRecord,
+  handleDeleteAllRecord,
+  textPointer,
+  onClickUserName,
 }) => {
   return (
     <FlexDiv justify="start" padding="0.3em 0">
@@ -68,7 +73,10 @@ const PickedItemList = ({
               <PickedIconBtn
                 color={color}
                 pointer={canModify ? true : false}
-                onClick={() => ToggleSymptom('symptom', id, name)}
+                onClick={() => {
+                  if (deleteAllRecord) handleDeleteAllRecord(id, name);
+                  else ToggleSymptom('symptom', id, name);
+                }}
                 key={id}
               >
                 {name}
@@ -84,7 +92,9 @@ const PickedItemList = ({
           )}
         </PickedContentWrapper>
       ) : (
-        <PickedText>{text}</PickedText>
+        <PickedText onClick={onClickUserName} textPointer={textPointer}>
+          {text}
+        </PickedText>
       )}
     </FlexDiv>
   );

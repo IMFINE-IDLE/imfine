@@ -6,7 +6,10 @@ import { iconStyle, GlobalStyle } from './styles/globalStyle';
 import { IconContext } from 'react-icons';
 import { Provider } from 'react-redux';
 import store, { persistor } from './store';
+import axios from 'axios';
 import { PersistGate } from 'redux-persist/integration/react';
+
+axios.defaults.withCredentials = true;
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

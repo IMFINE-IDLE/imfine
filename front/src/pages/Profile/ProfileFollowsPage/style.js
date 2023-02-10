@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { BoxGrad } from '../../common/BoxGrad/BoxGrad';
-import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
+import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
+import { BoxNoShad } from '../../../components/common/BoxNoShad/BoxNoShad';
 
 const ProfileFollowContainer = styled(BoxGrad)`
   background: linear-gradient(#ffffff, var(--main-color) 80%);

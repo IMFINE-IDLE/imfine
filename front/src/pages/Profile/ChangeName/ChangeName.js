@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
-import { InputGray } from '../../components/common/InputGray/InputGray';
-import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
+import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
+import { InputGray } from '../../../components/common/InputGray/InputGray';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import { TitleText, NicknameInput, SubmitBtn } from './style';
 
 const ChangeName = () => {
