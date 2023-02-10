@@ -88,7 +88,7 @@ function PaperCreatePage() {
       console.log('diaryInfo', diary.diaryHasSymptoms);
       setSymptoms(
         diary.diaryHasSymptoms.map((item) => ({
-          symptomId: item.id,
+          symptomId: item.symptomId,
           name: item.name,
         }))
       );
@@ -114,13 +114,23 @@ function PaperCreatePage() {
       symptomId: item.symptomId,
       score: scores[index],
     }));
-    console.log('result', symptomScore);
-    console.log('filesdata', files);
+
+    data.append('diaryId', diaryId);
     data.append('contents', value);
     data.append('open', isOpen);
     data.append('date', calendar);
-    data.append('images', files);
+
+    //data.append('images', files);
+    // files.forEach((f, index) => {
+    //   data.append('images', f, `images_${index}.png`);
+    // });
+    for (let i = 0; i < files.length; i++) {
+      const blob = await new Blob([files[i]], { type: files[i].type });
+      data.append(`images[${i}]`, blob, files[i].name);
+    }
+
     data.append('symptoms', JSON.stringify(symptomScore));
+    //data.append('symptoms', symptomScore);
     // (key: contents) value : 일기장내용
     // (key: open) isOpen: 공개/비공개 여부
     // (key: date) calendar: 날짜
@@ -130,7 +140,6 @@ function PaperCreatePage() {
     try {
       const config = {
         headers: {
-          Authorization: localStorage.getItem('accessToken'),
           'Content-Type': 'multipart/form-data',
         },
       };
@@ -139,10 +148,10 @@ function PaperCreatePage() {
       console.log('upload success', res);
 
       // 업로드성공하면 일기상세화면으로 넘어가야해용
-      // 일단 뒤로가기 설정해놓음
-      navigate(-1);
+      // 일단 알림
+      alert('업로드성공..');
     } catch (err) {
-      console.log('err', err);
+      console.error(err);
     }
   };
 
