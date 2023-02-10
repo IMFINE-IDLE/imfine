@@ -24,7 +24,6 @@ import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPa
 import ChangeName from './pages/Profile/ChangeName/ChangeName';
 import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
 import { PrivateRoute, PublicRoute } from './Route/Route';
-import axios from 'axios';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -35,8 +34,6 @@ import axios from 'axios';
 //     background: none;
 //   }s
 // `;
-
-axios.defaults.withCredentials = true;
 
 function App() {
   return (
