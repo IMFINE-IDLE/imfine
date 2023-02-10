@@ -51,6 +51,16 @@ function SearchPage() {
     }
   };
 
+  // 최근 검색어 저장
+  const postSearchHistory = async () => {
+    try {
+      const res = await axios.get(api.search.postSearchHistory());
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // 최근 검색어 불러오기
   const getSearchHistory = async () => {
     try {
