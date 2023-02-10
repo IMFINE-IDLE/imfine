@@ -140,7 +140,6 @@ function PaperCreatePage() {
     try {
       const config = {
         headers: {
-          Authorization: localStorage.getItem('accessToken'),
           'Content-Type': 'multipart/form-data',
         },
       };
