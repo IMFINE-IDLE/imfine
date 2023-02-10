@@ -2,7 +2,7 @@ import React from 'react';
 import IconSymptom from '../common/IconSymptom/IconSymptom';
 import { BoxPickMenu } from './style';
 
-function PickMenu({ type, dataList, setIsOpen, ToggleSymptom }) {
+function PickMenu({ tabCnt, type, dataList, setIsOpen, ToggleSymptom }) {
   return (
     <BoxPickMenu>
       {dataList.map(({ id, name, image }) => (

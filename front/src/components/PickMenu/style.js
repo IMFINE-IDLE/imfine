@@ -1,4 +1,66 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { BoxLT50 } from '../common/BoxLT50/BoxLT50';
+import { BoxRT25 } from '../common/BoxRT25/BoxRT25';
+import { Btn } from '../common/Btn/Btn';
+import { FlexDiv } from '../common/FlexDiv/FlexDiv';
+
+// const TabContainer = styled(BoxLT50)`
+//   background-color: #ffffff;
+// `;
+
+const PickMenuTabContainer = styled(FlexDiv)`
+  position: relative;
+  padding-bottom: 5em;
+`;
+
+const PickMenuTabLeft = styled(BoxRT25)`
+  ${({ fontColor }) => css`
+    position: absolute;
+    right: 50%;
+    z-index: 1;
+    width: 50%;
+    height: 3.125em;
+    line-height: 3.125em;
+    padding: 0;
+    text-align: center;
+    color: ${fontColor || 'var(--gray800-color)'};
+    font-weight: 700;
+  `}
+`;
+
+const PickMenuTabRight = styled(BoxRT25)`
+  ${({ fontColor }) => css`
+    position: absolute;
+    right: 0;
+    width: calc(50% + 25px);
+    height: 3.125em;
+    line-height: 3.125em;
+    padding: 0;
+    text-align: center;
+    color: ${fontColor || 'var(--gray800-color)'};
+    font-weight: 700;
+  `}
+`;
+
+// const TabBtn = styled.button`
+//   ${Btn}
+//   ${({ width, height, fontColor }) => css`
+//     width: ${width || '8.75em'};
+//     height: ${height || '3.125em'};
+//     padding: 0;
+//     color: ${fontColor || 'var(--gray800-color)'};
+//     font-weight: 700;
+//     position: relative;
+//     top: ${height
+//       ? 'calc(-1em - ' + height.split('em')[0] / 2 + 'em)'
+//       : '-2.5625em'};
+//   `}
+// `;
+
+const TabContentContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const BoxPickMenu = styled.div`
   width: 100%;
@@ -12,4 +74,10 @@ const BoxPickMenu = styled.div`
   /* align-items: center; */
 `;
 
-export { BoxPickMenu };
+export {
+  PickMenuTabContainer,
+  PickMenuTabLeft,
+  PickMenuTabRight,
+  TabContentContainer,
+  BoxPickMenu,
+};
