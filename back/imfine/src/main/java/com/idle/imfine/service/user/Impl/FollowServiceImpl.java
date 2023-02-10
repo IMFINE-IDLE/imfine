@@ -111,6 +111,7 @@ public class FollowServiceImpl implements FollowService {
             throw new ErrorException(FollowErrorCode.NOT_ALREADY_FOLLOW_REQUEST);
         } else if (followRepository.existsByFollowingUserAndFollowedUser(requester, user)) {
             LOGGER.info("[allowUserRequest] 이미 팔로워입니다.");
+            followWaitRepository.deleteByRequesterAndReceiver(requester, user);
             throw new ErrorException((FollowErrorCode.ALREADY_FOLLOWING));
         }
 
