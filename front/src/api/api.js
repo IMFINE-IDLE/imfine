@@ -45,6 +45,9 @@ const api = {
   search: {
     search: (params, query) =>
       URL + SEARCH + `/result?where=${params}&query=${query}`,
+    postSearchHistory: () => URL + SEARCH,
+    getSearchHistory: () => URL + SEARCH + '/mylist',
+    deleteSearchHistory: (keywordId) => URL + SEARCH + `/mylist/${keywordId}`,
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
