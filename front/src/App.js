@@ -22,7 +22,7 @@ import ChangeName from './pages/Profile/ChangeName/ChangeName';
 import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
 import LogOutPage from './pages/LogOutPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
-import instance from './api/instance';
+import axios from 'axios';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -34,8 +34,7 @@ import instance from './api/instance';
 //   }s
 // `;
 
-instance.defaults.headers.common['X-AUTH-TOKEN'] =
-  localStorage.getItem('accessToken');
+axios.defaults.withCredentials = true;
 
 function App() {
   return (
@@ -57,7 +56,14 @@ function App() {
           </PublicRoute>
         }
       />
-      <Route path="/logout" element={<LogOutPage />} />
+      <Route
+        path="/logout"
+        element={
+          <PrivateRoute>
+            <LogOutPage />
+          </PrivateRoute>
+        }
+      />
       <Route
         path="/signup"
         element={
@@ -74,93 +80,37 @@ function App() {
           </PrivateRoute>
         }
       />
-      <Route path="/search" element={<SearchPage />} />
+      <Route
+        path="/search"
+        element={
+          <PrivateRoute>
+            <SearchPage />
+          </PrivateRoute>
+        }
+      />
       <Route path="/diary">
         <Route index element={<DiaryFeedPage />} />
-        <Route
-          path=":diaryId" element={<DiaryDetailPage />} />
-        <Route path="create"
-          element={
-            <PrivateRoute>
-              <DiaryCreatePage />} />
+        <Route path=":diaryId" element={<DiaryDetailPage />} />
+        <Route path="create" element={<DiaryCreatePage />} />
         <Route path=":diaryId/modify">
           <Route index element={<DiaryModifyPage />} />
-          <Route path="symptom" element={<DiaryAddSymptomPage />
-            </PrivateRoute>
-          }
-        />
+          <Route path="symptom" element={<DiaryAddSymptomPage />} />
         </Route>
       </Route>
       <Route path="/paper">
-        <Route
-          path="/paper/create"
-          element={
-            <PrivateRoute>
-              <PaperCreatePage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/paper/:paperId"
-          element={
-            <PrivateRoute>
-              <PaperDetailPage />
-            </PrivateRoute>
-          }
-        />
+        <Route path="/paper/create" element={<PaperCreatePage />} />
+        <Route path="/paper/:paperId" element={<PaperDetailPage />} />
         <Route path="/paper/symptom" element={<PaperSymptomPage />} />
       </Route>
-      <Route
-        path="/bamboo"
-        element={
-          <PrivateRoute>
-            <BambooFeedPage />
-          </PrivateRoute>
-        }
-      ></Route>
-      <Route
-        path="/bamboo/create"
-        element={
-          <PrivateRoute>
-            <BambooCreatePage />
-          </PrivateRoute>
-        }
-      ></Route>
-      <Route
-        path="/bamboo/:bambooId"
-        element={
-          <PrivateRoute>
-            <BambooDetailPage />
-          </PrivateRoute>
-        }
-      ></Route>
-      <Route
-        path="/profile/:uid">
-        <Route index
-        element={
-          <PrivateRoute>
-            <ProfilePage />
-          </PrivateRoute>
-        }
-       />
-        <Route
-          path="follows"
-          element={
-            <PrivateRoute>
-              <ProfileFollowsPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="config"
-          element={
-            <PrivateRoute>
-              <ProfileConfigPage />} />
+      <Route path="/bamboo" element={<BambooFeedPage />}></Route>
+      <Route path="/bamboo/create" element={<BambooCreatePage />}></Route>
+      <Route path="/bamboo/:bambooId" element={<BambooDetailPage />}></Route>
+      <Route path="/profile/:uid">
+        <Route index element={<ProfilePage />} />
+        <Route path="follows" element={<ProfileFollowsPage />} />
+        <Route path="config" element={<ProfileConfigPage />} />
         <Route path="change-name" element={<ChangeName />} />
-        <Route path="change-symptom" element={<ChangeSymptom />
-            </PrivateRoute>
-          }
-        />
+        <Route path="change-symptom" element={<ChangeSymptom />} />
       </Route>
     </Routes>
     // </Wrapper>
