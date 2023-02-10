@@ -9,6 +9,7 @@ import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.UserHasMedical;
 import com.idle.imfine.data.entity.medical.MedicalCode;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
+import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.data.repository.user.FollowWaitRepository;
 import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
@@ -42,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private final Common common;
     private final UserRepository userRepository;
     private final UserHasMedicalRepository userHasMedicalRepository;
+    private final FollowRepository followRepository;
     private final FollowWaitRepository followWaitRepository;
     private final MedicalCodeRepository medicalCodeRepository;
     private final PasswordEncoder passwordEncoder;
@@ -206,8 +208,19 @@ public class UserServiceImpl implements UserService {
     public void withdrawal(String uid) {
         LOGGER.info("[withdrawal] 회뤈탈퇴 시도");
         User user = common.getUserByUid(uid);
-
         LOGGER.info("[withdrawal] 회뤈 정보 조회 성공 {}", user.getUid());
+
+        List<User> followingList = followRepository.findAllFollowingUserByFollowedUser(user);
+        for (User following : followingList) {
+            common.decreaseFollowingCount(following);
+        }
+        LOGGER.info("[withdrawal] 팔로워들의 팔로잉 수 감소 완료");
+
+        List<User> followedList = followRepository.findAllFollowedUserByFollowingUser(user);
+        for (User follower : followedList) {
+            common.decreaseFollowerCount(follower);
+        }
+        LOGGER.info("[withdrawal] 팔로잉들의 팔로워 수 감소 완료");
 
         userRepository.deleteById(user.getId());
         LOGGER.info("[withdrawal] 회뤈탈퇴 성공");
