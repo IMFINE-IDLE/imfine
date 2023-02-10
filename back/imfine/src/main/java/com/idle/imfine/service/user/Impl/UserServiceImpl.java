@@ -1,13 +1,7 @@
 package com.idle.imfine.service.user.Impl;
 
 import com.idle.imfine.config.security.JwtTokenProvider;
-import com.idle.imfine.data.dto.user.request.ChangePasswordRequestDto;
-import com.idle.imfine.data.dto.user.request.InitProfileRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserMedicalListRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserNameRequestDto;
-import com.idle.imfine.data.dto.user.request.ModifyUserOepnRequestDto;
-import com.idle.imfine.data.dto.user.request.SignInRequestDto;
-import com.idle.imfine.data.dto.user.request.SignUpRequestDto;
+import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
 import com.idle.imfine.data.entity.FollowWait;
@@ -27,16 +21,18 @@ import com.idle.imfine.service.Common;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
-
-import java.util.*;
-import java.util.regex.Pattern;
-import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.servlet.http.Cookie;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public HttpHeaders signUp(SignUpRequestDto requestDto) {
-        LOGGER.info("[UserService.signUp] 회원 가입 정보 전달");
+        LOGGER.info("[signUp] 회원 가입 정보 전달");
 
         checkUidDuplicate(requestDto.getUid());
         checkNameDuplicate(requestDto.getName());
@@ -69,37 +65,37 @@ public class UserServiceImpl implements UserService {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
-        LOGGER.info("[UserService.signUp] 회원 토큰 생성");
+        LOGGER.info("[signUp] 회원 토큰 생성");
         String accessToken = jwtTokenProvider.createAccessToken(user.getUid(), user.getRoles());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getUid(), user.getRoles());
-        LOGGER.info("[UserService.signUp] 회원 토큰 생성 완료");
+        LOGGER.info("[signUp] 회원 토큰 생성 완료");
 
         user.updateRefreshToken(refreshToken);
         userRepository.save(user);
-        LOGGER.info("[UserService.signUp] 회원 가입 완료");
+        LOGGER.info("[signUp] 회원 가입 완료");
 
         return common.createTokenHeader(accessToken, refreshToken);
     }
 
     @Override
     public HttpHeaders signIn(SignInRequestDto requestDto) {
-        LOGGER.info("[UserService.signIn] 회원 정보 요청");
+        LOGGER.info("[signIn] 회원 정보 요청");
         User user = common.getUserByUid(requestDto.getUid());
 
-        LOGGER.info("[UserService.signIn] 패스워드 비교 수행");
+        LOGGER.info("[signIn] 패스워드 비교 수행");
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
             throw new ErrorException(UserErrorCode.USER_WRONG_PASSWORD);
         }
-        LOGGER.info("[UserService.signIn] 패스워드 일치");
+        LOGGER.info("[signIn] 패스워드 일치");
 
-        LOGGER.info("[UserService.signIn] 회원 토큰 생성");
+        LOGGER.info("[signIn] 회원 토큰 생성");
         String accessToken = jwtTokenProvider.createAccessToken(user.getUid(), user.getRoles());
         String refreshToken = jwtTokenProvider.createRefreshToken(user.getUid(), user.getRoles());
-        LOGGER.info("[UserService.signIn] 회원 토큰 생성 완료");
+        LOGGER.info("[signIn] 회원 토큰 생성 완료");
 
         user.updateRefreshToken(refreshToken);
         userRepository.save(user);
-        LOGGER.info("[UserService.signIn] refreshToken 저장 완료");
+        LOGGER.info("[signIn] refreshToken 저장 완료");
 
         return common.createTokenHeader(accessToken, refreshToken);
     }
@@ -124,15 +120,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public HttpHeaders signOut(String uid) {
-        LOGGER.info("[UserService.signOut] 로그아웃 시도");
+        LOGGER.info("[signOut] 로그아웃 시도");
         User user = common.getUserByUid(uid);
 
-        LOGGER.info("[UserService.signOut] refresh token 제거 시도");
+        LOGGER.info("[signOut] refresh token 제거 시도");
         user.updateRefreshToken(null);
-        LOGGER.info("[UserService.signOut] refresh token 제거 완료");
+        LOGGER.info("[signOut] refresh token 제거 완료");
 
         userRepository.save(user);
-        LOGGER.info("[UserService.signOut] 로그아웃 성공");
+        LOGGER.info("[signOut] 로그아웃 성공");
 
         return common.deleteTokenHeader();
     }
@@ -183,38 +179,38 @@ public class UserServiceImpl implements UserService {
     }
 
     public void checkUidDuplicate(String uid) {
-        LOGGER.info("[UserService.checkUidDuplicate] 회원 uid 중복 검사 시작");
+        LOGGER.info("[checkUidDuplicate] 회원 uid 중복 검사 시작");
         if (userRepository.existsByUid(uid)) {
             throw new ErrorException(UserErrorCode.USER_DUPLICATE_UID);
         }
-        LOGGER.info("[UserService.checkUidDuplicate] 회원 uid 중복 검사 완료");
+        LOGGER.info("[checkUidDuplicate] 회원 uid 중복 검사 완료");
     }
 
     public void checkNameDuplicate(String name) {
-        LOGGER.info("[UserService.checkNameDuplicate] 회원 name 중복 검사 시작");
+        LOGGER.info("[checkNameDuplicate] 회원 name 중복 검사 시작");
         if (userRepository.existsByName(name)) {
             throw new ErrorException(UserErrorCode.USER_DUPLICATE_NAME);
         }
-        LOGGER.info("[UserService.checkNameDuplicate] 회원 name 중복 검사 완료");
+        LOGGER.info("[checkNameDuplicate] 회원 name 중복 검사 완료");
     }
 
     public void checkEmailDuplicate(String email) {
-        LOGGER.info("[UserService.checkEmailDuplicate] 회원 email 중복 검사 시작");
+        LOGGER.info("[checkEmailDuplicate] 회원 email 중복 검사 시작");
         if (userRepository.existsByEmail(email)) {
             throw new ErrorException(UserErrorCode.USER_DUPLICATE_EMAIL);
         }
-        LOGGER.info("[UserService.checkEmailDuplicate] 회원 email 중복 검사 완료");
+        LOGGER.info("[checkEmailDuplicate] 회원 email 중복 검사 완료");
     }
 
     @Override
     public void withdrawal(String uid) {
-        LOGGER.info("[UserService.withdrawal] 회뤈탈퇴 시도");
+        LOGGER.info("[withdrawal] 회뤈탈퇴 시도");
         User user = common.getUserByUid(uid);
 
-        LOGGER.info("[UserService.withdrawal] 회뤈 정보 조회 성공 {}", user.getUid());
+        LOGGER.info("[withdrawal] 회뤈 정보 조회 성공 {}", user.getUid());
 
         userRepository.deleteById(user.getId());
-        LOGGER.info("[UserService.withdrawal] 회뤈탈퇴 성공");
+        LOGGER.info("[withdrawal] 회뤈탈퇴 성공");
     }
 
     @Override
@@ -264,15 +260,15 @@ public class UserServiceImpl implements UserService {
         user.setOpen(afterState);
 
         if (!beforeState && afterState) {
-            LOGGER.info("[UserService.modifyUserOpen] 팔로우 요청 수락 시작");
+            LOGGER.info("[modifyUserOpen] 팔로우 요청 수락 시작");
             List<FollowWait> followWaitList = followWaitRepository.findAllByReceiver(user);
-            LOGGER.info("[UserService.modifyUserOpen] 팔로우 요청 목록 가져오기 완료");
+            LOGGER.info("[modifyUserOpen] 팔로우 요청 목록 가져오기 완료");
             for (FollowWait followWait : followWaitList) {
                 User requester = followWait.getRequester();
-                LOGGER.info("[UserService.modifyUserOpen] {}의 요청 수락 시작", requester);
+                LOGGER.info("[modifyUserOpen] {}의 요청 수락 시작", requester);
                 followService.allowUserRequest(uid, requester.getUid());
             }
-            LOGGER.info("[UserService.modifyUserOpen] 요청 모두 수락 완료");
+            LOGGER.info("[modifyUserOpen] 요청 모두 수락 완료");
         }
 
         userRepository.save(user);
@@ -300,18 +296,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public void changePassword(ChangePasswordRequestDto requestDto) {
         User user = common.getUserByUid(requestDto.getUid());
-        LOGGER.info("[UserService.changePassword] 비밀번호 변경 시작");
+        LOGGER.info("[changePassword] 비밀번호 변경 시작");
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
-        LOGGER.info("[UserService.changePassword] 비밀번호 변경 완료");
+        LOGGER.info("[changePassword] 비밀번호 변경 완료");
     }
 
     @Override
     public FindIdResponseDto findId(String email) {
-        LOGGER.info("[UserService.findId] 회원 uid 찾기 시작");
+        LOGGER.info("[findId] 회원 uid 찾기 시작");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
-        LOGGER.info("[UserService.findId] user {}", user.getUid());
+        LOGGER.info("[findId] user {}", user.getUid());
 
         return FindIdResponseDto.builder()
                 .uid(user.getUid())
@@ -319,19 +315,19 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void checkIdAndEmail(String uid, String email) {
-        LOGGER.info("[UserService.checkIdAndEmail] 회원 uid & email 일치 검사 시작");
+        LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 시작");
         userRepository.findByUidAndEmail(uid, email)
                 .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
-        LOGGER.info("[UserService.checkIdAndEmail] 회원 uid & email 일치 검사 성공");
+        LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 성공");
     }
 
     @Override
     public void changePassword(String uid, ChangePasswordRequestDto requestDto) {
         User user = common.getUserByUid(uid);
-        LOGGER.info("[UserService.changePassword] 비밀번호 변경 시작");
+        LOGGER.info("[changePassword] 비밀번호 변경 시작");
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
-        LOGGER.info("[UserService.changePassword] 비밀번호 변경 완료");
+        LOGGER.info("[changePassword] 비밀번호 변경 완료");
     }
 
 }

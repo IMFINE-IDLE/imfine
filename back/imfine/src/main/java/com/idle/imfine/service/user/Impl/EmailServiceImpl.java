@@ -8,6 +8,8 @@ import com.idle.imfine.service.user.EmailService;
 import com.idle.imfine.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +22,15 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class EmailServiceImpl implements EmailService {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
     private final JavaMailSender emailSender;
     private final RedisUtil redisUtil;
 
     private MimeMessage createMessage(String to, String confirm) throws MessagingException, UnsupportedEncodingException {
-        log.info("[EmailService.createMessage] 보내는 대상 : "+ to);
-        log.info("[EmailService.createMessage] 인증 번호 : "+ confirm);
+        LOGGER.info("[createMessage] 보내는 대상 : "+ to);
+        LOGGER.info("[createMessage] 인증 번호 : "+ confirm);
         MimeMessage  message = emailSender.createMimeMessage();
 
         message.addRecipients(RecipientType.TO, to);//보내는 대상
@@ -87,9 +89,9 @@ public class EmailServiceImpl implements EmailService {
             MimeMessage message = createMessage(requestDto.getEmail(), confirm);
             emailSender.send(message);
             redisUtil.setDataExpire(email, confirm, 60 * 3L);
-            log.info("인증 메일 전송을 성공했습니다.");
+            LOGGER.info("[sendEmail] 인증 메일 전송을 성공했습니다.");
         } catch(Exception e){
-            log.info("인증 메일 전송을 실패했습니다.");
+            LOGGER.info("[sendEmail] 인증 메일 전송을 실패했습니다.");
             throw new ErrorException(EmailErrorCode.EMAIL_FAILED);
         }
     }
@@ -99,12 +101,12 @@ public class EmailServiceImpl implements EmailService {
         String confirm = redisUtil.getData(requestDto.getEmail());
 
         if (confirm != null && confirm.equals(requestDto.getConfirm())) {
-            log.info("이메일이 인증되었습니다.");
+            LOGGER.info("[confirmEmail] 이메일이 인증되었습니다.");
             redisUtil.deleteData(requestDto.getEmail());
             return;
         }
 
-        log.info("유효하지 않은 인증번호 입니다.");
+        LOGGER.info("[confirmEmail] 유효하지 않은 인증번호 입니다.");
         throw new ErrorException(EmailErrorCode.EMAIL_AUTH_INVALID);
     }
 
