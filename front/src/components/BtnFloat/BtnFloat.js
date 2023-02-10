@@ -12,7 +12,6 @@ function BtnFloat() {
           <>
             <BtnLink
               to="/paper/create"
-              style={{ width: '100%' }}
               color={'light'}
               margin={'0'}
               padding={'1em 0.8em'}
@@ -23,7 +22,6 @@ function BtnFloat() {
             </BtnLink>
             <BtnLink
               to="/diary/create"
-              style={{ width: '100%' }}
               color={'light'}
               margin={'1em 0'}
               padding={'1em 0.8em'}

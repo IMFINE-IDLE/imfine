@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { URL } from '../../../api/api';
@@ -16,10 +16,11 @@ import {
   SpanDate,
 } from './style';
 
-function PaperItem({ paper }) {
+function PaperItem({ paper, likePaper, likePaperDelete }) {
   const userId = useSelector((state) => {
     return state.user.uid;
   });
+
   const navigate = useNavigate();
   const {
     paperId,
@@ -30,15 +31,16 @@ function PaperItem({ paper }) {
     content,
     likeCount,
     commentCount,
-    date,
+    createdAt,
     images,
     symptomList,
+    myHeart,
   } = paper;
 
   // 게시글 시간 표시 함수
   function getTimeDifference(timeString) {
     let currentTime = new Date();
-    let providedTime = new Date(date);
+    let providedTime = new Date(createdAt);
     let milli = currentTime.getTime() - providedTime.getTime();
     let timeGap = parseInt(milli / 60000);
     // console.log(paperId, timeGap);
@@ -66,7 +68,15 @@ function PaperItem({ paper }) {
       <BoxTop>
         <BoxLeft>
           <img
-            src={`/assets/clovers/clover${condition}.svg`}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/profile/${uid}`);
+            }}
+            src={
+              condition !== null
+                ? `/assets/clovers/clover${condition}.svg`
+                : '/assets/clovers/clover-1.svg'
+            }
             alt=""
             width={'50px'}
             height={'50px'}
@@ -78,10 +88,10 @@ function PaperItem({ paper }) {
               <p style={{ fontWeight: '700' }}>{name}</p>
             </div>
             <div>
-              {symptomList.map((symptom) => {
+              {symptomList?.map((symptom) => {
                 return (
-                  <Symptom key={symptom.symptomId}>
-                    {symptom.symptomName} {symptom.score}
+                  <Symptom key={symptom?.symptomId}>
+                    {symptom?.symptomName} {symptom?.score}
                   </Symptom>
                 );
               })}
@@ -97,9 +107,16 @@ function PaperItem({ paper }) {
       <BoxBottom>
         <div>
           <DiaryTitle title={title} />
-          <SpanDate>{getTimeDifference(date)}</SpanDate>
+          <SpanDate>{getTimeDifference(createdAt)}</SpanDate>
         </div>
-        <LikeComment likeCount={likeCount} commentCount={commentCount} />
+        <LikeComment
+          id={paperId}
+          myHeart={myHeart}
+          likeCount={likeCount}
+          commentCount={commentCount}
+          like={likePaper}
+          likeDelete={likePaperDelete}
+        />
       </BoxBottom>
     </BoxPaper>
   );

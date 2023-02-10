@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
 import styled, { css } from 'styled-components';
-import { BoxNoShad } from '../common/BoxNoShad/BoxNoShad';
 import { Clover } from '../common/Clover/Clover';
 
 // 하단탭 전체 감싸는 컴포넌트
@@ -59,22 +58,6 @@ const TabCenter = styled.div`
   justify
 `;
 
-// 클로버 상태창 모달 전체 감싸는 컴포넌트
-const CloverStatusContainer = styled(BoxNoShad)`
-  position: absolute;
-  left: calc(50% - ${(props) => props.width} / 2);
-  bottom: 5.2em;
-`;
-
-// 클로버 li 상위 ul
-const CloverWrap = styled.ul`
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  text-align: center;
-  color: var(--gray700-color);
-`;
-
 const MainClover = styled(Clover)`
   ${({ width }) => css`
     position: absolute;
@@ -83,13 +66,4 @@ const MainClover = styled(Clover)`
   `}
 `;
 
-export {
-  TabContainer,
-  Tab,
-  TabNavLink,
-  ActiveBar,
-  TabCenter,
-  MainClover,
-  CloverStatusContainer,
-  CloverWrap,
-};
+export { TabContainer, Tab, TabNavLink, ActiveBar, TabCenter, MainClover };
