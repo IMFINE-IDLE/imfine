@@ -88,7 +88,7 @@ function PaperCreatePage() {
       console.log('diaryInfo', diary.diaryHasSymptoms);
       setSymptoms(
         diary.diaryHasSymptoms.map((item) => ({
-          symptomId: item.id,
+          symptomId: item.symptomId,
           name: item.name,
         }))
       );
