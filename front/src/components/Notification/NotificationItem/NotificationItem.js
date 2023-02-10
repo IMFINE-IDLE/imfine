@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {
   ColumnDiv,
   BoxNoShadLeaves,
@@ -9,7 +11,33 @@ import {
 } from './style';
 
 // showButton true -> 팔로우 버튼 설정?
-function NotificationItem({ title, msg, showButton }) {
+function NotificationItem({ title, msg, showButton, senderUid, navigateId }) {
+  const navigate = useNavigate();
+
+  console.log('아이디', navigateId);
+  // 팔로우알림
+  if (title == 6) {
+    return (
+      <>
+        <div>
+          <ColumnDiv>
+            <BoxNoShadLeaves>
+              <TopDiv>
+                <TitleLabel> 팔로우신청 </TitleLabel>
+              </TopDiv>
+              <BottomDiv
+                onClick={() => {
+                  navigate(`/profile/${senderUid}`);
+                }}
+              >
+                <Content>{msg}</Content>
+              </BottomDiv>
+            </BoxNoShadLeaves>
+          </ColumnDiv>
+        </div>
+      </>
+    );
+  }
   // 대나무알림
   if (title == 4) {
     return (
@@ -20,7 +48,11 @@ function NotificationItem({ title, msg, showButton }) {
               <TopDiv>
                 <TitleLabel> 대나무 </TitleLabel>
               </TopDiv>
-              <BottomDiv>
+              <BottomDiv
+                onClick={() => {
+                  navigate(`/bamboo/${navigateId}`);
+                }}
+              >
                 <Content>{msg}</Content>
               </BottomDiv>
             </BoxNoShadLeaves>

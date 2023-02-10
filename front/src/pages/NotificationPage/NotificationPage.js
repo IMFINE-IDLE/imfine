@@ -65,6 +65,8 @@ function NotificationPage() {
               title={item.contentsCodeId}
               msg={item.msg}
               showButton={item.showButton}
+              senderUid={item.senderUid}
+              navigateId={item.contentsId}
             />
           );
         })}
