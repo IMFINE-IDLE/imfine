@@ -7,10 +7,8 @@ function NotificationPage() {
       console.log('tokentest', localStorage.getItem('accessToken'));
       let uid = localStorage.getItem('uid'); //uid로 할수 있나
       let eventSource = new EventSourcePolyfill(
-        `http://i8a809.p.ssafy.io/api/notification/subscribe?uid=${uid}`,
-        {
-          headers: { Authorization: localStorage.getItem('accessToken') },
-        }
+        `https://i8a809.p.ssafy.io/api/notification/subscribe?uid=${uid}`,
+        { withCredentials: true }
       );
       console.log('event url', eventSource);
 
@@ -32,9 +30,9 @@ function NotificationPage() {
       };
 
       // 기존 예제 코드
-      eventSource.addEventListener('sse', function (event) {
-        console.log(event.data);
-        //setData(event.data);
+      eventSource.addEventListener('sse', (e) => {
+        const { data: receivedConnectData } = e;
+        console.log('connect event', receivedConnectData);
       });
 
       // eventSource.addEventListener('error', function (event) {

@@ -70,6 +70,7 @@ function App() {
         <Route path="change-name" element={<ChangeName />} />
         <Route path="change-symptom" element={<ChangeSymptom />} />
       </Route>
+      <Route path="/noti" element={<NotificationPage />} />
     </Routes>
     // </Wrapper>
   );
