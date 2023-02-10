@@ -15,6 +15,12 @@ const BoxLogo = styled.div`
   /* margin: 2em 0; */
 `;
 
+const Label = styled.label`
+  padding-bottom: 1em;
+  font-weight: 700;
+  color: var(--icon-color);
+`;
+
 const BoxInnerLogin = styled.div`
   width: 100%;
   max-width: 280px;
@@ -29,4 +35,25 @@ const BtnLogin = styled.button`
   ${Btn}
 `;
 
-export { BoxLogin, BoxLogo, BoxInnerLogin, BoxInput, BtnLogin };
+const BoxOptions = styled.div`
+  text-align: center;
+  font-size: 12px;
+  padding-top: 1.2em;
+  color: var(--icon-color);
+`;
+
+const SpanOption = styled.span`
+  cursor: pointer;
+  margin: 0 1em;
+`;
+
+export {
+  BoxLogin,
+  BoxLogo,
+  BoxInnerLogin,
+  BoxInput,
+  BtnLogin,
+  BoxOptions,
+  SpanOption,
+  Label,
+};
