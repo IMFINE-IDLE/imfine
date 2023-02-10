@@ -12,12 +12,10 @@ import {
  *
  * (String) title: | 앞에 들어가는 제목
  * (String) type: 'text', 'medical', 'symptom' 중 하나.
- *                 type이 'medical' 또는 'symptom' 이면 버튼으로 표시됨
+ *                 type이 'medical' 또는 'symptom' 이면 아이콘으로 표시됨
  * (Any) text: type='text' 일 경우 표시될 내용
  * (Array) medicals: [{id: Number, name: String}] 형식의 배열
  * (Array) symptoms: [{id: Number, name: String}] 형식의 배열
- * (Function) setMedicals: medicals state 변경 함수
- * (Function) setSymptoms: symptoms state 변경 함수
  * (String) color: 아이콘 색깔
  * (Boolean) canModify: true일 경우 수정 가능
  *
@@ -28,41 +26,16 @@ const PickedItemList = ({
   type,
   text,
   medicals,
-  setMedicals,
   symptoms,
-  setSymptoms,
   color,
   canModify,
   // 아래로 필요한 함수나 값 넘겨서 사용
-  // ToggleSymptom,
+  ToggleSymptom,
   deleteAllRecord,
   handleDeleteAllRecord,
   textPointer,
   onClickUserName,
 }) => {
-  // 버튼 눌렀을 때 제거하기
-  const ToggleSymptom = (itemId, itemName) => {
-    let prevList;
-    if (type === 'medical') {
-      prevList = [...medicals];
-    } else {
-      prevList = [...symptoms];
-    }
-    console.log(prevList);
-    let idx = prevList.findIndex((item) => item.id === itemId);
-    if (idx === -1) {
-      prevList.push({ id: itemId, name: itemName });
-    } else {
-      prevList.splice(idx, 1);
-    }
-
-    if (type === 'medical') {
-      setMedicals(prevList);
-    } else {
-      setSymptoms(prevList);
-    }
-  };
-
   return (
     <FlexDiv justify="start" padding="0.25em 0" height="2em">
       <PickedTitle>{title}</PickedTitle>
@@ -76,7 +49,7 @@ const PickedItemList = ({
               <PickedIconBtn
                 color={color}
                 pointer={canModify ? true : false}
-                onClick={() => ToggleSymptom(id, name)}
+                onClick={() => ToggleSymptom('medical', id, name)}
                 key={id}
               >
                 {name}
@@ -102,7 +75,7 @@ const PickedItemList = ({
                 pointer={canModify ? true : false}
                 onClick={() => {
                   if (deleteAllRecord) handleDeleteAllRecord(id, name);
-                  else ToggleSymptom(id, name);
+                  else ToggleSymptom('symptom', id, name);
                 }}
                 key={id}
               >

@@ -19,8 +19,6 @@ import {
  *
  * (Number) tabCnt: 탭 개수, 1이면 하나만 표시
  * (String) title: 탭이 1개일 때 탭에 표시할 이름, '질병/수술', '증상' 중 하나
- * (Array) medicals: 질병/수술 선택 결과를 담을 state, 빈 배열 또는 기존 선택지를 담은 배열
- * (Array) symptoms: 증상 선택 결과를 담을 state, 빈 배열 또는 기존 선택지를 담은 배열
  * (Function) setMedicals: 질병/수술 선택 결과 state 업데이트 함수, 상위 컴포넌트에서 useState로 선언
  * (Function) setSymptoms: 증상 선택 결과를 state 업데이트 함수, 상위 컴포넌트에서 useState로 선언
  * (Function) apiFunc: 선택 완료 버튼 클릭시 실행할 api 함수
@@ -30,8 +28,6 @@ import {
 const PickMenuTab = ({
   tabCnt,
   title,
-  medicals,
-  symptoms,
   setMedicals,
   setSymptoms,
   apiFunc,
@@ -62,8 +58,8 @@ const PickMenuTab = ({
   // 메모
   // 여기서 medicalList = useState(medicals)로 한 번 더 state 써서 사용하다가 마지막에 버튼 눌렀을 때만
   // props로 받아온 setMedicals에 넣어주는 게 좋지 않을까...?
-  const [pickedMedicals, setPickedMedicals] = useState(medicals || []);
-  const [pickedSymptoms, setPickedSymptoms] = useState(symptoms || []);
+  const [pickedMedicals, setPickedMedicals] = useState([]);
+  const [pickedSymptoms, setPickedSymptoms] = useState([]);
 
   const dispatch = useDispatch();
   // 질병/수술 목록과 증상 목록을 서버에서 받아와서 스토어에 저장
@@ -139,10 +135,7 @@ const PickMenuTab = ({
             title={title}
             type={title === '증상' ? 'symptom' : 'medical'}
             medicals={pickedMedicals}
-            setMedicals={setPickedMedicals}
             symptoms={pickedSymptoms}
-            setSymptoms={setPickedSymptoms}
-            canModify={true}
           />
         ) : (
           <>
@@ -150,16 +143,12 @@ const PickMenuTab = ({
               title="질병/수술"
               type="medical"
               medicals={pickedMedicals}
-              setMedicals={setPickedMedicals}
-              canModify={true}
             />
             <PickedItemList
               title="증상"
               type="symptom"
               symptoms={pickedSymptoms}
-              setSymptoms={setPickedSymptoms}
               color="light-pink"
-              canModify={true}
             />
           </>
         )}
