@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     private final FollowService followService;
 
     @Override
-    public Map<String, Object> signUp(SignUpRequestDto requestDto) {
+    public HttpHeaders signUp(SignUpRequestDto requestDto) {
         LOGGER.info("[UserService.signUp] 회원 가입 정보 전달");
 
         checkUidDuplicate(requestDto.getUid());
@@ -78,11 +78,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         LOGGER.info("[UserService.signUp] 회원 가입 완료");
 
-        return common.createTokenResult(accessToken, refreshToken);
+        return common.createTokenHeader(accessToken, refreshToken);
     }
 
     @Override
-    public Map<String, Object> signIn(SignInRequestDto requestDto) {
+    public HttpHeaders signIn(SignInRequestDto requestDto) {
         LOGGER.info("[UserService.signIn] 회원 정보 요청");
         User user = common.getUserByUid(requestDto.getUid());
 
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         LOGGER.info("[UserService.signIn] refreshToken 저장 완료");
 
-        return common.createTokenResult(accessToken, refreshToken);
+        return common.createTokenHeader(accessToken, refreshToken);
     }
 
     @Override
@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> refresh(Cookie cookie) throws RuntimeException {
+    public HttpHeaders refresh(Cookie cookie) throws RuntimeException {
         if (cookie == null) {
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
@@ -172,7 +172,7 @@ public class UserServiceImpl implements UserService {
             user.updateRefreshToken(newRefreshToken);
             userRepository.save(user);
 
-            return common.createTokenResult(newAccessToken, newRefreshToken);
+            return common.createTokenHeader(newAccessToken, newRefreshToken);
         } catch (TokenNotFoundException e) {
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
         } catch (ExpiredJwtException e){

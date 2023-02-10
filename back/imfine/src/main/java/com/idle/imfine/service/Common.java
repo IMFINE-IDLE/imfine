@@ -43,12 +43,7 @@ public class Common {
 
         HttpHeaders headers = createTokenHeader(accessToken, refreshToken);
 
-        TokenResponseDto body = TokenResponseDto.builder()
-                .accessToken("Bearer " + accessToken)
-                .build();
-
         result.put("headers", headers);
-        result.put("body", body);
 
         return result;
     }
