@@ -271,6 +271,10 @@ public class PaperServiceImpl implements PaperService {
         Set<Long> imageHasPaper = imageRepository.existsByPaperIds(paperList);
         List<Symptom> symptoms = symptomRepository.getSymptomByPapers(paperList);
 
+        for (long s : map.keySet()) {
+            LOGGER.info("증상 갯수 {}", map.get(s).size());
+        }
+
         Map<Integer, Symptom> symptomIdByName = symptoms.stream().collect(Collectors.toMap(Symptom::getId, Function.identity()));
 
         return ResponseMainPage.builder()

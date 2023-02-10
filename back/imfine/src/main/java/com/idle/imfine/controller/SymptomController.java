@@ -31,7 +31,7 @@ public class SymptomController {
         return ResponseEntity.ok().body(responseService.getListResult(responseDto));
     }
 
-    @GetMapping("/symptom-codes")
+    @GetMapping("/list")
     public ResponseEntity<Result> getSymptomCodeList() {
         LOGGER.info("증상 코드 조회");
         return ResponseEntity.ok().body(responseService.getListResult(
