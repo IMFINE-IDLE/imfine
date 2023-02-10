@@ -68,10 +68,11 @@ function SearchPage() {
   };
 
   // 최근 검색어 삭제
-  const deleteSearchKeyword = async () => {
+  const deleteSearchKeyword = async (keywordId) => {
     try {
-      const res = await axios.delete(api.search.deleteSearchHistory());
+      const res = await axios.delete(api.search.deleteSearchHistory(keywordId));
       console.log(res);
+      getSearchKeywordList();
     } catch (err) {
       console.log(err);
     }
@@ -133,8 +134,8 @@ function SearchPage() {
           <BoxRecentQuery>
             <TitleRecent>최근 검색어</TitleRecent>
             <BoxInner>
-              {searchHistory?.map(({ id, query }) => (
-                <QueryItem key={id}>
+              {searchHistory?.map(({ query, searchId }) => (
+                <QueryItem key={searchId}>
                   <span
                     onClick={() => {
                       handlePaperSearch(query);
@@ -144,7 +145,7 @@ function SearchPage() {
                   </span>
                   <span
                     onClick={() => {
-                      deleteSearchKeyword(id);
+                      deleteSearchKeyword(searchId);
                     }}
                   >
                     X

@@ -5,7 +5,7 @@ import PaperItem from '../../Paper/PaperItem/PaperItem';
 function SearchPaper({ paperList, setPaperList }) {
   return (
     <>
-      {paperList.length > 1 ? (
+      {paperList.length > 0 ? (
         <BoxPaperFeed>
           {paperList?.map((paper) => {
             return (

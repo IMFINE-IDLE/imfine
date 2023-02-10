@@ -59,7 +59,7 @@ const FollowUser = ({
         )}
       </FollowUserContainer>
     );
-  else if (type === '팔로워')
+  else
     return (
       <FollowUserContainer>
         <FollowUserWrapper>
