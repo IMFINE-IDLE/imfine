@@ -1,7 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import LoginPage from './pages/LoginPage/LoginPage';
+import LogOutPage from './pages/LogOutPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import SearchPage from './pages/SearchPage/SearchPage';
 import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
@@ -15,6 +17,7 @@ import PaperSymptomPage from './pages/PaperSymptomPage/PaperSymptomPage';
 import BambooFeedPage from './pages/BambooFeedPage/BambooFeedPage';
 import BambooCreatePage from './pages/BambooCreatePage/BambooCreatePage';
 import BambooDetailPage from './pages/BambooDetailPage/BambooDetailPage';
+import NotificationPage from './pages/NotificationPage/NotificationPage';
 import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
 import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';

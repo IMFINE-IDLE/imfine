@@ -12,7 +12,7 @@ function NavBarRightItem() {
         </NavLink>
       </NavItem>
       <NavItem right="1em">
-        <NavLink to="/notifications">
+        <NavLink to="/noti">
           <BiBell />
         </NavLink>
       </NavItem>
