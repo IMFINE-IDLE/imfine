@@ -109,9 +109,14 @@ public class JwtTokenProvider {
     // HTTP Request Header 에 설정된 토큰 값을 가져옴
     public String resolveToken(HttpServletRequest request) {
         LOGGER.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
-        Cookie[] cookies = request.getCookies();
 
         String authorization = "";
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
+            LOGGER.info("[resolveToken] 요청에 Cookie 없음");
+            throw new TokenNotFoundException();
+        }
 
         for (Cookie cookie : cookies) {
             if ("accessToken".equals(cookie.getName())) {
@@ -119,12 +124,14 @@ public class JwtTokenProvider {
             }
         }
 
+        // 요청 헤더로 토큰 전달할 경우
 //        String authorization = request.getHeader("Authorization");
+
         if (authorization == null || authorization.isEmpty()) {
-            LOGGER.info("[resolveToken] HTTP 헤더에서 Token 없음");
+            LOGGER.info("[resolveToken] Token 없음");
             throw new TokenNotFoundException();
         } else if (!Pattern.matches("Bearer%.*", authorization)) {
-            LOGGER.info("[resolveToken] HTTP 헤더에서 Token 타입 잘못됨.");
+            LOGGER.info("[resolveToken] Token 타입 잘못됨.");
             throw new WrongTypeTokenException();
         }
         return authorization.substring(7);

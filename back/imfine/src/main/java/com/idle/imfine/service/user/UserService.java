@@ -10,15 +10,15 @@ import org.springframework.http.HttpHeaders;
 
 public interface UserService {
 
-    Map<String, Object> signUp(SignUpRequestDto requestDto);
+    HttpHeaders signUp(SignUpRequestDto requestDto);
 
-    Map<String, Object> signIn(SignInRequestDto requestDto);
+    HttpHeaders signIn(SignInRequestDto requestDto);
 
     void initProfile(String uid, InitProfileRequestDto requestDto);
 
     HttpHeaders signOut(String uid);
 
-    Map<String, Object> refresh(Cookie cookie);
+    HttpHeaders refresh(Cookie cookie);
 
     void checkUidDuplicate(String uid);
 

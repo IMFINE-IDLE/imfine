@@ -37,30 +37,36 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public void followUser(String uid, String otherUid) {
-        LOGGER.info("팔로우 신청");
+        LOGGER.info("[followUser] 팔로우 신청");
 
         if (uid.equals(otherUid)) {
-            LOGGER.info("나를 팔로우할 수 없습니다.");
+            LOGGER.info("[followUser] 나를 팔로우할 수 없습니다.");
             throw new ErrorException(FollowErrorCode.CANNOT_FOLLOW_ME);
         }
 
-        LOGGER.info("유저 정보 조회");
+        LOGGER.info("[followUser] 유저 정보 조회");
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
-        LOGGER.info("유저 정보 조회 완료");
+        LOGGER.info("[followUser] 유저 정보 조회 완료");
 
         if (followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
-            LOGGER.info("이미 팔로우하고 있습니다.");
+            LOGGER.info("[followUser] 이미 팔로우하고 있습니다.");
             throw new ErrorException(FollowErrorCode.ALREADY_FOLLOWING);
         } else if (!other.isOpen() && !followRepository.existsByFollowingUserAndFollowedUser(other, user)) {
-            LOGGER.info("비공개 유저에게 팔로우를 신청했습니다.");
+            LOGGER.info("[followUser] 비공개 유저에게 팔로우를 신청했습니다.");
+
+            if (followWaitRepository.existsByRequesterAndReceiver(other, user)) {
+                LOGGER.info("[followUser] 이미 팔로우 요청 중입니다.");
+                throw new ErrorException(FollowErrorCode.ALREADY_FOLLOW_REQUEST);
+            }
+
             FollowWait followWait = FollowWait.builder()
                     .requester(user)
                     .receiver(other)
                     .build();
             followWaitRepository.save(followWait);
             notificationService.send(user.getId(), other.getId(), 6, user.getId(), 6);
-            LOGGER.info("상대방에게 팔로우 요청을 보냈습니다.");
+            LOGGER.info("[followUser] 상대방에게 팔로우 요청을 보냈습니다.");
             return;
         }
 
@@ -73,32 +79,41 @@ public class FollowServiceImpl implements FollowService {
         common.increaseFollwerCount(other);
         followRepository.save(follow);
         notificationService.send(user.getId(), other.getId(), 6, user.getId(), 5);
-        LOGGER.info("팔로우가 완료되었습니다.");
+        LOGGER.info("[followUser] 팔로우가 완료되었습니다.");
     }
 
     @Override
     public void unfollowUser(String uid, String otherUid) {
-        LOGGER.info("언팔로우 신청");
+        LOGGER.info("[unfollowUser] 언팔로우 신청");
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
-        LOGGER.info("유저 정보 조회 완료");
+        LOGGER.info("[unfollowUser] 유저 정보 조회 완료");
 
         if (!followRepository.existsByFollowingUserAndFollowedUser(user, other)) {
-            LOGGER.info("이미 팔로우하고 있지않습니다.");
+            LOGGER.info("[unfollowUser] 이미 팔로우하고 있지않습니다.");
             throw new ErrorException(FollowErrorCode.NOT_ALREADY_FOLLOWING);
         }
 
         common.decreaseFollowingCount(user);
         common.decreaseFollowerCount(other);
         followRepository.deleteByFollowingUserAndFollowedUser(user, other);
-        LOGGER.info("언팔로우가 완료되었습니다.");
+        LOGGER.info("[unfollowUser] 언팔로우가 완료되었습니다.");
     }
 
     @Override
     public void allowUserRequest(String uid, String otherUid) {
         User user = common.getUserByUid(uid);
         User requester = common.getUserByUid(otherUid);
-        LOGGER.info("[FollowService.allowUserRequest] 유저 정보 조회 완료");
+        LOGGER.info("[allowUserRequest] 유저 정보 조회 완료");
+
+        if (!followWaitRepository.existsByRequesterAndReceiver(requester, user)) {
+            LOGGER.info("[allowUserRequest] 팔로우 요청이 없습니다.");
+            throw new ErrorException(FollowErrorCode.NOT_ALREADY_FOLLOW_REQUEST);
+        } else if (followRepository.existsByFollowingUserAndFollowedUser(requester, user)) {
+            LOGGER.info("[allowUserRequest] 이미 팔로워입니다.");
+            followWaitRepository.deleteByRequesterAndReceiver(requester, user);
+            throw new ErrorException((FollowErrorCode.ALREADY_FOLLOWING));
+        }
 
         Follow follow = Follow.builder()
                 .followingUser(requester)
@@ -115,17 +130,17 @@ public class FollowServiceImpl implements FollowService {
                 user.getId(), requester.getId(), 6);
         notification.setType(7);
 
-        LOGGER.info("[FollowService.allowUserRequest] 팔로우 요청을 수락했습니다.");
+        LOGGER.info("[allowUserRequest] 팔로우 요청을 수락했습니다.");
     }
 
     @Override
     public void declineUserRequest(String uid, String otherUid) {
         User user = common.getUserByUid(uid);
         User requester = common.getUserByUid(otherUid);
-        LOGGER.info("[FollowService.declineUserRequest] 유저 정보 조회 완료");
+        LOGGER.info("[declineUserRequest] 유저 정보 조회 완료");
 
         if (!followWaitRepository.existsByRequesterAndReceiver(requester, user)) {
-            LOGGER.info("[FollowService.declineUserRequest] 이미 팔로우 요청 중이 아닙니다.");
+            LOGGER.info("[declineUserRequest] 이미 팔로우 요청 중이 아닙니다.");
             throw new ErrorException(FollowErrorCode.NOT_ALREADY_FOLLOW_REQUEST);
         }
 
@@ -135,31 +150,31 @@ public class FollowServiceImpl implements FollowService {
                 user.getId(), requester.getId(), 6);
         notification.setType(8);
 
-        LOGGER.info("[FollowService.declineUserRequest] 팔로우 요청을 거절했습니다.");
+        LOGGER.info("[declineUserRequest] 팔로우 요청을 거절했습니다.");
     }
 
     @Override
     public void blockFollower(String uid, String otherUid) {
-        LOGGER.info("팔로워 차단하기 시작");
+        LOGGER.info("[blockFollower] 팔로워 차단하기 시작");
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
-        LOGGER.info("유저 정보 조회 완료");
+        LOGGER.info("[blockFollower] 유저 정보 조회 완료");
 
         if (!followRepository.existsByFollowingUserAndFollowedUser(other, user)) {
-            LOGGER.info("상대가 이미 팔로우하고 있지않습니다.");
+            LOGGER.info("[blockFollower] 상대가 이미 팔로우하고 있지않습니다.");
             throw new ErrorException(FollowErrorCode.NOT_ALREADY_FOLLOWING);
         }
 
         common.decreaseFollowingCount(other);
         common.decreaseFollowerCount(user);
         followRepository.deleteByFollowingUserAndFollowedUser(other, user);
-        LOGGER.info("팔로워 차단이 완료되었습니다.");
+        LOGGER.info("[blockFollower] 팔로워 차단이 완료되었습니다.");
     }
 
 
     @Override
     public List<FollowResponseDto> searchFollowingList(String uid, String targetUid) {
-        LOGGER.info("팔로잉 목록 조회");
+        LOGGER.info("[searchFollowingList] 팔로잉 목록 조회");
         User user = common.getUserByUid(uid);
         User target = common.getUserByUid(targetUid);
 
@@ -186,7 +201,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public List<FollowResponseDto> searchFollowerList(String uid, String targetUid) {
-        LOGGER.info("팔로워 목록 조회");
+        LOGGER.info("[searchFollowerList] 팔로워 목록 조회");
         User user = common.getUserByUid(uid);
         User target = common.getUserByUid(targetUid);
 
