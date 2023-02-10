@@ -96,7 +96,9 @@ function PickMenu({ type, dataList, setPickedMedicals, setPickedSymptoms }) {
   // 세부목록에서 질병/수술 또는 증상 하나 선택했을 때
   const handleDetailMenuClick = (id, name) => {
     if (type === 'medical') {
-      setPickedMedicals((prev) => [...prev, { id: 1, name: '질병1' }]);
+      setPickedMedicals((prev) => [...prev, { id, name }]);
+    } else {
+      setPickedSymptoms((prev) => [...prev, { id, name }]);
     }
   };
 
@@ -132,12 +134,24 @@ function PickMenu({ type, dataList, setPickedMedicals, setPickedSymptoms }) {
             ))}
           </FlexDiv>
 
-          <PickMenuSubListContainer>
-            <FlexDiv wrap="wrap" gap="0.85em 0" padding="0 0 0 0.5em">
+          <PickMenuSubListContainer padding="1em 0">
+            <FlexDiv
+              justify="start"
+              wrap="wrap"
+              gap="0.85em 0"
+              padding="0 0 0 10%"
+            >
               {detailList?.map(({ id, name }) => (
-                <PickMenuDetailMenu key={id}>{name}</PickMenuDetailMenu>
+                <PickMenuDetailMenu
+                  key={id}
+                  onClick={() => handleDetailMenuClick(id, name)}
+                >
+                  {name}
+                </PickMenuDetailMenu>
               ))}
-              <PickMenuDetailMenu onClick={() => handleDetailMenuClick()}>
+              <PickMenuDetailMenu
+                onClick={() => handleDetailMenuClick(1, 'test')}
+              >
                 질병하나
               </PickMenuDetailMenu>
               <PickMenuDetailMenu>질병하나이름이길어요</PickMenuDetailMenu>
