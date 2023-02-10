@@ -13,7 +13,6 @@ const NOTIFICATION = '/notification';
 const SYMPTOM = '/symptom';
 const MEDICAL = '/medical';
 
-
 const api = {
   user: {
     signUp: () => URL + USERS + '/sign-up',
@@ -87,6 +86,7 @@ const api = {
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
+    getNotifications: () => URL + NOTIFICATION + '/list',
   },
 };
 
