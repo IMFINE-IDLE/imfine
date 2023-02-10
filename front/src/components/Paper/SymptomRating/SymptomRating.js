@@ -10,10 +10,10 @@ import {
 function SymptomRating({ symptomList }) {
   return (
     <BoxSymptomRating>
-      {symptomList?.map(({ symptomId, symptomName, score }) => {
+      {symptomList?.map(({ id, name, score }) => {
         return (
-          <DivSymptom key={symptomId}>
-            <LabelSymptom>{symptomName}</LabelSymptom>
+          <DivSymptom key={id}>
+            <LabelSymptom>{name}</LabelSymptom>
             <RateSymptom>
               <ReactStars
                 count={5}
