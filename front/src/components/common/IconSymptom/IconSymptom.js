@@ -1,13 +1,9 @@
 import React from 'react';
 import { BoxIcon, BoxImg, TextImg } from './style';
 
-function IconSymptom({ type, id, name, image, ToggleSymptom }) {
+function IconSymptom({ type, id, name, image }) {
   return (
-    <BoxIcon
-      onClick={() => {
-        ToggleSymptom(type, id, name);
-      }}
-    >
+    <BoxIcon>
       <BoxImg color={'gray'}>
         <img src={image} style={{ width: '100%', height: '100%' }} alt={name} />
       </BoxImg>

@@ -56,6 +56,8 @@ const TabContentContainer = styled.div`
   justify-content: center;
 `;
 
+const PickMenuContentConainer = styled.div``;
+
 const BoxPickMenu = styled.div`
   width: 100%;
   margin-top: -2.5em;

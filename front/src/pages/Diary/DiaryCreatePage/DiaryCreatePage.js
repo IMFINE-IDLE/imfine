@@ -13,20 +13,6 @@ const DiaryCreatePage = () => {
     <>
       <NavBarBasic Back={true} Text="일기장 생성" />
 
-      {/* <FlexDiv direction="column" padding="0 0 2.5em 0">
-        <PickedItemList
-          title="질병/수술"
-          type="medical"
-          medicals={medicalList}
-        />
-        <PickedItemList
-          title="증상"
-          type="symptom"
-          symptoms={symptomList}
-          color="light-pink"
-        />
-      </FlexDiv> */}
-
       <PickMenuTab
         tabCnt={2}
         title="질병/수술"
