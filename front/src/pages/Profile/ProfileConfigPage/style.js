@@ -1,5 +1,10 @@
 import styled from 'styled-components';
+import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
 import { Btn } from '../../../components/common/Btn/Btn';
+
+const ProfileConfigContainer = styled(BoxGrad)`
+  height: calc(100vh - var(--nav-height));
+`;
 
 const ProfileConfigOptionBtn = styled.button`
   ${Btn}
@@ -72,6 +77,7 @@ const Toggle = styled.input`
 `;
 
 export {
+  ProfileConfigContainer,
   ProfileConfigOptionBtn,
   ToggleContainer,
   ToggleText,

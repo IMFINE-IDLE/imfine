@@ -2,9 +2,9 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import api from '../../../api/api';
-import { BoxGrad } from '../../../components/common/BoxGrad/BoxGrad';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import {
+  ProfileConfigContainer,
   ProfileConfigOptionBtn,
   ToggleContainer,
   ToggleText,
@@ -35,7 +35,7 @@ const ProfileConfigPage = () => {
     <>
       <NavBarBasic Back={true} Text="프로필 수정" />
 
-      <BoxGrad radius="0" height="calc(100vh - 71px)">
+      <ProfileConfigContainer radius="0">
         <ProfileConfigOptionBtn
           onClick={() => navigate(`/profile/${uid}/change-name`)}
         >
@@ -70,7 +70,7 @@ const ProfileConfigPage = () => {
             </ToggleWrapper>
           </ToggleContainer>
         </ProfileConfigOptionBtn>
-      </BoxGrad>
+      </ProfileConfigContainer>
     </>
   );
 };

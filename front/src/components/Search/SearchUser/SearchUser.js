@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function SearchUser() {
+  const [userList, setUserList] = useState([]);
+
   return (
     <div>
       SearchUser
