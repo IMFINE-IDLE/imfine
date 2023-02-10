@@ -28,7 +28,7 @@ function SearchNavBar({ keyword, setKeyword, handleSearch }) {
   };
 
   return (
-    <BoxNavBar>
+    <BoxNavBar color={currentQuery ? 'main' : null}>
       <BoxChevronLeft
         onClick={() => {
           currentQuery ? navigate('/search') : navigate('/');
