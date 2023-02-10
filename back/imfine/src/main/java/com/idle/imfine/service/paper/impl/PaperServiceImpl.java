@@ -3,15 +3,18 @@ package com.idle.imfine.service.paper.impl;
 
 import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
+import com.idle.imfine.data.dto.image.ResponseModifyImageDto;
 import com.idle.imfine.data.dto.image.UploadFile;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
+import com.idle.imfine.data.dto.paper.response.ResponseModifyPaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDtoOnlyMainPage;
+import com.idle.imfine.data.dto.symptom.response.ResponsePaperHasSymptomDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
@@ -29,6 +32,7 @@ import com.idle.imfine.data.repository.heart.HeartRepository;
 import com.idle.imfine.data.repository.image.ImageRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
+import com.idle.imfine.data.repository.symptom.DiaryHasSymptomRepository;
 import com.idle.imfine.data.repository.symptom.SymptomRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
 import com.idle.imfine.errors.code.DiaryErrorCode;
@@ -42,8 +46,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,6 +69,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class PaperServiceImpl implements PaperService {
     private final PaperRepository paperRepository;
     private final DiaryRepository diaryRepository;
+    private final DiaryHasSymptomRepository diaryHasSymptomRepository;
     private final PaperHasSymptomRepository paperHasSymptomRepository;
     private final ImageRepository imageRepository;
     private final CommentRepository commentRepository;
@@ -88,9 +95,14 @@ public class PaperServiceImpl implements PaperService {
 
         LOGGER.info("date : {} requestDate{}",  requestPaperPostDto.getDiaryId(), requestPaperPostDto.getDate());
         LocalDate date = common.convertDateType(requestPaperPostDto.getDate());
-        Paper exist = paperRepository.getByDiary_IdAndDate(diary.getId(), date)
-                .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_DUPLICATE_DATE));
+        Optional<Paper> exist = paperRepository.getByDiary_IdAndDate(diary.getId(), date);
 
+        if (exist.isPresent()) {
+            throw new ErrorException(PaperErrorCode.PAPER_DUPLICATE_DATE);
+        }
+        if (user.getId() != diary.getWriter().getId()) {
+            throw new ErrorException(PaperErrorCode.PAPER_NOT_AUTHORIZED);
+        }
         Paper savedPaper = paperRepository.save(Paper.builder()
                 .diary(diary)
                 .content(requestPaperPostDto.getContents())
@@ -165,6 +177,7 @@ public class PaperServiceImpl implements PaperService {
             }
         }
 
+        List<Image> images = imageRepository.deleteByPaper(paper.getId());
     }
 
     @Transactional
@@ -380,7 +393,7 @@ public class PaperServiceImpl implements PaperService {
                         .open(paper.isOpen())
                         .condition(String.format("%d",conditionRepository.findByUserAndDate(paper.getDiary()
                                 .getWriter(), paper.getDate()).orElseGet(Condition::new).getCondition()))
-                        .image(imageRepository.findByPaperId(paper).isPresent())
+                        .image(!imageRepository.findByPaperId(paper).isEmpty())
                         .symptomList(
                                 paper.getPaperHasSymptoms().stream().map(
                                         paperHasSymptom -> {
@@ -401,5 +414,49 @@ public class PaperServiceImpl implements PaperService {
                         )
                         .build()
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseModifyPaperDto getModifyPaper(String uid, long paperId) {
+        User user = common.getUserByUid(uid);
+        Paper paper = paperRepository.findPaperByPaperIdJoinDiary(paperId)
+                .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
+
+        if (paper.getDiary().getWriter().getId() != user.getId()) {
+            throw new ErrorException(PaperErrorCode.PAPER_NOT_AUTHORIZED);
+        }
+
+        List<Image> images = imageRepository.findByPaperId(paper);
+        List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findByPaper(paper);
+        List<Symptom> symptomByIdList = diaryHasSymptomRepository.findByDiaryToMap(paper.getDiary());
+        Map<Integer, String> symptomById = new HashMap<>();
+        symptomByIdList.forEach(
+                symptom -> symptomById.put(symptom.getId(), symptom.getName())
+        );
+        List<ResponseModifyImageDto> responseImage = images.stream().map(
+                image -> ResponseModifyImageDto.builder()
+                        .id(image.getId())
+                        .image(image.getPath())
+                        .build()
+        ).collect(Collectors.toList());
+
+        List<ResponsePaperHasSymptomDto> responsSymtpoms = symptoms.stream().map(
+                paperHasSymptom -> {
+                    return ResponsePaperHasSymptomDto.builder()
+                            .symptomId(paperHasSymptom.getId())
+                            .symptomName(symptomById.get(paperHasSymptom.getSymptomId()))
+                            .score(paperHasSymptom.getScore())
+                            .build();
+                }
+        ).collect(Collectors.toList());
+
+        return ResponseModifyPaperDto.builder()
+                .paperId(paper.getId())
+                .content(paper.getContent())
+                .open(paper.isOpen())
+                .symptoms(responsSymtpoms)
+                .images(responseImage)
+                .build();
     }
 }
