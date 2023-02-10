@@ -1,6 +1,7 @@
 package com.idle.imfine.service.search.impl;
 
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
+import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDtoOnlyMainPage;
@@ -11,17 +12,20 @@ import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Search;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.entity.UserHasMedical;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import com.idle.imfine.data.entity.symptom.Symptom;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.diary.SubscribeRepository;
 import com.idle.imfine.data.repository.image.ImageRepository;
+import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.search.SearchRepository;
 import com.idle.imfine.data.repository.symptom.SymptomRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
+import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.search.SearchService;
@@ -55,6 +59,8 @@ public class SearchServiceImpl implements SearchService {
     private final ImageRepository imageRepository;
     private final SymptomRepository symptomRepository;
     private final SearchRepository searchRepository;
+    private final UserHasMedicalRepository userHasMedicalRepository;
+    private final MedicalCodeRepository medicalCodeRepository;
     @Override
     public void save(RequestSearchDto requestSearchDto) {
         LOGGER.info("검색기록 저장 {}", requestSearchDto.getQuery());
@@ -117,11 +123,22 @@ public class SearchServiceImpl implements SearchService {
         List<SearchUserListResponseDto> userList = new ArrayList<>();
         for (User u : users) {
             int relation = common.getFollowRelation(user, u);
+            List<ResponseMedicalListDto> rml = new ArrayList<>();
+            List<UserHasMedical> userHasMedicals = userHasMedicalRepository.findAllByUser(u);
+            for (UserHasMedical uhm : userHasMedicals) {
+                ResponseMedicalListDto responseMedicalListDto = ResponseMedicalListDto.builder()
+                        .id(uhm.getId())
+                        .name(medicalCodeRepository.findById(uhm.getId()).getName())
+                        .build();
+                rml.add(responseMedicalListDto);
+            }
+
             SearchUserListResponseDto responseDto = SearchUserListResponseDto.builder()
                     .id(u.getId())
                     .uid(u.getUid())
                     .name(u.getName())
                     .relation(relation)
+                    .medicalList(rml)
                     .hasNext(users.hasNext())
                     .build();
             userList.add(responseDto);

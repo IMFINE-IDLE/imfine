@@ -9,4 +9,5 @@ public interface MedicalCodeRepository extends JpaRepository<MedicalCode, Intege
     List<MedicalCode> findByIdIn(List<Integer> medicalId);
 
     List<MedicalCode> findByMedicalDepartmentCode_Id(int medicalDepartmentId);
+    MedicalCode findById(int medicalId);
 }
