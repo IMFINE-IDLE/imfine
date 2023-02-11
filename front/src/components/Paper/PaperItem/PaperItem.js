@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { URL } from '../../../api/api';
 import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';

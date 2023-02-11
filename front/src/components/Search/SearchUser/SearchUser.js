@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+import FollowList from '../../Profile/FollowList/FollowList';
 
-function SearchUser() {
-  const [userList, setUserList] = useState([]);
-
+function SearchUser({ userList }) {
   return (
-    <div>
-      SearchUser
-      <div>유저 검색결과</div>
-    </div>
+    <>
+      {userList?.length > 0 ? (
+        <FollowList users={userList} />
+      ) : (
+        <span>검색 결과를 찾을 수 없습니다.</span>
+      )}
+    </>
   );
 }
 
