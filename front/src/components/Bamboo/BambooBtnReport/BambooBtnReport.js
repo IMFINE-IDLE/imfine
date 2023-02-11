@@ -9,13 +9,6 @@ function BambooBtnReport({ bambooId }) {
   // 대나무 신고 컴포넌트
   const [isClicked, setIsClicked] = useState(false);
   const navigate = useNavigate();
-  const reportPaper = async (bambooId) => {
-    try {
-      const res = await axios.post(api.bamboo.reportBamboo(bambooId));
-    } catch (err) {
-      console.log(err);
-    }
-  };
   console.log(typeof bambooId);
   const clicked = () => {
     navigate(`/report`, {
