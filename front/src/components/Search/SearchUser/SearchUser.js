@@ -1,6 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import api from '../../../api/api';
+import React from 'react';
 import FollowList from '../../Profile/FollowList/FollowList';
 
 function SearchUser({ userList }) {

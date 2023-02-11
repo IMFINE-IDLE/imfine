@@ -1,7 +1,4 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import api from '../../../api/api';
+import React from 'react';
 import DiaryListGrid from '../../Diary/DiaryListGrid/DiaryListGrid';
 
 function SearchDiary({ diaryList }) {

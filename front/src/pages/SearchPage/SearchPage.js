@@ -146,7 +146,7 @@ function SearchPage() {
     handlePaperSearch(trimmedQuery);
     handleDiarySearch(trimmedQuery);
     handleUserSearch(trimmedQuery);
-  }, [searchParams]);
+  }, [currentQuery]);
 
   return (
     <>

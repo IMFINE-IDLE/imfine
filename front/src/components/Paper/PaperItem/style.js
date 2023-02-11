@@ -8,6 +8,7 @@ const BoxPaper = styled(BoxLT50)`
   margin-bottom: 1.2em;
   cursor: pointer;
   z-index: 1;
+  height: auto;
 `;
 
 const BoxTop = styled.div`
