@@ -8,6 +8,7 @@ import Modal from '../../Modal/Modal';
 import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
+import PaperImages from '../PaperImages/PaperImages';
 import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
 import {
@@ -120,6 +121,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
         <BoxContent>
           <SymptomRating symptomList={symptomList} />
           {content}
+          <PaperImages images={images} />
         </BoxContent>
         <BoxBottomDetail userStatus={Boolean(!userStatus)}>
           <BoxBottemLeft>
