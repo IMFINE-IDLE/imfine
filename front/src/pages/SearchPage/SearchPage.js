@@ -176,6 +176,7 @@ function SearchPage() {
                     onClick={() => {
                       handleSearch(query);
                     }}
+                    style={{ cursor: 'pointer' }}
                   >
                     {query}
                   </span>
@@ -183,6 +184,7 @@ function SearchPage() {
                     onClick={() => {
                       deleteSearchKeyword(searchId);
                     }}
+                    style={{ cursor: 'pointer' }}
                   >
                     X
                   </span>
