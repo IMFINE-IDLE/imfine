@@ -23,6 +23,7 @@ import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollow
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/Profile/ChangeName/ChangeName';
 import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
+import ReportPage from './pages/Report/ReportPage/ReportPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -223,6 +224,14 @@ function App() {
           }
         />
       </Route>
+      <Route
+        path="/report"
+        element={
+          <PrivateRoute>
+            <ReportPage />
+          </PrivateRoute>
+        }
+      ></Route>
     </Routes>
     // </Wrapper>
   );
