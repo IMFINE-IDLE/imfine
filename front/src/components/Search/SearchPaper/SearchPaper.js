@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import PaperList from '../../Paper/PaperList/PaperList';
 
-function SearchPaper({ handlePaperSearch, paperList, currentQuery }) {
-  useEffect(() => {
-    handlePaperSearch(currentQuery);
-  }, []);
-
+function SearchPaper({ paperList }) {
   return (
     <>
       {paperList.length > 0 ? (

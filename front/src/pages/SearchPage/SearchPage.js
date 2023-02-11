@@ -29,11 +29,13 @@ function SearchPage() {
   const [keywordResult, setKeywordResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
 
   const [paperList, setPaperList] = useState([]);
+  const [diaryList, setDiaryList] = useState([]);
+  const [userList, setUserList] = useState([]);
 
   // 일기 검색
-  const handlePaperSearch = async (keyword) => {
+  const handlePaperSearch = async (currQuery) => {
     try {
-      const res = await axios.get(api.search.search('paper', keyword));
+      const res = await axios.get(api.search.search('paper', currQuery));
       console.log(res.data.data.list);
       setPaperList(res.data.data.list);
     } catch (err) {
@@ -41,7 +43,29 @@ function SearchPage() {
     }
   };
 
-  // 첫 페이지 일기 검색
+  // 일기장 검색
+  const handleDiarySearch = async (currQuery) => {
+    try {
+      const res = await axios.get(api.search.search('diary', currQuery));
+      console.log(res.data);
+      setDiaryList(res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 유저 검색
+  const handleUserSearch = async (currQuery) => {
+    try {
+      const res = await axios.get(api.search.search('user', currQuery));
+      console.log(res.data);
+      setUserList(res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 검색
   const handleSearch = async (trimmedKeyword) => {
     if (trimmedKeyword === '' || trimmedKeyword === null) {
       return;
@@ -51,6 +75,8 @@ function SearchPage() {
     postSearchKeywordList(trimmedKeyword); // 최근 검색어에 저장
 
     handlePaperSearch(trimmedKeyword);
+    handleDiarySearch(trimmedKeyword);
+    handleUserSearch(trimmedKeyword);
   };
 
   // 최근 검색어 저장
@@ -91,22 +117,18 @@ function SearchPage() {
       idx: 0,
       tabName: '일기',
       tabContent: (
-        <SearchPaper
-          paperList={paperList}
-          currentQuery={currentQuery}
-          handlePaperSearch={handlePaperSearch}
-        />
+        <SearchPaper paperList={paperList} currentQuery={currentQuery} />
       ),
     },
     {
       idx: 1,
       tabName: '일기장',
-      tabContent: <SearchDiary currentQuery={currentQuery} />,
+      tabContent: <SearchDiary diaryList={diaryList} />,
     },
     {
       idx: 2,
       tabName: '유저',
-      tabContent: <SearchUser currentQuery={currentQuery} />,
+      tabContent: <SearchUser userList={userList} />,
     },
   ];
 
@@ -121,6 +143,9 @@ function SearchPage() {
     let trimmedQuery = currentQuery.trim();
     setKeyword(trimmedQuery);
     setKeywordResult(trimmedQuery);
+    handlePaperSearch(trimmedQuery);
+    handleDiarySearch(trimmedQuery);
+    handleUserSearch(trimmedQuery);
   }, [searchParams]);
 
   return (
