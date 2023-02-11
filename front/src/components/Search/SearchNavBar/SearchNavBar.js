@@ -8,12 +8,7 @@ import {
   SearchInput,
 } from './style';
 
-function SearchNavBar({
-  keyword,
-  setKeyword,
-  handlePaperSearch,
-  searchParams,
-}) {
+function SearchNavBar({ keyword, setKeyword, handleSearch, searchParams }) {
   const navigate = useNavigate();
   const currentQuery = searchParams.get('query');
 
@@ -26,7 +21,7 @@ function SearchNavBar({
         return;
       }
       setKeyword(trimmedString);
-      handlePaperSearch(trimmedString);
+      handleSearch(trimmedString);
     }
   };
 

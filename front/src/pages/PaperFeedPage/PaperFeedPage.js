@@ -4,7 +4,7 @@ import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import { Clover } from '../../components/common/Clover/Clover';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import PaperItem from '../../components/Paper/PaperItem/PaperItem';
+import PaperList from '../../components/Paper/PaperList/PaperList';
 import TabBar from '../../components/TabBar/TabBar';
 import {
   BigCircle,
@@ -108,18 +108,11 @@ function PaperFeedPage() {
       ) : (
         <>
           <BoxPaperFeed>
-            {paperList?.map((paper) => {
-              return (
-                <PaperItem
-                  paper={paper}
-                  key={paper.paperId}
-                  myHeart={paper.myHeart}
-                  likeCount={paper.likeCount}
-                  likePaper={likePaper}
-                  likePaperDelete={likePaperDelete}
-                />
-              );
-            })}
+            <PaperList
+              paperList={paperList}
+              likePaper={likePaper}
+              likePaperDelete={likePaperDelete}
+            />
             <BtnFloat />
             <Circle small />
             <Circle />

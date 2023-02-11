@@ -1,29 +1,16 @@
-import React, { useState } from 'react';
-import { BoxPaperFeed } from '../../../pages/PaperFeedPage/style';
-import PaperItem from '../../Paper/PaperItem/PaperItem';
+import React from 'react';
+import PaperList from '../../Paper/PaperList/PaperList';
+import { BoxSearchPaper } from './style';
 
-function SearchPaper({ paperList, setPaperList }) {
+function SearchPaper({ paperList }) {
   return (
-    <>
-      {paperList.length > 1 ? (
-        <BoxPaperFeed>
-          {paperList?.map((paper) => {
-            return (
-              <PaperItem
-                paper={paper}
-                key={paper.paperId}
-                myHeart={paper.myHeart}
-                likeCount={paper.likeCount}
-                // likePaper={likePaper}
-                // likePaperDelete={likePaperDelete}
-              />
-            );
-          })}
-        </BoxPaperFeed>
+    <BoxSearchPaper>
+      {paperList.length > 0 ? (
+        <PaperList paperList={paperList} />
       ) : (
         <span>검색 결과를 찾을 수 없습니다.</span>
       )}
-    </>
+    </BoxSearchPaper>
   );
 }
 
