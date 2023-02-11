@@ -66,13 +66,11 @@ const api = {
     getUserBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
     postBambooLike: () => URL + BAMBOO + '/like',
     deleteBambooLike: (bambooId) => URL + BAMBOO + `/like/${bambooId}`,
-    reportBamboo: () => URL + REPORT + BAMBOO,
   },
   leaf: {
     postLeaf: () => URL + LEAF,
     postLeafLike: () => URL + LEAF + '/like',
     deletLeafLike: (leafId) => URL + LEAF + `/like/${leafId}`,
-    reportLeaf: () => URL + REPORT + LEAF,
   },
   diary: {
     postDiary: () => URL + DIARY,
@@ -94,6 +92,13 @@ const api = {
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
+  },
+  report: {
+    reportBamboo: () => URL + REPORT + BAMBOO,
+    reportLeaf: () => URL + REPORT + LEAF,
+    reportDiary: () => URL + REPORT + DIARY,
+    reportPaper: () => URL + REPORT + PAPER,
+    reportComment: () => URL + REPORT + COMMENT,
   },
 };
 

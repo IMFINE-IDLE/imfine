@@ -225,7 +225,7 @@ function App() {
         />
       </Route>
       <Route
-        path="/report"
+        path="/report/:contentsId"
         element={
           <PrivateRoute>
             <ReportPage />
