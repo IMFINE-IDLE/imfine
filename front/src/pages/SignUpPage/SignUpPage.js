@@ -6,6 +6,7 @@ import api from '../../api/api';
 import PickSymptom from '../../components/PickSymptom/PickSymptom';
 import BtnEmailCheck from '../../components/SignUp/BtnEmailCheck/BtnEmailCheck';
 import BtnEmailCodeCheck from '../../components/SignUp/BtnEmailCodeCheck/BtnEmailCodeCheck';
+import VerfifyEmailTimer from '../../components/SignUp/VerifyEmailTimer/VerifyEmailTimer';
 import { signUp } from '../../store/slice/userSlice';
 import {
   BoxSignUp,
@@ -33,8 +34,10 @@ function SignUpPage() {
     pwErrorMsg: '',
     confirmPwErrorMsg: '',
   });
-  const [emailVerify, setEmailVerify] = useState(false); // valid, emailSent
-  const [doneEmailVerify, setDoneEmailVerify] = useState(false);
+  const [emailVerify, setEmailVerify] = useState(false); // 이메일 인증메일 전송 단계 체크: valid, emailSent
+  const [doneEmailVerify, setDoneEmailVerify] = useState(false); // 이메일 인증 완료 여부 체크
+  const [timeLeft, setTimeLeft] = useState(179);
+
   const [isNext, setIsNext] = useState(false);
 
   const [inputValue, inputEvent] = useReducer(
@@ -249,9 +252,10 @@ function SignUpPage() {
   // 이메일 인증 코드 전송
   const sendVerifyEmail = async (emailState) => {
     try {
+      setTimeLeft(179); // 타이머 세팅
       const data = { email: emailState };
       const res = await axios.post(api.user.verifyEmail(emailState), data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -404,6 +408,10 @@ function SignUpPage() {
                           ? { border: '1px solid var(--red-color)' }
                           : null
                       }
+                    />
+                    <VerfifyEmailTimer
+                      timeLeft={timeLeft}
+                      setTimeLeft={setTimeLeft}
                     />
                     <BtnEmailCodeCheck
                       emailCode={emailCode}
