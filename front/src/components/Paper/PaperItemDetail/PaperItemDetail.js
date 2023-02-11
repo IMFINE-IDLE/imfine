@@ -8,6 +8,8 @@ import Modal from '../../Modal/Modal';
 import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
+import PaperImageModal from '../PaperImageModal/PaperImageModal';
+import PaperImages from '../PaperImages/PaperImages';
 import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
 import {
@@ -36,6 +38,10 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     createdAt,
     musicURL,
   } = paper;
+
+  // 이미지 크게 보기 모달
+  const [showFullImage, setShowFullImage] = useState(false);
+  const [clickedImgSrc, setClickedImgSrc] = useState(false);
 
   // 일기 삭제 함수
   const deletePaper = async (paperId) => {
@@ -120,6 +126,11 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
         <BoxContent>
           <SymptomRating symptomList={symptomList} />
           {content}
+          <PaperImages
+            images={images}
+            setShowFullImage={setShowFullImage}
+            setClickedImgSrc={setClickedImgSrc}
+          />
         </BoxContent>
         <BoxBottomDetail userStatus={Boolean(!userStatus)}>
           <BoxBottemLeft>
@@ -157,6 +168,12 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
           action={'삭제'}
           setModalOpen={setModalOpen}
           apiFunc={() => deletePaper(paperId)}
+        />
+      )}
+      {showFullImage && (
+        <PaperImageModal
+          clickedImgSrc={clickedImgSrc}
+          setShowFullImage={setShowFullImage}
         />
       )}
     </>
