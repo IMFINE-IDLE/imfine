@@ -21,7 +21,7 @@ const CloverImg = styled.img.attrs({
 `;
 
 const BoxInnerSignup = styled(BoxGrad)`
-  padding: 1em 4em 0;
+  padding: 1em 2.3em 0;
   margin: 0;
 `;
 
@@ -69,18 +69,6 @@ const DivEmail = styled.div`
   gap: 1em;
 `;
 
-const BtnEmailCheck = styled.button`
-  ${Btn}
-  right: 0;
-  bottom: 0;
-  margin-top: 1em;
-  cursor: pointer;
-  background-color: var(--main-color);
-  width: 5em;
-  height: 3em;
-  text-align: center;
-`;
-
 export {
   BoxSignUp,
   TitleSignUp,
@@ -93,5 +81,4 @@ export {
   ErrorMsg,
   GuideMsg,
   DivEmail,
-  BtnEmailCheck,
 };
