@@ -17,7 +17,7 @@ const CloverImg = styled.img.attrs({
   src: '/assets/images/clover.png',
 })`
   width: 100px;
-  margin: 0 0 2em -0.5em;
+  margin-left: -0.5em;
 `;
 
 const BoxInnerSignup = styled(BoxGrad)`
@@ -28,7 +28,7 @@ const BoxInnerSignup = styled(BoxGrad)`
 const Label = styled.label`
   font-weight: 700;
   display: inline-block;
-  margin-top: 1.5em;
+  margin: 1.5em 0 0.7em;
 `;
 
 const InfoSpan = styled.span`
@@ -37,14 +37,13 @@ const InfoSpan = styled.span`
 `;
 
 const InputSignUp = styled(InputGray)`
-  height: 3em;
+  height: 2.7em;
   padding: 1em;
-  margin-top: 1em;
 `;
 
 const BtnSignup = styled.button`
   ${Btn}
-  margin-top: 2em;
+  margin-top: 1.5em;
   padding: 1em;
   display: inline-block;
 `;

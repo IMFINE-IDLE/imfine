@@ -7,6 +7,7 @@ import PickSymptom from '../../components/PickSymptom/PickSymptom';
 import BtnEmailCheck from '../../components/SignUp/BtnEmailCheck/BtnEmailCheck';
 import BtnEmailCodeCheck from '../../components/SignUp/BtnEmailCodeCheck/BtnEmailCodeCheck';
 import VerfifyEmailTimer from '../../components/SignUp/VerifyEmailTimer/VerifyEmailTimer';
+import CheckTermsOfService from '../../components/SignUp/CheckTermsOfService/CheckTermsOfService';
 import { signUp } from '../../store/slice/userSlice';
 import {
   BoxSignUp,
@@ -38,6 +39,7 @@ function SignUpPage() {
   const [doneEmailVerify, setDoneEmailVerify] = useState(false); // 이메일 인증 완료 여부 체크
   const [timeLeft, setTimeLeft] = useState(179);
 
+  const [checkedTerms, setCheckedTerms] = useState(false);
   const [isNext, setIsNext] = useState(false);
 
   const [inputValue, inputEvent] = useReducer(
@@ -188,16 +190,6 @@ function SignUpPage() {
         }
       }
 
-      // 3-1. 이메일 인증 코드 검사
-      if (emailVerify === 'emailSent') {
-        setErrMsg((prev) => {
-          return {
-            ...prev,
-            emailVerifyErrorMsg: '',
-          };
-        });
-      }
-
       // 4. 비밀번호 유효성 검사
       if (currInput.password) {
         setErrMsg((prev) => {
@@ -293,7 +285,8 @@ function SignUpPage() {
     doneEmailVerify &&
     password.length > 0 &&
     confirmPassword.length > 0 &&
-    password === confirmPassword
+    password === confirmPassword &&
+    checkedTerms
   ) {
     // console.log('TRUE');
     if (!isValid) setIsValid(true);
@@ -455,6 +448,11 @@ function SignUpPage() {
                 }
               />
               {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
+
+              <CheckTermsOfService
+                checkedTerms={checkedTerms}
+                setCheckedTerms={setCheckedTerms}
+              />
               {isValid ? (
                 <BtnSignup
                   type="submit"
