@@ -52,7 +52,7 @@ public class NotificationController {
                 .body(responseService.getListResult(responseNotificationList));
 
     }
-
+/*
     @GetMapping(value = "/subscribe", consumes = MediaType.ALL_VALUE)
     public SseEmitter getNotification(@RequestParam String uid,
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
@@ -61,7 +61,7 @@ public class NotificationController {
 //        User user = userRepository.getByUid(uid);
         return notificationService.subscribe(uid, lastEventId);
 
-    }
+    }*/
 
     @PostMapping("/check")
     public ResponseEntity<Result> getNotificationCheck(@RequestBody RequestNotificationDetailDto requestNotificationDetail,
