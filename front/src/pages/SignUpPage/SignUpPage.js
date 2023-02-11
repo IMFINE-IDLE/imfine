@@ -4,6 +4,10 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
 import PickSymptom from '../../components/PickSymptom/PickSymptom';
+import BtnEmailCheck from '../../components/SignUp/BtnEmailCheck/BtnEmailCheck';
+import BtnEmailCodeCheck from '../../components/SignUp/BtnEmailCodeCheck/BtnEmailCodeCheck';
+import VerfifyEmailTimer from '../../components/SignUp/VerifyEmailTimer/VerifyEmailTimer';
+import CheckTermsOfService from '../../components/SignUp/CheckTermsOfService/CheckTermsOfService';
 import { signUp } from '../../store/slice/userSlice';
 import {
   BoxSignUp,
@@ -16,7 +20,6 @@ import {
   BtnSignup,
   ErrorMsg,
   DivEmail,
-  BtnEmailCheck,
   GuideMsg,
 } from './style';
 
@@ -32,8 +35,11 @@ function SignUpPage() {
     pwErrorMsg: '',
     confirmPwErrorMsg: '',
   });
-  const [emailVerify, setEmailVerify] = useState(false);
-  const [doneVerify, setDoneVerify] = useState(false);
+  const [emailVerify, setEmailVerify] = useState(false); // 이메일 인증메일 전송 단계 체크: valid, emailSent
+  const [doneEmailVerify, setDoneEmailVerify] = useState(false); // 이메일 인증 완료 여부 체크
+  const [timeLeft, setTimeLeft] = useState(179);
+
+  const [checkedTerms, setCheckedTerms] = useState(false);
   const [isNext, setIsNext] = useState(false);
 
   const [inputValue, inputEvent] = useReducer(
@@ -163,7 +169,9 @@ function SignUpPage() {
               });
 
               // 이메일 인증 버튼 활성화
-              setEmailVerify(true);
+              if (emailVerify === false) {
+                setEmailVerify('valid');
+              }
             } catch (err) {
               console.log(err.response.data);
               setErrMsg((prev) => {
@@ -180,16 +188,6 @@ function SignUpPage() {
             };
           });
         }
-      }
-
-      // 3-1. 이메일 인증 코드 검사
-      if (emailVerify) {
-        setErrMsg((prev) => {
-          return {
-            ...prev,
-            emailVerifyErrorMsg: '',
-          };
-        });
       }
 
       // 4. 비밀번호 유효성 검사
@@ -243,45 +241,26 @@ function SignUpPage() {
     confirmPwErrorMsg,
   } = errorMsg;
 
-  // 전체 유효 여부 확인
-  const noErr = Object.values(errorMsg).every((x) => x === '' || x === null);
-  // console.log(noErr);
-  if (
-    noErr &&
-    id.length > 0 &&
-    id.length <= 12 &&
-    name.length > 0 &&
-    name.length <= 12 &&
-    email.length > 0 &&
-    password.length > 0 &&
-    confirmPassword.length > 0 &&
-    password === confirmPassword
-  ) {
-    // console.log('TRUE');
-    if (!isValid) setIsValid(true);
-  } else {
-    if (isValid) setIsValid(false);
-    if (isNext) setIsNext(false);
-  }
-
   // 이메일 인증 코드 전송
   const sendVerifyEmail = async (emailState) => {
     try {
+      setTimeLeft(179); // 타이머 세팅
       const data = { email: emailState };
       const res = await axios.post(api.user.verifyEmail(emailState), data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (err) {
       console.log(err);
     }
   };
 
   // 이메일 인증 코드 확인
-  const asyncConfirmVerifyEmail = async () => {
+  const confirmVerifyEmailCode = async () => {
     const data = { email, confirm: emailCode };
     try {
       const res = await axios.post(api.user.confirmEmail(), data);
       console.log(res);
-      setDoneVerify(true);
+      setDoneEmailVerify(true);
+      alert('이메일 인증이 완료되었습니다.');
     } catch (err) {
       console.log(err);
       setErrMsg((prev) => {
@@ -292,6 +271,29 @@ function SignUpPage() {
       });
     }
   };
+
+  // 전체 유효 여부 확인
+  const noErr = Object.values(errorMsg).every((x) => x === '' || x === null);
+  // console.log(noErr);
+  if (
+    noErr &&
+    id.length > 0 &&
+    id.length <= 12 &&
+    name.length > 0 &&
+    name.length <= 12 &&
+    email.length > 0 &&
+    doneEmailVerify &&
+    password.length > 0 &&
+    confirmPassword.length > 0 &&
+    password === confirmPassword &&
+    checkedTerms
+  ) {
+    // console.log('TRUE');
+    if (!isValid) setIsValid(true);
+  } else {
+    if (isValid) setIsValid(false);
+    if (isNext) setIsNext(false);
+  }
 
   // 최종 회원 가입
   const signUpByData = async () => {
@@ -367,29 +369,20 @@ function SignUpPage() {
                       ? { border: '1px solid var(--red-color)' }
                       : null
                   }
+                  readOnly={doneEmailVerify ? true : false}
                 />
-                {emailVerify ? (
+                {!doneEmailVerify && (
                   <BtnEmailCheck
-                    type="button"
-                    onClick={() => {
-                      sendVerifyEmail(email);
-                    }}
-                  >
-                    인증
-                  </BtnEmailCheck>
-                ) : (
-                  <BtnEmailCheck
-                    type="button"
-                    disabled
-                    style={{ background: 'var(--gray700-color)' }}
-                  >
-                    인증
-                  </BtnEmailCheck>
+                    email={email}
+                    emailVerify={emailVerify}
+                    setEmailVerify={setEmailVerify}
+                    sendVerifyEmail={sendVerifyEmail}
+                  />
                 )}
               </DivEmail>
               {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
 
-              {emailVerify && !doneVerify ? (
+              {emailVerify === 'emailSent' && !doneEmailVerify ? (
                 <>
                   <Label htmlFor="emailCodeInput">인증코드 입력</Label>
                   <GuideMsg>이메일로 전송된 인증코드를 입력해주세요.</GuideMsg>
@@ -409,24 +402,14 @@ function SignUpPage() {
                           : null
                       }
                     />
-                    {emailVerify ? (
-                      <BtnEmailCheck
-                        type="button"
-                        onClick={() => {
-                          asyncConfirmVerifyEmail();
-                        }}
-                      >
-                        인증
-                      </BtnEmailCheck>
-                    ) : (
-                      <BtnEmailCheck
-                        type="button"
-                        disabled
-                        style={{ background: 'var(--gray700-color)' }}
-                      >
-                        인증
-                      </BtnEmailCheck>
-                    )}
+                    <VerfifyEmailTimer
+                      timeLeft={timeLeft}
+                      setTimeLeft={setTimeLeft}
+                    />
+                    <BtnEmailCodeCheck
+                      emailCode={emailCode}
+                      confirmVerifyEmailCode={confirmVerifyEmailCode}
+                    />
                   </DivEmail>
                   {emailVerifyErrorMsg && (
                     <ErrorMsg>{emailVerifyErrorMsg}</ErrorMsg>
@@ -465,6 +448,11 @@ function SignUpPage() {
                 }
               />
               {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
+
+              <CheckTermsOfService
+                checkedTerms={checkedTerms}
+                setCheckedTerms={setCheckedTerms}
+              />
               {isValid ? (
                 <BtnSignup
                   type="submit"
