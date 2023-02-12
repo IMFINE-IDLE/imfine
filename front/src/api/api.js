@@ -25,6 +25,7 @@ const api = {
     login: () => URL + USERS + '/sign-in',
     logout: () => URL + USERS + '/sign-out',
     refresh: () => URL + USERS + '/refresh',
+    setInitialProfile: () => URL + USERS + '/profile',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },
