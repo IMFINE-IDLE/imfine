@@ -114,7 +114,7 @@ public class DiaryServiceImpl implements DiaryService {
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
         // 심텀들 찾기
-        List<DiaryHasSymptom> diaryHasSymptoms = foundDiary.getDiaryHasSymptoms();
+        List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.findDiaryHasSymptomByDiary(foundDiary);
         List<ResponseSymptomDto> responseSymptomDtos = new ArrayList<>();
 
 
