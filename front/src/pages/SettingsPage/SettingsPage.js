@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import BtnLogOut from '../../components/BtnLogOut/BtnLogOut';
 import Modal from '../../components/Modal/Modal';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import {
@@ -22,8 +23,8 @@ const SettingsPage = () => {
         <ProfileConfigOptionBtn onClick={() => navigate(`/change-password`)}>
           <span>비밀번호 변경하기</span>
         </ProfileConfigOptionBtn>
-        <ProfileConfigOptionBtn onClick={() => navigate('/logout')}>
-          <span>로그아웃하기</span>
+        <ProfileConfigOptionBtn>
+          <BtnLogOut />
         </ProfileConfigOptionBtn>
         <ProfileConfigOptionBtn onClick={() => setModalOpen(true)}>
           <span>탈퇴하기</span>
