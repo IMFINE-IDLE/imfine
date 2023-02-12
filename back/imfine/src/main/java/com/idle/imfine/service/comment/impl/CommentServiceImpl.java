@@ -2,6 +2,7 @@ package com.idle.imfine.service.comment.impl;
 
 import com.idle.imfine.data.dto.comment.request.RequestContentRegistraitionDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.comment.Comment;
@@ -32,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void save(RequestContentRegistraitionDto requestContentRegistraitionDto, String uid) {
+    public ResponseNotificationPost save(RequestContentRegistraitionDto requestContentRegistraitionDto, String uid) {
         User user = common.getUserByUid(uid);
         Paper paper = paperRepository.findById(requestContentRegistraitionDto.getPaperId())
                 .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
@@ -44,10 +45,8 @@ public class CommentServiceImpl implements CommentService {
                 .build());
         paper.setCommentCount(paper.getCommentCount() + 1);
         paperRepository.save(paper);
-        if (user.getId() != paper.getDiary().getWriter().getId()) {
-            notificationService.send(user.getId(), paper.getDiary().getWriter().getId(), 2,
-                    paper.getId(), 2);
-        }
+        return new ResponseNotificationPost(user.getId(), paper.getDiary().getWriter().getId(), 2,
+                paper.getId(), 2);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void postCommentLike(RequestHeartDto requestHeartDto, String uid) {
+    public ResponseNotificationPost postCommentLike(RequestHeartDto requestHeartDto, String uid) {
         User user = common.getUserByUid(uid);
 
         Comment comment = commentRepository.getById(requestHeartDto.getContentId());
@@ -84,10 +83,9 @@ public class CommentServiceImpl implements CommentService {
                 .build());
         comment.setLikeCount(comment.getLikeCount() + 1);
         commentRepository.save(comment);
-        if (user.getId() != comment.getWriter().getId()) {
-            notificationService.send(user.getId(), comment.getWriter().getId(), 2, comment.getPaperId(),
-                    33);
-        }
+
+        return new ResponseNotificationPost(user.getId(), comment.getWriter().getId(), 2, comment.getPaperId(),
+                33);
     }
 
     @Override

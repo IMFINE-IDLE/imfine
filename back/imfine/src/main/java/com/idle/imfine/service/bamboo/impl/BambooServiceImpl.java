@@ -242,6 +242,7 @@ public class BambooServiceImpl implements BambooService {
     public void deleteBamboo() {
         LOGGER.info("Delete 수행 {}", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
         List<Bamboo> bamboos = bambooRepository.findByDeleteAtBefore(LocalDateTime.now());
+//        heartRepository.deleteByContentsCodeIdAndContentsId(4);
         leafRepository.deleteLeavesBy(bamboos);
         bambooRepository.deleteByDeleteAtBefore(LocalDateTime.now());
     }

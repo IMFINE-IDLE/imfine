@@ -1,6 +1,7 @@
 package com.idle.imfine.service.paper;
 
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
@@ -17,7 +18,7 @@ public interface PaperService {
 
     List<String> modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) throws IOException;
 
-    void postPaperLike(RequestHeartDto requestLikeDto, String uid);
+    ResponseNotificationPost postPaperLike(RequestHeartDto requestLikeDto, String uid);
 
     void deletePaperLike(RequestHeartDto build, String uid);
 

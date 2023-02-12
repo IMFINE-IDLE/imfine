@@ -10,6 +10,7 @@ import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponseModifyPaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
 import com.idle.imfine.service.FileStore;
+import com.idle.imfine.service.notification.NotificationService;
 import com.idle.imfine.service.paper.PaperService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import java.util.List;
 public class PaperController {
 
     private final PaperService paperService;
+    private final NotificationService notificationService;
     private final ResponseService responseService;
     private final FileStore fileStore;
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
@@ -87,7 +89,7 @@ public class PaperController {
     @PostMapping("/like")
     public ResponseEntity<Result> postPaperLike(@RequestBody RequestHeartDto requestLikeDto, @LoginUser String uid) {
         requestLikeDto.setContentCodeId(2);
-        paperService.postPaperLike(requestLikeDto, uid);
+        notificationService.dtoToSend(paperService.postPaperLike(requestLikeDto, uid));
         LOGGER.info("일기 좋아요 {}", requestLikeDto);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }

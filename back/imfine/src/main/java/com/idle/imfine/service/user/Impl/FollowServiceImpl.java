@@ -1,5 +1,6 @@
 package com.idle.imfine.service.user.Impl;
 
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.dto.user.response.FollowResponseDto;
 import com.idle.imfine.data.entity.Follow;
 import com.idle.imfine.data.entity.FollowWait;
@@ -36,7 +37,7 @@ public class FollowServiceImpl implements FollowService {
     private final NotificationRepository notificationRepository;
 
     @Override
-    public void followUser(String uid, String otherUid) {
+    public ResponseNotificationPost followUser(String uid, String otherUid) {
         LOGGER.info("[followUser] 팔로우 신청");
 
         if (uid.equals(otherUid)) {
@@ -65,9 +66,9 @@ public class FollowServiceImpl implements FollowService {
                     .receiver(other)
                     .build();
             followWaitRepository.save(followWait);
-            notificationService.send(user.getId(), other.getId(), 6, user.getId(), 6);
+
             LOGGER.info("[followUser] 상대방에게 팔로우 요청을 보냈습니다.");
-            return;
+            return new ResponseNotificationPost(user.getId(), other.getId(), 6, user.getId(), 6);
         }
 
         Follow follow = Follow.builder()
@@ -78,8 +79,9 @@ public class FollowServiceImpl implements FollowService {
         common.increaseFollowingCount(user);
         common.increaseFollwerCount(other);
         followRepository.save(follow);
-        notificationService.send(user.getId(), other.getId(), 6, user.getId(), 5);
+
         LOGGER.info("[followUser] 팔로우가 완료되었습니다.");
+        return new ResponseNotificationPost(user.getId(), other.getId(), 6, user.getId(), 5);
     }
 
     @Override

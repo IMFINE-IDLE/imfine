@@ -6,6 +6,7 @@ import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.comment.request.RequestContentRegistraitionDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.service.comment.CommentService;
+import com.idle.imfine.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +21,11 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
     private final CommentService commentService;
+    private final NotificationService notificationService;
     private final ResponseService responseService;
     @PostMapping
     public ResponseEntity<Result> postComment(@RequestBody RequestContentRegistraitionDto requestContentRegistraitionDto, @LoginUser String uid) {
-        commentService.save(requestContentRegistraitionDto, uid);
+        notificationService.dtoToSend(commentService.save(requestContentRegistraitionDto, uid));
         LOGGER.info("댓글 생성 {}", requestContentRegistraitionDto);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
@@ -48,7 +50,7 @@ public class CommentController {
     @PostMapping("/like")
     public ResponseEntity<Result> postCommentLike(@RequestBody RequestHeartDto requestHeartDto, @LoginUser String uid) {
         requestHeartDto.setContentCodeId(3);
-        commentService.postCommentLike(requestHeartDto, uid);
+        notificationService.dtoToSend(commentService.postCommentLike(requestHeartDto, uid));
         LOGGER.info("댓글 좋아요 등록 들어옴 {}", requestHeartDto);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }

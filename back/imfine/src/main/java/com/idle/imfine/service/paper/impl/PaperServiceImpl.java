@@ -5,6 +5,7 @@ import com.idle.imfine.data.dto.comment.response.ResponseCommentDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.image.ResponseModifyImageDto;
 import com.idle.imfine.data.dto.image.UploadFile;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPostDto;
 import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
@@ -208,7 +209,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Transactional
     @Override
-    public void postPaperLike(RequestHeartDto requestHeartDto, String uid) {
+    public ResponseNotificationPost postPaperLike(RequestHeartDto requestHeartDto, String uid) {
         LOGGER.info("일기 좋아요 service");
         User user = common.getUserByUid(uid);
         Paper foundPaper = paperRepository.findById(requestHeartDto.getContentId())
@@ -229,9 +230,8 @@ public class PaperServiceImpl implements PaperService {
 
         Long userId = user.getId();
         Long otherId = foundPaper.getDiary().getWriter().getId();
-        if (!userId.equals(otherId)) {
-            notificationService.send(user.getId(), foundPaper.getDiary().getWriter().getId(), 2, foundPaper.getId(), 31);
-        }
+
+        return new ResponseNotificationPost(user.getId(), foundPaper.getDiary().getWriter().getId(), 2, foundPaper.getId(), 31);
     }
 
     @Override
