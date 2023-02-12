@@ -2,6 +2,18 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import api from '../../api/api';
 
+export const tokenRefresh = async () => {
+  try {
+    const refresh = await axios.post(api.user.refresh(), {
+      withCredentials: true,
+    });
+    console.log(refresh);
+  } catch (err) {
+    console.log(err);
+    logOut();
+  }
+};
+
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
