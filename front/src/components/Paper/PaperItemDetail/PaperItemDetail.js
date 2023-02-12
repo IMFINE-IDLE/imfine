@@ -81,7 +81,8 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     }
   }
 
-  console.log(diaryId);
+  // console.log(diaryId);
+
   return (
     <>
       <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
@@ -157,8 +158,6 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
             myHeart={myHeart}
             likeCount={likeCount}
             commentCount={commentCount}
-            like={likePaper}
-            likeDelete={likePaperDelete}
           />
         </BoxBottomDetail>
       </BoxPaperDetail>
