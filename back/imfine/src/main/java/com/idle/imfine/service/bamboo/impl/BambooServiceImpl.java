@@ -5,6 +5,7 @@ import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.bamboo.Bamboo;
@@ -187,7 +188,7 @@ public class BambooServiceImpl implements BambooService {
 
     @Override
     @Transactional
-    public void likeBamboo(RequestHeartDto requestHeart, String uid) {
+    public ResponseNotificationPost likeBamboo(RequestHeartDto requestHeart, String uid) {
 
         User user = userRepository.getByUid(uid);
         Bamboo bamboo = bambooRepository.getById(requestHeart.getContentId());
@@ -209,12 +210,14 @@ public class BambooServiceImpl implements BambooService {
             bamboo.setLikeCount(bamboo.getLikeCount() + 1);
             bambooRepository.save(bamboo);
 
-            Long userId = user.getId();
-            Long otherId = bamboo.getWriter().getId();
-            if (!userId.equals(otherId)) {
-                notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
-            }
+            //return을 내가 내 알람 안 울리게 처리하기ㅣㅣㅣㅣ
+//            Long userId = user.getId();
+//            Long otherId = bamboo.getWriter().getId();
+//            if (!userId.equals(otherId)) {
+//                notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
+//            }
         }
+        return new ResponseNotificationPost(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
     }
 
     @Override
@@ -239,6 +242,7 @@ public class BambooServiceImpl implements BambooService {
     public void deleteBamboo() {
         LOGGER.info("Delete 수행 {}", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
         List<Bamboo> bamboos = bambooRepository.findByDeleteAtBefore(LocalDateTime.now());
+//        heartRepository.deleteByContentsCodeIdAndContentsId(4);
         leafRepository.deleteLeavesBy(bamboos);
         bambooRepository.deleteByDeleteAtBefore(LocalDateTime.now());
     }

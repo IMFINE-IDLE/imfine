@@ -5,6 +5,7 @@ import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.*;
+import com.idle.imfine.service.notification.NotificationService;
 import com.idle.imfine.service.paper.impl.PaperServiceImpl;
 import com.idle.imfine.service.user.ConditionService;
 import com.idle.imfine.service.user.EmailService;
@@ -33,6 +34,7 @@ public class UserController {
     private final ConditionService conditionService;
     private final ResponseService responseService;
     private final PaperServiceImpl paperService;
+    private final NotificationService notificationService;
 
     @PostMapping("/sign-in")
     public ResponseEntity<Result> signIn(@RequestBody SignInRequestDto requestDto) {
@@ -225,8 +227,8 @@ public class UserController {
 
     @PostMapping("/follow")
     public ResponseEntity<Result> followUser(@LoginUser String loginUid, @RequestBody followUserRequestDto requestDto) {
-        followService.followUser(loginUid, requestDto.getUid());
-
+//        followService.followUser(loginUid, requestDto.getUid());
+        notificationService.dtoToSend(followService.followUser(loginUid, requestDto.getUid()));
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }

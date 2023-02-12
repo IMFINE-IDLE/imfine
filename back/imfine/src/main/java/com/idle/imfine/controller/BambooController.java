@@ -8,6 +8,7 @@ import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.service.bamboo.BambooService;
+import com.idle.imfine.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ public class BambooController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BambooController.class);
     private final BambooService bambooService;
     private final ResponseService responseService;
+    private final NotificationService notificationService;
 
     @GetMapping("/list")
     public ResponseEntity<Result> getList(@RequestParam("filter") String filter, @LoginUser String uid, @PageableDefault(size=10) Pageable pageable){
@@ -39,7 +41,6 @@ public class BambooController {
 
 
     @GetMapping("/myactive")
-    // 로그인 구현되면 loginuser 추가하기
     public ResponseEntity<Result> getMyActiveList(@RequestParam("filter") String filter, @LoginUser String uid, @PageableDefault(size=10) Pageable pageable){
         LOGGER.info("myactivelist api에 들어옴  {}", filter);
 
@@ -49,7 +50,6 @@ public class BambooController {
     }
 
     @GetMapping("/detail/{bamboo-id}")
-    // 로그인 구현되면 loginuser 추가하기
     public ResponseEntity<Result> getBambooDetail(@PathVariable("bamboo-id") long bambooId, @LoginUser String uid){
         LOGGER.info("getBamboodetail api에 들어옴  {}", bambooId);
 
@@ -58,29 +58,23 @@ public class BambooController {
                 .body(responseService.getSingleResult(responseBambooDetailDto));
     }
     @PostMapping
-    // 로그인 구현되면 loginuser 추가하기
     public ResponseEntity<Result> postBamboo(@RequestBody RequestBambooDto requestBamboo, @LoginUser String uid) {
         LOGGER.info("대나무 등록 api에 들어왔습니다.");
-//        RequestBambooDto rbd = new RequestBambooDto(content, 1);
         requestBamboo.setWriterId(uid);
         bambooService.save(requestBamboo);
-//        LOGGER.info("대나무 등록 api에 들어왔습니다. {}", rbd);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
     @PostMapping("/like")
-    // 로그인 구현되면 loginuser 추가하기
     public ResponseEntity<Result> postBambooLike(@RequestBody RequestHeartDto requestHeartDto, @LoginUser String uid) {
-
-        bambooService.likeBamboo(requestHeartDto, uid);
-//        LOGGER.info("대나무 좋아요 {}", rl );
+        LOGGER.info("대나무 좋아요 api");
+        notificationService.dtoToSend(bambooService.likeBamboo(requestHeartDto, uid));
+        LOGGER.info("대나무 좋아요 {}", requestHeartDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @DeleteMapping("/like/{bamboo-id}")
-    // 로그인 구현되면 loginuser 추가하기
-    // 검증을 서비스에서 해야하나?
     public ResponseEntity<Result> deleteBambooLike(@PathVariable("bamboo-id") long bambooId, @LoginUser String uid) {
         LOGGER.info("대나무 좋아요 삭제 api에 들어왔습니다. {}", bambooId);
 

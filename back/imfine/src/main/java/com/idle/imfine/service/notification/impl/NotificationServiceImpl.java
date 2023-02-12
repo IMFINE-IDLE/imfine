@@ -3,6 +3,7 @@ package com.idle.imfine.service.notification.impl;
 
 import com.idle.imfine.data.dto.notification.request.RequestNotificationDetailDto;
 import com.idle.imfine.data.dto.notification.response.ResponseNotification;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.notification.Notification;
 import com.idle.imfine.data.repository.emitter.EmitterRepository;
@@ -123,7 +124,9 @@ public class NotificationServiceImpl implements NotificationService {
         String id = uid + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
+        LOGGER.info("에미터 커플리션 {} {}", id, lastEventId);
         emitter.onCompletion(() -> emitterRepository.deleteById(id));
+        LOGGER.info("에미터 타임아웃 {} {}", id, lastEventId);
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
         sendToClient(emitter, id, "EventStream Created. [userId=" + uid + "]");
@@ -149,11 +152,20 @@ public class NotificationServiceImpl implements NotificationService {
             LOGGER.info("sendToClient 들어오니ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ");
         } catch (IOException exception) {
             LOGGER.info("여기는 오니");
+            exception.printStackTrace();
             emitterRepository.deleteById(id);
             throw new RuntimeException("연결 오류!");
         }
     }
 
+    public void dtoToSend(ResponseNotificationPost responseDto) {
+        Long senderId = responseDto.getSenderId();
+        Long receiverId = responseDto.getReceiverId();
+        if (!senderId.equals(receiverId)) {
+            send(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
+                responseDto.getContentsId(), responseDto.getType());
+        }
+    }
     public void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
         //////
         User user = userRepository.getById(recieverId);
@@ -163,6 +175,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = saveNotification(senderId, recieverId, contenstsCodeId, contentsId, type);
 
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
+        LOGGER.info("sseEmitter {}", sseEmitters.toString());
         sseEmitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
