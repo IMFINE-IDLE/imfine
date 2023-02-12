@@ -2,6 +2,7 @@ package com.idle.imfine.service.leaf.impl;
 
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.leaf.request.RequestLeafDto;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.bamboo.Bamboo;
@@ -37,7 +38,7 @@ public class LeafServiceImpl implements LeafService {
     private final Common common;
 
     @Override
-    public void save(RequestLeafDto requestLeafDto) {
+    public ResponseNotificationPost save(RequestLeafDto requestLeafDto) {
 
         User user = userRepository.getByUid(requestLeafDto.getWriterId());
         Bamboo bamboo = bambooRepository.getById(requestLeafDto.getBambooId());
@@ -61,15 +62,16 @@ public class LeafServiceImpl implements LeafService {
         bambooRepository.save(bamboo);
         LOGGER.info("{} {} {}", user.getId(), bamboo.getWriter().getId(), bamboo.getId());
 
-        Long userId = user.getId();
-        Long otherId = bamboo.getWriter().getId();
-        if (!userId.equals(otherId)) {
-            notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 4);
-        }
+//        Long userId = user.getId();
+//        Long otherId = bamboo.getWriter().getId();
+//        if (!userId.equals(otherId)) {
+//            notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 4);
+//        }
+        return new ResponseNotificationPost(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 4);
     }
 
     @Override
-    public void likeLeaf(RequestHeartDto requestHeart, String uid) {
+    public ResponseNotificationPost likeLeaf(RequestHeartDto requestHeart, String uid) {
 
         User user = userRepository.getByUid(uid);
         Leaf leaf = leafRepository.getById(requestHeart.getContentId());
@@ -91,12 +93,13 @@ public class LeafServiceImpl implements LeafService {
             leaf.setLikeCount(leaf.getLikeCount() + 1);
             leafRepository.save(leaf);
 
-            Long userId = user.getId();
-            Long otherId = bamboo.getWriter().getId();
-            if (!userId.equals(otherId)) {
-                notificationService.send(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
-            }
+//            Long userId = user.getId();
+//            Long otherId = bamboo.getWriter().getId();
+//            if (!userId.equals(otherId)) {
+//                notificationService.send(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
+//            }
         }
+        return new ResponseNotificationPost(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
     }
 
     @Override
