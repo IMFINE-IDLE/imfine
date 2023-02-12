@@ -9,8 +9,6 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponseModifyPaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
-import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
-import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.paper.PaperService;
 import java.io.IOException;
@@ -20,12 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RestController
