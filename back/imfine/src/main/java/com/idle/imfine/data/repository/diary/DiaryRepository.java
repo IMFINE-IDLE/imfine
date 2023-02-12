@@ -32,7 +32,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<Diary> findByDiaryFetchMedicalCode(@Param("writer") User writer);
     @Query("select distinct d from Diary d join fetch Paper p on p.diary=d  Where d.id=:diaryId and p.date between :startDate and :endDate")
     Optional<Diary> findDiaryByIdFetchPaper(@Param("diaryId") long diaryId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
-    @Query("select distinct d from Diary d join fetch d.diaryHasSymptoms join fetch d.writer join fetch d.medicalCode where d.id=:diaryId")
+    @Query("select distinct d from Diary d join fetch d.writer join fetch d.medicalCode where d.id=:diaryId")
     Optional<Diary> findDiaryByIdFetchDetail(@Param("diaryId") long diaryId);
     @Query("SELECT distinct d FROM Diary d join fetch Subscribe s on d=s.diary where s.userId=:id")
     List<Diary> findAllByUserId(@Param("id") long id);
