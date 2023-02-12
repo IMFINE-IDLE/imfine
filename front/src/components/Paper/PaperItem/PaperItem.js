@@ -15,7 +15,7 @@ import {
   SpanDate,
 } from './style';
 
-function PaperItem({ paper, likePaper, likePaperDelete }) {
+function PaperItem({ paper }) {
   const userId = useSelector((state) => {
     return state.user.uid;
   });
@@ -113,8 +113,6 @@ function PaperItem({ paper, likePaper, likePaperDelete }) {
           myHeart={myHeart}
           likeCount={likeCount}
           commentCount={commentCount}
-          like={likePaper}
-          likeDelete={likePaperDelete}
         />
       </BoxBottom>
     </BoxPaper>

@@ -58,36 +58,6 @@ function PaperFeedPage() {
     fetchPaperFeed(page);
   }, [page]);
 
-  const likePaper = async (paperId) => {
-    try {
-      const res = await axios.post(
-        api.paper.paperLikePost(),
-        {
-          contentId: paperId,
-        },
-        {
-          headers: { Authorization: localStorage.getItem('accessToken') },
-        }
-      );
-      console.log(res);
-      fetchPaperFeed();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
-  const likePaperDelete = async (paperId) => {
-    try {
-      const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log(res);
-      fetchPaperFeed();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
   return (
     <>
       <NavBarBasic />
@@ -108,11 +78,7 @@ function PaperFeedPage() {
       ) : (
         <>
           <BoxPaperFeed>
-            <PaperList
-              paperList={paperList}
-              likePaper={likePaper}
-              likePaperDelete={likePaperDelete}
-            />
+            <PaperList paperList={paperList} />
             <BtnFloat />
             <Circle small />
             <Circle />
