@@ -25,7 +25,7 @@ function NotificationPage() {
   useEffect(() => {
     let uid = localStorage.getItem('uid'); //uid로 할수 있나
     let eventSource = new EventSourcePolyfill(
-      `https://i8a809.p.ssafy.io/api/notification/subscribe?uid=${uid}`,
+      `https://i8a809.p.ssafy.io/api/sse?uid=${uid}`,
       { withCredentials: true }
     );
     console.log('event url', eventSource);
