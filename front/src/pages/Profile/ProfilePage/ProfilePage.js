@@ -55,7 +55,7 @@ function ProfilePage() {
 
   return (
     <div>
-      <NavBarBasic />
+      <NavBarBasic BackgroundColor="light" />
       <ProfileInfo
         isMine={isMine}
         condition={userInfo.condition}

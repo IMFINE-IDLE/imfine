@@ -30,27 +30,7 @@ const ProfileInfo = ({
   const [followStatus, setFollowStatus] = useState(relation);
   const navigate = useNavigate();
 
-  // // 타인의 프로필 페이지에서 팔로우, 언팔로우 요청
-  // const fetchFollow = async () => {
-  //   try {
-  //     // 현재 팔로우하고 있으면 언팔로우 요청
-  //     if (relation === 1) {
-  //       const res = await axios.delete(api.profile.unfollow(uid));
-  //       console.log(res.data.data);
-  //     }
-  //     // 현재 팔로우하고 있지 않으면 팔로우 요청
-  //     else if (relation === 3) {
-  //       console.log('uid', uid);
-  //       const res = await axios.post(api.profile.follow(), {
-  //         uid,
-  //       });
-  //       console.log(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
+  // 타인의 프로필 페이지에서 팔로우, 언팔로우 요청
   const fetchChangeFollowStatus = async () => {
     try {
       // 내가 현재 팔로중이면 언팔로우 요청을 보내고 relation을 3으로 변경
@@ -83,7 +63,7 @@ const ProfileInfo = ({
   }, [cloverCode, followStatus]);
 
   return (
-    <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
+    <BoxNoShad color="light" radius="0" padding="0.3em 1em 6.7em 1em">
       <ProfileInfoContainer>
         <Clover
           // 내 프로필일 때는 store에서 컨디션을 가져와서 렌더링
