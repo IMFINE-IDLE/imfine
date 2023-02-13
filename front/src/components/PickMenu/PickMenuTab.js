@@ -63,10 +63,8 @@ const PickMenuTab = ({
   // 메모
   // 여기서 medicalList = useState(medicals)로 한 번 더 state 써서 사용하다가 마지막에 버튼 눌렀을 때만
   // props로 받아온 setMedicals에 넣어주는 게 좋지 않을까...?
-  const [pickedMedicals, setPickedMedicals] = useState(medicals || []);
-  const [pickedSymptoms, setPickedSymptoms] = useState(symptoms || []);
-  // const [, updateState] = useState();
-  // const forceUpdate = useCallback(() => updateState({}), []);
+  // const [pickedMedicals, setPickedMedicals] = useState(medicals || []);
+  // const [pickedSymptoms, setPickedSymptoms] = useState(symptoms || []);
 
   /*
    * Hooks
@@ -97,9 +95,9 @@ const PickMenuTab = ({
   const ToggleSymptom = (type, itemId, itemName) => {
     let prevList;
     if (type === 'medical') {
-      prevList = [...pickedMedicals];
+      prevList = [...medicals];
     } else {
-      prevList = [...pickedSymptoms];
+      prevList = [...symptoms];
     }
     console.log(prevList);
     let idx = prevList.findIndex((item) => item.id === itemId);
@@ -110,9 +108,9 @@ const PickMenuTab = ({
     }
 
     if (type === 'medical') {
-      setPickedMedicals(prevList);
+      setMedicals(prevList);
     } else {
-      setPickedSymptoms(prevList);
+      setSymptoms(prevList);
     }
   };
 
@@ -139,7 +137,7 @@ const PickMenuTab = ({
                 <PickMenu
                   type="symptom"
                   dataList={symptomMenuList}
-                  setPickedSymptoms={setPickedSymptoms}
+                  setPickedSymptoms={setSymptoms}
                   ToggleSymptom={ToggleSymptom}
                   ref={refs}
                 />
@@ -147,7 +145,7 @@ const PickMenuTab = ({
                 <PickMenu
                   type="medical"
                   dataList={medicalMenuList}
-                  setPickedMedicals={setPickedMedicals}
+                  setPickedMedicals={setMedicals}
                   ToggleSymptom={ToggleSymptom}
                   ref={refs}
                 />
@@ -162,7 +160,7 @@ const PickMenuTab = ({
               <PickMenu
                 type="medical"
                 dataList={sampleDataList}
-                setPickedMedicals={setPickedMedicals}
+                setPickedMedicals={setMedicals}
                 ToggleSymptom={ToggleSymptom}
                 ref={refs}
               />
@@ -175,7 +173,7 @@ const PickMenuTab = ({
               <PickMenu
                 type="symptom"
                 dataList={sampleDataList}
-                setPickedSymptoms={setPickedSymptoms}
+                setPickedSymptoms={setSymptoms}
                 ToggleSymptom={ToggleSymptom}
                 ref={refs}
               />
@@ -193,8 +191,8 @@ const PickMenuTab = ({
           <PickedItemList
             title={title}
             type={title === '증상' ? 'symptom' : 'medical'}
-            medicals={pickedMedicals}
-            symptoms={pickedSymptoms}
+            medicals={medicals}
+            symptoms={symptoms}
             canModify={true}
             ToggleSymptom={ToggleSymptom}
           />
@@ -203,14 +201,14 @@ const PickMenuTab = ({
             <PickedItemList
               title="질병/수술"
               type="medical"
-              medicals={pickedMedicals}
+              medicals={medicals}
               canModify={true}
               ToggleSymptom={ToggleSymptom}
             />
             <PickedItemList
               title="증상"
               type="symptom"
-              symptoms={pickedSymptoms}
+              symptoms={symptoms}
               color="light-pink"
               canModify={true}
               ToggleSymptom={ToggleSymptom}
@@ -260,8 +258,8 @@ const PickMenuTab = ({
           height="3.5em"
           type="submit"
           onClick={() => {
-            setMedicals(pickedMedicals);
-            setSymptoms(pickedSymptoms);
+            setMedicals(setMedicals);
+            setSymptoms(setSymptoms);
             onSubmitBtnClick();
           }}
         >

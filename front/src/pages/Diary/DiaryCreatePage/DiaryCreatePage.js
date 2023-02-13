@@ -9,8 +9,13 @@ const DiaryCreatePage = () => {
   const [medicalList, setMedicalList] = useState(null);
   const [symptomList, setSymptomList] = useState(null);
 
+  const infoToConfirm = {
+    medicalList,
+    symptomList,
+  };
+
   const handleSubmit = () => {
-    navigate('/diary/create/confirm');
+    navigate('/diary/create/confirm', { state: infoToConfirm });
   };
 
   console.log('medicals picked test', medicalList);

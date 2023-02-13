@@ -30,11 +30,8 @@ const PickMenu = forwardRef(({ type, dataList, ToggleSymptom }, ref) => {
     dataListModified.push(dataList.slice(0 + 4 * i, 4 + 4 * i));
   }
 
-  const { subMenuSection, clickedSubMenuSectionIdx, clickedMenuId } = ref;
   // // 메뉴 클릭시 서브메뉴 열기 위한 ref
-  // const subMenuSection = useRef([]);
-  // const clickedSubMenuSectionIdx = useRef(null);
-  // const clickedMenuId = useRef(null);
+  const { subMenuSection, clickedSubMenuSectionIdx, clickedMenuId } = ref;
 
   const [detailList, setDetailList] = useState(null);
 
