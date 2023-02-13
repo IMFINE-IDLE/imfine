@@ -1,14 +1,28 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import api from '../../api/api';
+import { axiosInstance } from '../../api/axiosInstance';
 import { BoxRT50LB50 } from '../common/BoxRT50LB50/BoxRT50LB50';
 import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 import IconSymptom from '../common/IconSymptom/IconSymptom';
 import {
   BoxPickMenu,
+  PickMenuDetailMenu,
   PickMenuRowContainer,
   PickMenuSubListContainer,
 } from './style';
 
-function PickMenu({ type, dataList, setIsOpen }) {
+/* 프롭스 설명
+ *
+ * (String) type: 'medical', 'symptom' 중 하나.
+ * (Any) text: type='text' 일 경우 표시될 내용
+ * (Array) medicals: [{id: Number, name: String}] 형식의 배열
+ * (Array) symptoms: [{id: Number, name: String}] 형식의 배열
+ * (String) color: 아이콘 색깔
+ * (Boolean) canModify: true일 경우 수정 가능
+ *
+ */
+
+function PickMenu({ type, dataList, ToggleSymptom }) {
   // dataList를 4개씩 잘라서 dataListModified에 넣기
   const dataListModified = [];
   // const rowCnt = Math.floor(dataList.length / 4);
@@ -20,6 +34,26 @@ function PickMenu({ type, dataList, setIsOpen }) {
   const subMenuSection = useRef([]);
   const clickedSubMenuSectionIdx = useRef(null);
   const clickedMenuId = useRef(null);
+
+  // useEffect(() => {
+  //   subMenuSection.current = [];
+  //   clickedSubMenuSectionIdx.current = null;
+  //   clickedMenuId.current = null;
+  // }, [type]);
+
+  const [detailList, setDetailList] = useState(null);
+
+  // 질병/수술 또는 증상 세부목록 가져오기
+  const fetchDetailList = async (id) => {
+    const url =
+      type === 'medical'
+        ? api.medical.getMedicalDetail(id)
+        : api.symptom.getSymptomDetail(id);
+    const res = await axiosInstance.get(url);
+    console.log('detail', res.data.data);
+    await setDetailList(res.data.data);
+    console.log(detailList);
+  };
 
   // 메뉴 하나 클릭했을 때
   const handleMenuClick = (e, idx, id) => {
@@ -60,6 +94,9 @@ function PickMenu({ type, dataList, setIsOpen }) {
       clickedSubMenuSectionIdx.current = idx;
       subMenuSection.current[idx].lastElementChild.style.display = 'block';
     }
+
+    // 메뉴 id로 세부목록 불러오기
+    fetchDetailList(id);
   };
 
   return (
@@ -75,9 +112,12 @@ function PickMenu({ type, dataList, setIsOpen }) {
     //     />
     //   ))}
     //       </BoxPickMenu>
-    <FlexDiv wrap="wrap">
+    <FlexDiv wrap="wrap" padding="0 1em">
       {dataListModified?.map((dataList, idx) => (
-        <PickMenuRowContainer ref={(el) => (subMenuSection.current[idx] = el)}>
+        <PickMenuRowContainer
+          ref={(el) => (subMenuSection.current[idx] = el)}
+          key={idx}
+        >
           <FlexDiv justify="space-bewteen" gap="1.25em" padding="0 0 1em 0">
             {dataList.map(({ id, name, image }) => (
               <IconSymptom
@@ -91,14 +131,43 @@ function PickMenu({ type, dataList, setIsOpen }) {
             ))}
           </FlexDiv>
 
-          <PickMenuSubListContainer>
-            <FlexDiv direction="column">
-              <span>질병하나</span>
-              <span>질병하나</span>
-              <span>질병하나</span>
-              <span>질병하나</span>
-              <span>질병하나</span>
-              <span>질병하나</span>
+          <PickMenuSubListContainer padding="1em 0">
+            <FlexDiv
+              justify="start"
+              wrap="wrap"
+              gap="0.85em 0"
+              padding="0 0 0 10%"
+            >
+              {detailList?.map(({ id, name }) => (
+                <PickMenuDetailMenu
+                  key={id}
+                  onClick={() => ToggleSymptom(type, id, name)}
+                >
+                  {name}
+                </PickMenuDetailMenu>
+              ))}
+              {/* <PickMenuDetailMenu
+                onClick={() => handleDetailMenuClick('medical', 1, 'test')}
+              >
+                질병하나
+              </PickMenuDetailMenu>
+              <PickMenuDetailMenu
+                onClick={() => handleDetailMenuClick('symptom', 2, 'test')}
+              >
+                질병하나이름이길어요
+              </PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병둘</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나세세</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나꺅</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
+              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu> */}
             </FlexDiv>
           </PickMenuSubListContainer>
         </PickMenuRowContainer>

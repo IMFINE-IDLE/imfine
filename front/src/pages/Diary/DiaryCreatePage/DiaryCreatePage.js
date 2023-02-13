@@ -9,6 +9,12 @@ const DiaryCreatePage = () => {
   const [medicalList, setMedicalList] = useState(null);
   const [symptomList, setSymptomList] = useState(null);
 
+  const handleSubmit = () => {
+    navigate('/diary/create/confirm');
+  };
+
+  console.log('medicals picked test', medicalList);
+
   return (
     <>
       <NavBarBasic Back={true} Text="일기장 생성" />
@@ -18,9 +24,13 @@ const DiaryCreatePage = () => {
         title="질병/수술"
         medicals={medicalList}
         symptoms={symptomList}
+        setMedicals={setMedicalList}
+        setSymptoms={setSymptomList}
+        onSubmitBtnClick={handleSubmit}
+        submitText="선택 완료"
       />
 
-      <SubmitBtn
+      {/* <SubmitBtn
         radius="20px"
         height="3.5em"
         margin="4em 0 0 0"
@@ -28,7 +38,7 @@ const DiaryCreatePage = () => {
         onClick={() => navigate('/diary/create/confirm')}
       >
         선택 완료
-      </SubmitBtn>
+      </SubmitBtn> */}
     </>
   );
 };

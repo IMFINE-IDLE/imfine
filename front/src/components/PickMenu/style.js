@@ -5,7 +5,7 @@ import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 
 const PickMenuTabContainer = styled(FlexDiv)`
   position: relative;
-  padding-bottom: 5em;
+  padding-bottom: 3em;
 `;
 
 const PickMenuTabLeft = styled(BoxRT25)`
@@ -37,13 +37,17 @@ const PickMenuTabRight = styled(BoxRT25)`
   `}
 `;
 const PickMenuRowContainer = styled.section`
-  .subsubMenuOpen:last-child {
-    diaplay: block;
+  padding-bottom: 1em;
   }
 `;
 
 const PickMenuSubListContainer = styled(BoxRT50LB50)`
   display: none;
+`;
+
+const PickMenuDetailMenu = styled.span`
+  width: 45%;
+  font-size: 0.8em;
 `;
 
 // const TabBtn = styled.button`
@@ -84,6 +88,7 @@ export {
   PickMenuTabRight,
   PickMenuRowContainer,
   PickMenuSubListContainer,
+  PickMenuDetailMenu,
   TabContentContainer,
   BoxPickMenu,
 };
