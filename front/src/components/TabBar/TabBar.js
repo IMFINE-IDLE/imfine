@@ -15,7 +15,7 @@ import {
 } from './style';
 
 const TabBar = () => {
-  const { cloverCode } = useSelector((state) => state.userInfo.cloverCode);
+  const { cloverCode } = useSelector((state) => state.userInfo);
   const uid = localStorage.getItem('uid');
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
@@ -48,7 +48,7 @@ const TabBar = () => {
         <TabCenter>
           <MainClover
             onClick={() => setCloversOpen((prev) => !prev)}
-            code={currentClover}
+            code={cloverCode}
             width="6.25em"
             height="6.25em"
             pointer={true}

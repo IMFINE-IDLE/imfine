@@ -44,7 +44,7 @@ function DiaryCreateConfirmPage() {
       const res = await axios.post(
         api.diary.postDiary(),
         {
-          medicalId: medicalList.id,
+          medicalId: medicalList[0].id,
           open: isOpen,
           title: diaryInfo.title,
           description: diaryInfo.description,

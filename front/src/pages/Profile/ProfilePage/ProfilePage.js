@@ -65,6 +65,7 @@ function ProfilePage() {
         followerCount={userInfo.followerCount}
         relation={userInfo.relation}
         uid={uid}
+        fetchUserInfo={fetchUserInfo}
       />
 
       <Tabs tabArr={tabArr} btnWidth="6.25em"></Tabs>

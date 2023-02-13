@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
@@ -19,10 +20,12 @@ const ProfileInfo = ({
   followingCount,
   followerCount,
   relation,
+  fetchUserInfo,
 }) => {
   const navigate = useNavigate();
   const { cloverCode } = useSelector((state) => state.userInfo);
 
+  // 팔로잉, 팔로워 목록 페이지로 보낼 데이터
   const infoToFollowPage = {
     name,
     open,
@@ -30,6 +33,11 @@ const ProfileInfo = ({
     followerCount,
     condition,
   };
+
+  // 클로버 오늘 상태가 바뀔 때마다 재렌더링
+  useEffect(() => {
+    fetchUserInfo();
+  }, [cloverCode]);
 
   return (
     <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
