@@ -80,8 +80,14 @@ function Login() {
             로그인하기
           </BtnLogin>
           <BoxOptions>
-            <SpanOption>아이디 찾기</SpanOption>|
-            <SpanOption>비밀번호 찾기</SpanOption>|
+            <SpanOption onClick={() => navigate('/find-id')}>
+              아이디 찾기
+            </SpanOption>
+            |
+            <SpanOption onClick={() => navigate('/find-password')}>
+              비밀번호 찾기
+            </SpanOption>
+            |
             <SpanOption onClick={() => navigate('/signup')}>
               회원가입
             </SpanOption>
