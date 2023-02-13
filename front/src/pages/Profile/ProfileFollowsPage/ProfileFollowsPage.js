@@ -19,21 +19,23 @@ const ProfileFollowsPage = () => {
     useLocation().state;
   const [users, setUsers] = useState(null);
   const [followType, setFollowType] = useState(type); // '팔로잉' 또는 '팔로워'
+  const [followingCnt, setFollowingCnt] = useState(followingCount);
+  const [followerCnt, setFollowerCnt] = useState(followerCount);
+
   const [trigger, setTrigger] = useState(false); // 목록에 변화가 생겼을 때 다시 렌더링하기 위한 트리거 변수
 
   // 팔로잉 또는 팔로워 목록 가져오기
   const fetchFollowList = async () => {
-    const url =
-      followType === '팔로워'
-        ? api.profile.getFollowerList(uid)
-        : api.profile.getFollowingList(uid);
-
     try {
-      const res = await axios.get(url);
-
-      setUsers(() => res.data.data);
-      console.log('fetchfollowList res', res.data.data);
-      console.log('fetchfollowList users', users);
+      if (type === '팔로잉') {
+        const res = await axios.get(api.profile.getFollowingList(uid));
+        setUsers(() => res.data.data);
+        setFollowingCnt(res.data.data.length);
+      } else if (type === '팔로워') {
+        const res = await axios.get(api.profile.getFollowerList(uid));
+        setUsers(() => res.data.data);
+        setFollowerCnt(res.data.data.length);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -65,9 +67,9 @@ const ProfileFollowsPage = () => {
             <FlexDiv justify="end" onClick={() => setFollowType('팔로잉')}>
               <ProfileItemSpan pointer={true}>팔로잉</ProfileItemSpan>
               <ProfileItemSpan pointer={true}>
-                {followingCount >= 1000
-                  ? parseInt(followingCount / 1000) + 'k'
-                  : followingCount}
+                {followingCnt >= 1000
+                  ? parseInt(followingCnt / 1000) + 'k'
+                  : followingCnt}
               </ProfileItemSpan>
             </FlexDiv>
             <ProfileItemSpan></ProfileItemSpan>
@@ -78,9 +80,9 @@ const ProfileFollowsPage = () => {
             <FlexDiv justify="start" onClick={() => setFollowType('팔로워')}>
               <ProfileItemSpan pointer={true}>팔로워</ProfileItemSpan>
               <ProfileItemSpan pointer={true}>
-                {followerCount >= 1000
-                  ? parseInt(followerCount / 1000) + 'k'
-                  : followerCount}
+                {followerCnt >= 1000
+                  ? parseInt(followerCnt / 1000) + 'k'
+                  : followerCnt}
               </ProfileItemSpan>
             </FlexDiv>
           </FlexDiv>

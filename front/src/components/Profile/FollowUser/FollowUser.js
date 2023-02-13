@@ -3,10 +3,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
 import { Clover } from '../../common/Clover/Clover';
+import Modal from '../../Modal/Modal';
 import { FollowUserBtn, FollowUserContainer, FollowUserWrapper } from './style';
 
 const FollowUser = ({ cloverCode, name, type, relation, uid, setTrigger }) => {
   const [followStatus, setFollowStatus] = useState(relation);
+  // 팔로워 삭제 확인 모달
+  const [modalOpen, setModalOpen] = useState(false);
+
   const navigate = useNavigate();
 
   // 팔로잉 목록에서 팔로우 요청, 언팔로우 요청 보내기
@@ -70,28 +74,39 @@ const FollowUser = ({ cloverCode, name, type, relation, uid, setTrigger }) => {
     );
   else
     return (
-      <FollowUserContainer>
-        <FollowUserWrapper>
-          <Clover
-            onClick={() => navigate(`/profile/${uid}`)}
-            code={cloverCode}
-            width="3.75em"
-            height="3.75em"
-            style={{ cursor: 'pointer' }}
+      <>
+        <FollowUserContainer>
+          <FollowUserWrapper>
+            <Clover
+              onClick={() => navigate(`/profile/${uid}`)}
+              code={cloverCode}
+              width="3.75em"
+              height="3.75em"
+              style={{ cursor: 'pointer' }}
+            />
+            <span
+              onClick={() => navigate(`/profile/${uid}`)}
+              style={{ cursor: 'pointer' }}
+            >
+              {name}
+            </span>
+          </FollowUserWrapper>
+          {followStatus === 0 || (
+            <FollowUserBtn color="gray" onClick={() => setModalOpen(true)}>
+              삭제
+            </FollowUserBtn>
+          )}
+        </FollowUserContainer>
+
+        {modalOpen && (
+          <Modal
+            type={'팔로워'}
+            action={'삭제'}
+            setModalOpen={setModalOpen}
+            apiFunc={fetchDeleteFollower}
           />
-          <span
-            onClick={() => navigate(`/profile/${uid}`)}
-            style={{ cursor: 'pointer' }}
-          >
-            {name}
-          </span>
-        </FollowUserWrapper>
-        {followStatus === 0 || (
-          <FollowUserBtn color="gray" onClick={() => fetchDeleteFollower()}>
-            삭제
-          </FollowUserBtn>
         )}
-      </FollowUserContainer>
+      </>
     );
 };
 
