@@ -17,16 +17,11 @@ import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.code.BambooErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.bamboo.BambooService;
-import com.idle.imfine.service.notification.NotificationService;
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Transactional
@@ -49,7 +42,6 @@ public class BambooServiceImpl implements BambooService {
     private final UserRepository userRepository;
     private final HeartRepository heartRepository;
     private final LeafRepository leafRepository;
-    private final NotificationService notificationService;
 
     @Override
     public void save(RequestBambooDto requestBamboo) {
@@ -64,8 +56,8 @@ public class BambooServiceImpl implements BambooService {
                 .leafCount(0)
                 .deleteAt(LocalDateTime.now().plusWeeks(1))
                 .build();
-        Bamboo savedBamboo = bambooRepository.save(bamboo);
-        System.out.println(savedBamboo.getId());
+        bambooRepository.save(bamboo);
+        LOGGER.info("bamboo 저장 {}", bamboo.getId());
     }
 
     @Override
@@ -120,8 +112,6 @@ public class BambooServiceImpl implements BambooService {
         if(filter.equals("write")) {
             all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
         } else if(filter.equals("comment")) {
-//            List<Leaf> leaves = leafRepository.getByWriter_IdAndCreatedAtBetween(user.getId(), start, end);
-//            all = bambooRepository.findByLeaves(leaves, start, end, pageable);
             all = bambooRepository.findByLeaves(user.getId(), start, end, pageable);
         } else if(filter.equals("like")) {
             all = bambooRepository.findByHeart(user.getId(), start, end, pageable);
@@ -157,7 +147,7 @@ public class BambooServiceImpl implements BambooService {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
 
-        LOGGER.info("대나무 상세조회");
+        LOGGER.info("대나무 상세조회 service");
         List<ResponseLeafDto> responseLeafDtoList = new ArrayList<>();
         List<Leaf> leafList = leafRepository.getByBamboo_Id(bambooId);
         List<Leaf> heartLeafList = leafRepository.findByHeartList(user.getId());
@@ -210,6 +200,7 @@ public class BambooServiceImpl implements BambooService {
             bamboo.setLikeCount(bamboo.getLikeCount() + 1);
             bambooRepository.save(bamboo);
         }
+        LOGGER.info("");
         return new ResponseNotificationPost(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
     }
 

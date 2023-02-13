@@ -23,10 +23,7 @@ public class SseController {
     @GetMapping(consumes = MediaType.ALL_VALUE)
     public SseEmitter getNotification(@RequestParam String uid,
         @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
-        LOGGER.info("알람 리스트 api에 들어옴");
-//        List<ResponseNotification> responseNotificationList = notificationService.showList(uid, pageable);
-//        User user = userRepository.getByUid(uid);
+        LOGGER.info("sse구독 api");
         return notificationService.subscribe(uid, lastEventId);
-
     }
 }

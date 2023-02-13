@@ -25,7 +25,6 @@ public interface BambooRepository extends JpaRepository<Bamboo, Long> {
 
     //내가 작성한 글
     Slice<Bamboo> findByWriter_IdAndCreatedAtBetween(long writerId, LocalDateTime start, LocalDateTime end, Pageable pageable);
-//    Page<Bamboo> findByWriterAndCreatedAtBetween(long writerId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     @Query("select b from Bamboo b inner join Heart h on b.id = h.contentsId where h.contentsCodeId = 4 and h.senderId = :writerId and b.createdAt between :start and :end")
     Slice<Bamboo> findByHeart(@Param("writerId") long writerId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
@@ -38,10 +37,6 @@ public interface BambooRepository extends JpaRepository<Bamboo, Long> {
     @Modifying
     @Query("delete from Bamboo b where b.deleteAt < :now")
     void deleteByDeleteAtBefore(@Param("now") LocalDateTime now);
-
-//    @Query("select distinct b from Bamboo b where b.leaves in :leaves and b.createdAt between :start and :end")
-//    @Query("select distinct b from Bamboo b join Leaf l on l.bamboo=b where l in :leaves and b.createdAt between :start and :end")
-//    Page<Bamboo> findByLeaves(@Param("leaves") List<Leaf> leaves, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 
     @Query("select distinct b from Bamboo b join Leaf l on l.bamboo=b where l.writer.id=:writerId and b.createdAt between :start and :end")
     Page<Bamboo> findByLeaves(@Param("writerId") long writerId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);

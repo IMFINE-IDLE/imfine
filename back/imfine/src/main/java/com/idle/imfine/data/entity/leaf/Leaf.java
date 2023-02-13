@@ -45,7 +45,4 @@ public class Leaf extends BaseCreatedEntity {
     @JoinColumn(name = "bamboo_id")
     Bamboo bamboo;
 
-    public void declarationAdd() {
-        this.declarationCount += 1;
-    }
 }
