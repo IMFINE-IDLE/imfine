@@ -46,6 +46,6 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
 
     @Query("select p from Paper p join fetch p.paperHasSymptoms where p.id=:paperId")
     Optional<Paper> findByIdFetchPaperSymptom(@Param("paperId") long paperId);
-    @Query("select p from Paper p join fetch p.paperHasSymptoms join fetch p.comments where p.id=:paperId")
+    @Query("select p from Paper p join fetch  p.comments where p.id=:paperId")
     Optional<Paper> findByIdFetchAll(long paperId);
 }
