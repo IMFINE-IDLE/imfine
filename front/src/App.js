@@ -47,8 +47,7 @@ function App() {
   const dispatch = useDispatch();
   // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
   const accessToken = localStorage.getItem('accessToken');
-  console.log(accessToken);
-  if (accessToken) {
+  if (accessToken !== 'null') {
     axios.defaults.headers.common['Authorization'] = accessToken;
     axios.interceptors.response.use(
       (response) => response,

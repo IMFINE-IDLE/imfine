@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Navigate } from 'react-router';
 import api from '../../api/api';
 
 // localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
@@ -62,17 +63,18 @@ export const logOut = createAsyncThunk(
       });
       // console.log(resLogout);
       localStorage.setItem('accessToken', null);
-
+      <Navigate to="/login" />;
       return resLogout;
     } catch (err) {
       console.log(err);
-      // return rejectWithValue(err);
+      return rejectWithValue(err);
     }
   }
 );
 
 export const tokenRefresh = createAsyncThunk('user/tokenRefresh', async () => {
   try {
+    console.log('토큰 갱신');
     const res = await axios.post(api.user.refresh(), {
       withCredentials: true,
     });
