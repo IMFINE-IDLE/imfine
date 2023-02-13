@@ -79,7 +79,7 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public long save(RequestDiaryPostDto saveDiary, String uId) {
         User user = common.getUserByUid(uId);
-        MedicalCode medicalCode = medicalCodeRepository.getById(saveDiary.getMedicalId());
+        MedicalCode medicalCode = medicalCodeRepository.findById(saveDiary.getMedicalId()).get();
 
         Diary diary = Diary.builder()
                 .medicalCode(medicalCode)
@@ -91,8 +91,9 @@ public class DiaryServiceImpl implements DiaryService {
                 .active(saveDiary.isOpen())
                 .build();
 
-        List<Integer> symptoms = saveDiary.getSymptom();
         Diary savedDiary = diaryRepository.save(diary);
+
+        List<Integer> symptoms = saveDiary.getSymptom();
         if (symptoms.size() != 0) {
             for (Integer s : symptoms) {
                 Symptom symptom = symptomRepository.getById(s);
