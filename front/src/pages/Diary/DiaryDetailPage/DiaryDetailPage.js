@@ -7,10 +7,11 @@ import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
-import { DiaryBoxGrad } from '../DiaryCreatePage/style';
+import { DiaryBoxGrad } from '../DiaryCreateConfirmPage/style';
 import { DiaryInfoContainer, DiaryDateSpan } from './style';
 import DiaryTitle from '../../../components/Paper/DiaryTitle/DiaryTitle';
 import { ReactComponent as BookmarkSvg } from './bookmark.svg';
+
 import PickedItemList from '../../../components/PickedItemList/PickedItemList';
 import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
 
@@ -18,6 +19,7 @@ const DiaryDetailPage = () => {
   const { diaryId } = useParams();
   const [diaryInfo, setDiaryInfo] = useState(null);
   const [showGraph, setShowGraph] = useState(false);
+
   const navigate = useNavigate();
 
   // 일기장 상세정보 가져오기
@@ -56,6 +58,7 @@ const DiaryDetailPage = () => {
     fetchGetDiaryInfo();
   }, []);
 
+  // 작성자 클릭시 해당 유저의 프로필로 이동
   const onClickUserName = () => {
     console.log(diaryInfo.uid);
     navigate(`/profile/${diaryInfo.uid}`);
@@ -194,7 +197,12 @@ const DiaryDetailPage = () => {
           </BoxShad>
         )}
 
-        <StatusCalendar uid={diaryInfo.uid} />
+        <StatusCalendar
+          uid={diaryInfo.uid}
+          diaryId={diaryId}
+          isProfile={false}
+          isMine={isMine}
+        />
       </DiaryBoxGrad>
     </>
   );
