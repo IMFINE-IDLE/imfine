@@ -110,27 +110,13 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         LOGGER.info("[resolveToken] HTTP 헤더에서 Token 값 추출");
 
-        String authorization = "";
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies == null) {
-            LOGGER.info("[resolveToken] 요청에 Cookie 없음");
-            throw new TokenNotFoundException();
-        }
-
-        for (Cookie cookie : cookies) {
-            if ("accessToken".equals(cookie.getName())) {
-                authorization = cookie.getValue();
-            }
-        }
-
         // 요청 헤더로 토큰 전달할 경우
-//        String authorization = request.getHeader("Authorization");
+        String authorization = request.getHeader("Authorization");
 
         if (authorization == null || authorization.isEmpty()) {
             LOGGER.info("[resolveToken] Token 없음");
             throw new TokenNotFoundException();
-        } else if (!Pattern.matches("Bearer%.*", authorization)) {
+        } else if (!Pattern.matches("Bearer .*", authorization)) {
             LOGGER.info("[resolveToken] Token 타입 잘못됨.");
             throw new WrongTypeTokenException();
         }

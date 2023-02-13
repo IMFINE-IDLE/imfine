@@ -41,29 +41,31 @@ public class Common {
     public Map<String, Object> createTokenResult(String accessToken, String refreshToken) {
         Map<String, Object> result = new HashMap<>();
 
-        HttpHeaders headers = createTokenHeader(accessToken, refreshToken);
+        HttpHeaders headers = createTokenHeader(refreshToken);
+        TokenResponseDto responseDto = TokenResponseDto.builder()
+                .accessToken("Bearer " + accessToken)
+                .build();
 
         result.put("headers", headers);
+        result.put("body", responseDto);
 
         return result;
     }
 
-    public HttpHeaders createTokenHeader(String accessToken, String refreshToken) {
+    public HttpHeaders createTokenHeader(String refreshToken) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", createTokenCookie("accessToken", accessToken, 60 * 60 * 24 * 7));
         headers.add("Set-Cookie", createTokenCookie("refreshToken", refreshToken, 60 * 60 * 24 * 7));
         return headers;
     }
 
     public HttpHeaders deleteTokenHeader() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", createTokenCookie("accessToken", "", 0));
         headers.add("Set-Cookie", createTokenCookie("refreshToken", "", 0));
         return headers;
     }
 
     public String createTokenCookie(String name, String token, int maxAge) {
-        ResponseCookie cookie = ResponseCookie.from(name, "Bearer%" + token)
+        ResponseCookie cookie = ResponseCookie.from(name, token)
                 .path("/")
                 .httpOnly(true)
                 .secure(true)
@@ -121,16 +123,4 @@ public class Common {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId) {
-//        User user = userRepository.getByUid(uid);
-
-        Notification notification = Notification.builder()
-            .senderId(senderId)
-            .recieverId(recieverId)
-            .contentsCodeId(contenstsCodeId)
-            .contentsId(contentsId)
-            .build();
-
-        notificationRepository.save(notification);
-    }
 }

@@ -38,10 +38,12 @@ public class UserController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<Result> signIn(@RequestBody SignInRequestDto requestDto) {
-        HttpHeaders headers = userService.signIn(requestDto);
+        Map<String, Object> result = userService.signIn(requestDto);
+        HttpHeaders headers = (HttpHeaders) result.get("headers");
+        TokenResponseDto responseDto = (TokenResponseDto) result.get("body");
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(responseService.getSuccessResult());
+                .body(responseService.getSingleResult(responseDto));
     }
 
     @PostMapping("/sign-out")
@@ -54,18 +56,22 @@ public class UserController {
 
     @PostMapping("/refresh")
     public ResponseEntity<Result> refresh(@CookieValue(name = "refreshToken", required = false) Cookie cookie) {
-        HttpHeaders headers = userService.refresh(cookie);
+        Map<String, Object> result = userService.refresh(cookie);
+        HttpHeaders headers = (HttpHeaders) result.get("headers");
+        TokenResponseDto responseDto = (TokenResponseDto) result.get("body");
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(responseService.getSuccessResult());
+                .body(responseService.getSingleResult(responseDto));
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<Result> signUp(@RequestBody SignUpRequestDto requestDto) {
-        HttpHeaders headers = userService.signUp(requestDto);
+        Map<String, Object> result = userService.signUp(requestDto);
+        HttpHeaders headers = (HttpHeaders) result.get("headers");
+        TokenResponseDto responseDto = (TokenResponseDto) result.get("body");
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(responseService.getSuccessResult());
+                .body(responseService.getSingleResult(responseDto));
     }
 
     @PutMapping("/profile")

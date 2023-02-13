@@ -33,6 +33,7 @@ import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Service
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
     private final FollowService followService;
 
     @Override
-    public HttpHeaders signUp(SignUpRequestDto requestDto) {
+    public Map<String, Object> signUp(SignUpRequestDto requestDto) {
         LOGGER.info("[signUp] 회원 가입 정보 전달");
 
         checkUidDuplicate(requestDto.getUid());
@@ -76,11 +77,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         LOGGER.info("[signUp] 회원 가입 완료");
 
-        return common.createTokenHeader(accessToken, refreshToken);
+        return common.createTokenResult(accessToken, refreshToken);
     }
 
     @Override
-    public HttpHeaders signIn(SignInRequestDto requestDto) {
+    public Map<String, Object> signIn(SignInRequestDto requestDto) {
         LOGGER.info("[signIn] 회원 정보 요청");
         User user = common.getUserByUid(requestDto.getUid());
 
@@ -99,7 +100,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         LOGGER.info("[signIn] refreshToken 저장 완료");
 
-        return common.createTokenHeader(accessToken, refreshToken);
+        return common.createTokenResult(accessToken, refreshToken);
     }
 
     @Override
@@ -136,21 +137,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public HttpHeaders refresh(Cookie cookie) throws RuntimeException {
+    public Map<String, Object> refresh(Cookie cookie) throws RuntimeException {
+        LOGGER.info("[refresh] 토큰 갱신 시작");
+        
         if (cookie == null) {
+            LOGGER.info("[refresh] 쿠키 없음.");
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
 
         String refreshToken = cookie.getValue();
 
         if (refreshToken == null || refreshToken.isEmpty()) {
+            LOGGER.info("[refresh] refresh token 없음.");
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
-        } else if (!Pattern.matches("Bearer%.*", refreshToken)) {
-            throw new ErrorException(TokenErrorCode.WRONG_TYPE_TOKEN);
         }
 
         try {
-            refreshToken = refreshToken.substring(7);
             jwtTokenProvider.validateToken(refreshToken);
 
             String uid = jwtTokenProvider.getUsername(refreshToken);
@@ -159,6 +161,7 @@ public class UserServiceImpl implements UserService {
             String savedRefreshToken = user.getRefreshToken();
 
             if (!savedRefreshToken.equals(refreshToken)) {
+                LOGGER.info("[refresh] refresh token 불일치.");
                 throw new ErrorException(TokenErrorCode.NOT_MATCH_REFRESH_TOKEN);
             }
 
@@ -170,7 +173,8 @@ public class UserServiceImpl implements UserService {
             user.updateRefreshToken(newRefreshToken);
             userRepository.save(user);
 
-            return common.createTokenHeader(newAccessToken, newRefreshToken);
+            LOGGER.info("[refresh] 토큰 갱신 완료");
+            return common.createTokenResult(newAccessToken, newRefreshToken);
         } catch (TokenNotFoundException e) {
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
         } catch (ExpiredJwtException e){
