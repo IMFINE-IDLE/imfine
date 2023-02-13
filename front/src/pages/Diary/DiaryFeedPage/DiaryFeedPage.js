@@ -66,7 +66,7 @@ const DiaryFeedPage = () => {
 
   return (
     <>
-      <NavBarBasic />
+      <NavBarBasic BackgroundColor={'light'} />
       <DiaryInfo filtered={filtered} />
 
       <Tabs tabArr={tabArr} setType={setType}></Tabs>
