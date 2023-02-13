@@ -8,10 +8,12 @@ import ToggleAccountOpen from '../../components/ToggleAccountOpen/ToggleAccountO
 import { BtnSignup } from '../SignUpPage/style';
 import { BoxSymptom, BoxTopArea, Title, TitleSmall } from './style';
 import api from '../../api/api';
+import PickMenuTab from '../../components/PickMenu/PickMenuTab';
 
 function SignUpSettingPage() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(true);
+  const [medicalList, setMedicalList] = useState([]);
 
   const setInitialProfile = async () => {
     const data = {
@@ -27,28 +29,31 @@ function SignUpSettingPage() {
   };
 
   return (
-    <BoxGrad radius={'0 0 0 0'}>
+    <>
       <div>
         <Title>계정 기본 설정</Title>
       </div>
       <BoxTopArea>
-        <ToggleAccountOpen isOpen={isOpen} setIsOpen={setIsOpen} />
-        <BoxSymptom>
+        <div style={{ padding: '0 2em' }}>
+          <ToggleAccountOpen isOpen={isOpen} setIsOpen={setIsOpen} />
           <TitleSmall>관심있는 질병 혹은 수술을 선택해주세요.</TitleSmall>
+        </div>
+        <BoxSymptom>
+          <PickMenuTab
+            tabCnt={1}
+            title={'질병/수술'}
+            paddingPicked={'0 2em'}
+            medicals={medicalList}
+            setMedicals={setMedicalList}
+            onSubmitBtnClick={() => {
+              setInitialProfile();
+              navigate('/home');
+            }}
+            submitBtnText={'건강해지러 가기!'}
+          />
         </BoxSymptom>
       </BoxTopArea>
-      <div style={{ width: '80%', margin: '0 auto' }}>
-        <BtnSignup
-          type="button"
-          onClick={() => {
-            setInitialProfile();
-            navigate('/home');
-          }}
-        >
-          건강해지러 가기!
-        </BtnSignup>
-      </div>
-    </BoxGrad>
+    </>
   );
 }
 
