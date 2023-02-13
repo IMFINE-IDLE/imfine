@@ -90,7 +90,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   // 해당 날짜의 컨디션 정보를 저장하고 개별 일기 정보를 불러오기
   useEffect(() => {
     fetchGetDiaryPaperItem(diaryId, date);
-    setCloverOfDayClicked(monthCondition[moment(date).format('D')] || '-1');
+    setCloverOfDayClicked(monthCondition?.moment(date).format('D') || '-1');
   }, [date]);
 
   // // 날짜 선택했을 때 날짜와 클로버 상태 업데이트
