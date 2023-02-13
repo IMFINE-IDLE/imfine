@@ -27,7 +27,7 @@ const DiaryCreatePage = () => {
         setMedicals={setMedicalList}
         setSymptoms={setSymptomList}
         onSubmitBtnClick={handleSubmit}
-        submitText="선택 완료"
+        submitBtnText="선택 완료"
       />
 
       {/* <SubmitBtn
