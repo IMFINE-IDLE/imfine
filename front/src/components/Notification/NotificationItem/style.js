@@ -21,8 +21,8 @@ const TopDiv = styled.div`
 `;
 
 const TitleLabel = styled.label`
-  font-weight: 400;
-  color: var(--icon-color);
+  font-weight: 700;
+  color: var(--gray800-color);
   margin 0 0.2em 0 0.4em 
 `;
 
@@ -33,7 +33,7 @@ const BottomDiv = styled.div`
 `;
 
 const Content = styled.div`
-  padding: 1em 0 1em 0;
+  padding: 1em 0 1em 0.4em;
   color: var(--icon-color);
 `;
 
