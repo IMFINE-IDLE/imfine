@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import api from '../../api/api';
 import { axiosInstance } from '../../api/axiosInstance';
 import { BoxRT50LB50 } from '../common/BoxRT50LB50/BoxRT50LB50';
@@ -22,7 +22,7 @@ import {
  *
  */
 
-function PickMenu({ type, dataList, ToggleSymptom }) {
+const PickMenu = forwardRef(({ type, dataList, ToggleSymptom }, ref) => {
   // dataList를 4개씩 잘라서 dataListModified에 넣기
   const dataListModified = [];
   // const rowCnt = Math.floor(dataList.length / 4);
@@ -30,16 +30,11 @@ function PickMenu({ type, dataList, ToggleSymptom }) {
     dataListModified.push(dataList.slice(0 + 4 * i, 4 + 4 * i));
   }
 
-  // 메뉴 클릭시 서브메뉴 열기 위한 ref
-  const subMenuSection = useRef([]);
-  const clickedSubMenuSectionIdx = useRef(null);
-  const clickedMenuId = useRef(null);
-
-  // useEffect(() => {
-  //   subMenuSection.current = [];
-  //   clickedSubMenuSectionIdx.current = null;
-  //   clickedMenuId.current = null;
-  // }, [type]);
+  const { subMenuSection, clickedSubMenuSectionIdx, clickedMenuId } = ref;
+  // // 메뉴 클릭시 서브메뉴 열기 위한 ref
+  // const subMenuSection = useRef([]);
+  // const clickedSubMenuSectionIdx = useRef(null);
+  // const clickedMenuId = useRef(null);
 
   const [detailList, setDetailList] = useState(null);
 
@@ -174,6 +169,6 @@ function PickMenu({ type, dataList, ToggleSymptom }) {
       ))}
     </FlexDiv>
   );
-}
+});
 
 export default PickMenu;

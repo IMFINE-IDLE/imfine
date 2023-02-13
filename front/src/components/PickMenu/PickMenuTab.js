@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import useTabs from '../../hooks/useTabs';
 import { SubmitBtn } from '../../pages/Diary/DiaryCreateConfirmPage/style';
@@ -68,6 +68,9 @@ const PickMenuTab = ({
   // const [, updateState] = useState();
   // const forceUpdate = useCallback(() => updateState({}), []);
 
+  /*
+   * Hooks
+   */
   const dispatch = useDispatch();
   // 질병/수술 목록과 증상 목록을 서버에서 받아와서 스토어에 저장
   useEffect(() => {
@@ -75,6 +78,16 @@ const PickMenuTab = ({
     dispatch(fetchSymptomList());
   }, []);
 
+  // 메뉴 클릭시 서브메뉴 열기 위한 ref
+  const refs = {
+    subMenuSection: useRef([]),
+    clickedSubMenuSectionIdx: useRef(null),
+    clickedMenuId: useRef(null),
+  };
+
+  /*
+   * Functions
+   */
   // 스토어에서 질병/수술 목록과 증상 목록 가져오기
   const { medicalMenuList, symptomMenuList } = useSelector(
     (state) => state.menu
@@ -117,6 +130,7 @@ const PickMenuTab = ({
                   dataList={symptomMenuList}
                   setPickedSymptoms={setPickedSymptoms}
                   ToggleSymptom={ToggleSymptom}
+                  ref={refs}
                 />
               ) : (
                 <PickMenu
@@ -124,6 +138,7 @@ const PickMenuTab = ({
                   dataList={medicalMenuList}
                   setPickedMedicals={setPickedMedicals}
                   ToggleSymptom={ToggleSymptom}
+                  ref={refs}
                 />
               ),
           },
@@ -138,6 +153,7 @@ const PickMenuTab = ({
                 dataList={medicalMenuList}
                 setPickedMedicals={setPickedMedicals}
                 ToggleSymptom={ToggleSymptom}
+                ref={refs}
               />
             ),
           },
@@ -150,6 +166,7 @@ const PickMenuTab = ({
                 dataList={symptomMenuList}
                 setPickedSymptoms={setPickedSymptoms}
                 ToggleSymptom={ToggleSymptom}
+                ref={refs}
               />
             ),
           },
