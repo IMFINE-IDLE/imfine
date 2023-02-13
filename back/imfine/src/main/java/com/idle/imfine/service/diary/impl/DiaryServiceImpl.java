@@ -79,13 +79,13 @@ public class DiaryServiceImpl implements DiaryService {
     @Transactional
     public long save(RequestDiaryPostDto saveDiary, String uId) {
         User user = common.getUserByUid(uId);
+        LOGGER.info("[DiaryServiceImpl.save] 일기 저장 medicalId: {}, uid: {}", saveDiary.getMedicalId(), uId);
         MedicalCode medicalCode = medicalCodeRepository.findById(saveDiary.getMedicalId()).get();
-
         Diary diary = Diary.builder()
                 .medicalCode(medicalCode)
                 .title(saveDiary.getTitle())
                 .description(saveDiary.getDescription())
-                .image("background/" + String.valueOf((int) (Math.random() * 10)))
+                .image("background/" + (int) (Math.random() * 10))
                 .active(true)
                 .writer(user)
                 .active(saveDiary.isOpen())

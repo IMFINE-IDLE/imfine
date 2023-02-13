@@ -16,7 +16,7 @@ public class ResponseModifyPaperDto {
 
     private long diaryId;
     private String title;
-
+    private String date;
     private long paperId;
     private String content;
     private boolean open;
