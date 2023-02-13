@@ -54,6 +54,8 @@ export const logIn = createAsyncThunk(
 export const logOut = createAsyncThunk(
   'user/logOut',
   async (userData, { rejectWithValue }) => {
+    console.log('로그아웃 실행');
+
     try {
       const resLogout = await axios.post(api.user.logout(), {
         withCredentials: true,
@@ -64,7 +66,7 @@ export const logOut = createAsyncThunk(
       return resLogout;
     } catch (err) {
       console.log(err);
-      return rejectWithValue(err);
+      // return rejectWithValue(err);
     }
   }
 );
@@ -89,7 +91,7 @@ const userSlice = createSlice({
   initialState: {
     isLogin: false,
     uid: null,
-    accessToken: null,
+    // accessToken: null,
   },
   reducers: {},
   extraReducers: (builder) => {
