@@ -93,6 +93,8 @@ const api = {
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
+    getNotifications: () => URL + NOTIFICATION + '/list',
+    readNotification: () => URL + NOTIFICATION + '/check',
   },
   report: {
     reportBamboo: () => URL + REPORT + BAMBOO,

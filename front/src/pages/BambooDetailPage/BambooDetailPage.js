@@ -8,12 +8,13 @@ import BoxLeavesFeed from '../../components/Bamboo/BoxLeavesFeed/BoxLeavesFeed';
 import { TopDiv, ReplyLabel, ReplyDiv } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
 import BambooReplyBox from '../../components/Bamboo/BambooReplyBox/BambooReplyBox';
-
+import { useNavigate } from 'react-router-dom';
 function BambooDetailPage() {
   const { bambooId } = useParams();
   const [bamboo, setbamboo] = useState([]);
   const [leaves, setleaves] = useState([]);
 
+  const navigate = useNavigate();
   // 대나무 좋아요 post
   const likeBamboo = async (bambooId) => {
     try {
@@ -55,7 +56,11 @@ function BambooDetailPage() {
       setbamboo(res.data.data);
       setleaves(res.data.data.leaf);
     } catch (err) {
-      console.log('error', err);
+      console.log('error', err.response.data.message);
+      if (err.response.data.message === '24시간이 지난 게시물 입니다.') {
+        alert('24시간이 지나 사라진 대나무입니다.');
+        navigate(-1);
+      }
     }
   };
 

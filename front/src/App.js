@@ -233,6 +233,7 @@ function App() {
           }
         />
       </Route>
+      <Route path="/noti" element={ <PrivateRoute><NotificationPage /></PrivateRoute>}></Route>
       <Route
         path="/report"
         element={
