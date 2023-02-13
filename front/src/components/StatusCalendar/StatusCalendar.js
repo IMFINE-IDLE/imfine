@@ -13,7 +13,7 @@ import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 import { BoxShad } from '../common/BoxShad/BoxShad';
 import { Clover } from '../common/Clover/Clover';
 import { CalendarStatusModifyBtn } from './style';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   /*
@@ -44,12 +44,10 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
         date: moment(date).format('YYYY-MM'),
       };
 
-      const res = await axios.get(api.profile.getMonthCondition(params), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.get(api.profile.getMonthCondition(params));
 
       setMonthCondition({ ...res.data.data });
-      setCloverOfDayClicked(res.data.data[moment(date).format('D')]);
+      setCloverOfDayClicked(res.data.data?.[moment(date).format('D')]);
     } catch (err) {
       console.error(err);
     }
@@ -59,7 +57,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   const fetchGetDiaryPaperItem = async (diaryId, date) => {
     try {
       if (isProfile) {
-        const params = { uid, date: moment(date).format('YYYY-MM-DD') };
+        const params = { uid: uid, date: moment(date).format('YYYY-MM-DD') };
 
         const res = await axios.get(api.profile.getUserPaperItem(params));
 
@@ -90,7 +88,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   // 해당 날짜의 컨디션 정보를 저장하고 개별 일기 정보를 불러오기
   useEffect(() => {
     fetchGetDiaryPaperItem(diaryId, date);
-    setCloverOfDayClicked(monthCondition?.moment(date).format('D') || '-1');
+    setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
   }, [date]);
 
   // // 날짜 선택했을 때 날짜와 클로버 상태 업데이트
@@ -132,7 +130,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
                   code={
                     moment(date).isAfter(new Date())
                       ? 'blank'
-                      : monthCondition[moment(date).format('D') || '-1']
+                      : monthCondition?.[moment(date).format('D') || '-1']
                   }
                   width="2.7em"
                   height="2.7em"

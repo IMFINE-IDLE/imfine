@@ -16,7 +16,7 @@ import {
 
 const TabBar = () => {
   const { cloverCode } = useSelector((state) => state.userInfo);
-  const uid = localStorage.getItem('uid');
+  const uid = useSelector((state) => state.user.uid);
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
