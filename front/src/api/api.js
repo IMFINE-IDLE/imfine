@@ -36,6 +36,8 @@ const api = {
     paperLikePost: () => URL + PAPER + '/like',
     paperLikeDelete: (paperId) => URL + PAPER + `/${paperId}/like`,
     paperWrite: () => URL + PAPER,
+    getPaperModifyInfo: (paperId) => URL + PAPER + `/modify/${paperId}`,
+    putPaper: () => URL + PAPER,
   },
   comment: {
     commentCreate: () => URL + COMMENT,

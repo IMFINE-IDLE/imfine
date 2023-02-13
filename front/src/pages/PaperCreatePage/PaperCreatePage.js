@@ -178,7 +178,12 @@ function PaperCreatePage() {
       />
       <BoxPaperDetail>
         <PaperCreateHeader />
-        <DiariesDropdown value={diaryId} state={setDiaryId} diaries={diaries} />
+        <DiariesDropdown
+          isdisabled={false}
+          value={diaryId}
+          state={setDiaryId}
+          diaries={diaries}
+        />
         <DateDropdown value={form} state={setForm} />
       </BoxPaperDetail>
       <TopDiv>
