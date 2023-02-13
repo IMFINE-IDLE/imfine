@@ -85,11 +85,11 @@ const api = {
   },
   symptom: {
     getSymptomList: () => URL + SYMPTOM + '/list',
-    getSymptomDetail: (symptomId) => URL + SYMPTOM + symptomId,
+    getSymptomDetail: (symptomId) => URL + SYMPTOM + `/${symptomId}`,
   },
   medical: {
     getMedicalList: () => URL + MEDICAL + '/list',
-    getMedicalDetail: (medicalId) => URL + MEDICAL + medicalId,
+    getMedicalDetail: (medicalId) => URL + MEDICAL + `/${medicalId}`,
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',

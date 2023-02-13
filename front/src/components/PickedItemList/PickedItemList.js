@@ -12,7 +12,7 @@ import {
  *
  * (String) title: | 앞에 들어가는 제목
  * (String) type: 'text', 'medical', 'symptom' 중 하나.
- *                 type이 'medical' 또는 'symptom' 이면 아이콘으로 표시됨
+ *                 type이 'medical' 또는 'symptom' 이면 버튼으로 표시됨
  * (Any) text: type='text' 일 경우 표시될 내용
  * (Array) medicals: [{id: Number, name: String}] 형식의 배열
  * (Array) symptoms: [{id: Number, name: String}] 형식의 배열
@@ -37,7 +37,7 @@ const PickedItemList = ({
   onClickUserName,
 }) => {
   return (
-    <FlexDiv justify="start" padding="0.3em 0">
+    <FlexDiv justify="start" padding="0.25em 0" height="2em">
       <PickedTitle>{title}</PickedTitle>
       <PickedDivision> | &nbsp; </PickedDivision>
       {type === 'medical' ? (

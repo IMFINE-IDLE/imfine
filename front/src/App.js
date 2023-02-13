@@ -9,6 +9,7 @@ import SearchPage from './pages/SearchPage/SearchPage';
 import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
 import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
 import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
+import DiaryCreateConfirmPage from './pages/Diary/DiaryCreateConfirmPage/DiaryCreateConfirmPage';
 import DiaryModifyPage from './pages/Diary/DiaryModifyPage/DiaryModifyPage';
 import DiaryAddSymptomPage from './pages/Diary/DiaryAddSymptomPage/DiaryAddSymptomPage';
 import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
@@ -115,6 +116,15 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <SettingsPage />
+          </PrivateRoute>
+        }
+      />
+
       <Route path="/diary">
         <Route
           index
@@ -132,14 +142,24 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="create"
-          element={
-            <PrivateRoute>
-              <DiaryCreatePage />
-            </PrivateRoute>
-          }
-        />
+        <Route path="create">
+          <Route
+            index
+            element={
+              <PrivateRoute>
+                <DiaryCreatePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="confirm"
+            element={
+              <PrivateRoute>
+                <DiaryCreateConfirmPage />
+              </PrivateRoute>
+            }
+          />
+        </Route>
         <Route path=":diaryId/modify">
           <Route
             index
