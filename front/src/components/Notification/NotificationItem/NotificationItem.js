@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../../api/api';
+import axios from 'axios';
 
 import {
   ColumnDiv,
@@ -11,7 +13,24 @@ import {
 } from './style';
 
 // showButton true -> 팔로우 버튼 설정?
-function NotificationItem({ title, msg, showButton, senderUid, navigateId }) {
+function NotificationItem({
+  notificationId,
+  title,
+  msg,
+  showButton,
+  senderUid,
+  navigateId,
+}) {
+  const readPost = async () => {
+    try {
+      await axios.post(api.notifications.readNotification(), {
+        notificationId: notificationId,
+      });
+      console.log('test');
+    } catch (error) {
+      console.log('err, error');
+    }
+  };
   const navigate = useNavigate();
 
   console.log('아이디', navigateId);
@@ -27,6 +46,7 @@ function NotificationItem({ title, msg, showButton, senderUid, navigateId }) {
               </TopDiv>
               <BottomDiv
                 onClick={() => {
+                  readPost();
                   navigate(`/profile/${senderUid}`);
                 }}
               >

@@ -87,7 +87,7 @@ const api = {
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
     getNotifications: () => URL + NOTIFICATION + '/list',
-    readNotification: () => URL + Notification + '/check',
+    readNotification: () => URL + NOTIFICATION + '/check',
   },
 };
 

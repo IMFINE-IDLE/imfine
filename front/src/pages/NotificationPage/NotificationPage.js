@@ -26,7 +26,7 @@ function NotificationPage() {
     let uid = localStorage.getItem('uid'); //uid로 할수 있나
     let eventSource = new EventSourcePolyfill(
       `https://i8a809.p.ssafy.io/api/sse?uid=${uid}`,
-      { withCredentials: true }
+      { withCredentials: true, heartbeatTimeout: 120000 }
     );
     console.log('event url', eventSource);
 
@@ -62,6 +62,7 @@ function NotificationPage() {
           return (
             <NotificationItem
               key={item.notificationId}
+              notificationId={item.notificationId}
               title={item.contentsCodeId}
               msg={item.msg}
               showButton={item.showButton}
