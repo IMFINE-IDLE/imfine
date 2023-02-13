@@ -9,6 +9,7 @@ import com.idle.imfine.data.dto.diary.response.ResponseDiaryPostPaper;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.diary.response.ResponsePutMedicalSymptomsDto;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
@@ -20,7 +21,7 @@ public interface DiaryService {
     ResponseDiaryDetailDto getDiaryDetail(long diaryId, String uid);
     List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(RequestSymptomChartDto requestDto);
     ResponsePaperDto getPaper(long diary, String date, String uid);
-    void saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto);
+    ResponseNotificationPost saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto);
 
     void deleteSubscribe(RequestDiarySubscribeDto build);
 

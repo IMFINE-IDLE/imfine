@@ -10,6 +10,7 @@ import com.idle.imfine.data.dto.diary.response.ResponseDiaryDetailDto;
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
 import com.idle.imfine.data.dto.diary.response.ResponsePutMedicalSymptomsDto;
 import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
@@ -253,7 +254,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     @Transactional
-    public void saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto) {
+    public ResponseNotificationPost saveSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto) {
         Diary diary = diaryRepository.findById(requestDiarySubscribeDto.getDiaryId())
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
         User user = common.getUserByUid(requestDiarySubscribeDto.getUid());
@@ -268,10 +269,9 @@ public class DiaryServiceImpl implements DiaryService {
         diary.setSubscribeCount(diary.getSubscribeCount() + 1);
         diaryRepository.save(diary);
 
-        long otherId = diary.getWriter().getId();
-        if(otherId != userId) {
-            notificationService.send(userId, diary.getWriter().getId(), 1, diary.getId(), 1);
-        }
+//        long otherId = diary.getWriter().getId();
+
+        return new ResponseNotificationPost(userId, diary.getWriter().getId(), 1, diary.getId(), 1);
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.idle.imfine.data.dto.paper.response.ResponsePaperDto;
 import com.idle.imfine.data.dto.symptom.request.RequestSymptomRegistrationDto;
 import com.idle.imfine.data.dto.symptom.response.ResponseSymptomChartRecordDto;
 import com.idle.imfine.service.diary.DiaryService;
+import com.idle.imfine.service.notification.NotificationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DiaryController {
     private final ResponseService responseService;
+    private final NotificationService notificationService;
     private static final Logger LOGGER = LoggerFactory.getLogger(DiaryController.class);
     private final DiaryService diaryService;
 
@@ -111,7 +113,7 @@ public class DiaryController {
     public ResponseEntity<Result> postDiarySubscribe(@RequestBody RequestDiarySubscribeDto requestDto, @LoginUser String uid) {
         LOGGER.info("일기장 구독 등록 api {}", requestDto);
         requestDto.setUid(uid);
-        diaryService.saveSubscribe(requestDto);
+        notificationService.dtoToSend(diaryService.saveSubscribe(requestDto));
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
