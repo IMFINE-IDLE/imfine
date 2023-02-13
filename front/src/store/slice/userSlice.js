@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import api from '../../api/api';
 
-export const onSilentRefresh = async () => {
+export const tokenRefresh = async () => {
   try {
     const refresh = await axios.post(api.user.refresh(), {
       withCredentials: true,
@@ -29,9 +29,6 @@ export const signUp = createAsyncThunk(
 
       localStorage.setItem('uid', userData.uid);
 
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000; // 30분
-      setInterval(onSilentRefresh, JWT_EXPIRATION_TIME - 60000); // accessToken 만료되기 1분전 로그인 연장
-
       return saveData;
     } catch (err) {
       return rejectWithValue(err);
@@ -49,8 +46,6 @@ export const logIn = createAsyncThunk(
       console.log(resLogin);
 
       localStorage.setItem('uid', userData.uid);
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000; // 30분
-      setInterval(onSilentRefresh, JWT_EXPIRATION_TIME - 60000); // accessToken 만료되기 1분전 로그인 연장
 
       return userData.uid;
     } catch (err) {
@@ -67,7 +62,8 @@ export const logOut = createAsyncThunk(
       const resLogout = await axios.post(api.user.logout(), {
         withCredentials: true,
       });
-      console.log(resLogout);
+      // console.log(resLogout);
+
       return resLogout;
     } catch (err) {
       console.log(err);

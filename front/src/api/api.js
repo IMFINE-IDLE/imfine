@@ -25,6 +25,7 @@ const api = {
     login: () => URL + USERS + '/sign-in',
     logout: () => URL + USERS + '/sign-out',
     refresh: () => URL + USERS + '/refresh',
+    setInitialProfile: () => URL + USERS + '/profile',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },
@@ -66,13 +67,11 @@ const api = {
     getUserBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
     postBambooLike: () => URL + BAMBOO + '/like',
     deleteBambooLike: (bambooId) => URL + BAMBOO + `/like/${bambooId}`,
-    reportBamboo: () => URL + REPORT + BAMBOO,
   },
   leaf: {
     postLeaf: () => URL + LEAF,
     postLeafLike: () => URL + LEAF + '/like',
     deletLeafLike: (leafId) => URL + LEAF + `/like/${leafId}`,
-    reportLeaf: () => URL + REPORT + LEAF,
   },
   diary: {
     postDiary: () => URL + DIARY,
@@ -94,6 +93,15 @@ const api = {
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
+    getNotifications: () => URL + NOTIFICATION + '/list',
+    readNotification: () => URL + NOTIFICATION + '/check',
+  },
+  report: {
+    reportBamboo: () => URL + REPORT + BAMBOO,
+    reportLeaf: () => URL + REPORT + LEAF,
+    reportDiary: () => URL + REPORT + DIARY,
+    reportPaper: () => URL + REPORT + PAPER,
+    reportComment: () => URL + REPORT + COMMENT,
   },
 };
 

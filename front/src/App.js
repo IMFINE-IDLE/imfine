@@ -24,7 +24,9 @@ import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollow
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/Profile/ChangeName/ChangeName';
 import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
+import ReportPage from './pages/Report/ReportPage/ReportPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
+import SignUpSettingPage from './pages/SignUpSettingPage/SignUpSettingPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -70,6 +72,14 @@ function App() {
           <PublicRoute>
             <SignUpPage />
           </PublicRoute>
+        }
+      />
+      <Route
+        path="/signup/setting"
+        element={
+          <PrivateRoute>
+            <SignUpSettingPage />
+          </PrivateRoute>
         }
       />
       <Route
@@ -234,6 +244,15 @@ function App() {
           }
         />
       </Route>
+      <Route path="/noti" element={ <PrivateRoute><NotificationPage /></PrivateRoute>}></Route>
+      <Route
+        path="/report"
+        element={
+          <PrivateRoute>
+            <ReportPage />
+          </PrivateRoute>
+        }
+      ></Route>
     </Routes>
     // </Wrapper>
   );

@@ -8,55 +8,27 @@ import PaperComment from '../../components/Paper/PaperComment/PaperComment';
 import { BoxComment } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
 import CommentCreate from '../../components/Paper/CommentCreate/CommentCreate';
+import { useCallback } from 'react';
 
 function PaperDetailPage() {
   const { paperId } = useParams();
   const [paperDetail, setPaperDetail] = useState({});
-  const fetchPaperDetail = async () => {
+  const fetchPaperDetail = useCallback(async () => {
     try {
       const res = await axios.get(api.paper.paperDetail(paperId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
-      // console.log(res.data);
-      setPaperDetail(res.data.data);
+      setPaperDetail((prev) => {
+        return { ...prev, ...res.data.data };
+      });
     } catch (err) {
       console.log(err.response.data);
     }
-  };
+  }, [paperId]);
 
   useEffect(() => {
     fetchPaperDetail();
-  }, []);
-
-  // 일기 좋아요 등록
-  const likePaper = async (paperId) => {
-    try {
-      const res = await axios.post(
-        api.paper.paperLikePost(),
-        {
-          contentId: paperId,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
-      console.log(res);
-      fetchPaperDetail();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
-
-  // 일기 좋아요 취소
-  const likePaperDelete = async (paperId) => {
-    try {
-      const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log(res);
-      fetchPaperDetail();
-    } catch (err) {
-      console.log(err.response.data);
-    }
-  };
+  }, [fetchPaperDetail]);
 
   // 댓글 작성
   const createComment = async (commentContent) => {
@@ -100,7 +72,7 @@ function PaperDetailPage() {
         { headers: { Authorization: localStorage.getItem('accessToken') } }
       );
       console.log(res);
-      fetchPaperDetail();
+      // fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
     }
@@ -113,7 +85,7 @@ function PaperDetailPage() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
       console.log(res);
-      fetchPaperDetail();
+      // fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
     }
@@ -122,12 +94,7 @@ function PaperDetailPage() {
   return (
     <>
       <NavBarBasic Back />
-      <PaperItemDetail
-        paper={paperDetail}
-        paperId={paperId}
-        likePaper={likePaper}
-        likePaperDelete={likePaperDelete}
-      />
+      <PaperItemDetail paper={paperDetail} paperId={paperId} />
       <BoxComment>
         <FiMessageCircle />
         <span> 댓글 {paperDetail?.comments?.length}개</span>

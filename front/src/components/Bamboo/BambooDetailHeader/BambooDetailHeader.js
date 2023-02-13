@@ -30,7 +30,7 @@ function BambooDetailHeader({
   return (
     <BoxHeader>
       <TopDiv>
-        <BambooBtnReport />
+        <BambooBtnReport bambooId={bambooId} />
       </TopDiv>
       <Content>{content}</Content>
       <BottomDiv>

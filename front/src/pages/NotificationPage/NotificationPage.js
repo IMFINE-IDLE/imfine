@@ -1,50 +1,80 @@
 import React, { useState, useEffect } from 'react';
-import { EventSourcePolyfill } from 'event-source-polyfill';
+import axios from 'axios';
 import api from '../../api/api';
+import { EventSourcePolyfill } from 'event-source-polyfill';
+import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
+import NotificationItem from '../../components/Notification/NotificationItem/NotificationItem';
 function NotificationPage() {
-  useEffect(() => {
-    if (localStorage.getItem('accessToken') != null) {
-      console.log('tokentest', localStorage.getItem('accessToken'));
-      let uid = localStorage.getItem('uid'); //uid로 할수 있나
-      let eventSource = new EventSourcePolyfill(
-        `http://i8a809.p.ssafy.io/api/notification/subscribe?uid=${uid}`,
-        {
-          headers: { Authorization: localStorage.getItem('accessToken') },
-        }
-      );
-      console.log('event url', eventSource);
+  const [notifications, setNotifications] = useState([]);
 
-      eventSource.onopen = (event) => {
-        console.log(event.target.readyState);
-        console.log('connection opened');
-      };
-
-      eventSource.onmessage = (event) => {
-        console.log('result', event.data);
-      };
-
-      eventSource.onerror = (event) => {
-        console.log(event.target.readyState);
-        if (event.target.readyState === EventSource.CLOSED) {
-          console.log('eventsource closed (' + event.target.readyState + ')');
-        }
-        eventSource.close();
-      };
-
-      // 기존 예제 코드
-      eventSource.addEventListener('sse', function (event) {
-        console.log(event.data);
-        //setData(event.data);
-      });
-
-      // eventSource.addEventListener('error', function (event) {
-      //   console.log(event);
-      //   eventSource.close();
-      // });
+  // 알림 리스트 GET
+  const fetchNotificationsDetail = async () => {
+    try {
+      const res = await axios.get(api.notifications.getNotifications());
+      console.log('notifications list res', res.data.data);
+      setNotifications(res.data.data);
+    } catch (error) {
+      console.log('err', error);
     }
+  };
+
+  useEffect(() => {
+    fetchNotificationsDetail();
   }, []);
 
-  return <div></div>;
+  useEffect(() => {
+    let uid = localStorage.getItem('uid'); //uid로 할수 있나
+    let eventSource = new EventSourcePolyfill(
+      `https://i8a809.p.ssafy.io/api/sse?uid=${uid}`,
+      { withCredentials: true, heartbeatTimeout: 120000 }
+    );
+    console.log('event url', eventSource);
+
+    eventSource.onopen = (event) => {
+      console.log(event.target.readyState);
+      console.log('connection opened');
+    };
+
+    eventSource.onmessage = (event) => {
+      console.log('result', event.data);
+    };
+
+    eventSource.onerror = (event) => {
+      console.log(event.target.readyState);
+      if (event.target.readyState === EventSource.CLOSED) {
+        console.log('eventsource closed (' + event.target.readyState + ')');
+      }
+      eventSource.close();
+    };
+
+    // 기존 예제 코드
+    eventSource.addEventListener('sse', (e) => {
+      const { data: receivedConnectData } = e;
+      console.log('connect event', receivedConnectData);
+    });
+  }, []);
+
+  return (
+    <>
+      <NavBarBasic />
+      <div>
+        {notifications.map((item) => {
+          return (
+            <NotificationItem
+              key={item.notificationId}
+              notificationId={item.notificationId}
+              title={item.contentsCodeId}
+              msg={item.msg}
+              showButton={item.showButton}
+              senderUid={item.senderUid}
+              navigateId={item.contentsId}
+              check={item.check}
+            />
+          );
+        })}
+      </div>
+    </>
+  );
 }
 
 export default NotificationPage;
