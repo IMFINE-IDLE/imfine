@@ -41,7 +41,6 @@ public class MedicalController {
                         medicalCode -> ResponseCategoryMedicalListDto.builder()
                                 .id(medicalCode.getId())
                                 .name(medicalCode.getName())
-                                .image(medicalCode.getImage())
                                 .build()
                 ).collect(Collectors.toList())));
     }

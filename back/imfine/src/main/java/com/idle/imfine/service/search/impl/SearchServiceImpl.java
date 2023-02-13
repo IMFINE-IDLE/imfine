@@ -1,7 +1,8 @@
 package com.idle.imfine.service.search.impl;
 
+import static com.idle.imfine.service.diary.impl.DiaryServiceImpl.getResponseDiaryList;
+
 import com.idle.imfine.data.dto.diary.response.ResponseDiaryListDto;
-import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDtoOnlyMainPage;
@@ -12,26 +13,20 @@ import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Search;
 import com.idle.imfine.data.entity.User;
-import com.idle.imfine.data.entity.UserHasMedical;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
 import com.idle.imfine.data.entity.symptom.Symptom;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.diary.SubscribeRepository;
 import com.idle.imfine.data.repository.image.ImageRepository;
-import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
 import com.idle.imfine.data.repository.paper.PaperHasSymptomRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.search.SearchRepository;
 import com.idle.imfine.data.repository.symptom.SymptomRepository;
 import com.idle.imfine.data.repository.user.ConditionRepository;
-import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
-import com.idle.imfine.errors.code.ConditionErrorCode;
-import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.search.SearchService;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -100,21 +95,8 @@ public class SearchServiceImpl implements SearchService {
         User user = common.getUserByUid(uid);
         Slice<Diary> diaries = diaryRepository.findByTitleContainingIgnoreCaseAndOpenTrue(query, pageable);
         Set<Long> subscribeDiaryIds = subscribeRepository.getDiaryIdsByDiaries(diaries.getContent(), user.getId());
-        return diaries.stream()
-                .map(
-                        diary -> ResponseDiaryListDto.builder()
-                                .diaryId(diary.getId())
-                                .title(diary.getTitle())
-                                .medicalName(diary.getMedicalCode().getName())
-                                .name(diary.getWriter().getName())
-                                .image(diary.getImage())
-                                .subscribeCount(diary.getSubscribeCount())
-                                .paperCount(diary.getPaperCount())
-                                .open(diary.isOpen())
-                                .mySubscribe(subscribeDiaryIds.contains(diary.getId()))
-                                .hasNext(diaries.hasNext())
-                                .build()
-                ).collect(Collectors.toList());
+
+        return getResponseDiaryList(user, diaries, subscribeDiaryIds);
     }
 
     @Override
