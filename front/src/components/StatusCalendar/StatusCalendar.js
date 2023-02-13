@@ -63,9 +63,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
       if (isProfile) {
         const params = { uid, date: moment(date).format('YYYY-MM-DD') };
 
-        const res = await axiosInstance.get(
-          api.profile.getUserPaperItem(params)
-        );
+        const res = await axios.get(api.profile.getUserPaperItem(params));
 
         await setPaperInfo(res.data.data);
         console.log('p res', res.data.data);
@@ -76,9 +74,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
           date: moment(date).format('YYYY-MM-DD'),
         };
 
-        const res = await axiosInstance.get(
-          api.diary.getDiaryPaperItem(params)
-        );
+        const res = await axios.get(api.diary.getDiaryPaperItem(params));
 
         await setPaperInfo(res.data.data);
         console.log('diarypaper res', res.data.data);
