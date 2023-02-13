@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
 import PickSymptom from '../../components/PickSymptom/PickSymptom';
+import { isEmailValid } from '../../utils/utils';
 import BtnEmailCheck from '../../components/SignUp/BtnEmailCheck/BtnEmailCheck';
 import BtnEmailCodeCheck from '../../components/SignUp/BtnEmailCodeCheck/BtnEmailCodeCheck';
 import VerfifyEmailTimer from '../../components/SignUp/VerifyEmailTimer/VerifyEmailTimer';
@@ -150,12 +151,12 @@ function SignUpPage() {
       // 3. 이메일 유효성 검사
       if (currInput.email) {
         checkStage(3);
-        const isEmailValid = (email) => {
-          const emailRegex =
-            /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
+        // const isEmailValid = (email) => {
+        //   const emailRegex =
+        //     /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
 
-          return emailRegex.test(email);
-        };
+        //   return emailRegex.test(email);
+        // };
         if (isEmailValid(currInput.email)) {
           // 유효한 경우에만 이메일 중복체크
           const asyncCheckEmail = async () => {

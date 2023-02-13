@@ -3,7 +3,7 @@ import { NavBar, NavItem, Logo, Title, Search, Bell } from './style';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { BiChevronLeft, BiSearch, BiBell } from 'react-icons/bi';
 import NavBarRightItem from './NavBarRightItem';
-function NavBarBasic({ BackgroundColor, TextColor, Back, Text }) {
+function NavBarBasic({ BackgroundColor, TextColor, Back, Text, NoRightItem }) {
   // 작성예시 :
   // <NavBarBasic Back={true} Text={'일기장 작성하기'} BackgroundColor={'icon'} TextColor={'gray'} />
 
@@ -28,7 +28,7 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text }) {
         <NavItem justify="center">
           <Title display="none">{Text}</Title>
         </NavItem>
-        <NavBarRightItem />
+        {!NoRightItem && <NavBarRightItem />}
       </NavBar>
     );
   } else {
@@ -45,7 +45,7 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text }) {
         <NavItem>
           <Title color={TextColor}>{Text}</Title>
         </NavItem>
-        <NavBarRightItem />
+        {!NoRightItem && <NavBarRightItem />}
       </NavBar>
     );
   }
