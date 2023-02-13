@@ -91,47 +91,26 @@ function PaperModifyPage() {
           image: item.image,
         }))
       );
+      const dates = res.data.data.date.split('-');
+      setForm({
+        year: dates[0],
+        month: dates[1],
+        day: dates[2],
+      });
+      setIsOpen(res.data.data.open);
     } catch (error) {
       console.log('error', error);
     }
   };
 
   console.log('print', paperInfo);
-
+  console.log('form', form);
+  console.log('files', files);
+  console.log('value', value);
   useEffect(() => {
     getDiaries();
     modifyPaperInfo();
   }, []);
-
-  // useEffect(() => {
-  //   if (paperInfo) {
-  //     setSymptoms(
-  //       paperInfo.symptoms.map((item) => ({
-  //         symptomId: item.symptomId,
-  //         name: item.symptomName,
-  //         score: item.score,
-  //       }))
-  //     );
-  //     setScores(Array(diary.diaryHasSymptoms.length).fill(0));
-  //   }
-  // }, [paperInfo]);
-
-  // 일기장 선택될때마다 해당 일기장의 Symptom 정보끌고오기
-  // useEffect(() => {
-  //   if (diary) {
-  //     console.log('diaryInfo', diary.diaryHasSymptoms);
-  //     setSymptoms(
-  //       diary.diaryHasSymptoms.map((item) => ({
-  //         symptomId: item.symptomId,
-  //         name: item.name,
-  //       }))
-  //     );
-  //     setScores(Array(diary.diaryHasSymptoms.length).fill(0));
-  //   }
-  //   //setSymptomScore(diary.diaryHasSymptoms.symptomId);
-  // }, [diary]);
-  // console.log('증상값 모음', scores);
-  // console.log('setSymptoms', symptoms);
 
   // 이미지 서버에 업로드 시키기
   // 일기수정하기
@@ -144,7 +123,7 @@ function PaperModifyPage() {
       score: scores[index],
     }));
 
-    data.append('diaryId', diaryId);
+    data.append('paperId', paperId);
     data.append('contents', value);
     data.append('open', isOpen);
     data.append('date', calendar);
@@ -155,8 +134,8 @@ function PaperModifyPage() {
     }
 
     for (let i = 0; i < symptomScore.length; i++) {
-      data.append(`symptoms[${i}].symptomId`, symptomScore[i].symptomId);
-      data.append(`symptoms[${i}].symptomId`, symptomScore[i].score);
+      data.append(`symptomsList[${i}].symptomId`, symptomScore[i].symptomId);
+      data.append(`symptomsList[${i}].symptomId`, symptomScore[i].score);
     }
 
     // (key: contents) value : 일기장내용
@@ -172,7 +151,7 @@ function PaperModifyPage() {
         },
       };
 
-      const res = await axios.post(api.paper.paperWrite(), data, config);
+      const res = await axios.put(api.paper.putPaper(), data, config);
       console.log('upload success', res);
 
       // 업로드성공하면 일기상세화면으로 넘어가야해용

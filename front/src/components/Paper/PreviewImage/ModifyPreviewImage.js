@@ -4,11 +4,17 @@ import { Img, RemoveBtn } from './style';
 function ModifyPreviewImage({ file, onRemove }) {
   const [previewUrl, setPreviewUrl] = useState(null);
   useEffect(() => {
+    console.log(typeof file.image);
     const reader = new FileReader();
-    reader.onload = (e) => {
-      setPreviewUrl(e.target.result);
-    };
-    reader.readAsDataURL(file.image);
+    if (typeof file.image === 'string') {
+      setPreviewUrl(`	
+      https://i8a809.p.ssafy.io/images/${file.image}`);
+    } else {
+      reader.onload = (e) => {
+        setPreviewUrl(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   }, [file]);
 
   return (
