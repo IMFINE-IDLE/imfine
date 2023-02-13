@@ -38,7 +38,6 @@ const PickMenuTabRight = styled(BoxRT25)`
 `;
 const PickMenuRowContainer = styled.section`
   padding-bottom: 1em;
-  }
 `;
 
 const PickMenuSubListContainer = styled(BoxRT50LB50)`
