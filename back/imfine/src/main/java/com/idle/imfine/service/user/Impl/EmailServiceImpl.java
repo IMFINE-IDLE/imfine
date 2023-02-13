@@ -56,7 +56,9 @@ public class EmailServiceImpl implements EmailService {
         return message;
     }
 
-    public static String createKey() {
+    private String createKey() {
+        LOGGER.info("[createKey] 인증 번호 생성 시작.");
+
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
@@ -78,6 +80,8 @@ public class EmailServiceImpl implements EmailService {
                     break;
             }
         }
+
+        LOGGER.info("[createKey] 인증 번호 생성 완료.");
         return key.toString();
     }
 
@@ -88,8 +92,9 @@ public class EmailServiceImpl implements EmailService {
             String confirm = createKey();
             MimeMessage message = createMessage(requestDto.getEmail(), confirm);
             emailSender.send(message);
-            redisUtil.setDataExpire(email, confirm, 60 * 3L);
             LOGGER.info("[sendEmail] 인증 메일 전송을 성공했습니다.");
+            redisUtil.setDataExpire(email, confirm, 60 * 3L);
+            LOGGER.info("[sendEmail] 인증 번호를 캐시에 저장했습니다.");
         } catch(Exception e){
             LOGGER.info("[sendEmail] 인증 메일 전송을 실패했습니다.");
             throw new ErrorException(EmailErrorCode.EMAIL_FAILED);
