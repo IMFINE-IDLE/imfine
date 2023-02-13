@@ -138,20 +138,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> refresh(Cookie cookie) throws RuntimeException {
+        LOGGER.info("[refresh] 토큰 갱신 시작");
+        
         if (cookie == null) {
+            LOGGER.info("[refresh] 쿠키 없음.");
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
         }
 
         String refreshToken = cookie.getValue();
 
         if (refreshToken == null || refreshToken.isEmpty()) {
+            LOGGER.info("[refresh] refresh token 없음.");
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);
-        } else if (!Pattern.matches("Bearer%.*", refreshToken)) {
-            throw new ErrorException(TokenErrorCode.WRONG_TYPE_TOKEN);
         }
 
         try {
-            refreshToken = refreshToken.substring(7);
             jwtTokenProvider.validateToken(refreshToken);
 
             String uid = jwtTokenProvider.getUsername(refreshToken);
@@ -160,6 +161,7 @@ public class UserServiceImpl implements UserService {
             String savedRefreshToken = user.getRefreshToken();
 
             if (!savedRefreshToken.equals(refreshToken)) {
+                LOGGER.info("[refresh] refresh token 불일치.");
                 throw new ErrorException(TokenErrorCode.NOT_MATCH_REFRESH_TOKEN);
             }
 
@@ -171,6 +173,7 @@ public class UserServiceImpl implements UserService {
             user.updateRefreshToken(newRefreshToken);
             userRepository.save(user);
 
+            LOGGER.info("[refresh] 토큰 갱신 완료");
             return common.createTokenResult(newAccessToken, newRefreshToken);
         } catch (TokenNotFoundException e) {
             throw new ErrorException(TokenErrorCode.REFRESH_TOKEN_NOT_FOUND);

@@ -43,7 +43,7 @@ public class Common {
 
         HttpHeaders headers = createTokenHeader(refreshToken);
         TokenResponseDto responseDto = TokenResponseDto.builder()
-                .accessToken(accessToken)
+                .accessToken("Bearer " + accessToken)
                 .build();
 
         result.put("headers", headers);
@@ -65,7 +65,7 @@ public class Common {
     }
 
     public String createTokenCookie(String name, String token, int maxAge) {
-        ResponseCookie cookie = ResponseCookie.from(name, "Bearer%" + token)
+        ResponseCookie cookie = ResponseCookie.from(name, token)
                 .path("/")
                 .httpOnly(true)
                 .secure(true)
@@ -123,16 +123,4 @@ public class Common {
         return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public void saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId) {
-//        User user = userRepository.getByUid(uid);
-
-        Notification notification = Notification.builder()
-            .senderId(senderId)
-            .recieverId(recieverId)
-            .contentsCodeId(contenstsCodeId)
-            .contentsId(contentsId)
-            .build();
-
-        notificationRepository.save(notification);
-    }
 }
