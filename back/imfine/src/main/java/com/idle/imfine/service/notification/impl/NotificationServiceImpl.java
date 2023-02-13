@@ -157,16 +157,17 @@ public class NotificationServiceImpl implements NotificationService {
         LOGGER.info("알림 보내기 {}", responseDto.toString());
         Long senderId = responseDto.getSenderId();
         Long receiverId = responseDto.getReceiverId();
-        if (!senderId.equals(receiverId)) {
-            send(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
+        Notification notification = saveNotification(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
                 responseDto.getContentsId(), responseDto.getType());
+        if (!senderId.equals(receiverId)) {
+            send(notification);
         }
     }
-    public void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
+    public void send(Notification newNotification) {
         LOGGER.info("send event 들어옴");
-        User user = userRepository.getById(recieverId);
+        User user = userRepository.getById(newNotification.getRecieverId());
         String id = String.valueOf(user.getUid());
-        Notification notification = saveNotification(senderId, recieverId, contenstsCodeId, contentsId, type);
+        Notification notification = newNotification;
 
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
         sseEmitters.forEach(
