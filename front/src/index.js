@@ -12,7 +12,10 @@ import { logOut, tokenRefresh } from './store/slice/userSlice';
 
 // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
 const accessToken = localStorage.getItem('accessToken');
-if (accessToken) axios.defaults.headers.common['Authorization'] = accessToken;
+console.log(accessToken);
+if (accessToken) {
+  axios.defaults.headers.common['Authorization'] = accessToken;
+}
 axios.defaults.withCredentials = true;
 axios.interceptors.response.use(
   (response) => response,

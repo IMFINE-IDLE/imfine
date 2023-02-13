@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import api from '../../api/api';
 
+// localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
+
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
@@ -11,7 +13,8 @@ export const signUp = createAsyncThunk(
       });
       console.log(res.data);
       const accessToken = res.data.data.accessToken;
-
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
       const saveData = {
         uid: userData.uid,
         accessToken,
@@ -33,6 +36,8 @@ export const logIn = createAsyncThunk(
       });
       console.log(res);
       const accessToken = res.data.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
       const saveData = {
         uid: userData.uid,
         accessToken,
@@ -54,6 +59,7 @@ export const logOut = createAsyncThunk(
         withCredentials: true,
       });
       // console.log(resLogout);
+      localStorage.setItem('accessToken', null);
 
       return resLogout;
     } catch (err) {
@@ -63,13 +69,14 @@ export const logOut = createAsyncThunk(
   }
 );
 
-export const tokenRefresh = createAsyncThunk('user/refresh', async () => {
+export const tokenRefresh = createAsyncThunk('user/tokenRefresh', async () => {
   try {
     const res = await axios.post(api.user.refresh(), {
       withCredentials: true,
     });
     console.log(res);
     const accessToken = res.data.data.accessToken;
+    axios.defaults.headers.common['Authorization'] = accessToken;
     return accessToken;
   } catch (err) {
     console.log(err);
