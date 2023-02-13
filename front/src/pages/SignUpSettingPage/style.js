@@ -3,7 +3,7 @@ import { BoxRT25 } from '../../components/common/BoxRT25/BoxRT25';
 import { Btn } from '../../components/common/Btn/Btn';
 
 const BoxTopArea = styled.div`
-  padding: 2em;
+  padding: 2em 0;
 `;
 
 const Title = styled.div`
@@ -20,7 +20,8 @@ const TitleSmall = styled.span`
 `;
 
 const BoxSymptom = styled.div`
-  line-height: 25px;
+  /* line-height: 25px; */
+  margin-top: 1em;
 `;
 
 const BtnSymptom = styled.span`

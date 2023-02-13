@@ -2,7 +2,7 @@ import { formToJSON } from 'axios';
 import React, { useState, useEffect } from 'react';
 import { BottomDiv, SelectContainer, Options } from './style';
 
-function DateDropdown({ value, state }) {
+function DateDropdown({ isdisabled, value, state }) {
   const now = new Date();
   let years = [];
   for (let y = now.getFullYear(); y >= 1930; y -= 1) {
@@ -33,6 +33,7 @@ function DateDropdown({ value, state }) {
     <>
       <BottomDiv>
         <SelectContainer
+          disabled={isdisabled}
           value={value.year}
           onChange={(e) => state({ ...value, year: e.target.value })}
         >
@@ -43,6 +44,7 @@ function DateDropdown({ value, state }) {
           ))}
         </SelectContainer>
         <SelectContainer
+          disabled={isdisabled}
           value={value.month}
           onChange={(e) => state({ ...value, month: e.target.value })}
         >
@@ -53,6 +55,7 @@ function DateDropdown({ value, state }) {
           ))}
         </SelectContainer>
         <SelectContainer
+          disabled={isdisabled}
           value={value.day}
           onChange={(e) => state({ ...value, day: e.target.value })}
         >

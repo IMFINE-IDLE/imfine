@@ -40,6 +40,7 @@ const PickMenuTab = ({
   onSubmitBtnClick,
   submitBtnText,
   idx,
+  paddingPicked,
 }) => {
   // 임시 더미데이터
   const sampleDataList = [
@@ -197,6 +198,7 @@ const PickMenuTab = ({
             symptoms={symptoms}
             canModify={true}
             ToggleSymptom={ToggleSymptom}
+            paddingPicked={paddingPicked}
           />
         ) : (
           <>
@@ -206,6 +208,7 @@ const PickMenuTab = ({
               medicals={medicals}
               canModify={true}
               ToggleSymptom={ToggleSymptom}
+              paddingPicked={paddingPicked}
             />
             <PickedItemList
               title="증상"
@@ -214,6 +217,7 @@ const PickMenuTab = ({
               color="light-pink"
               canModify={true}
               ToggleSymptom={ToggleSymptom}
+              paddingPicked={paddingPicked}
             />
           </>
         )}
@@ -261,7 +265,9 @@ const PickMenuTab = ({
           type="submit"
           onClick={() => {
             setMedicals(setMedicals);
-            setSymptoms(setSymptoms);
+            if (tabCnt === 2) {
+              setSymptoms(setSymptoms);
+            }
             onSubmitBtnClick();
           }}
         >

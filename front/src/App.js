@@ -27,8 +27,13 @@ import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
 import ReportPage from './pages/Report/ReportPage/ReportPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
 import SignUpSettingPage from './pages/SignUpSettingPage/SignUpSettingPage';
+import PaperModifyPage from './pages/PaperModifyPage/PaperModifyPage';
 import FindIdPage from './pages/FindIdPage/FindIdPage';
 import FindPwPage from './pages/FindPwPage/FindPwPage';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { logOut, tokenRefresh } from './store/slice/userSlice';
+
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -41,6 +46,31 @@ import FindPwPage from './pages/FindPwPage/FindPwPage';
 // `;
 
 function App() {
+  const dispatch = useDispatch();
+  // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
+  const accessToken = localStorage.getItem('accessToken');
+  if (accessToken !== 'null') {
+    axios.defaults.headers.common['Authorization'] = accessToken;
+    axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        console.log(error.response);
+        if (error.response.data.error === 'EXPIRED_TOKEN') {
+          dispatch(tokenRefresh());
+        }
+        if (
+          error.response.data.error === 'INVALID_REFRESH_TOKEN' ||
+          error.response.data.error === 'WRONG_TYPE_TOKEN'
+        ) {
+          console.log('들어옴');
+          dispatch(logOut());
+        }
+        return Promise.reject(error);
+      }
+    );
+  }
+  axios.defaults.withCredentials = true;
+
   return (
     // <Wrapper>
     <Routes>
@@ -201,6 +231,14 @@ function App() {
           element={
             <PrivateRoute>
               <PaperSymptomPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/paper/modify/:paperId"
+          element={
+            <PrivateRoute>
+              <PaperModifyPage />
             </PrivateRoute>
           }
         />
