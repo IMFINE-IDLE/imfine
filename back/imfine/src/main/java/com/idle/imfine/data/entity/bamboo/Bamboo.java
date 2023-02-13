@@ -52,7 +52,7 @@ public class Bamboo extends BaseCreatedEntity {
     @JoinColumn(name="writer_id")
     private User writer;
     @OneToMany(mappedBy = "bamboo", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Leaf> leaves = new ArrayList<>();
+    private List<Leaf> leaves;
 
     public void declarationAdd() {
         this.declarationCount += 1;

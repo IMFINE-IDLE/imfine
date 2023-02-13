@@ -209,13 +209,6 @@ public class BambooServiceImpl implements BambooService {
             heartRepository.save(heart);
             bamboo.setLikeCount(bamboo.getLikeCount() + 1);
             bambooRepository.save(bamboo);
-
-            //return을 내가 내 알람 안 울리게 처리하기ㅣㅣㅣㅣ
-//            Long userId = user.getId();
-//            Long otherId = bamboo.getWriter().getId();
-//            if (!userId.equals(otherId)) {
-//                notificationService.send(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
-//            }
         }
         return new ResponseNotificationPost(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 34);
     }
@@ -242,7 +235,13 @@ public class BambooServiceImpl implements BambooService {
     public void deleteBamboo() {
         LOGGER.info("Delete 수행 {}", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
         List<Bamboo> bamboos = bambooRepository.findByDeleteAtBefore(LocalDateTime.now());
-//        heartRepository.deleteByContentsCodeIdAndContentsId(4);
+        for(Bamboo b : bamboos) {
+            heartRepository.deleteHeartsByContentsCodeIdAndContentsId(4, b.getId());
+            List<Leaf> leafList = leafRepository.getByBamboo_Id(b.getId());
+            for(Leaf l : leafList) {
+                heartRepository.deleteHeartsByContentsCodeIdAndContentsId(5, l.getId());
+            }
+        }
         leafRepository.deleteLeavesBy(bamboos);
         bambooRepository.deleteByDeleteAtBefore(LocalDateTime.now());
     }
