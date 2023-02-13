@@ -28,18 +28,17 @@ const DiaryFeedPage = () => {
     try {
       const res = await axios.get(api.diary.getDiaryList(), {
         params: {
-          tab: `${type}`,
+          tab: `${type === '인기' ? 'popular' : 'latest'}`,
           'medical-id': `${medicalIds || ''}`,
           'symptom-id': `${symptomIds || ''}`,
           page: 0,
           size: 12,
         },
-        headers: { Authorization: localStorage.getItem('accessToken') },
       });
 
+      console.log('idaryList', res.data.data);
       await setDiaryList(res.data.data);
       // console.log(11111111111, type);
-      // console.log(res.data.data);
     } catch (err) {
       console.error(err);
     }
