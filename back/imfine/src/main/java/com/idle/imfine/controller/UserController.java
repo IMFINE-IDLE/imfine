@@ -194,7 +194,6 @@ public class UserController {
                 .body(responseService.getListResult((paperService.getAllPaperByDate(uid, date))));
     }
 
-
     @PostMapping("/condition")
     public ResponseEntity<Result> createCondition(@LoginUser String loginUid, @RequestBody ConditionRequestDto requestDto) {
         conditionService.createCondition(loginUid, requestDto);
