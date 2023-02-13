@@ -39,6 +39,54 @@ function NotificationItem({
   if (check) {
     return <></>;
   } else {
+    // 일기장알림
+    if (title === 1) {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel> 일기장 </TitleLabel>
+                </TopDiv>
+                <BottomDiv
+                  onClick={() => {
+                    readPost();
+                    navigate(`/diary/${senderUid}`);
+                  }}
+                >
+                  <Content>{msg}</Content>
+                </BottomDiv>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    }
+    // 일기 알림
+    if (title === 2) {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel> 일기 </TitleLabel>
+                </TopDiv>
+                <BottomDiv
+                  onClick={() => {
+                    readPost();
+                    navigate(`/diary/${senderUid}`);
+                  }}
+                >
+                  <Content>{msg}</Content>
+                </BottomDiv>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    }
     // 팔로우알림
     if (title === 6) {
       return (
@@ -75,6 +123,7 @@ function NotificationItem({
                 </TopDiv>
                 <BottomDiv
                   onClick={() => {
+                    readPost();
                     navigate(`/bamboo/${navigateId}`);
                   }}
                 >
