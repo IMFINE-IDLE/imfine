@@ -15,6 +15,12 @@ import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.errors.code.BambooErrorCode;
+import com.idle.imfine.errors.code.CommentErrorCode;
+import com.idle.imfine.errors.code.DeclarationErrorCode;
+import com.idle.imfine.errors.code.DiaryErrorCode;
+import com.idle.imfine.errors.code.PaperErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.declaration.DeclarationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -38,7 +44,12 @@ public class DeclarationServiceImpl implements DeclarationService {
 
     public void saveDiaryReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Diary diary = diaryRepository.getById(requestDeclaration.getContentsId());
+        Diary diary = diaryRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
+
+        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(1,
+                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
+            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
+        }
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(1)
@@ -47,14 +58,19 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .receiverId(diary.getWriter().getId())
                 .type(requestDeclaration.getType())
                 .build();
-        diary.declarationAdd();
+        diary.setDeclarationCount(diary.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("일기장 신고 등록 {}", declaration);
     }
 
     public void savePaperReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Paper paper = paperRepository.getById(requestDeclaration.getContentsId());
+        Paper paper = paperRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
+
+        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(2,
+                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
+            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
+        }
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(2)
@@ -63,15 +79,20 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .receiverId(paper.getDiary().getWriter().getId())
                 .type(requestDeclaration.getType())
                 .build();
-        
-        paper.declarationAdd();
+
+        paper.setDeclarationCount(paper.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("일기 신고 등록 {}", declaration);
     }
 
     public void saveCommentReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Comment comment = commentRepository.getById(requestDeclaration.getContentsId());
+        Comment comment = commentRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(CommentErrorCode.COMMENT_NOT_FOUND));
+
+        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(3,
+                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
+            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
+        }
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(3)
@@ -81,14 +102,19 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .type(requestDeclaration.getType())
                 .build();
 
-        comment.declarationAdd();
+        comment.setDeclarationCount(comment.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("댓글 신고 등록 {}", declaration);
     }
 
     public void saveBambooReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
-        Bamboo bamboo = bambooRepository.getById(requestDeclaration.getContentsId());
+        Bamboo bamboo = bambooRepository.findById(requestDeclaration.getContentsId()).orElseThrow(() -> new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND));
+
+        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(4,
+                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
+            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
+        }
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(4)
@@ -98,7 +124,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .type(requestDeclaration.getType())
                 .build();
 
-        bamboo.declarationAdd();
+        bamboo.setDeclarationCount(bamboo.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("대나무 신고 등록 {}", declaration);
     }
@@ -106,6 +132,11 @@ public class DeclarationServiceImpl implements DeclarationService {
     public void saveLeafReport(RequestDeclarationDto requestDeclaration) {
         User user = userRepository.getByUid(requestDeclaration.getSenderId());
         Leaf leaf = leafRepository.getById(requestDeclaration.getContentsId());
+
+        if (declarationRepository.existsByContentsCodeIdAndContentsIdAndSenderIdAndType(5,
+                requestDeclaration.getContentsId(), user.getId(), requestDeclaration.getType())) {
+            throw new ErrorException(DeclarationErrorCode.REPORT_CONFLICT);
+        }
 
         Declaration declaration = Declaration.builder()
                 .contentsCodeId(5)
@@ -115,7 +146,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .type(requestDeclaration.getType())
                 .build();
 
-        leaf.declarationAdd();
+        leaf.setDeclarationCount(leaf.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("대나무잎 신고 등록 {}", declaration);
     }

@@ -21,15 +21,17 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Diary extends BaseCreatedEntity{
 
@@ -54,7 +56,7 @@ public class Diary extends BaseCreatedEntity{
     @Column(nullable = false)
     private String image;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean active;
 
     @Column(nullable = false)
@@ -80,16 +82,4 @@ public class Diary extends BaseCreatedEntity{
 
     @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<DiaryHasSymptom> diaryHasSymptoms;
-
-    public void paperAdd() {
-        this.paperCount += 1;
-    }
-
-    public void paperSub() {
-        this.paperCount -= 1;
-    }
-
-    public void declarationAdd() {
-        this.declarationCount += 1;
-    }
 }

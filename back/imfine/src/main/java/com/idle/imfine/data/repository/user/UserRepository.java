@@ -3,6 +3,8 @@ package com.idle.imfine.data.repository.user;
 import com.idle.imfine.data.entity.User;
 import java.util.Optional;
 import javax.swing.text.html.Option;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUid(String uid);
     boolean existsByName(String name);
     boolean existsByEmail(String email);
+
+    Slice<User> findByNameContainingIgnoreCase(String query, Pageable pageable);
 
 }

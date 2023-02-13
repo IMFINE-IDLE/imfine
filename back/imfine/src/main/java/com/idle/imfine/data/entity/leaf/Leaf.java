@@ -22,10 +22,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "leaf")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Leaf extends BaseCreatedEntity {
     @Id
@@ -46,7 +45,4 @@ public class Leaf extends BaseCreatedEntity {
     @JoinColumn(name = "bamboo_id")
     Bamboo bamboo;
 
-    public void declarationAdd() {
-        this.declarationCount += 1;
-    }
 }

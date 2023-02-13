@@ -18,6 +18,7 @@ public class ResponsePaperDto {
     private String title;
     private long paperId;
     private String uid;
+    private String name;
     private String content;
     private int commentCount;
     private int likeCount;
@@ -25,7 +26,8 @@ public class ResponsePaperDto {
     private String condition;
     private boolean myHeart;
     private boolean open;
+    private boolean hasNext;
     private String createdAt;
-    List<String> images;
+    private boolean image;
     List<ResponsePaperSymptomRecordDto> symptomList;
 }

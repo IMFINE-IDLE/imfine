@@ -7,6 +7,5 @@ import lombok.Setter;
 @Setter
 public class Result {
     private boolean success;
-    private int status;
     private String message;
 }
