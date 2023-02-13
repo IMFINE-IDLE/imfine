@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { FiHeart, FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../../Modal/Modal';
 import BtnReport from '../BtnReport/BtnReport';
 import {
@@ -40,8 +41,11 @@ function PaperComment({
     setLocalLikeCount(likeCount);
   }, [myHeart, likeCount]);
 
-  // 댓글 삭제, 신고 위한 모달
-  const [modalOpen, setModalOpen] = useState(false);
+  // 댓글 삭제 모달
+  const [commentRemoveModalOpen, setCommentRemoveModalOpen] = useState(false);
+  // 댓글 신고 모달
+  const [commentReportModalOpen, setCommentReportModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -58,7 +62,7 @@ function PaperComment({
             {Boolean(!userStatus) && (
               <FiTrash2
                 onClick={() => {
-                  setModalOpen(true);
+                  setCommentRemoveModalOpen(true);
                 }}
                 size="16px"
               />
@@ -95,17 +99,29 @@ function PaperComment({
                 {localLikeCount}
               </span>
             </div>
-            <BtnReport />
+            <BtnReport apiFunc={() => setCommentReportModalOpen(true)} />
           </BoxBtns>
         </BoxTop>
         <BoxContent>{content}</BoxContent>
       </BoxCommentItem>
-      {modalOpen && (
+      {commentRemoveModalOpen && (
         <Modal
           type={'댓글'}
           action={'삭제'}
-          setModalOpen={setModalOpen}
+          setModalOpen={setCommentRemoveModalOpen}
           apiFunc={() => deleteComment(commentId)}
+        />
+      )}
+      {commentReportModalOpen && (
+        <Modal
+          type={'댓글'}
+          action={'신고'}
+          setModalOpen={setCommentReportModalOpen}
+          apiFunc={() =>
+            navigate('/report', {
+              state: { id: commentId, type: 'Comment' },
+            })
+          }
         />
       )}
     </>
