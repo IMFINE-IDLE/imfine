@@ -24,9 +24,7 @@ function ProfilePage() {
   // userInfo 가져오기
   const fetchUserInfo = async () => {
     try {
-      const response = await axios.get(api.profile.getUserInfo(uid), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const response = await axios.get(api.profile.getUserInfo(uid));
 
       await setUserInfo(response.data.data);
     } catch (err) {

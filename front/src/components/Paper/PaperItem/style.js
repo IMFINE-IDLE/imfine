@@ -8,6 +8,7 @@ const BoxPaper = styled(BoxLT50)`
   margin-bottom: 1.2em;
   cursor: pointer;
   z-index: 1;
+  height: auto;
 `;
 
 const BoxTop = styled.div`
@@ -57,7 +58,7 @@ const Symptom = styled(BtnSymptom)`
 
 const BoxContent = styled.div`
   padding: 0.3em 0 1em;
-  line-height: 1.2em;
+  line-height: 1.5em;
   color: var(--icon-color);
 `;
 

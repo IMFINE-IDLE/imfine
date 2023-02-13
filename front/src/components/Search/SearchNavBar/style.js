@@ -9,6 +9,7 @@ const BoxNavBar = styled.div`
   padding: 0 1em;
   background-color: ${(props) =>
     'var(--' + props.color + '-color)' || 'var(--gray-color)'};
+  z-index: 1000;
 `;
 
 const BoxChevronLeft = styled.div``;

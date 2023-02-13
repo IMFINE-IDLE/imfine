@@ -7,11 +7,21 @@ import { IconContext } from 'react-icons';
 import { Provider } from 'react-redux';
 import store, { persistor } from './store';
 import axios from 'axios';
-import { onSilentRefresh } from './store/slice/userSlice';
 import { PersistGate } from 'redux-persist/integration/react';
+import { tokenRefresh } from './store/slice/userSlice';
 
 axios.defaults.withCredentials = true;
-onSilentRefresh();
+
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.log(error.response);
+    if (error.response.data.error === 'EXPIRED_TOKEN') {
+      tokenRefresh();
+    }
+    return Promise.reject(error);
+  }
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

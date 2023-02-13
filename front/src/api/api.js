@@ -12,6 +12,7 @@ const REPORT = '/report';
 const NOTIFICATION = '/notification';
 const SYMPTOM = '/symptom';
 const MEDICAL = '/medical';
+const SEARCH = '/search';
 
 const api = {
   user: {
@@ -24,6 +25,7 @@ const api = {
     login: () => URL + USERS + '/sign-in',
     logout: () => URL + USERS + '/sign-out',
     refresh: () => URL + USERS + '/refresh',
+    setInitialProfile: () => URL + USERS + '/profile',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },
@@ -40,6 +42,13 @@ const api = {
     commentDelete: (commentId) => URL + COMMENT + `/${commentId}`,
     commentLike: () => URL + COMMENT + '/like',
     commentLikeDelete: (commentId) => URL + COMMENT + `/like/${commentId}`,
+  },
+  search: {
+    search: (params, query) =>
+      URL + SEARCH + `/result?where=${params}&query=${query}`,
+    postSearchHistory: () => URL + SEARCH,
+    getSearchHistory: () => URL + SEARCH + '/mylist',
+    deleteSearchHistory: (keywordId) => URL + SEARCH + `/mylist/${keywordId}`,
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
@@ -58,13 +67,11 @@ const api = {
     getUserBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
     postBambooLike: () => URL + BAMBOO + '/like',
     deleteBambooLike: (bambooId) => URL + BAMBOO + `/like/${bambooId}`,
-    reportBamboo: () => URL + REPORT + BAMBOO,
   },
   leaf: {
     postLeaf: () => URL + LEAF,
     postLeafLike: () => URL + LEAF + '/like',
     deletLeafLike: (leafId) => URL + LEAF + `/like/${leafId}`,
-    reportLeaf: () => URL + REPORT + LEAF,
   },
   diary: {
     postDiary: () => URL + DIARY,
@@ -88,6 +95,13 @@ const api = {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
     getNotifications: () => URL + NOTIFICATION + '/list',
     readNotification: () => URL + NOTIFICATION + '/check',
+  },
+  report: {
+    reportBamboo: () => URL + REPORT + BAMBOO,
+    reportLeaf: () => URL + REPORT + LEAF,
+    reportDiary: () => URL + REPORT + DIARY,
+    reportPaper: () => URL + REPORT + PAPER,
+    reportComment: () => URL + REPORT + COMMENT,
   },
 };
 

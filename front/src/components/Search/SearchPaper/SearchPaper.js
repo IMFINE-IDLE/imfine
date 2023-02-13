@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import PaperItem from '../../Paper/PaperItem/PaperItem';
+import React from 'react';
+import PaperList from '../../Paper/PaperList/PaperList';
+import { BoxSearchPaper } from './style';
 
-function SearchPaper({ paperList, setPaperList }) {
+function SearchPaper({ paperList }) {
   return (
-    <div>
-      SearchPaper
-      <div>일기 검색결과</div>
-    </div>
+    <BoxSearchPaper>
+      {paperList.length > 0 ? (
+        <PaperList paperList={paperList} />
+      ) : (
+        <span>검색 결과를 찾을 수 없습니다.</span>
+      )}
+    </BoxSearchPaper>
   );
 }
 

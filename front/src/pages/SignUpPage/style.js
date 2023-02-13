@@ -17,18 +17,18 @@ const CloverImg = styled.img.attrs({
   src: '/assets/images/clover.png',
 })`
   width: 100px;
-  margin: 0 0 2em -0.5em;
+  margin-left: -0.5em;
 `;
 
 const BoxInnerSignup = styled(BoxGrad)`
-  padding: 1em 4em 0;
+  padding: 1em 2.3em 0;
   margin: 0;
 `;
 
 const Label = styled.label`
   font-weight: 700;
   display: inline-block;
-  margin-top: 1.5em;
+  margin: 1.5em 0 0.7em;
 `;
 
 const InfoSpan = styled.span`
@@ -37,14 +37,13 @@ const InfoSpan = styled.span`
 `;
 
 const InputSignUp = styled(InputGray)`
-  height: 3em;
+  height: 2.7em;
   padding: 1em;
-  margin-top: 1em;
 `;
 
 const BtnSignup = styled.button`
   ${Btn}
-  margin-top: 2em;
+  margin-top: 1.5em;
   padding: 1em;
   display: inline-block;
 `;
@@ -69,18 +68,6 @@ const DivEmail = styled.div`
   gap: 1em;
 `;
 
-const BtnEmailCheck = styled.button`
-  ${Btn}
-  right: 0;
-  bottom: 0;
-  margin-top: 1em;
-  cursor: pointer;
-  background-color: var(--main-color);
-  width: 5em;
-  height: 3em;
-  text-align: center;
-`;
-
 export {
   BoxSignUp,
   TitleSignUp,
@@ -93,5 +80,4 @@ export {
   ErrorMsg,
   GuideMsg,
   DivEmail,
-  BtnEmailCheck,
 };

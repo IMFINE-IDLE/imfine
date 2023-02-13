@@ -4,17 +4,17 @@ const userInfoSlice = createSlice({
   name: 'userInfo',
   initialState: {
     cloverCode: '-1',
-    searchHistory: [],
+    // searchHistory: [],
   },
   reducers: {
     updateCode: (state, action) => {
       state.cloverCode = action.payload;
     },
-    addSearchHistory: (state, action) => {
-      state.searchHistory.unshift(action.payload);
-    },
+    // addSearchHistory: (state, action) => {
+    //   state.searchHistory.unshift(action.payload);
+    // },
   },
 });
 
-export const { updateCode, addSearchHistory } = userInfoSlice.actions;
+export const { updateCode } = userInfoSlice.actions;
 export default userInfoSlice;
