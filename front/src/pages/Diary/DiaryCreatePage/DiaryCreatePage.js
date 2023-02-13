@@ -6,8 +6,8 @@ import { SubmitBtn } from '../DiaryCreateConfirmPage/style';
 
 const DiaryCreatePage = () => {
   const navigate = useNavigate();
-  const [medicalList, setMedicalList] = useState(null);
-  const [symptomList, setSymptomList] = useState(null);
+  const [medicalList, setMedicalList] = useState([]);
+  const [symptomList, setSymptomList] = useState([]);
 
   const infoToConfirm = {
     medicalList,

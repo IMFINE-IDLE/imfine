@@ -1,11 +1,9 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import React, { forwardRef, useState } from 'react';
 import api from '../../api/api';
-import { axiosInstance } from '../../api/axiosInstance';
-import { BoxRT50LB50 } from '../common/BoxRT50LB50/BoxRT50LB50';
 import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 import IconSymptom from '../common/IconSymptom/IconSymptom';
 import {
-  BoxPickMenu,
   PickMenuDetailMenu,
   PickMenuRowContainer,
   PickMenuSubListContainer,
@@ -41,39 +39,25 @@ const PickMenu = forwardRef(({ type, dataList, ToggleSymptom }, ref) => {
       type === 'medical'
         ? api.medical.getMedicalDetail(id)
         : api.symptom.getSymptomDetail(id);
-    const res = await axiosInstance.get(url);
-    console.log('detail', res.data.data);
-    await setDetailList(res.data.data);
-    console.log(detailList);
+    const res = await axios.get(url);
+    setDetailList(res.data.data);
   };
 
   // 메뉴 하나 클릭했을 때
   const handleMenuClick = (e, idx, id) => {
-    console.log(e);
-    console.log('idx, id', idx, id);
-    console.log('aaaaaa', subMenuSection.current[idx]);
-    // console.log('bbbb', subMenuSection.current[idx].lastElementChild);
-    // subMenuSection.current[idx].lastElementChild.style.display = 'block';
-    // subMenuFirstClicked.current.classList.add('subMenuOpen');
-
-    // const currentDisplay =
-    //   subMenuSection.current[idx].lastElementChild.style.display;
-    // console.log('curdis', currentDisplay);
-
-    // subMenuSection.current[idx].lastElementChild.style.display =
-    //   currentDisplay === 'block' ? 'none' : 'block';
-
     // 최초 클릭시 클릭된 메뉴의 id와 행의 idx를 저장하고 subMenu 영역 열기
     if (!clickedMenuId.current) {
       clickedMenuId.current = id;
       clickedSubMenuSectionIdx.current = idx;
       subMenuSection.current[idx].lastElementChild.style.display = 'block';
     }
-    // 기존에 클릭된 메뉴와 같은 메뉴를 다시 클릭하면 subMenu 영역을 닫음
+    // 기존에 클릭된 메뉴와 같은 메뉴를 다시 클릭하면 subMenu 영역을 토글(닫거나 염)
     else if (clickedMenuId.current === id) {
-      subMenuSection.current[idx].lastElementChild.style.display = 'none';
+      const currentState =
+        subMenuSection.current[idx].lastElementChild.style.display;
+      subMenuSection.current[idx].lastElementChild.style.display =
+        currentState === 'block' ? 'none' : 'block';
     }
-    // 닫힌 메뉴 다시 클릭시 다시 여는 로직 필요
 
     // 기존과 다른 메뉴를 클릭하면 기존 subMenu를 닫고
     // 클릭된 메뉴의 id와 행의 idx를 저장하고 새 subMenu를 열기
@@ -92,18 +76,6 @@ const PickMenu = forwardRef(({ type, dataList, ToggleSymptom }, ref) => {
   };
 
   return (
-    // <BoxPickMenu>
-    //   {dataList?.map(({ id, name, image }) => (
-    //     <IconSymptom
-    //       type={type}
-    //       key={id}
-    //       id={id}
-    //       name={name}
-    //       image={image}
-    //       onClick={handleMenuClick}
-    //     />
-    //   ))}
-    //       </BoxPickMenu>
     <FlexDiv wrap="wrap" padding="0 1em">
       {dataListModified?.map((dataList, idx) => (
         <PickMenuRowContainer
@@ -138,28 +110,6 @@ const PickMenu = forwardRef(({ type, dataList, ToggleSymptom }, ref) => {
                   {name}
                 </PickMenuDetailMenu>
               ))}
-              {/* <PickMenuDetailMenu
-                onClick={() => handleDetailMenuClick('medical', 1, 'test')}
-              >
-                질병하나
-              </PickMenuDetailMenu>
-              <PickMenuDetailMenu
-                onClick={() => handleDetailMenuClick('symptom', 2, 'test')}
-              >
-                질병하나이름이길어요
-              </PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병둘</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나세세</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나꺅</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu>
-              <PickMenuDetailMenu>질병하나</PickMenuDetailMenu> */}
             </FlexDiv>
           </PickMenuSubListContainer>
         </PickMenuRowContainer>

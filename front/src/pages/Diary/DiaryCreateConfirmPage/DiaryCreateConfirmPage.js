@@ -23,12 +23,14 @@ import {
 
 function DiaryCreateConfirmPage() {
   // 임시. 나중에 앞 페이지에서 프롭스로 받아올 것
-  // const {medicalPick, symptomPickList} = useLocation();
-  const medicals = [{ id: 1, name: '질병명' }];
-  const symptoms = [
-    { id: 1, name: '증상1' },
-    { id: 2, name: '증상2' },
-  ];
+  const { medicalList, symptomList } = useLocation().state;
+  // const state = useLocation();
+  // console.log(state);
+  // const medicals = [{ id: 1, name: '질병명' }];
+  // const symptoms = [
+  //   { id: 1, name: '증상1' },
+  //   { id: 2, name: '증상2' },
+  // ];
   const [diaryInfo, setDiaryInfo] = useState({
     title: '',
     description: '',
@@ -42,14 +44,14 @@ function DiaryCreateConfirmPage() {
       const res = await axios.post(
         api.diary.postDiary(),
         {
-          medicalId: medicals.id,
+          medicalId: medicalList.id,
           open: isOpen,
           title: diaryInfo.title,
           description: diaryInfo.description,
           image: '1',
-          symptom: symptoms?.map((symptom) => symptom.id),
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
+          symptom: symptomList?.map((symptom) => symptom.id),
+        }
+        // { headers: { Authorization: localStorage.getItem('accessToken') } }
       );
 
       navigate(`/diary/${res.data.data}`);
@@ -110,12 +112,12 @@ function DiaryCreateConfirmPage() {
             <PickedItemList
               title="질병/수술"
               type="medical"
-              medicals={medicals}
+              medicals={medicalList}
             />
             <PickedItemList
               title="증상"
               type="symptom"
-              symptoms={symptoms}
+              symptoms={symptomList}
               color="light-pink"
             />
           </FlexDiv>

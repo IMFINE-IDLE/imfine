@@ -24,7 +24,9 @@ import {
  * (Array) symptoms: 증상 선택 결과를 담을 state, 빈 배열 또는 기존 선택지를 담은 배열
  * (Function) setMedicals: 질병/수술 선택 결과 state 업데이트 함수, 상위 컴포넌트에서 useState로 선언
  * (Function) setSymptoms: 증상 선택 결과를 state 업데이트 함수, 상위 컴포넌트에서 useState로 선언
- * (Function) apiFunc: 선택 완료 버튼 클릭시 실행할 api 함수
+ * (Function) onSubmitBtnClick: 하단 버튼 클릭시 실행할 함수
+ * (String) submitBtnText: 하단 버튼에 들어갈 텍스트
+ * (Number) idx: 초기에 선택될 탭의 인덱스. 디폴트는 0(왼쪽 탭이 선택된 상태)
  *
  */
 
