@@ -20,7 +20,7 @@ import {
   BoxTopAudio,
 } from './style';
 
-function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
+function PaperItemDetail({ paperId, paper }) {
   const navigate = useNavigate();
   const {
     condition,
@@ -56,7 +56,9 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
   };
 
   // 일기 삭제 모달
-  const [modalOpen, setModalOpen] = useState(false);
+  const [paperDeleteModalOpen, setPaperDeleteModalOpen] = useState(false);
+  // 일기 신고 모달
+  const [paperReportModalOpen, setPaperReportModalOpen] = useState(false);
 
   // 게시글 시간 표시 함수
   function getTimeDifference(timeString) {
@@ -121,7 +123,12 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                 {/* {isPlaying ? <p>Playing...</p> : <p>Paused</p>} */}
               </BoxTopAudio>
             </div>
-            <BtnReport paperId={paperId} />
+            <BtnReport
+              paperId={paperId}
+              apiFunc={() => {
+                setPaperReportModalOpen(true);
+              }}
+            />
           </BoxRight>
         </BoxTop>
         <BoxContent>
@@ -144,7 +151,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                 />
                 <FiTrash2
                   onClick={() => {
-                    setModalOpen(true);
+                    setPaperDeleteModalOpen(true);
                   }}
                 />
               </>
@@ -161,12 +168,24 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
           />
         </BoxBottomDetail>
       </BoxPaperDetail>
-      {modalOpen && (
+      {paperDeleteModalOpen && (
         <Modal
           type={'일기'}
           action={'삭제'}
-          setModalOpen={setModalOpen}
+          setModalOpen={setPaperDeleteModalOpen}
           apiFunc={() => deletePaper(paperId)}
+        />
+      )}
+      {paperReportModalOpen && (
+        <Modal
+          type={'일기'}
+          action={'신고'}
+          setModalOpen={setPaperReportModalOpen}
+          apiFunc={() =>
+            navigate('/report', {
+              state: { id: paperId, type: 'Paper' },
+            })
+          }
         />
       )}
       {showFullImage && (
