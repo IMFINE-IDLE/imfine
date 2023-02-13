@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ReactComponent as MainTabSvg } from './icons/home.svg';
 import { ReactComponent as DiaryTabSvg } from './icons/diary.svg';
 import { ReactComponent as BambooTabSvg } from './icons/bamboo.svg';
 import { ReactComponent as ProfileTabSvg } from './icons/profile.svg';
-import CloverModal from './CloverModal';
+import CloverModal from '../CloverModal/CloverModal';
 import {
   TabContainer,
   Tab,
@@ -12,27 +12,24 @@ import {
   ActiveBar,
   TabCenter,
   MainClover,
-  CloverStatusContainer,
 } from './style';
 
 const TabBar = () => {
-  const { uid, cloverCode } = useSelector((state) => {
-    return { uid: state.user.uid, cloverCode: state.userInfo.cloverCode };
-  });
-  console.log('state', uid, cloverCode);
+  const { cloverCode } = useSelector((state) => state.userInfo.cloverCode);
+  const uid = localStorage.getItem('uid');
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
   return (
     <div>
       {cloversOpen && (
-        <CloverStatusContainer width="18.75em" height="11em" radius="25px">
-          <CloverModal
-            currentClover={currentClover}
-            setCurrentClover={setCurrentClover}
-            setCloversOpen={setCloversOpen}
-          />
-        </CloverStatusContainer>
+        <CloverModal
+          currentClover={currentClover}
+          setCurrentClover={setCurrentClover}
+          setCloversOpen={setCloversOpen}
+          center={false}
+          date={new Date()}
+        />
       )}
 
       <TabContainer>

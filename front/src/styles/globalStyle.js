@@ -6,6 +6,7 @@ const iconStyle = {
   verticalAlign: 'middle',
   color: 'var(--icon-color)',
   fontSize: '1.3rem',
+  cursor: 'pointer',
 };
 
 const GlobalStyle = createGlobalStyle`
@@ -36,6 +37,9 @@ const GlobalStyle = createGlobalStyle`
     --pink-color: #FC9595;
     --red-color: #D61616;
     --default-font-color: #2D2D2D;
+
+    /* Navigation bar height */
+    --nav-height: 65px;
   }
 
   *, *::before, *::after {
@@ -73,6 +77,15 @@ const GlobalStyle = createGlobalStyle`
 
   abbr {
     text-decoration: none;
+  }
+
+  a,
+  div,
+  span,
+  input,
+  button,
+  textarea {
+    font-family: inherit;
   }
 `;
 

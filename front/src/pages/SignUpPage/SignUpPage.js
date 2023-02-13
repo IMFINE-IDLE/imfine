@@ -4,6 +4,11 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
 import PickSymptom from '../../components/PickSymptom/PickSymptom';
+import { isEmailValid } from '../../utils/utils';
+import BtnEmailCheck from '../../components/SignUp/BtnEmailCheck/BtnEmailCheck';
+import BtnEmailCodeCheck from '../../components/SignUp/BtnEmailCodeCheck/BtnEmailCodeCheck';
+import VerfifyEmailTimer from '../../components/SignUp/VerifyEmailTimer/VerifyEmailTimer';
+import CheckTermsOfService from '../../components/SignUp/CheckTermsOfService/CheckTermsOfService';
 import { signUp } from '../../store/slice/userSlice';
 import {
   BoxSignUp,
@@ -15,6 +20,8 @@ import {
   InputSignUp,
   BtnSignup,
   ErrorMsg,
+  DivEmail,
+  GuideMsg,
 } from './style';
 
 function SignUpPage() {
@@ -25,10 +32,15 @@ function SignUpPage() {
     idErrorMsg: '',
     nameErrorMsg: '',
     emailErrorMsg: '',
+    emailVerifyErrorMsg: '',
     pwErrorMsg: '',
     confirmPwErrorMsg: '',
   });
-  const [isNext, setIsNext] = useState(false);
+  const [emailVerify, setEmailVerify] = useState(false); // 이메일 인증메일 전송 단계 체크: valid, emailSent
+  const [doneEmailVerify, setDoneEmailVerify] = useState(false); // 이메일 인증 완료 여부 체크
+  const [timeLeft, setTimeLeft] = useState(179);
+
+  const [checkedTerms, setCheckedTerms] = useState(false);
 
   const [inputValue, inputEvent] = useReducer(
     (prev, next) => {
@@ -139,12 +151,12 @@ function SignUpPage() {
       // 3. 이메일 유효성 검사
       if (currInput.email) {
         checkStage(3);
-        const isEmailValid = (email) => {
-          const emailRegex =
-            /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
+        // const isEmailValid = (email) => {
+        //   const emailRegex =
+        //     /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
 
-          return emailRegex.test(email);
-        };
+        //   return emailRegex.test(email);
+        // };
         if (isEmailValid(currInput.email)) {
           // 유효한 경우에만 이메일 중복체크
           const asyncCheckEmail = async () => {
@@ -155,6 +167,11 @@ function SignUpPage() {
               setErrMsg((prev) => {
                 return { ...prev, emailErrorMsg: '' };
               });
+
+              // 이메일 인증 버튼 활성화
+              if (emailVerify === false) {
+                setEmailVerify('valid');
+              }
             } catch (err) {
               console.log(err.response.data);
               setErrMsg((prev) => {
@@ -209,18 +226,51 @@ function SignUpPage() {
       id: '',
       name: '',
       email: '',
+      emailCode: '',
       password: '',
       confirmPassword: '',
     }
   );
-  const { id, name, email, password, confirmPassword } = inputValue;
+  const { id, name, email, emailCode, password, confirmPassword } = inputValue;
   const {
     idErrorMsg,
     nameErrorMsg,
     emailErrorMsg,
+    emailVerifyErrorMsg,
     pwErrorMsg,
     confirmPwErrorMsg,
   } = errorMsg;
+
+  // 이메일 인증 코드 전송
+  const sendVerifyEmail = async (emailState) => {
+    try {
+      setTimeLeft(179); // 타이머 세팅
+      const data = { email: emailState };
+      const res = await axios.post(api.user.verifyEmail(emailState), data);
+      // console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 이메일 인증 코드 확인
+  const confirmVerifyEmailCode = async () => {
+    const data = { email, confirm: emailCode };
+    try {
+      const res = await axios.post(api.user.confirmEmail(), data);
+      console.log(res);
+      setDoneEmailVerify(true);
+      alert('이메일 인증이 완료되었습니다.');
+    } catch (err) {
+      console.log(err);
+      setErrMsg((prev) => {
+        return {
+          ...prev,
+          emailVerifyErrorMsg: err.response.data.message,
+        };
+      });
+    }
+  };
 
   // 전체 유효 여부 확인
   const noErr = Object.values(errorMsg).every((x) => x === '' || x === null);
@@ -232,17 +282,19 @@ function SignUpPage() {
     name.length > 0 &&
     name.length <= 12 &&
     email.length > 0 &&
+    doneEmailVerify &&
     password.length > 0 &&
     confirmPassword.length > 0 &&
-    password === confirmPassword
+    password === confirmPassword &&
+    checkedTerms
   ) {
     // console.log('TRUE');
     if (!isValid) setIsValid(true);
   } else {
     if (isValid) setIsValid(false);
-    if (isNext) setIsNext(false);
   }
 
+  // 최종 회원 가입
   const signUpByData = async () => {
     const userData = {
       uid: id,
@@ -253,143 +305,172 @@ function SignUpPage() {
     };
     try {
       const success = await dispatch(signUp(userData)).unwrap();
-      setIsNext(true);
+      navigate('/signup/setting');
       // console.log(success);
     } catch (rejectWithValue) {
       console.log(rejectWithValue);
       alert(rejectWithValue.response.data.message);
-      setIsNext(false);
     }
   };
 
   return (
     <>
-      {!isNext ? (
-        <div>
-          <BoxSignUp>
-            <CloverImg />
-            <TitleSignUp>회원가입</TitleSignUp>
-          </BoxSignUp>
-          <BoxInnerSignup>
-            <form action="">
-              <Label htmlFor="idInput">아이디</Label>
-              <InfoSpan>&nbsp;최대 12자</InfoSpan>
-              <InputSignUp
-                value={id}
-                id="idInput"
-                type="text"
-                required
-                autoFocus
-                // maxLength="12"
-                onChange={(e) => inputEvent({ id: e.target.value })}
-                style={
-                  idErrorMsg ? { border: '1px solid var(--red-color)' } : null
-                }
-              />
-              {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
+      <div>
+        <BoxSignUp>
+          <CloverImg />
+          <TitleSignUp>회원가입</TitleSignUp>
+        </BoxSignUp>
+        <BoxInnerSignup>
+          <form action="">
+            <Label htmlFor="idInput">아이디</Label>
+            <InfoSpan>&nbsp;최대 12자</InfoSpan>
+            <InputSignUp
+              value={id}
+              id="idInput"
+              type="text"
+              // required
+              autoFocus
+              // maxLength="12"
+              onChange={(e) => inputEvent({ id: e.target.value })}
+              style={
+                idErrorMsg ? { border: '1px solid var(--red-color)' } : null
+              }
+            />
+            {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
 
-              <Label htmlFor="nameInput">닉네임</Label>
-              <InfoSpan>&nbsp;최대 10자</InfoSpan>
-              <InputSignUp
-                value={name}
-                id="nameInput"
-                type="text"
-                required
-                // maxLength="10"
-                onChange={(e) => inputEvent({ name: e.target.value })}
-                style={
-                  nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
-                }
-              />
-              {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
+            <Label htmlFor="nameInput">닉네임</Label>
+            <InfoSpan>&nbsp;최대 10자</InfoSpan>
+            <InputSignUp
+              value={name}
+              id="nameInput"
+              type="text"
+              // required
+              // maxLength="10"
+              onChange={(e) => inputEvent({ name: e.target.value })}
+              style={
+                nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
+              }
+            />
+            {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
 
-              <Label htmlFor="emailInput">이메일</Label>
+            <Label htmlFor="emailInput">이메일</Label>
+            <DivEmail>
               <InputSignUp
                 value={email}
                 id="emailInput"
                 type="email"
-                required
+                // required
                 onChange={(e) => inputEvent({ email: e.target.value })}
                 style={
                   emailErrorMsg
                     ? { border: '1px solid var(--red-color)' }
                     : null
                 }
+                readOnly={doneEmailVerify ? true : false}
               />
-              {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
-
-              <Label htmlFor="passwordInput">비밀번호</Label>
-              <InputSignUp
-                value={password}
-                id="passwordInput"
-                type="password"
-                autoComplete="off"
-                required
-                onChange={(e) => inputEvent({ password: e.target.value })}
-                style={
-                  pwErrorMsg ? { border: '1px solid var(--red-color)' } : null
-                }
-              />
-              {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
-
-              <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
-              <InputSignUp
-                value={confirmPassword}
-                id="confirmPasswordInput"
-                type="password"
-                autoComplete="off"
-                required
-                onChange={(e) =>
-                  inputEvent({ confirmPassword: e.target.value })
-                }
-                style={
-                  confirmPwErrorMsg
-                    ? { border: '1px solid var(--red-color)' }
-                    : null
-                }
-              />
-              {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
-              {isValid ? (
-                <BtnSignup
-                  margin={'0'}
-                  padding={'1em'}
-                  fontSize={'1em'}
-                  type="submit"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (isValid) {
-                      signUpByData();
-                    }
-                  }}
-                >
-                  회원가입하기
-                </BtnSignup>
-              ) : (
-                <BtnSignup
-                  margin={'0'}
-                  padding={'1em'}
-                  fontSize={'1em'}
-                  type="button"
-                  color={'gray700'}
-                  disabled
-                  style={{ cursor: 'not-allowed' }}
-                >
-                  회원가입하기
-                </BtnSignup>
+              {!doneEmailVerify && (
+                <BtnEmailCheck
+                  email={email}
+                  emailVerify={emailVerify}
+                  setEmailVerify={setEmailVerify}
+                  sendVerifyEmail={sendVerifyEmail}
+                />
               )}
-            </form>
-          </BoxInnerSignup>
-        </div>
-      ) : (
-        <>
-          <PickSymptom />
-          <div style={{ width: '80%', margin: '0 auto' }}>
-            <BtnSignup type="button" onClick={() => navigate('/home')}>
-              건강해지러 가기!
-            </BtnSignup>
-          </div>
-        </>
-      )}
+            </DivEmail>
+            {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
+
+            {emailVerify === 'emailSent' && !doneEmailVerify ? (
+              <>
+                <Label htmlFor="emailCodeInput">인증코드 입력</Label>
+                <GuideMsg>이메일로 전송된 인증코드를 입력해주세요.</GuideMsg>
+                <DivEmail>
+                  <InputSignUp
+                    value={emailCode}
+                    id="emailCodeInput"
+                    type="text"
+                    autoComplete="off"
+                    // required
+                    onChange={(e) => inputEvent({ emailCode: e.target.value })}
+                    style={
+                      emailVerifyErrorMsg
+                        ? { border: '1px solid var(--red-color)' }
+                        : null
+                    }
+                  />
+                  <VerfifyEmailTimer
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                  />
+                  <BtnEmailCodeCheck
+                    emailCode={emailCode}
+                    confirmVerifyEmailCode={confirmVerifyEmailCode}
+                  />
+                </DivEmail>
+                {emailVerifyErrorMsg && (
+                  <ErrorMsg>{emailVerifyErrorMsg}</ErrorMsg>
+                )}
+              </>
+            ) : null}
+
+            <Label htmlFor="passwordInput">비밀번호</Label>
+            <InputSignUp
+              value={password}
+              id="passwordInput"
+              type="password"
+              autoComplete="off"
+              // required
+              onChange={(e) => inputEvent({ password: e.target.value })}
+              style={
+                pwErrorMsg ? { border: '1px solid var(--red-color)' } : null
+              }
+            />
+            {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
+
+            <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
+            <InputSignUp
+              value={confirmPassword}
+              id="confirmPasswordInput"
+              type="password"
+              autoComplete="off"
+              // required
+              onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
+              style={
+                confirmPwErrorMsg
+                  ? { border: '1px solid var(--red-color)' }
+                  : null
+              }
+            />
+            {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
+
+            <CheckTermsOfService
+              checkedTerms={checkedTerms}
+              setCheckedTerms={setCheckedTerms}
+            />
+            {isValid ? (
+              <BtnSignup
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isValid) {
+                    signUpByData();
+                  }
+                }}
+              >
+                회원가입하기
+              </BtnSignup>
+            ) : (
+              <BtnSignup
+                type="button"
+                color={'gray700'}
+                disabled
+                style={{ cursor: 'not-allowed' }}
+              >
+                회원가입하기
+              </BtnSignup>
+            )}
+          </form>
+        </BoxInnerSignup>
+      </div>
     </>
   );
 }

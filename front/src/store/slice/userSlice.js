@@ -1,26 +1,25 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Navigate } from 'react-router';
 import api from '../../api/api';
+
+// localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
 
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post(api.user.signUp(), userData);
+      const res = await axios.post(api.user.signUp(), userData, {
+        withCredentials: true,
+      });
       console.log(res.data);
-      const { accessToken, refreshToken } = res.data.data;
+      const accessToken = res.data.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
       const saveData = {
         uid: userData.uid,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+        accessToken,
       };
-
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
-      // console.log(accessToken);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
-      setInterval(logOut, JWT_EXPIRATION_TIME);
 
       return saveData;
     } catch (err) {
@@ -33,38 +32,68 @@ export const logIn = createAsyncThunk(
   'user/login',
   async (userData, { rejectWithValue }) => {
     try {
-      const resLogin = await axios.post(api.user.login(), userData);
-      // console.log(resLogin.data.data);
-      const { accessToken, refreshToken } = resLogin.data.data;
+      const res = await axios.post(api.user.login(), userData, {
+        withCredentials: true,
+      });
+      console.log(res);
+      const accessToken = res.data.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
       const saveData = {
         uid: userData.uid,
         accessToken,
-        refreshToken,
       };
-
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
-      // console.log(accessToken);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
-      setInterval(logOut, JWT_EXPIRATION_TIME);
 
       return saveData;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err);
     }
   }
 );
 
-export const logOut = createAsyncThunk('user/logOut', async () => {});
+export const logOut = createAsyncThunk(
+  'user/logOut',
+  async (userData, { rejectWithValue }) => {
+    console.log('로그아웃 실행');
+
+    try {
+      const resLogout = await axios.post(api.user.logout(), {
+        withCredentials: true,
+      });
+      // console.log(resLogout);
+      localStorage.setItem('accessToken', null);
+      <Navigate to="/login" />;
+      return resLogout;
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const tokenRefresh = createAsyncThunk('user/tokenRefresh', async () => {
+  try {
+    console.log('토큰 갱신');
+    const res = await axios.post(api.user.refresh(), {
+      withCredentials: true,
+    });
+    console.log(res);
+    const accessToken = res.data.data.accessToken;
+    axios.defaults.headers.common['Authorization'] = accessToken;
+    return accessToken;
+  } catch (err) {
+    console.log(err);
+    logOut();
+  }
+});
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLogin: false,
-    accessToken: '',
-    refreshToken: '',
-    uid: '',
+    uid: null,
+    // accessToken: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -72,7 +101,6 @@ const userSlice = createSlice({
       .addCase(signUp.fulfilled, (state, action) => {
         state.isLogin = true;
         state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
         state.uid = action.payload.uid;
       })
       .addCase(signUp.rejected, (state, action) => {
@@ -81,14 +109,28 @@ const userSlice = createSlice({
       .addCase(logIn.fulfilled, (state, action) => {
         state.isLogin = true;
         state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
         state.uid = action.payload.uid;
       })
       .addCase(logIn.rejected, (state, action) => {
         console.log(action.payload.response.data);
+      })
+      .addCase(logOut.fulfilled, (state, action) => {
+        state.isLogin = false;
+        state.accessToken = null;
+        state.uid = null;
+      })
+      .addCase(logOut.rejected, (state, action) => {
+        console.log(action.payload.response.data);
+      })
+      .addCase(tokenRefresh.fulfilled, (state, action) => {
+        state.accessToken = action.payload.accessToken;
+      })
+      .addCase(tokenRefresh.rejected, (state, action) => {
+        state.isLogin = false;
+        state.accessToken = null;
+        state.uid = null;
       });
   },
 });
 
-// export const { } = userSlice.actions;
 export default userSlice;

@@ -1,85 +1,205 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import moment from 'moment';
 
-import api from '../../api/api';
-import { BoxShad } from '../common/BoxShad/BoxShad';
-import { Clover } from '../common/Clover/Clover';
 import 'react-calendar/dist/Calendar.css';
 import './style.css';
 
-const StatusCalendar = ({ uid }) => {
-  const state = useSelector((state) => state);
-  const [value, onChange] = useState(new Date());
+import api from '../../api/api';
+import CloverModal from '../CloverModal/CloverModal';
+import { FlexDiv } from '../common/FlexDiv/FlexDiv';
+import { BoxShad } from '../common/BoxShad/BoxShad';
+import { Clover } from '../common/Clover/Clover';
+import { CalendarStatusModifyBtn } from './style';
+import DiaryPaperItem from '../Diary/DiaryPaperItem/DiaryPaperItem';
+import { useNavigate } from 'react-router-dom';
+import { axiosInstance } from '../../api/axiosInstance';
+
+const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
+  /*
+   * Hooks
+   */
+
+  // 달력 관련 state
+  const [date, setDate] = useState(new Date());
   const [monthCondition, setMonthCondition] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const params = {
-    uid,
-    date: moment(value).format('YYYY-MM'),
-  };
+  // 클로버 상태 변경 관련 state
+  const [cloverOfDayClicked, setCloverOfDayClicked] = useState('-1');
+  const [cloversOpen, setCloversOpen] = useState(false);
 
-  const fetchProfileCalendar = async () => {
+  // 개별 날짜의 일기 정보
+  const [paperInfo, setPaperInfo] = useState(null);
+
+  const navigate = useNavigate();
+
+  /*
+   * Functions
+   */
+
+  // 해당 달의 컨디션 정보 불러오기
+  const fetchProfileCalendar = async (date) => {
     try {
-      setError(null);
-      setMonthCondition(null);
-      setLoading(true);
+      const params = {
+        uid,
+        date: moment(date).format('YYYY-MM'),
+      };
 
       const res = await axios.get(api.profile.getMonthCondition(params), {
-        headers: { 'X-AUTH-TOKEN': state.user.accessToken },
+        headers: { Authorization: localStorage.getItem('accessToken') },
       });
 
       setMonthCondition({ ...res.data.data });
-      console.log('res', res.data);
-      console.log('data', monthCondition);
-    } catch (e) {
-      setError(e);
-      console.error(e);
+      setCloverOfDayClicked(res.data.data[moment(date).format('D')]);
+    } catch (err) {
+      console.error(err);
     }
-    setLoading(false);
+  };
+
+  // 선택한 날짜의 일기 불러오기
+  const fetchGetDiaryPaperItem = async (diaryId, date) => {
+    try {
+      if (isProfile) {
+        const params = { uid, date: moment(date).format('YYYY-MM-DD') };
+
+        const res = await axiosInstance.get(
+          api.profile.getUserPaperItem(params)
+        );
+
+        await setPaperInfo(res.data.data);
+        console.log('p res', res.data.data);
+        console.log('p', paperInfo);
+      } else {
+        const params = {
+          diaryId,
+          date: moment(date).format('YYYY-MM-DD'),
+        };
+
+        const res = await axiosInstance.get(
+          api.diary.getDiaryPaperItem(params)
+        );
+
+        await setPaperInfo(res.data.data);
+        console.log('diarypaper res', res.data.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
-    fetchProfileCalendar();
+    fetchProfileCalendar(date);
   }, []);
 
-  const onClickDay = (value, event) => {};
+  // 날짜를 새로 선택할 때마다 개별 일기 정보를 불러오기
+  useEffect(() => {
+    fetchGetDiaryPaperItem(diaryId, date);
+  }, [date]);
 
-  if (loading) return <div>로딩중..</div>;
-  if (error) return <div>에러가 발생했습니다</div>;
+  // 날짜 선택했을 때 날짜와 클로버 상태 업데이트
+  const onClickDay = async (date, event) => {
+    setDate(date);
+    const cloverOfDayClicked = monthCondition[moment(date).format('D')] || '-1';
+    setCloverOfDayClicked(cloverOfDayClicked);
+    // fetchGetDiaryPaperItem(diaryId, date);
+  };
+
   if (!monthCondition) return null;
 
   return (
-    <div>
-      <BoxShad width="22.875em">
-        <Calendar
-          onChange={onChange}
-          value={value}
-          calendarType="US" // 일요일부터 시작
-          showNeighboringMonth={false} // 앞뒤 달에 속한 날짜들 안 보이게 설정
-          formatDay={(locale, date) => moment(date).format('D')} // 개별 날짜표시 숫자만 보이게
-          minDetail="month" // 월별 달력만 보이게 설정
-          prevLabel={<img src="/assets/icons/chevron-left.svg" alt="prev" />} // 앞쪽 이동 화살표
-          nextLabel={<img src="/assets/icons/chevron-right.svg" alt="next" />} // 뒤쪽 이동 화살표
-          prev2Label={null} // 연간 이동 삭제
-          next2Label={null} // 연간 이동 삭제
-          navigationLabel={({ date }) => moment(date).format('YYYY.MM')} // 내비게이션 표기형식 설정
-          onClickDay={onClickDay()} // 특정 날짜 선택했을 때 일기 불러올 함수
-          tileContent={({ date }) => {
-            return (
-              <Clover
-                code={monthCondition[moment(date).format('YYYY-MM-DD') || '-1']}
-                width="2.7em"
-                height="2.7em"
-                pointer={true}
-              />
-            );
-          }}
-        />
-      </BoxShad>
+    <div style={{ position: 'relative' }}>
+      <FlexDiv direction="column">
+        <BoxShad height="auto">
+          <Calendar
+            onChange={setDate}
+            value={date}
+            calendarType="US" // 일요일부터 시작
+            showNeighboringMonth={false} // 앞뒤 달에 속한 날짜들 안 보이게 설정
+            formatDay={(locale, date) => moment(date).format('D')} // 개별 날짜표시 숫자만 보이게
+            minDetail="month" // 월별 달력만 보이게 설정
+            prevLabel={<img src="/assets/icons/chevron-left.svg" alt="prev" />} // 앞쪽 이동 화살표
+            nextLabel={<img src="/assets/icons/chevron-right.svg" alt="next" />} // 뒤쪽 이동 화살표
+            prev2Label={null} // 연간 이동 삭제
+            next2Label={null} // 연간 이동 삭제
+            navigationLabel={({ date }) => moment(date).format('YYYY.MM')} // 내비게이션 표기형식 설정
+            onActiveStartDateChange={({ activeStartDate, value, view }) => {
+              // 월 이동시 해당월 데이터 받아오기
+              fetchProfileCalendar(activeStartDate);
+            }}
+            onClickDay={() => onClickDay(date)} // 특정 날짜 선택했을 때 일기 불러올 함수
+            tileContent={({ date }) => {
+              return (
+                <Clover
+                  // code={monthCondition[moment(date).format('D') || '-1']}
+                  code={
+                    moment(date).isAfter(new Date())
+                      ? 'blank'
+                      : monthCondition[moment(date).format('D') || '-1']
+                  }
+                  width="2.7em"
+                  height="2.7em"
+                  pointer={true}
+                />
+              );
+            }}
+          />
+        </BoxShad>
+
+        {cloversOpen && (
+          <CloverModal
+            date={date}
+            currentClover={cloverOfDayClicked}
+            setCurrentClover={setCloverOfDayClicked}
+            setCloversOpen={setCloversOpen}
+            fetchProfileCalendar={fetchProfileCalendar}
+            isCenter={true}
+          />
+        )}
+
+        {isMine && (
+          <FlexDiv>
+            <CalendarStatusModifyBtn
+              color="light"
+              height="auto"
+              margin="1em 0.5em"
+              onClick={() => {
+                if (date <= new Date()) setCloversOpen((prev) => !prev);
+              }}
+            >
+              <span>이 날짜의</span>
+              <br />
+              <span>컨디션 변경하기</span>
+            </CalendarStatusModifyBtn>
+            <CalendarStatusModifyBtn
+              height="auto"
+              margin="1em 0.5em"
+              onClick={() => {
+                const infoToPaperCreate = {
+                  year: '2023',
+                  month: '01',
+                  day: '01',
+                };
+                navigate('/paper/create', {
+                  state: { ...infoToPaperCreate, diaryId },
+                });
+              }}
+            >
+              <span>이 날짜에</span>
+              <br />
+              <span>새 일기 작성하기</span>
+            </CalendarStatusModifyBtn>
+          </FlexDiv>
+        )}
+
+        {isProfile ? (
+          paperInfo?.map((paper) => (
+            <DiaryPaperItem paperInfo={paper} key={paper.id} />
+          ))
+        ) : (
+          <DiaryPaperItem paperInfo={paperInfo} />
+        )}
+      </FlexDiv>
     </div>
   );
 };

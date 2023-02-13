@@ -5,21 +5,32 @@ import App from './App';
 import { iconStyle, GlobalStyle } from './styles/globalStyle';
 import { IconContext } from 'react-icons';
 import { Provider } from 'react-redux';
-import store from './store';
+import store, { persistor } from './store';
+import axios from 'axios';
+import { PersistGate } from 'redux-persist/integration/react';
+
+// // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
+axios.defaults.withCredentials = true;
+const accessToken = localStorage.getItem('accessToken');
+if (accessToken !== 'null') {
+  axios.defaults.headers.common['Authorization'] = accessToken;
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   // <React.StrictMode>
   <BrowserRouter>
     <Provider store={store}>
-      <GlobalStyle />
-      <IconContext.Provider
-        value={{
-          style: iconStyle,
-        }}
-      >
-        <App />
-      </IconContext.Provider>
+      <PersistGate loading={null} persistor={persistor}>
+        <GlobalStyle />
+        <IconContext.Provider
+          value={{
+            style: iconStyle,
+          }}
+        >
+          <App />
+        </IconContext.Provider>
+      </PersistGate>
     </Provider>
   </BrowserRouter>
   // </React.StrictMode>,

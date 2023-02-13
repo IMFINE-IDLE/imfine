@@ -1,16 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  cloverCode: '-1',
-};
-
 const userInfoSlice = createSlice({
   name: 'userInfo',
-  initialState,
+  initialState: {
+    cloverCode: '-1',
+    // searchHistory: [],
+  },
   reducers: {
     updateCode: (state, action) => {
       state.cloverCode = action.payload;
     },
+    // addSearchHistory: (state, action) => {
+    //   state.searchHistory.unshift(action.payload);
+    // },
   },
 });
 

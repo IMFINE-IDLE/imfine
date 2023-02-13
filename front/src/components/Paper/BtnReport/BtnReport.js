@@ -1,18 +1,11 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
-import api from '../../../api/api';
+// import { useNavigate } from 'react-router-dom';
 import { BtnSmall } from './style';
 
-function BtnReport({ paperId }) {
+function BtnReport({ apiFunc }) {
   const [isClicked, setIsClicked] = useState(false);
-  const reportPaper = async (paperId) => {
-    try {
-      const res = await axios.post(api.paper.paperReport(paperId));
-    } catch (err) {
-      console.log(err);
-    }
-  };
+
   return (
     <div style={{ cursor: 'pointer', position: 'relative' }}>
       <FiMoreVertical
@@ -25,7 +18,7 @@ function BtnReport({ paperId }) {
         <BtnSmall
           onClick={(e) => {
             e.stopPropagation();
-            reportPaper(paperId);
+            apiFunc();
           }}
         >
           신고하기
