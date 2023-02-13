@@ -394,8 +394,10 @@ public class DiaryServiceImpl implements DiaryService {
 
         if (diaryPapers.size() != 0) {
             List<Comment> comments = diaryRepository.findDiaryComments(diary);
-            diaryRepository.deleteCommentsHeart(comments);
-            diaryRepository.deleteComments(comments);
+            if (!comments.isEmpty()) {
+                diaryRepository.deleteComments(comments);
+                diaryRepository.deleteCommentsHeart(comments);
+            }
             diaryRepository.deletePaperHasSymptom(diaryPapers);
             diaryRepository.deletePapersHeart(diaryPapers);
             diaryRepository.deletePapers(diary);
