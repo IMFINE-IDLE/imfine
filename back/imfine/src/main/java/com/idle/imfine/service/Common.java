@@ -41,23 +41,25 @@ public class Common {
     public Map<String, Object> createTokenResult(String accessToken, String refreshToken) {
         Map<String, Object> result = new HashMap<>();
 
-        HttpHeaders headers = createTokenHeader(accessToken, refreshToken);
+        HttpHeaders headers = createTokenHeader(refreshToken);
+        TokenResponseDto responseDto = TokenResponseDto.builder()
+                .accessToken(accessToken)
+                .build();
 
         result.put("headers", headers);
+        result.put("body", responseDto);
 
         return result;
     }
 
-    public HttpHeaders createTokenHeader(String accessToken, String refreshToken) {
+    public HttpHeaders createTokenHeader(String refreshToken) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", createTokenCookie("accessToken", accessToken, 60 * 60 * 24 * 7));
         headers.add("Set-Cookie", createTokenCookie("refreshToken", refreshToken, 60 * 60 * 24 * 7));
         return headers;
     }
 
     public HttpHeaders deleteTokenHeader() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Set-Cookie", createTokenCookie("accessToken", "", 0));
         headers.add("Set-Cookie", createTokenCookie("refreshToken", "", 0));
         return headers;
     }
