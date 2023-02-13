@@ -33,6 +33,8 @@ import FindPwPage from './pages/FindPwPage/FindPwPage';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { logOut, tokenRefresh } from './store/slice/userSlice';
+import { updateCode } from './store/slice/userInfoSlice';
+import schedule from 'node-schedule';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -70,6 +72,16 @@ function App() {
     );
   }
   axios.defaults.withCredentials = true;
+
+  // 매일 자정에 클로버 컨디션 코드 -1로 초기화
+  const rule = new schedule.RecurrenceRule();
+  rule.dayOfWeek = [new schedule.Range(0, 6)];
+  rule.hour = 0;
+  rule.minute = 0;
+  rule.tz = 'Asia/Seoul';
+  schedule.scheduleJob(rule, function () {
+    dispatch(updateCode('-1'));
+  });
 
   return (
     // <Wrapper>

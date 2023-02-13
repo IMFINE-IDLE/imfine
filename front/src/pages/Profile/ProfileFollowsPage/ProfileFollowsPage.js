@@ -1,87 +1,3 @@
-//    import React, { useEffect, useState } from 'react';
-// import Tabs from '../../Tabs/Tabs';
-// // import FollowingList from '../FollowingList/FollowingList';
-// // import FollowerList from '../FollowerList/FollowerList';
-// import FollowList from '../FollowList/FollowList';
-// import axios from 'axios';
-// import api from '../../../api/api';
-// import { useLocation, useParams } from 'react-router-dom';
-// import NavBarBasic from '../../NavBarBasic/NavBarBasic';
-// import ProfileInfo from '../ProfileInfo/ProfileInfo';
-
-// const ProfileFollows = () => {
-//   const location = useLocation();
-//   const { uid } = useParams();
-//   const [users, setUsers] = useState(null);
-//   const [type, setType] = useState(null);
-//   const [idx, setIdx] = useState(location.state === '팔로워' ? 1 : 0);
-
-//   // const idx = location.state.type === 'follower' ? 1 : 0;
-//   console.log('loc', location);
-//   // console.log('idx', idx);
-//   // console.log('paramuid', uid);
-//   // setType(() => location.state);
-
-//   const fetchFollowList = async () => {
-//     const url =
-//       type === '팔로워'
-//         ? api.profile.getFollowerList(uid)
-//         : api.profile.getFollowingList(uid);
-
-//     try {
-//       const res = await axios.get(url, {
-//         headers: { Authorization: localStorage.getItem('accessToken') },
-//       });
-//       console.log('fetchfollowList res', res.data.data);
-//       setUsers(res.data.data);
-//       console.log('fetchfollowList users', users);
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     setType(location.state);
-//     fetchFollowList();
-//   }, [type, location]);
-
-//   const tabArr = [
-//     {
-//       idx: 0,
-//       tabName: '팔로잉',
-//       tabContent: (
-//         <FollowList
-//           users={users}
-//           type="팔로잉"
-//           fetchFunction={fetchFollowList}
-//         />
-//       ),
-//     },
-//     {
-//       idx: 1,
-//       tabName: '팔로워',
-//       tabContent: <FollowList users={users} type="팔로워" />,
-//     },
-//     // { idx: 1, tabName: '팔로워', tabContent: <FollowerList /> },
-//   ];
-
-//   if (!users) return null;
-//   return (
-//     <div>
-//       <NavBarBasic Back={true} />
-//       <div style={{ paddingBottom: '6.7em' }}>{uid}</div>
-//       <Tabs
-//         tabArr={tabArr}
-//         btnWidth="8.75em"
-//         idx={idx}
-//         setType={setType}
-//       ></Tabs>
-//     </div>
-//   );
-// };
-
-// export default ProfileFollows;
-
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -103,22 +19,23 @@ const ProfileFollowsPage = () => {
     useLocation().state;
   const [users, setUsers] = useState(null);
   const [followType, setFollowType] = useState(type); // '팔로잉' 또는 '팔로워'
+  const [followingCnt, setFollowingCnt] = useState(followingCount);
+  const [followerCnt, setFollowerCnt] = useState(followerCount);
+
   const [trigger, setTrigger] = useState(false); // 목록에 변화가 생겼을 때 다시 렌더링하기 위한 트리거 변수
 
+  // 팔로잉 또는 팔로워 목록 가져오기
   const fetchFollowList = async () => {
-    const url =
-      followType === '팔로워'
-        ? api.profile.getFollowerList(uid)
-        : api.profile.getFollowingList(uid);
-
     try {
-      const res = await axios.get(url, {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-
-      setUsers(() => res.data.data);
-      console.log('fetchfollowList res', res.data.data);
-      console.log('fetchfollowList users', users);
+      if (type === '팔로잉') {
+        const res = await axios.get(api.profile.getFollowingList(uid));
+        setUsers(() => res.data.data);
+        setFollowingCnt(res.data.data.length);
+      } else if (type === '팔로워') {
+        const res = await axios.get(api.profile.getFollowerList(uid));
+        setUsers(() => res.data.data);
+        setFollowerCnt(res.data.data.length);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -150,9 +67,9 @@ const ProfileFollowsPage = () => {
             <FlexDiv justify="end" onClick={() => setFollowType('팔로잉')}>
               <ProfileItemSpan pointer={true}>팔로잉</ProfileItemSpan>
               <ProfileItemSpan pointer={true}>
-                {followingCount >= 1000
-                  ? parseInt(followingCount / 1000) + 'k'
-                  : followingCount}
+                {followingCnt >= 1000
+                  ? parseInt(followingCnt / 1000) + 'k'
+                  : followingCnt}
               </ProfileItemSpan>
             </FlexDiv>
             <ProfileItemSpan></ProfileItemSpan>
@@ -163,9 +80,9 @@ const ProfileFollowsPage = () => {
             <FlexDiv justify="start" onClick={() => setFollowType('팔로워')}>
               <ProfileItemSpan pointer={true}>팔로워</ProfileItemSpan>
               <ProfileItemSpan pointer={true}>
-                {followerCount >= 1000
-                  ? parseInt(followerCount / 1000) + 'k'
-                  : followerCount}
+                {followerCnt >= 1000
+                  ? parseInt(followerCnt / 1000) + 'k'
+                  : followerCnt}
               </ProfileItemSpan>
             </FlexDiv>
           </FlexDiv>

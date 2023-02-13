@@ -1,5 +1,8 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import api from '../../../api/api';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { Clover } from '../../common/Clover/Clover';
 import {
@@ -19,10 +22,33 @@ const ProfileInfo = ({
   followingCount,
   followerCount,
   relation,
+  fetchUserInfo,
 }) => {
-  const navigate = useNavigate();
+  // 그날 해당 유저의 컨디션
   const { cloverCode } = useSelector((state) => state.userInfo);
+  // 팔로우 여부 체크용 state
+  const [followStatus, setFollowStatus] = useState(relation);
+  const navigate = useNavigate();
 
+  // 타인의 프로필 페이지에서 팔로우, 언팔로우 요청
+  const fetchChangeFollowStatus = async () => {
+    try {
+      // 내가 현재 팔로중이면 언팔로우 요청을 보내고 relation을 3으로 변경
+      if (followStatus === 1) {
+        await axios.delete(api.profile.unfollow(uid));
+        setFollowStatus(3);
+      }
+      // 현재 팔로우하고 있지 않으면 팔로우 요청을 보니고 relation을 1로 변경
+      else if (followStatus === 3) {
+        await axios.post(api.profile.follow(), { uid });
+        setFollowStatus(1);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 팔로잉, 팔로워 목록 페이지로 보낼 데이터
   const infoToFollowPage = {
     name,
     open,
@@ -31,8 +57,13 @@ const ProfileInfo = ({
     condition,
   };
 
+  // 클로버 오늘 상태가 바뀌거나 팔로우 상태가 바뀔 때마다 재렌더링
+  useEffect(() => {
+    fetchUserInfo();
+  }, [cloverCode, followStatus]);
+
   return (
-    <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
+    <BoxNoShad color="light" radius="0" padding="0.3em 1em 6.7em 1em">
       <ProfileInfoContainer>
         <Clover
           // 내 프로필일 때는 store에서 컨디션을 가져와서 렌더링
@@ -59,8 +90,15 @@ const ProfileInfo = ({
               {relation === 0 ? (
                 <img src="/assets/icons/more-vertical.svg" alt="more" />
               ) : (
-                <ProfileFollowBtn color={relation === 1 ? 'gray' : 'main'}>
-                  {relation === 1 ? '팔로잉' : '팔로우'}
+                <ProfileFollowBtn
+                  onClick={() => fetchChangeFollowStatus()}
+                  color={relation === 1 ? 'gray' : 'main'}
+                >
+                  {relation === 1
+                    ? '언팔로우'
+                    : relation === 2
+                    ? '요청중'
+                    : '팔로우'}
                 </ProfileFollowBtn>
               )}
             </div>

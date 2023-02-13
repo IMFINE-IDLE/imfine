@@ -36,11 +36,12 @@ const CloverModal = ({
     setCurrentClover(newCondition); // 클로버 상태 업데이트
     setCloversOpen((prev) => !prev); // 클로버 선택 모달 닫기
 
-    if (date.getDate() !== new Date().getDate()) return; // 날짜가 오늘일 경우에만
-    dispatch(updateCode(newCondition)); // 유저의 오늘 컨디션 store에 저장
+    // 날짜가 오늘일 경우에만 유저의 오늘 컨디션 store에 저장
+    if (date.getDate() === new Date().getDate())
+      dispatch(updateCode(newCondition));
   };
 
-  // api 요청: props로 받은 date 날짜의 컨디션 변경
+  // api 요청: 서버에 유저의 새로운 컨디션 저장
   const fetchUpdateCondition = async (newCondition) => {
     try {
       // 컨디션 최초 설정이면 post 요청, 수정이면 put 요청

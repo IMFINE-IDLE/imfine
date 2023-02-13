@@ -13,7 +13,7 @@ const FollowList = ({ users, type, setTrigger }) => {
             cloverCode={user.condition}
             name={user.name}
             type={type}
-            followStatus={user.relation}
+            relation={user.relation}
             uid={user.uid}
             setTrigger={setTrigger}
             key={user.uid}

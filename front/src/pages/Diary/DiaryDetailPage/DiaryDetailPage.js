@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../../api/api';
-import { axiosInstance } from '../../../api/axiosInstance';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
@@ -41,11 +40,11 @@ const DiaryDetailPage = () => {
     try {
       // 구독중이면 구독 취소 요청
       if (status) {
-        await axiosInstance.delete(api.diary.deleteDiarySubscribe(diaryId));
+        await axios.delete(api.diary.deleteDiarySubscribe(diaryId));
       }
       // 구독중이 아니면 구독 요청
       else {
-        await axiosInstance.post(api.diary.setDiarySubscribe(), {
+        await axios.post(api.diary.setDiarySubscribe(), {
           diaryId,
         });
       }

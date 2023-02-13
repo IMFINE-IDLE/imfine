@@ -54,11 +54,12 @@ const api = {
     deleteSearchHistory: (keywordId) => URL + SEARCH + `/mylist/${keywordId}`,
   },
   profile: {
-    getUserInfo: (params) => URL + USERS + `/${params}`,
-    getFollowingList: (params) => URL + USERS + `/${params}/following`,
-    getFollowerList: (params) => URL + USERS + `/${params}/follower`,
+    getUserInfo: (uid) => URL + USERS + `/${uid}`,
+    getFollowingList: (uid) => URL + USERS + `/${uid}/following`,
+    getFollowerList: (uid) => URL + USERS + `/${uid}/follower`,
     follow: () => URL + USERS + '/follow',
-    unfollow: (params) => URL + USERS + `/follow/${params}`,
+    unfollow: (uid) => URL + USERS + `/follow/${uid}`,
+    deleteFollower: (uid) => URL + USERS + `/follow/block/${uid}`,
     getMonthCondition: (params) =>
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
     getUserPaperItem: (params) =>

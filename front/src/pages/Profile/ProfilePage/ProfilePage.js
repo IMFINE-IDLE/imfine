@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../../api/api';
-import BtnFloat from '../../../components/BtnFloat/BtnFloat';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import TabBar from '../../../components/TabBar/TabBar';
 import ProfileInfo from '../../../components/Profile/ProfileInfo/ProfileInfo';
@@ -10,12 +10,11 @@ import Tabs from '../../../components/Tabs/Tabs';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
 import ProfileUserDiary from '../../../components/Profile/ProfileUserDiary/ProfileUserDiary';
 import ProfileSubscribeDiary from '../../../components/Profile/ProfileSubscribeDiary/ProfileSubscribeDiary';
-// import { axiosInstance } from '../../api/axiosInstance';
 
 function ProfilePage() {
   const { uid } = useParams();
   const [userInfo, setUserInfo] = useState(null);
-  const isMine = Boolean(uid === localStorage.getItem('uid'));
+  const isMine = Boolean(uid === useSelector((state) => state.user.uid));
 
   useEffect(() => {
     fetchUserInfo();
@@ -55,7 +54,7 @@ function ProfilePage() {
 
   return (
     <div>
-      <NavBarBasic />
+      <NavBarBasic BackgroundColor="light" />
       <ProfileInfo
         isMine={isMine}
         condition={userInfo.condition}
@@ -65,6 +64,7 @@ function ProfilePage() {
         followerCount={userInfo.followerCount}
         relation={userInfo.relation}
         uid={uid}
+        fetchUserInfo={fetchUserInfo}
       />
 
       <Tabs tabArr={tabArr} btnWidth="6.25em"></Tabs>
