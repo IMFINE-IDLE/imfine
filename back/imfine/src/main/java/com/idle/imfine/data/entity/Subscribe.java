@@ -1,5 +1,6 @@
 package com.idle.imfine.data.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,7 @@ public class Subscribe extends BaseCreatedEntity {
     @Column(nullable = false)
     private long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "diary_id")
     private Diary diary;
 }

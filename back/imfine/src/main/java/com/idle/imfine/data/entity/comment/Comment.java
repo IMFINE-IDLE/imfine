@@ -2,6 +2,7 @@ package com.idle.imfine.data.entity.comment;
 
 import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.User;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +29,7 @@ public class Comment extends BaseCreatedEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private User writer;
 
     @JoinColumn

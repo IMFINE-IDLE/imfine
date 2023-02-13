@@ -1,4 +1,4 @@
-package com.idle.imfine.controller;
+    package com.idle.imfine.controller;
 
 import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;

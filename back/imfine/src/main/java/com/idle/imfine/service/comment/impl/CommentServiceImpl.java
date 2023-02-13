@@ -61,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
             throw new ErrorException(CommentErrorCode.COMMENT_ACCESS_DENIED);
         }
 
+        heartRepository.deleteHeartsByContentsCodeIdAndContentsId(3, commentId);
         commentRepository.delete(comment);
         paper.setCommentCount(paper.getCommentCount() - 1);
         paperRepository.save(paper);
