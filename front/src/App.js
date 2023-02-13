@@ -98,6 +98,15 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <SettingsPage />
+          </PrivateRoute>
+        }
+      />
+
       <Route path="/diary">
         <Route
           index
@@ -244,7 +253,14 @@ function App() {
           }
         />
       </Route>
-      <Route path="/noti" element={ <PrivateRoute><NotificationPage /></PrivateRoute>}></Route>
+      <Route
+        path="/noti"
+        element={
+          <PrivateRoute>
+            <NotificationPage />
+          </PrivateRoute>
+        }
+      ></Route>
       <Route
         path="/report"
         element={
