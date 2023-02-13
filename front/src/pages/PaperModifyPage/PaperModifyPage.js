@@ -15,8 +15,8 @@ import {
 import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCreateHeader';
 import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropdown';
 import DateDropdown from '../../components/Paper/DateDropdown/DateDropdown';
-import SymptomRating from '../../components/Paper/BoxSymptom/BoxSymptom';
-import { useNavigate } from 'react-router-dom';
+import ModifyBoxSymptom from '../../components/Paper/ModifyBoxSymptom/ModifyBoxSymptom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
@@ -28,14 +28,25 @@ import {
   Toggle,
   ToggleLabel,
 } from '../../components/PickSymptom/style';
-function PaperCreatePage() {
+import DiaryInfo from '../../components/Diary/DiaryInfo/DiaryInfo';
+import ModifyPreviewImage from '../../components/Paper/PreviewImage/ModifyPreviewImage';
+function PaperModifyPage() {
   const navigate = useNavigate();
+
+  const { paperId } = useParams();
   // 이미지 업로드 개수 3개까지 MAX
   const now = new Date();
+
   const [diaries, setDiaries] = useState([]); // dropdown에 나올 일기장 선택값들 저장
   const [diaryId, setDiaryId] = useState(''); // dropdown 선택 시 일기장 아이디값 저장
   const [diary, setDiary] = useState(''); // 일기장 상세정보
   const [value, setValue] = useState(''); // 일기내용
+  const [files, setFiles] = useState([]); // 이미지미리뵈기
+  const [fileId, setFileId] = useState([]); // 이미지파일아이디 저장하는 값
+  const [isOpen, setIsOpen] = useState(true); // 공개.비공개 state
+  const [symptoms, setSymptoms] = useState([]); // 증상받아오기
+  const [scores, setScores] = useState([]); // 증상점수저장하는 State
+
   // 날짜 저장하는 state 객체
   const [form, setForm] = useState({
     year: now.getFullYear(),
@@ -43,69 +54,87 @@ function PaperCreatePage() {
     day: '01',
   });
 
-  const [files, setFiles] = useState([]); // 이미지미리뵈기
-  const [isOpen, setIsOpen] = useState(true); // 공개.비공개 state
-  const [symptoms, setSymptoms] = useState([]); // 증상받아오기
-  const [scores, setScores] = useState([]); // 증상점수저장하는 State
+  // 수정할 일기 정보 저장하는 useState();
+  const [paperInfo, setPaperInfo] = useState([]);
 
   // API 처리부분
-  // 사용자가 작성한 다이어리 정보 받아오기
   const getDiaries = async () => {
     try {
       const res = await axios.get(api.diary.getDiaries(), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
       setDiaries(res.data.data);
-      console.log('내가만든다이어리', res.data.data);
     } catch (res) {
       console.log('err', res.data);
     }
   };
 
-  // 해당 다이어리의 정보 불러오기
-  const getDiaryInfos = async () => {
+  // 일기 수정시 필요한 정보 받아오기
+  const modifyPaperInfo = async () => {
     try {
-      const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log('일기장 상세정보', res.data.data);
-      setDiary(res.data.data);
-    } catch (res) {
-      console.log('err', res.data);
+      const res = await axios.get(api.paper.getPaperModifyInfo(paperId));
+      console.log('일기장수정정보', res.data.data);
+      setPaperInfo(res.data.data);
+      setSymptoms(
+        res.data.data.symptoms.map((item) => ({
+          symptomId: item.symptomId,
+          name: item.symptomName,
+          score: item.score,
+        }))
+      );
+      //setScores(Array(res.data.data.symptoms.length).fill(0));
+      setScores(res.data.data.symptoms.map((item) => item.score));
+      setValue(res.data.data.content);
+      setFiles(
+        res.data.data.images.map((item) => ({
+          id: item.id,
+          image: item.image,
+        }))
+      );
+    } catch (error) {
+      console.log('error', error);
     }
   };
+
+  console.log('print', paperInfo);
 
   useEffect(() => {
     getDiaries();
-    if (diaryId != '') {
-      getDiaryInfos();
-    }
-  }, [diaryId]);
+    modifyPaperInfo();
+  }, []);
+
+  // useEffect(() => {
+  //   if (paperInfo) {
+  //     setSymptoms(
+  //       paperInfo.symptoms.map((item) => ({
+  //         symptomId: item.symptomId,
+  //         name: item.symptomName,
+  //         score: item.score,
+  //       }))
+  //     );
+  //     setScores(Array(diary.diaryHasSymptoms.length).fill(0));
+  //   }
+  // }, [paperInfo]);
 
   // 일기장 선택될때마다 해당 일기장의 Symptom 정보끌고오기
-  useEffect(() => {
-    if (diary) {
-      console.log('diaryInfo', diary.diaryHasSymptoms);
-      setSymptoms(
-        diary.diaryHasSymptoms.map((item) => ({
-          symptomId: item.symptomId,
-          name: item.name,
-        }))
-      );
-      setScores(Array(diary.diaryHasSymptoms.length).fill(0));
-    }
-    //setSymptomScore(diary.diaryHasSymptoms.symptomId);
-  }, [diary]);
-  console.log('증상값 모음', scores);
-  console.log('setSymptoms', symptoms);
-
-  useEffect(() => {
-    if (symptoms) {
-    }
-  }, [symptoms]);
+  // useEffect(() => {
+  //   if (diary) {
+  //     console.log('diaryInfo', diary.diaryHasSymptoms);
+  //     setSymptoms(
+  //       diary.diaryHasSymptoms.map((item) => ({
+  //         symptomId: item.symptomId,
+  //         name: item.name,
+  //       }))
+  //     );
+  //     setScores(Array(diary.diaryHasSymptoms.length).fill(0));
+  //   }
+  //   //setSymptomScore(diary.diaryHasSymptoms.symptomId);
+  // }, [diary]);
+  // console.log('증상값 모음', scores);
+  // console.log('setSymptoms', symptoms);
 
   // 이미지 서버에 업로드 시키기
-  // multipart 업로드
+  // 일기수정하기
   const handleUploadImage = async () => {
     const data = new FormData();
     const calendar = form.year + '-' + form.month + '-' + form.day;
@@ -168,30 +197,31 @@ function PaperCreatePage() {
   const handleRemove = (index) => {
     setFiles(files.filter((_, i) => i !== index));
   };
+
   return (
     <>
       <NavBarBasic
         BackgroundColor={'main'}
         Back={true}
-        Text={'일기 작성'}
+        Text={'일기 수정'}
         TextColor={'icon'}
       />
       <BoxPaperDetail>
         <PaperCreateHeader />
         <DiariesDropdown
-          isdisabled={false}
-          value={diaryId}
-          state={setDiaryId}
+          isdisabled={true}
+          value={paperInfo.title}
+          state={setDiaries}
           diaries={diaries}
         />
-        <DateDropdown value={form} state={setForm} />
+        <DateDropdown isdisabled={true} value={form} />
       </BoxPaperDetail>
       <TopDiv>
         <ContentLabel>증상을 체크해주세요.</ContentLabel>
       </TopDiv>
       <BoxContent>
-        <SymptomRating
-          symptomList={diary.diaryHasSymptoms}
+        <ModifyBoxSymptom
+          symptomList={paperInfo.symptoms}
           values={scores}
           state={setScores}
         />
@@ -226,7 +256,7 @@ function PaperCreatePage() {
           <StyledInput type="file" multiple onChange={handleSelectImage} />
           <FlexDiv>
             {files.map((file, index) => (
-              <PreviewImage
+              <ModifyPreviewImage
                 key={index}
                 file={file}
                 onRemove={() => handleRemove(index)}
@@ -254,10 +284,10 @@ function PaperCreatePage() {
         <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
           취소하기
         </BtnUpdate>
-        <BtnUpdate onClick={handleUploadImage}>일기쓰기</BtnUpdate>
+        <BtnUpdate onClick={handleUploadImage}>일기수정</BtnUpdate>
       </FlexDiv>
     </>
   );
 }
 
-export default PaperCreatePage;
+export default PaperModifyPage;
