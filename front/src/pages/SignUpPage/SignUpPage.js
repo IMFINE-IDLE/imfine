@@ -261,6 +261,12 @@ function SignUpPage() {
       console.log(res);
       setDoneEmailVerify(true);
       alert('이메일 인증이 완료되었습니다.');
+      setErrMsg((prev) => {
+        return {
+          ...prev,
+          emailVerifyErrorMsg: '',
+        };
+      });
     } catch (err) {
       console.log(err);
       setErrMsg((prev) => {
@@ -451,9 +457,7 @@ function SignUpPage() {
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault();
-                  if (isValid) {
-                    signUpByData();
-                  }
+                  signUpByData();
                 }}
               >
                 회원가입하기
@@ -475,4 +479,4 @@ function SignUpPage() {
   );
 }
 
-export default SignUpPage;
+export default React.memo(SignUpPage);
