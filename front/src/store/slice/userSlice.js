@@ -2,18 +2,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import api from '../../api/api';
 
-export const tokenRefresh = async () => {
-  try {
-    const refresh = await axios.post(api.user.refresh(), {
-      withCredentials: true,
-    });
-    console.log(refresh);
-  } catch (err) {
-    console.log(err);
-    logOut();
-  }
-};
-
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
@@ -22,12 +10,12 @@ export const signUp = createAsyncThunk(
         withCredentials: true,
       });
       console.log(res.data);
+      const accessToken = res.data.data.accessToken;
 
       const saveData = {
         uid: userData.uid,
+        accessToken,
       };
-
-      localStorage.setItem('uid', userData.uid);
 
       return saveData;
     } catch (err) {
@@ -40,14 +28,17 @@ export const logIn = createAsyncThunk(
   'user/login',
   async (userData, { rejectWithValue }) => {
     try {
-      const resLogin = await axios.post(api.user.login(), userData, {
+      const res = await axios.post(api.user.login(), userData, {
         withCredentials: true,
       });
-      console.log(resLogin);
+      console.log(res);
+      const accessToken = res.data.data.accessToken;
+      const saveData = {
+        uid: userData.uid,
+        accessToken,
+      };
 
-      localStorage.setItem('uid', userData.uid);
-
-      return userData.uid;
+      return saveData;
     } catch (err) {
       console.log(err);
       return rejectWithValue(err);
@@ -72,17 +63,33 @@ export const logOut = createAsyncThunk(
   }
 );
 
+export const tokenRefresh = createAsyncThunk('user/refresh', async () => {
+  try {
+    const res = await axios.post(api.user.refresh(), {
+      withCredentials: true,
+    });
+    console.log(res);
+    const accessToken = res.data.data.accessToken;
+    return accessToken;
+  } catch (err) {
+    console.log(err);
+    logOut();
+  }
+});
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLogin: false,
-    uid: '',
+    uid: null,
+    accessToken: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(signUp.fulfilled, (state, action) => {
         state.isLogin = true;
+        state.accessToken = action.payload.accessToken;
         state.uid = action.payload.uid;
       })
       .addCase(signUp.rejected, (state, action) => {
@@ -90,6 +97,7 @@ const userSlice = createSlice({
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.isLogin = true;
+        state.accessToken = action.payload.accessToken;
         state.uid = action.payload.uid;
       })
       .addCase(logIn.rejected, (state, action) => {
@@ -97,10 +105,19 @@ const userSlice = createSlice({
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.isLogin = false;
+        state.accessToken = null;
         state.uid = null;
       })
       .addCase(logOut.rejected, (state, action) => {
         console.log(action.payload.response.data);
+      })
+      .addCase(tokenRefresh.fulfilled, (state, action) => {
+        state.accessToken = action.payload.accessToken;
+      })
+      .addCase(tokenRefresh.rejected, (state, action) => {
+        state.isLogin = false;
+        state.accessToken = null;
+        state.uid = null;
       });
   },
 });
