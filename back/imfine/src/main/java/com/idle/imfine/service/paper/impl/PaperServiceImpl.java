@@ -145,12 +145,15 @@ public class PaperServiceImpl implements PaperService {
     public void delete(long paperId, String uid) {
         LOGGER.info("일기 삭제 service");
         User user = common.getUserByUid(uid);
-        Paper foundPaper = paperRepository.findById(paperId)
+        Paper foundPaper = paperRepository.findByIdFetchAll(paperId)
             .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
-        paperHasSymptomRepository.deleteByPaper(foundPaper.getId());
 
         Diary paperDiary = foundPaper.getDiary();
         paperDiary.setPaperCount(paperDiary.getPaperCount() - 1);
+
+        heartRepository.deleteByCommentsId(foundPaper.getComments());
+        paperHasSymptomRepository.deleteByPaper(foundPaper.getId());
+        commentRepository.deleteByCommentIds(foundPaper.getId());
         paperRepository.deleteById(paperId);
     }
 
