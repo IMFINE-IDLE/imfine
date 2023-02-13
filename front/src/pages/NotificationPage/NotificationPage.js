@@ -68,6 +68,7 @@ function NotificationPage() {
               showButton={item.showButton}
               senderUid={item.senderUid}
               navigateId={item.contentsId}
+              check={item.check}
             />
           );
         })}

@@ -20,6 +20,7 @@ function NotificationItem({
   showButton,
   senderUid,
   navigateId,
+  check,
 }) {
   const readPost = async () => {
     try {
@@ -34,69 +35,74 @@ function NotificationItem({
   const navigate = useNavigate();
 
   console.log('아이디', navigateId);
-  // 팔로우알림
-  if (title == 6) {
-    return (
-      <>
-        <div>
-          <ColumnDiv>
-            <BoxNoShadLeaves>
-              <TopDiv>
-                <TitleLabel> 팔로우신청 </TitleLabel>
-              </TopDiv>
-              <BottomDiv
-                onClick={() => {
-                  readPost();
-                  navigate(`/profile/${senderUid}`);
-                }}
-              >
-                <Content>{msg}</Content>
-              </BottomDiv>
-            </BoxNoShadLeaves>
-          </ColumnDiv>
-        </div>
-      </>
-    );
-  }
-  // 대나무알림
-  if (title == 4) {
-    return (
-      <>
-        <div>
-          <ColumnDiv>
-            <BoxNoShadLeaves>
-              <TopDiv>
-                <TitleLabel> 대나무 </TitleLabel>
-              </TopDiv>
-              <BottomDiv
-                onClick={() => {
-                  navigate(`/bamboo/${navigateId}`);
-                }}
-              >
-                <Content>{msg}</Content>
-              </BottomDiv>
-            </BoxNoShadLeaves>
-          </ColumnDiv>
-        </div>
-      </>
-    );
+
+  if (check) {
+    return <></>;
   } else {
-    return (
-      <>
-        <div>
-          <ColumnDiv>
-            <BoxNoShadLeaves>
-              <TopDiv>
-                <TitleLabel></TitleLabel>
-              </TopDiv>
-              <BottomDiv>
-                <Content>{msg}</Content>
-              </BottomDiv>
-            </BoxNoShadLeaves>
-          </ColumnDiv>
-        </div>
-      </>
-    );
+    // 팔로우알림
+    if (title === 6) {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel> 팔로우신청 </TitleLabel>
+                </TopDiv>
+                <BottomDiv
+                  onClick={() => {
+                    readPost();
+                    navigate(`/profile/${senderUid}`);
+                  }}
+                >
+                  <Content>{msg}</Content>
+                </BottomDiv>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    }
+    // 대나무알림
+    if (title === 4) {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel> 대나무 </TitleLabel>
+                </TopDiv>
+                <BottomDiv
+                  onClick={() => {
+                    navigate(`/bamboo/${navigateId}`);
+                  }}
+                >
+                  <Content>{msg}</Content>
+                </BottomDiv>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel></TitleLabel>
+                </TopDiv>
+                <BottomDiv>
+                  <Content>{msg}</Content>
+                </BottomDiv>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    }
   }
 }
 
