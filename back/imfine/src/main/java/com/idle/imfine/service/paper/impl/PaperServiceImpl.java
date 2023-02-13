@@ -115,7 +115,8 @@ public class PaperServiceImpl implements PaperService {
         List<UploadFile> storeImageFiles;
         storeImageFiles = fileStore.storeFiles(requestPaperPostDto.getImages());
         LOGGER.info("[PaperService.save] diary update.......");
-        diary.paperAdd();
+//        diary.paperAdd();
+        diary.setPaperCount(diary.getPaperCount() + 1);
         diary.setPostedAt(LocalDateTime.now());
 
         LOGGER.info("[PaperService.save] image name 테이블 저장.......");

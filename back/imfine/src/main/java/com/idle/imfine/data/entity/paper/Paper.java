@@ -66,13 +66,13 @@ public class Paper extends BaseCreatedEntity {
     @Column(nullable = false, columnDefinition = "integer default -1")
     private int sentiment;
 
-    @OneToMany(mappedBy = "paper",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "paper",fetch = FetchType.LAZY)
     private List<PaperHasSymptom> paperHasSymptoms;
 
-    @OneToMany(mappedBy = "paperId",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "paperId",fetch = FetchType.LAZY)
     private List<Image> images;
 
-    @OneToMany(mappedBy = "paperId",fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "paperId",fetch = FetchType.LAZY)
     private List<Comment> comments;
     public void addLikeCount() {
         this.likeCount += 1;
