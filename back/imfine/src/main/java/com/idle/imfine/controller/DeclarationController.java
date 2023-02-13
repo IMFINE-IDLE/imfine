@@ -28,7 +28,7 @@ public class DeclarationController {
         requestDeclaration.setSenderId(uid);
         declarationService.saveDiaryReport(requestDeclaration);
 
-        LOGGER.info("건의 동록 api에 들어옴 {}", requestDeclaration);
+        LOGGER.info("일기장 신고 api {}", requestDeclaration);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -38,7 +38,7 @@ public class DeclarationController {
         requestDeclaration.setSenderId(uid);
         declarationService.savePaperReport(requestDeclaration);
 
-        LOGGER.info("건의 동록 api에 들어옴 {}", requestDeclaration);
+        LOGGER.info("일기 신고 api {}", requestDeclaration);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -48,7 +48,7 @@ public class DeclarationController {
         requestDeclaration.setSenderId(uid);
         declarationService.saveCommentReport(requestDeclaration);
 
-        LOGGER.info("건의 동록 api에 들어옴 {}", requestDeclaration);
+        LOGGER.info("댓글 신고 api {}", requestDeclaration);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -58,7 +58,7 @@ public class DeclarationController {
         requestDeclaration.setSenderId(uid);
         declarationService.saveBambooReport(requestDeclaration);
 
-        LOGGER.info("건의 동록 api에 들어옴 {}", requestDeclaration);
+        LOGGER.info("대나무 신고 api {}", requestDeclaration);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
@@ -68,7 +68,7 @@ public class DeclarationController {
         requestDeclaration.setSenderId(uid);
         declarationService.saveLeafReport(requestDeclaration);
 
-        LOGGER.info("건의 동록 api에 들어옴 {}", requestDeclaration);
+        LOGGER.info("대나무 잎 신고 api {}", requestDeclaration);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }

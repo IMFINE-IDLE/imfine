@@ -5,7 +5,6 @@ import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
-import com.idle.imfine.data.entity.bamboo.Bamboo;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 

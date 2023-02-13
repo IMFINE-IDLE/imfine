@@ -22,7 +22,6 @@ import com.idle.imfine.errors.code.DiaryErrorCode;
 import com.idle.imfine.errors.code.PaperErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.declaration.DeclarationService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .receiverId(diary.getWriter().getId())
                 .type(requestDeclaration.getType())
                 .build();
-        diary.declarationAdd();
+        diary.setDeclarationCount(diary.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("일기장 신고 등록 {}", declaration);
     }
@@ -80,8 +79,8 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .receiverId(paper.getDiary().getWriter().getId())
                 .type(requestDeclaration.getType())
                 .build();
-        
-        paper.declarationAdd();
+
+        paper.setDeclarationCount(paper.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("일기 신고 등록 {}", declaration);
     }
@@ -103,7 +102,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .type(requestDeclaration.getType())
                 .build();
 
-        comment.declarationAdd();
+        comment.setDeclarationCount(comment.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("댓글 신고 등록 {}", declaration);
     }
@@ -125,7 +124,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .type(requestDeclaration.getType())
                 .build();
 
-        bamboo.declarationAdd();
+        bamboo.setDeclarationCount(bamboo.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("대나무 신고 등록 {}", declaration);
     }
@@ -147,7 +146,7 @@ public class DeclarationServiceImpl implements DeclarationService {
                 .type(requestDeclaration.getType())
                 .build();
 
-        leaf.declarationAdd();
+        leaf.setDeclarationCount(leaf.getDeclarationCount() + 1);
         declarationRepository.save(declaration);
         LOGGER.info("대나무잎 신고 등록 {}", declaration);
     }

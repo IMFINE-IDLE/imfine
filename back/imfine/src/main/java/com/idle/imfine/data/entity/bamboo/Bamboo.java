@@ -54,7 +54,4 @@ public class Bamboo extends BaseCreatedEntity {
     @OneToMany(mappedBy = "bamboo", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Leaf> leaves;
 
-    public void declarationAdd() {
-        this.declarationCount += 1;
-    }
 }

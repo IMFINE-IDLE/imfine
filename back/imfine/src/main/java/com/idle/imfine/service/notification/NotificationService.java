@@ -9,7 +9,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface NotificationService {
 
-    //    void save(RequestDeclarationDto requestDeclaration, String uid);
     List<ResponseNotification> showList(String uid, Pageable pageable);
     void checkNotification(RequestNotificationDetailDto requestNotificationDetailDto, String uid);
     SseEmitter subscribe(String uid, String lastEventId);

@@ -31,7 +31,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class NotificationServiceImpl implements NotificationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServiceImpl.class);
     private static final Long DEFAULT_TIMEOUT = 60L * 1000 * 60;
-
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
@@ -51,10 +50,7 @@ public class NotificationServiceImpl implements NotificationService {
             String userName = sender.getName();
 
             if (n.getContentsCodeId() == 6
-                    && common.getFollowRelation(sender, receiver) == 2) { //type 6
-                // common. 팔로우 관계 가져와서 > (메시지 보내는 사람, 받는사람)
-                // 1: 팔로우 수락된건가야 > FALSE 수락 완료 표시
-                // 2: 팔로우 관계가 아닌거니깐 > TRUE 수락 버튼 만들기
+                    && common.getFollowRelation(sender, receiver) == 2) {
                 ResponseNotification notification = ResponseNotification.builder()
                         .notificationId(n.getId())
                         .senderUid(uId)
@@ -117,10 +113,11 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = notificationRepository.getByIdAndRecieverId(
                 requestNotificationDetailDto.getNotificationId(), user.getId());
         notification.setCheck(true);
+        LOGGER.info("알림 읽음 표시 service {}", notification.getId());
     }
+
     public SseEmitter subscribe(String uid, String lastEventId) {
-//        User user = userRepository.getByUid(uid);
-        LOGGER.info("혹시 여기니2");
+        LOGGER.info("SseEmitter subscribe");
         String id = uid + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
@@ -138,20 +135,18 @@ public class NotificationServiceImpl implements NotificationService {
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                     .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
         }
-
         return emitter;
     }
 
     private void sendToClient(SseEmitter emitter, String id, Object data) {
-        LOGGER.info("여긴가1");
+        LOGGER.info("sendToClient!!");
         try {
             emitter.send(SseEmitter.event()
                     .id(id)
                     .name("sse")
                     .data(data));
-            LOGGER.info("sendToClient 들어오니ㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣㅣ");
+            LOGGER.info("sendToClient 성공");
         } catch (IOException exception) {
-            LOGGER.info("여기는 오니");
             exception.printStackTrace();
             emitterRepository.deleteById(id);
             throw new RuntimeException("연결 오류!");
@@ -159,6 +154,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     public void dtoToSend(ResponseNotificationPost responseDto) {
+        LOGGER.info("알림 보내기 {}", responseDto.toString());
         Long senderId = responseDto.getSenderId();
         Long receiverId = responseDto.getReceiverId();
         if (!senderId.equals(receiverId)) {
@@ -167,15 +163,12 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
     public void send(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
-        //////
+        LOGGER.info("send event 들어옴");
         User user = userRepository.getById(recieverId);
-        LOGGER.info("에바다3");
         String id = String.valueOf(user.getUid());
-        LOGGER.info("id {}", id);
         Notification notification = saveNotification(senderId, recieverId, contenstsCodeId, contentsId, type);
 
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
-        LOGGER.info("sseEmitter {}", sseEmitters.toString());
         sseEmitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
@@ -186,8 +179,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     private Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
-//        User user = userRepository.getByUid(uid);
-
+        LOGGER.info("알림 저장 service");
         Notification notification = Notification.builder()
                 .senderId(senderId)
                 .recieverId(recieverId)
@@ -195,9 +187,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .contentsId(contentsId)
                 .type(type)
                 .build();
-
         notificationRepository.save(notification);
         return notification;
     }
-
 }
