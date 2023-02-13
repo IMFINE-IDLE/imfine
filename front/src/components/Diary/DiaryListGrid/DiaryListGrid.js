@@ -1,10 +1,7 @@
-import { useNavigate } from 'react-router-dom';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import DiaryItem from '../DiaryItem/DiaryItem';
 
 const DiaryListGrid = ({ diaryList }) => {
-  const navigate = useNavigate();
-
   return (
     <FlexDiv wrap="wrap" gap="1.25em 5%" justify="space-between">
       {diaryList?.map((diary) => {
@@ -17,6 +14,9 @@ const DiaryListGrid = ({ diaryList }) => {
           subscribeCount,
           title,
         } = diary;
+        // 공개여부 추후 서버에서 받아오는 걸로 변경
+        const open = false;
+
         return (
           <DiaryItem
             key={diaryId}
@@ -27,7 +27,7 @@ const DiaryListGrid = ({ diaryList }) => {
             paperCount={paperCount}
             subscribeCount={subscribeCount}
             title={title}
-            onClick={() => navigate(`/diary/${diaryId}`)}
+            open={open}
           />
         );
       })}

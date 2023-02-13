@@ -1,154 +1,51 @@
-import axios from 'axios';
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../../../api/api';
-import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
+import { useNavigate } from 'react-router-dom';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
-import PickedItemList from '../../../components/PickedItemList/PickedItemList';
-import { BoxToggle } from '../../../components/PickSymptom/style';
-import {
-  ToggleContainer,
-  ToggleText,
-  ToggleWrapper,
-  Toggle,
-  ToggleLabel,
-} from '../../Profile/ProfileConfigPage/style';
-import {
-  DiaryBoxGrad,
-  DiaryCreateTitleText,
-  DiaryCreateInput,
-  DiaryCreateTextarea,
-  SubmitBtn,
-} from './style';
+import PickMenuTab from '../../../components/PickMenu/PickMenuTab';
+import { SubmitBtn } from '../DiaryCreateConfirmPage/style';
 
-function DiaryCreatePage() {
-  // 임시. 나중에 앞 페이지에서 프롭스로 받아올 것
-  // const {medicalPick, symptomPickList} = useLocation();
-  const medicals = [{ id: 1, name: '질병명' }];
-  const symptoms = [
-    { id: 1, name: '증상1' },
-    { id: 2, name: '증상2' },
-  ];
-  const [diaryInfo, setDiaryInfo] = useState({
-    title: '',
-    description: '',
-  });
-  const [isOpen, setIsOpen] = useState(true);
+const DiaryCreatePage = () => {
   const navigate = useNavigate();
+  const [medicalList, setMedicalList] = useState([]);
+  const [symptomList, setSymptomList] = useState([]);
 
-  // 일기장 생성 요청
-  const fetchPostDiary = async () => {
-    try {
-      const res = await axios.post(
-        api.diary.postDiary(),
-        {
-          medicalId: medicals.id,
-          open: isOpen,
-          title: diaryInfo.title,
-          description: diaryInfo.description,
-          image: '1',
-          symptom: symptoms?.map((symptom) => symptom.id),
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
-
-      navigate(`/diary/${res.data.data}`);
-    } catch (err) {
-      console.error(err);
-    }
+  const infoToConfirm = {
+    medicalList,
+    symptomList,
   };
 
-  // 입력값을 diaryInfo state에 저장
-  const handleDiaryInfoChange = (e) => {
-    console.log(e.target.name);
-    setDiaryInfo({
-      ...diaryInfo,
-      [e.target.name]: e.target.value,
-    });
+  const handleSubmit = () => {
+    navigate('/diary/create/confirm', { state: infoToConfirm });
   };
 
-  // useEffect(() => {
-  //   console.log({
-  //     medicalId: medicalPick.id,
-  //     open: isOpen,
-  //     title: diaryInfo.title,
-  //     description: diaryInfo.description,
-  //     image: '1',
-  //     symptom: symptomPickList.map((symptom) => symptom.id),
-  //   });
-  // }, [diaryInfo]);
+  console.log('medicals picked test', medicalList);
 
   return (
     <>
-      <NavBarBasic Back={true} Text="일기장 생성" BackgroundColor={'main'} />
-      <DiaryBoxGrad radius="0" padding="2em">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            fetchPostDiary();
-          }}
-        >
-          <DiaryCreateTitleText>
-            일기장 제목을 입력해주세요
-          </DiaryCreateTitleText>
-          <DiaryCreateInput
-            name="title"
-            maxLength={20}
-            required
-            onChange={handleDiaryInfoChange}
-          />
-          <DiaryCreateTitleText>
-            일기장 설명을 입력해주세요
-          </DiaryCreateTitleText>
-          <DiaryCreateTextarea
-            name="description"
-            maxLength={100}
-            onChange={handleDiaryInfoChange}
-          ></DiaryCreateTextarea>
+      <NavBarBasic Back={true} Text="일기장 생성" />
 
-          <FlexDiv direction="column" padding="1em 0">
-            <PickedItemList
-              title="질병/수술"
-              type="medical"
-              medicals={medicals}
-            />
-            <PickedItemList
-              title="증상"
-              type="symptom"
-              symptoms={symptoms}
-              color="light-pink"
-            />
-          </FlexDiv>
+      <PickMenuTab
+        tabCnt={2}
+        title="질병/수술"
+        medicals={medicalList}
+        symptoms={symptomList}
+        setMedicals={setMedicalList}
+        setSymptoms={setSymptomList}
+        onSubmitBtnClick={handleSubmit}
+        submitBtnText="선택 완료"
+      />
 
-          {/* <img /> */}
-
-          <BoxToggle>
-            <span>일기장 공개/비공개 설정하기</span>
-            <ToggleContainer>
-              <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
-              <ToggleWrapper isOpen={isOpen}>
-                <Toggle
-                  id="toggle"
-                  type="checkbox"
-                  onChange={() => setIsOpen((prev) => !prev)}
-                  checked={isOpen}
-                />
-                <ToggleLabel htmlFor="toggle" />
-              </ToggleWrapper>
-            </ToggleContainer>
-          </BoxToggle>
-          <SubmitBtn
-            radius="20px"
-            height="3.5em"
-            margin="4em 0 0 0"
-            type="submit"
-          >
-            새 일기장 만들기
-          </SubmitBtn>
-        </form>
-      </DiaryBoxGrad>
+      {/* <SubmitBtn
+        radius="20px"
+        height="3.5em"
+        margin="4em 0 0 0"
+        type="submit"
+        onClick={() => navigate('/diary/create/confirm')}
+      >
+        선택 완료
+      </SubmitBtn> */}
     </>
   );
-}
+};
 
 export default DiaryCreatePage;

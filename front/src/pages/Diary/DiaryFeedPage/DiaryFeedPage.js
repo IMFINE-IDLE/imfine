@@ -37,7 +37,7 @@ const DiaryFeedPage = () => {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
 
-      setDiaryList(res.data.data);
+      await setDiaryList(res.data.data);
       // console.log(11111111111, type);
       // console.log(res.data.data);
     } catch (err) {

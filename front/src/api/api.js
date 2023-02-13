@@ -26,6 +26,7 @@ const api = {
     logout: () => URL + USERS + '/sign-out',
     refresh: () => URL + USERS + '/refresh',
     setInitialProfile: () => URL + USERS + '/profile',
+    findUserId: (email) => URL + USERS + `/find-id/${email}`,
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },
@@ -54,12 +55,14 @@ const api = {
   },
   profile: {
     getUserInfo: (params) => URL + USERS + `/${params}`,
-    getMonthCondition: (params) =>
-      URL + USERS + `/${params.uid}/condition/month/${params.date}`,
     getFollowingList: (params) => URL + USERS + `/${params}/following`,
     getFollowerList: (params) => URL + USERS + `/${params}/follower`,
     follow: () => URL + USERS + '/follow',
     unfollow: (params) => URL + USERS + `/follow/${params}`,
+    getMonthCondition: (params) =>
+      URL + USERS + `/${params.uid}/condition/month/${params.date}`,
+    getUserPaperItem: (params) =>
+      URL + USERS + `/${params.uid}/paper/${params.date}`,
   },
   bamboo: {
     postBamboo: () => URL + BAMBOO,
@@ -82,16 +85,18 @@ const api = {
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
     deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
+    getDiaryPaperItem: (params) =>
+      URL + DIARY + `/${params.diaryId}/paper/${params.date}`,
     getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
     getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
   },
   symptom: {
     getSymptomList: () => URL + SYMPTOM + '/list',
-    getSymptomDetail: (symptomId) => URL + SYMPTOM + symptomId,
+    getSymptomDetail: (symptomId) => URL + SYMPTOM + `/${symptomId}`,
   },
   medical: {
     getMedicalList: () => URL + MEDICAL + '/list',
-    getMedicalDetail: (medicalId) => URL + MEDICAL + medicalId,
+    getMedicalDetail: (medicalId) => URL + MEDICAL + `/${medicalId}`,
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
