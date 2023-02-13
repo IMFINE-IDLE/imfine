@@ -19,7 +19,7 @@ import {
   DiaryCreateInput,
   DiaryCreateTextarea,
   SubmitBtn,
-} from '../DiaryCreatePage/style';
+} from '../DiaryCreateConfirmPage/style';
 
 const DiaryModifyPage = () => {
   /*
