@@ -16,27 +16,29 @@ const FollowUser = ({ cloverCode, name, type, relation, uid, setTrigger }) => {
       if (followStatus === 1) {
         await axios.delete(api.profile.unfollow(uid));
         setFollowStatus(3);
+        setTrigger((prev) => !prev);
       }
       // 현재 팔로우하고 있지 않으면 팔로우 요청을 보내고 relation을 1로 변경
       else if (followStatus === 3) {
         await axios.post(api.profile.follow(), { uid });
         setFollowStatus(1);
+        setTrigger((prev) => !prev);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
-  // // api 물어봐야 함
-  // const fetchDeletefollower = async () => {
-  //   try {
-  //     const res = await axiosInstance.delete(api.profile.deleteFollower(uid));
-  //     console.log(res);
-  //     setTrigger((prev) => !prev);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  // 팔로워 목록에서 나를 팔로우하는 유저 팔로우 해제 요청
+  const fetchDeleteFollower = async () => {
+    try {
+      const res = await axios.delete(api.profile.deleteFollower(uid));
+      console.log(res.data.data);
+      setTrigger((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   if (type === '팔로잉')
     return (
@@ -85,11 +87,8 @@ const FollowUser = ({ cloverCode, name, type, relation, uid, setTrigger }) => {
           </span>
         </FollowUserWrapper>
         {followStatus === 0 || (
-          <FollowUserBtn
-            color={followStatus === 1 ? 'gray' : 'main'}
-            // onClick={fetchDeleteFollower}
-          >
-            {followStatus === 1 ? '삭제' : ''}
+          <FollowUserBtn color="gray" onClick={() => fetchDeleteFollower()}>
+            삭제
           </FollowUserBtn>
         )}
       </FollowUserContainer>

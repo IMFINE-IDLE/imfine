@@ -59,6 +59,7 @@ const api = {
     getFollowerList: (uid) => URL + USERS + `/${uid}/follower`,
     follow: () => URL + USERS + '/follow',
     unfollow: (uid) => URL + USERS + `/follow/${uid}`,
+    deleteFollower: (uid) => URL + USERS + `/follow/block/${uid}`,
     getMonthCondition: (params) =>
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
     getUserPaperItem: (params) =>
