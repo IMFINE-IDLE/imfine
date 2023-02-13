@@ -26,6 +26,7 @@ const api = {
     logout: () => URL + USERS + '/sign-out',
     refresh: () => URL + USERS + '/refresh',
     setInitialProfile: () => URL + USERS + '/profile',
+    findUserId: (email) => URL + USERS + `/find-id/${email}`,
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },

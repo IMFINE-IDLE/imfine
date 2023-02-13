@@ -146,7 +146,7 @@ function PaperItemDetail({ paperId, paper }) {
               <>
                 <FiEdit
                   onClick={() => {
-                    navigate('/paper/create');
+                    navigate(`/paper/modify/${paperId}`);
                   }}
                 />
                 <FiTrash2

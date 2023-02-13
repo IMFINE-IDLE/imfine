@@ -27,6 +27,8 @@ import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
 import ReportPage from './pages/Report/ReportPage/ReportPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
 import SignUpSettingPage from './pages/SignUpSettingPage/SignUpSettingPage';
+import FindIdPage from './pages/FindIdPage/FindIdPage';
+import FindPwPage from './pages/FindPwPage/FindPwPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -55,6 +57,22 @@ function App() {
         element={
           <PublicRoute>
             <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/find-id"
+        element={
+          <PublicRoute>
+            <FindIdPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/find-password"
+        element={
+          <PublicRoute>
+            <FindPwPage />
           </PublicRoute>
         }
       />
