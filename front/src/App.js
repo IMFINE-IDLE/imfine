@@ -9,6 +9,7 @@ import SearchPage from './pages/SearchPage/SearchPage';
 import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
 import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
 import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
+import DiaryCreateConfirmPage from './pages/Diary/DiaryCreateConfirmPage/DiaryCreateConfirmPage';
 import DiaryModifyPage from './pages/Diary/DiaryModifyPage/DiaryModifyPage';
 import DiaryAddSymptomPage from './pages/Diary/DiaryAddSymptomPage/DiaryAddSymptomPage';
 import PaperCreatePage from './pages/PaperCreatePage/PaperCreatePage';
@@ -23,7 +24,9 @@ import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollow
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
 import ChangeName from './pages/Profile/ChangeName/ChangeName';
 import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
+import ReportPage from './pages/Report/ReportPage/ReportPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
+import SignUpSettingPage from './pages/SignUpSettingPage/SignUpSettingPage';
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
 //   margin: 0 auto;
@@ -72,6 +75,14 @@ function App() {
         }
       />
       <Route
+        path="/signup/setting"
+        element={
+          <PrivateRoute>
+            <SignUpSettingPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/home"
         element={
           <PrivateRoute>
@@ -87,6 +98,15 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/settings"
+        element={
+          <PrivateRoute>
+            <SettingsPage />
+          </PrivateRoute>
+        }
+      />
+
       <Route path="/diary">
         <Route
           index
@@ -104,14 +124,24 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="create"
-          element={
-            <PrivateRoute>
-              <DiaryCreatePage />
-            </PrivateRoute>
-          }
-        />
+        <Route path="create">
+          <Route
+            index
+            element={
+              <PrivateRoute>
+                <DiaryCreatePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="confirm"
+            element={
+              <PrivateRoute>
+                <DiaryCreateConfirmPage />
+              </PrivateRoute>
+            }
+          />
+        </Route>
         <Route path=":diaryId/modify">
           <Route
             index
@@ -223,6 +253,22 @@ function App() {
           }
         />
       </Route>
+      <Route
+        path="/noti"
+        element={
+          <PrivateRoute>
+            <NotificationPage />
+          </PrivateRoute>
+        }
+      ></Route>
+      <Route
+        path="/report"
+        element={
+          <PrivateRoute>
+            <ReportPage />
+          </PrivateRoute>
+        }
+      ></Route>
     </Routes>
     // </Wrapper>
   );

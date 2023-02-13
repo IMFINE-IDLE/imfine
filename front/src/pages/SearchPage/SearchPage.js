@@ -22,14 +22,51 @@ import axios from 'axios';
 
 function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentQuery = searchParams.get('query');
+
   const [searchHistory, setSearchHistory] = useState([]);
   const [keyword, setKeyword] = useState(''); // 검색창에 검색하는 쿼리
   const [keywordResult, setKeywordResult] = useState(''); // {{queryResult}}에 대한 검색결과 (검색완료한 쿼리)
 
   const [paperList, setPaperList] = useState([]);
+  const [diaryList, setDiaryList] = useState([]);
+  const [userList, setUserList] = useState([]);
 
-  // 첫 페이지 일기 검색
-  const handlePaperSearch = async (trimmedKeyword) => {
+  // 일기 검색
+  const handlePaperSearch = async (currQuery) => {
+    try {
+      const res = await axios.get(api.search.search('paper', currQuery));
+      console.log(res.data.data.list);
+      setPaperList(res.data.data.list);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 일기장 검색
+  const handleDiarySearch = async (currQuery) => {
+    try {
+      const res = await axios.get(api.search.search('diary', currQuery));
+      console.log(res.data);
+      setDiaryList(res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 유저 검색
+  const handleUserSearch = async (currQuery) => {
+    try {
+      const res = await axios.get(api.search.search('user', currQuery));
+      console.log(res.data);
+      setUserList(res.data.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 검색
+  const handleSearch = async (trimmedKeyword) => {
     if (trimmedKeyword === '' || trimmedKeyword === null) {
       return;
     }
@@ -37,12 +74,9 @@ function SearchPage() {
     setKeywordResult(trimmedKeyword);
     postSearchKeywordList(trimmedKeyword); // 최근 검색어에 저장
 
-    try {
-      const res = await axios.get(api.search.search('paper', trimmedKeyword));
-      console.log(res.data.data.list);
-    } catch (err) {
-      console.log(err);
-    }
+    handlePaperSearch(trimmedKeyword);
+    handleDiarySearch(trimmedKeyword);
+    handleUserSearch(trimmedKeyword);
   };
 
   // 최근 검색어 저장
@@ -68,10 +102,11 @@ function SearchPage() {
   };
 
   // 최근 검색어 삭제
-  const deleteSearchKeyword = async () => {
+  const deleteSearchKeyword = async (keywordId) => {
     try {
-      const res = await axios.delete(api.search.deleteSearchHistory());
+      const res = await axios.delete(api.search.deleteSearchHistory(keywordId));
       console.log(res);
+      getSearchKeywordList();
     } catch (err) {
       console.log(err);
     }
@@ -82,18 +117,18 @@ function SearchPage() {
       idx: 0,
       tabName: '일기',
       tabContent: (
-        <SearchPaper paperList={paperList} setPaperList={setPaperList} />
+        <SearchPaper paperList={paperList} currentQuery={currentQuery} />
       ),
     },
     {
       idx: 1,
       tabName: '일기장',
-      tabContent: <SearchDiary />,
+      tabContent: <SearchDiary diaryList={diaryList} />,
     },
     {
       idx: 2,
       tabName: '유저',
-      tabContent: <SearchUser />,
+      tabContent: <SearchUser userList={userList} />,
     },
   ];
 
@@ -101,7 +136,6 @@ function SearchPage() {
     getSearchKeywordList();
 
     // 주소창 쳐서 들어올 경우
-    let currentQuery = searchParams.get('query');
     if (currentQuery === '' || currentQuery === null) {
       setKeyword('');
       return;
@@ -109,14 +143,17 @@ function SearchPage() {
     let trimmedQuery = currentQuery.trim();
     setKeyword(trimmedQuery);
     setKeywordResult(trimmedQuery);
-  }, [searchParams]);
+    handlePaperSearch(trimmedQuery);
+    handleDiarySearch(trimmedQuery);
+    handleUserSearch(trimmedQuery);
+  }, [currentQuery]);
 
   return (
     <>
       <SearchNavBar
         keyword={keyword}
         setKeyword={setKeyword}
-        handlePaperSearch={handlePaperSearch}
+        handleSearch={handleSearch}
         searchParams={searchParams}
       />
 
@@ -133,19 +170,21 @@ function SearchPage() {
           <BoxRecentQuery>
             <TitleRecent>최근 검색어</TitleRecent>
             <BoxInner>
-              {searchHistory?.map(({ id, query }) => (
-                <QueryItem key={id}>
+              {searchHistory?.map(({ query, searchId }) => (
+                <QueryItem key={searchId}>
                   <span
                     onClick={() => {
-                      handlePaperSearch(query);
+                      handleSearch(query);
                     }}
+                    style={{ cursor: 'pointer' }}
                   >
                     {query}
                   </span>
                   <span
                     onClick={() => {
-                      deleteSearchKeyword(id);
+                      deleteSearchKeyword(searchId);
                     }}
+                    style={{ cursor: 'pointer' }}
                   >
                     X
                   </span>

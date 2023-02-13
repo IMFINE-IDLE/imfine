@@ -1,15 +1,10 @@
 import axios from 'axios';
 
-const URL = 'http://i8A809.p.ssafy.io:8080/api';
+const URL = 'https://i8A809.p.ssafy.io/api';
 
 const authAPI = (url, options) => {
-  const accessToken = localStorage.getItem('accessToken');
-
   return axios.create({
     baseURL: url,
-    headers: {
-      Authorization: accessToken,
-    },
     ...options,
   });
 };

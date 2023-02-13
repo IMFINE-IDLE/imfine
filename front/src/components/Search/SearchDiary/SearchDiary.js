@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
+import DiaryListGrid from '../../Diary/DiaryListGrid/DiaryListGrid';
 
-function SearchDiary() {
-  const [diaryList, setDiaryList] = useState([]);
-
+function SearchDiary({ diaryList }) {
   return (
-    <div>
-      SearchDiary
-      <div>일기장 검색결과</div>
-    </div>
+    <>
+      {diaryList?.length > 0 ? (
+        <DiaryListGrid diaryList={diaryList} />
+      ) : (
+        <span>검색 결과를 찾을 수 없습니다.</span>
+      )}
+    </>
   );
 }
 

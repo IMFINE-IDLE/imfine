@@ -7,7 +7,7 @@ import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
-import { DiaryBoxGrad } from '../DiaryCreatePage/style';
+import { DiaryBoxGrad } from '../DiaryCreateConfirmPage/style';
 import { DiaryInfoContainer, DiaryDateSpan } from './style';
 import DiaryTitle from '../../../components/Paper/DiaryTitle/DiaryTitle';
 import { ReactComponent as BookmarkSvg } from './bookmark.svg';

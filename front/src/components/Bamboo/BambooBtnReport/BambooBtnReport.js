@@ -1,18 +1,19 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import api from '../../../api/api';
 import { BtnSmall } from './style';
 
 function BambooBtnReport({ bambooId }) {
   // 대나무 신고 컴포넌트
   const [isClicked, setIsClicked] = useState(false);
-  const reportPaper = async (bambooId) => {
-    try {
-      const res = await axios.post(api.bamboo.reportBamboo(bambooId));
-    } catch (err) {
-      console.log(err);
-    }
+  const navigate = useNavigate();
+  console.log(typeof bambooId);
+  const clicked = () => {
+    navigate(`/report`, {
+      state: { id: `${bambooId}`, type: 'Bamboo' },
+    });
   };
   return (
     <div style={{ cursor: 'pointer', position: 'relative' }}>
@@ -26,7 +27,7 @@ function BambooBtnReport({ bambooId }) {
         <BtnSmall
           onClick={(e) => {
             e.stopPropagation();
-            reportPaper(bambooId);
+            clicked();
           }}
         >
           신고하기

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
-import { Navigate, useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { BtnSmall } from './style';
 
-function BtnReport({ paperId }) {
-  const navigate = useNavigate();
+function BtnReport({ apiFunc }) {
   const [isClicked, setIsClicked] = useState(false);
 
   return (
@@ -19,7 +18,7 @@ function BtnReport({ paperId }) {
         <BtnSmall
           onClick={(e) => {
             e.stopPropagation();
-            navigate('/신고페이지');
+            apiFunc();
           }}
         >
           신고하기

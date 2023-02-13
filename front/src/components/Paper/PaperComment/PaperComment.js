@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useState } from 'react';
-import { FiHeart, FiMessageCircle, FiTrash2 } from 'react-icons/fi';
-import api from '../../../api/api';
+import { useEffect } from 'react';
+import { FiHeart, FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../../Modal/Modal';
 import BtnReport from '../BtnReport/BtnReport';
 import {
@@ -32,10 +32,20 @@ function PaperComment({
     myHeart,
   } = comment;
 
-  const fillHeart = myHeart ? 'var(--red-color)' : 'none';
+  const [isLiked, setIsLiked] = useState(myHeart);
+  const fillHeart = isLiked ? 'var(--red-color)' : 'none';
+  const [localLikeCount, setLocalLikeCount] = useState(likeCount);
 
-  // 댓글 삭제, 신고 위한 모달
-  const [modalOpen, setModalOpen] = useState(false);
+  useEffect(() => {
+    setIsLiked(myHeart);
+    setLocalLikeCount(likeCount);
+  }, [myHeart, likeCount]);
+
+  // 댓글 삭제 모달
+  const [commentRemoveModalOpen, setCommentRemoveModalOpen] = useState(false);
+  // 댓글 신고 모달
+  const [commentReportModalOpen, setCommentReportModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -52,7 +62,7 @@ function PaperComment({
             {Boolean(!userStatus) && (
               <FiTrash2
                 onClick={() => {
-                  setModalOpen(true);
+                  setCommentRemoveModalOpen(true);
                 }}
                 size="16px"
               />
@@ -68,12 +78,16 @@ function PaperComment({
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (myHeart) {
+                  if (isLiked) {
                     // 좋아요 되어있으면 취소
                     likeCommentDelete(commentId);
+                    setLocalLikeCount((prev) => prev - 1);
+                    setIsLiked((prev) => !prev);
                   } else {
                     // 좋아요 안되어있으면 등록
                     likeComment(commentId);
+                    setLocalLikeCount((prev) => prev + 1);
+                    setIsLiked((prev) => !prev);
                   }
                 }}
               />
@@ -82,20 +96,32 @@ function PaperComment({
                   color: 'var(--icon-color)',
                 }}
               >
-                {likeCount}
+                {localLikeCount}
               </span>
             </div>
-            <BtnReport />
+            <BtnReport apiFunc={() => setCommentReportModalOpen(true)} />
           </BoxBtns>
         </BoxTop>
         <BoxContent>{content}</BoxContent>
       </BoxCommentItem>
-      {modalOpen && (
+      {commentRemoveModalOpen && (
         <Modal
           type={'댓글'}
           action={'삭제'}
-          setModalOpen={setModalOpen}
+          setModalOpen={setCommentRemoveModalOpen}
           apiFunc={() => deleteComment(commentId)}
+        />
+      )}
+      {commentReportModalOpen && (
+        <Modal
+          type={'댓글'}
+          action={'신고'}
+          setModalOpen={setCommentReportModalOpen}
+          apiFunc={() =>
+            navigate('/report', {
+              state: { id: commentId, type: 'Comment' },
+            })
+          }
         />
       )}
     </>

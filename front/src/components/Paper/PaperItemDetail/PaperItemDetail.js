@@ -8,6 +8,8 @@ import Modal from '../../Modal/Modal';
 import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
 import LikeComment from '../LikeComment/LikeComment';
+import PaperImageModal from '../PaperImageModal/PaperImageModal';
+import PaperImages from '../PaperImages/PaperImages';
 import { BoxContent, BoxLeft, BoxRight, BoxTop } from '../PaperItem/style';
 import SymptomRating from '../SymptomRating/SymptomRating';
 import {
@@ -18,7 +20,7 @@ import {
   BoxTopAudio,
 } from './style';
 
-function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
+function PaperItemDetail({ paperId, paper }) {
   const navigate = useNavigate();
   const {
     condition,
@@ -37,6 +39,10 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     musicURL,
   } = paper;
 
+  // 이미지 크게 보기 모달
+  const [showFullImage, setShowFullImage] = useState(false);
+  const [clickedImgSrc, setClickedImgSrc] = useState(false);
+
   // 일기 삭제 함수
   const deletePaper = async (paperId) => {
     try {
@@ -50,7 +56,9 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
   };
 
   // 일기 삭제 모달
-  const [modalOpen, setModalOpen] = useState(false);
+  const [paperDeleteModalOpen, setPaperDeleteModalOpen] = useState(false);
+  // 일기 신고 모달
+  const [paperReportModalOpen, setPaperReportModalOpen] = useState(false);
 
   // 게시글 시간 표시 함수
   function getTimeDifference(timeString) {
@@ -75,7 +83,8 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
     }
   }
 
-  console.log(diaryId);
+  // console.log(diaryId);
+
   return (
     <>
       <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
@@ -114,12 +123,22 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                 {/* {isPlaying ? <p>Playing...</p> : <p>Paused</p>} */}
               </BoxTopAudio>
             </div>
-            <BtnReport paperId={paperId} />
+            <BtnReport
+              paperId={paperId}
+              apiFunc={() => {
+                setPaperReportModalOpen(true);
+              }}
+            />
           </BoxRight>
         </BoxTop>
         <BoxContent>
           <SymptomRating symptomList={symptomList} />
           {content}
+          <PaperImages
+            images={images}
+            setShowFullImage={setShowFullImage}
+            setClickedImgSrc={setClickedImgSrc}
+          />
         </BoxContent>
         <BoxBottomDetail userStatus={Boolean(!userStatus)}>
           <BoxBottemLeft>
@@ -132,7 +151,7 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
                 />
                 <FiTrash2
                   onClick={() => {
-                    setModalOpen(true);
+                    setPaperDeleteModalOpen(true);
                   }}
                 />
               </>
@@ -146,17 +165,33 @@ function PaperItemDetail({ paperId, paper, likePaper, likePaperDelete }) {
             myHeart={myHeart}
             likeCount={likeCount}
             commentCount={commentCount}
-            like={likePaper}
-            likeDelete={likePaperDelete}
           />
         </BoxBottomDetail>
       </BoxPaperDetail>
-      {modalOpen && (
+      {paperDeleteModalOpen && (
         <Modal
           type={'일기'}
           action={'삭제'}
-          setModalOpen={setModalOpen}
+          setModalOpen={setPaperDeleteModalOpen}
           apiFunc={() => deletePaper(paperId)}
+        />
+      )}
+      {paperReportModalOpen && (
+        <Modal
+          type={'일기'}
+          action={'신고'}
+          setModalOpen={setPaperReportModalOpen}
+          apiFunc={() =>
+            navigate('/report', {
+              state: { id: paperId, type: 'Paper' },
+            })
+          }
+        />
+      )}
+      {showFullImage && (
+        <PaperImageModal
+          clickedImgSrc={clickedImgSrc}
+          setShowFullImage={setShowFullImage}
         />
       )}
     </>
