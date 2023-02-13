@@ -36,7 +36,7 @@ public class PaperController {
     private static final Logger LOGGER = LoggerFactory.getLogger(PaperController.class);
     @PostMapping
     public ResponseEntity<Result> postPaper(@ModelAttribute RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
-        LOGGER.info("일기 생성 api 도착 {} {}", requestPaperPostDto);
+        LOGGER.info("일기 생성 api 도착 userId: {} diaryId: {}", uid, requestPaperPostDto.getDiaryId());
         try {
             paperService.save(requestPaperPostDto, uid);
         } catch (IOException e) {
@@ -47,6 +47,7 @@ public class PaperController {
 
     @GetMapping("/{paper-id}")
     public ResponseEntity<Result> getPaperDetail(@PathVariable(value = "paper-id") long paperId, @LoginUser String uid){
+        LOGGER.info("일기 상세 정보 api paperId: {}", paperId);
         ResponsePaperDetailDto responseDto = paperService.getPaperDetail(paperId, uid);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
@@ -62,12 +63,15 @@ public class PaperController {
     public ResponseEntity<Result> getModifyPaper(@LoginUser String uid,
             @PathVariable("paper-id") long paperId) {
 
+        LOGGER.info("일기장 삭제 수정 정보 api paperId: {}", paperId);
         ResponseModifyPaperDto responseDto = paperService.getModifyPaper(uid, paperId);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
 
     @PutMapping
     public ResponseEntity<Result> putPaper(@ModelAttribute RequestPaperPutDto requestPaperPutDto, @LoginUser String uid){
+        LOGGER.info("일기 수정 paperId: {}, uid: {}", requestPaperPutDto.getPaperId(), uid);
+
         try {
             List<String> removeImages = paperService.modifyPaper(requestPaperPutDto, uid);
             fileStore.deleteImages(removeImages);
@@ -75,13 +79,13 @@ public class PaperController {
             e.printStackTrace();
             throw new RuntimeException("이미지 삭제과정에서 에러가 발생했습니다.");
         }
-        LOGGER.info("일기 수정 {}, {}", requestPaperPutDto, requestPaperPutDto.getSymptomList().get(0).getSymptomId());
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @GetMapping("/list")
     public ResponseEntity<Result> getPaperList(@LoginUser String uid, @RequestParam("page") int page, @RequestParam("tab") String filter) {
         Pageable pageable = PageRequest.of(page, 10, Direction.DESC, filter);
+        LOGGER.info("일기 목록 api (메인페이지) : uid: {},  pageable: {}", uid ,pageable);
         ResponseMainPage responseDto = paperService.getPaperList(uid, pageable);
         return ResponseEntity.ok().body(responseService.getSingleResult(responseDto));
     }
@@ -89,13 +93,16 @@ public class PaperController {
     @PostMapping("/like")
     public ResponseEntity<Result> postPaperLike(@RequestBody RequestHeartDto requestLikeDto, @LoginUser String uid) {
         requestLikeDto.setContentCodeId(2);
+        LOGGER.info("일기 좋아요 paperId: {}, uid: {}", requestLikeDto.getContentId(), uid);
+
         notificationService.dtoToSend(paperService.postPaperLike(requestLikeDto, uid));
-        LOGGER.info("일기 좋아요 {}", requestLikeDto);
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }
 
     @DeleteMapping("/{paper-id}/like")
     public ResponseEntity<Result> deletePaperLike(@PathVariable(value = "paper-id") long paperId, @LoginUser String uid) {
+        LOGGER.info("일기 좋아요 삭제 uid: {}" , uid);
+
         paperService.deletePaperLike(RequestHeartDto.builder()
                         .contentId(paperId)
                         .contentCodeId(2)

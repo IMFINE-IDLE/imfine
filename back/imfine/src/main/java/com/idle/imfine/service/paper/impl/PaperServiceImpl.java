@@ -40,7 +40,6 @@ import com.idle.imfine.errors.code.PaperErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.FileStore;
-import com.idle.imfine.service.notification.NotificationService;
 import com.idle.imfine.service.paper.PaperService;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -79,7 +78,6 @@ public class PaperServiceImpl implements PaperService {
     private final Common common;
     private final FileStore fileStore;
     private final SentimentAnalysis sentimentAnalysis;
-    private final NotificationService notificationService;
 
     static final Logger LOGGER = LoggerFactory.getLogger(PaperServiceImpl.class);
 
@@ -93,7 +91,7 @@ public class PaperServiceImpl implements PaperService {
                 .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
 
-        LOGGER.info("date : {} requestDate{}",  requestPaperPostDto.getDiaryId(), requestPaperPostDto.getDate());
+        LOGGER.info("[PaperService.save] date : {} requestDate{}",  requestPaperPostDto.getDiaryId(), requestPaperPostDto.getDate());
         LocalDate date = common.convertDateType(requestPaperPostDto.getDate());
         Optional<Paper> exist = paperRepository.getByDiary_IdAndDate(diary.getId(), date);
 
@@ -113,11 +111,14 @@ public class PaperServiceImpl implements PaperService {
         LOGGER.info("[PaperService.save] 감정 분석 > 비동기 처리");
         sentimentAnalysis.analyzeText(savedPaper);
 
+        LOGGER.info("[PaperService.save] 이미지 업로드.......");
         List<UploadFile> storeImageFiles;
         storeImageFiles = fileStore.storeFiles(requestPaperPostDto.getImages());
+        LOGGER.info("[PaperService.save] diary update.......");
         diary.paperAdd();
         diary.setPostedAt(LocalDateTime.now());
 
+        LOGGER.info("[PaperService.save] image name 테이블 저장.......");
         List<Image> saveImage = storeImageFiles.stream().map(
                 path ->  Image.builder()
                         .paperId(savedPaper.getId())
@@ -125,9 +126,12 @@ public class PaperServiceImpl implements PaperService {
                         .build()
         ).collect(Collectors.toList());
         if (saveImage.size() != 0){
+            LOGGER.info("[PaperService.save] image 존재하지 않음");
             imageRepository.saveAll(saveImage);
         }
+        LOGGER.info("[PaperService.save] 증상 저장");
         if (requestPaperPostDto.getSymptoms().size() != 0) {
+            LOGGER.info("[PaperService.save] 증상 존재, 증상기록 저장");
             Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
                 symptomRecord -> PaperHasSymptom.builder()
                         .symptomId(symptomRecord.getSymptomId())
@@ -144,7 +148,8 @@ public class PaperServiceImpl implements PaperService {
     @Override
     public void delete(long paperId, String uid) {
         LOGGER.info("일기 삭제 service");
-        User user = common.getUserByUid(uid);
+        common.getUserByUid(uid);
+
         Paper foundPaper = paperRepository.findByIdFetchAll(paperId)
             .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
 
@@ -161,7 +166,7 @@ public class PaperServiceImpl implements PaperService {
     @Transactional
     public List<String> modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) throws IOException {
         LOGGER.info("일기 수정 service");
-        User user = common.getUserByUid(uid);
+        common.getUserByUid(uid);
 
         Paper paper = paperRepository.findByIdFetchPaperSymptom(requestPaperPutDto.getPaperId())
             .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
@@ -496,6 +501,8 @@ public class PaperServiceImpl implements PaperService {
 
 
         return ResponseModifyPaperDto.builder()
+                .diaryId(paper.getDiary().getId())
+                .title(paper.getDiary().getTitle())
                 .paperId(paper.getId())
                 .content(paper.getContent())
                 .open(paper.isOpen())
