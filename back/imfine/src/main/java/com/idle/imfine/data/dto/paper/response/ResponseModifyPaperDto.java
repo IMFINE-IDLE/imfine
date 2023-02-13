@@ -14,6 +14,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ResponseModifyPaperDto {
 
+    private long diaryId;
+    private String title;
+
     private long paperId;
     private String content;
     private boolean open;
