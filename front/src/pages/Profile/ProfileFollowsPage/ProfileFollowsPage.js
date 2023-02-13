@@ -105,6 +105,7 @@ const ProfileFollowsPage = () => {
   const [followType, setFollowType] = useState(type); // '팔로잉' 또는 '팔로워'
   const [trigger, setTrigger] = useState(false); // 목록에 변화가 생겼을 때 다시 렌더링하기 위한 트리거 변수
 
+  // 팔로잉 또는 팔로워 목록 가져오기
   const fetchFollowList = async () => {
     const url =
       followType === '팔로워'
@@ -112,9 +113,7 @@ const ProfileFollowsPage = () => {
         : api.profile.getFollowingList(uid);
 
     try {
-      const res = await axios.get(url, {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.get(url);
 
       setUsers(() => res.data.data);
       console.log('fetchfollowList res', res.data.data);
