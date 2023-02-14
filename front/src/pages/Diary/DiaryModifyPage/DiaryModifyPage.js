@@ -20,44 +20,52 @@ import {
   DiaryCreateTextarea,
   SubmitBtn,
 } from '../DiaryCreateConfirmPage/style';
+import axios from 'axios';
+import api from '../../../api/api';
 
 const DiaryModifyPage = () => {
   /*
    * Hooks
    */
-  // 임시. 나중에 앞 페이지에서 받아올 것
-  const [diaryInfo, setDiaryInfo] = useState({
-    title: '기존 일기장 제목',
-    description: '기존 일기장 설명',
-  });
-  const medicals = [{ id: 1, name: '질병명' }];
-  const symptoms = [
-    { id: 1, name: '증상1' },
-    { id: 2, name: '증상2' },
-  ];
-  const [isOpen, setIsOpen] = useState(true);
-  // 임시
-
   const { diaryId } = useParams();
-  // const { title, description, medicals, diaryHasSymptoms, open } =
-  //   useLocation().state;
-  // const [diaryInfo, setDiaryInfo] = useState({
-  //   title,
-  //   description,
-  // });
-  // const [symptoms, setSymptoms] = useState(diaryHasSymptoms);
-  // const [isOpen, setIsOpen] = useState(open);
+  const { title, description, medicals, diaryHasSymptoms, open } =
+    useLocation().state;
 
+  // 수정사항 반영을 위한 state
+  const [diaryInfo, setDiaryInfo] = useState({
+    title,
+    description,
+  });
+  const [symptoms, setSymptoms] = useState(diaryHasSymptoms);
+  const [isOpen, setIsOpen] = useState(open);
+
+  // 삭제 확인 모달용 state
   const [diaryDeleteModalOpen, setdiaryDeleteModalOpen] = useState(false);
   const [symptomDeleteModalOpen, setSymptomDeleteModalOpen] = useState(false);
   const [symptomToDelete, setSymptomToDelete] = useState(null);
+
   const navigate = useNavigate();
 
   /*
    * Functions
    */
   // 일기장 수정 요청
-  const fetchUpdateDiary = () => {};
+  const fetchUpdateDiary = async () => {
+    try {
+      await axios.put(api.diary.postDiary(), {
+        diaryId: diaryId,
+        title: diaryInfo.title,
+        description: diaryInfo.description,
+        image: '1',
+        open: isOpen,
+        active: true,
+      });
+
+      navigate(`/diary/${diaryId}`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // 일기장 삭제 요청
   const fetchDeleteDiary = () => {};
