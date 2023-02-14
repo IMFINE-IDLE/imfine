@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import BambooHeader from '../../components/Bamboo/BambooHeader/BambooHeader';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
-
+import { useNavigate } from 'react-router-dom';
 import { DivTextArea, BtnUpdate } from './style';
 
 function BambooCreatePage() {
+  const navigate = useNavigate();
   const [value, setValue] = useState('');
 
   const fetchPost = async () => {
@@ -24,6 +25,7 @@ function BambooCreatePage() {
           },
         }
       );
+      navigate(-1);
     } catch (err) {
       console.log('Err', err);
     }

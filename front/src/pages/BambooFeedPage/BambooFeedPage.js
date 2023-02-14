@@ -61,9 +61,9 @@ function BambooFeedPage() {
       <NavBarBasic BackgroundColor={'light'} />
       <div>
         <BambooHeader
-          title={'대나무메인'}
-          subTitle={'대나무메인페이지입니다.'}
-          secondSubTitle={'둘째줄 설명도이어서 작성하긔'}
+          title={'대나무숲'}
+          subTitle={'어떤 말이든 써보세요.'}
+          secondSubTitle={'하루가 지나면 사라질거에요.'}
         />
         <Tabs tabArr={tabArr} btnWidth={'10em'} btnHeight={'3em'} />
         <BambooBtnFloat />
