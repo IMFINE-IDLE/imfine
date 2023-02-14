@@ -12,7 +12,10 @@ export const isEmailValid = (email) => {
 let isAlreadyFetchingAccessToken = false;
 let subscribers = [];
 
-export const resetTokenAndReattemptRequest = async (error) => {
+export const resetTokenAndReattemptRequest = async (
+  error,
+  dispatchCallback
+) => {
   try {
     console.log('토큰 갱신');
     const { response: errorResponse } = error;
@@ -44,6 +47,11 @@ export const resetTokenAndReattemptRequest = async (error) => {
   } catch (err) {
     // logOut()
     console.log(err);
+    // console.log('로그아웃 하러 들어옴');
+    localStorage.setItem('accessToken', null);
+    // window.location.href = '/login';
+    dispatchCallback();
+
     return Promise.reject(error);
   }
 };
@@ -56,9 +64,3 @@ function onAccessTokenFetched(accessToken) {
   subscribers.forEach((callback) => callback(accessToken));
   subscribers = [];
 }
-
-// function logOut() {
-//   removeUserToken('access');
-//   removeUserToken('refresh');
-//   window.location.href = '/signin';
-// }

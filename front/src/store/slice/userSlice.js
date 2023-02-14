@@ -63,7 +63,7 @@ export const logIn = createAsyncThunk(
 export const logOut = createAsyncThunk(
   'user/logOut',
   async (userData, { rejectWithValue }) => {
-    console.log('로그아웃 실행');
+    console.log('정상적 상황에서 로그아웃 실행');
     // localStorage.setItem('accessToken', null);
 
     try {
@@ -90,6 +90,12 @@ const userSlice = createSlice({
   reducers: {
     updateCode: (state, action) => {
       state.cloverCode = action.payload;
+    },
+    // 토큰이 비정상적인 에러 상황일 때 실행
+    logOutWithError: (state, action) => {
+      state.isLogin = action.payload.isLogin;
+      state.uid = action.payload.uid;
+      state.cloverCode = action.payload.cloverCode;
     },
   },
   extraReducers: (builder) => {
@@ -120,5 +126,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { updateCode } = userSlice.actions;
+export const { updateCode, logOutWithError } = userSlice.actions;
 export default userSlice;

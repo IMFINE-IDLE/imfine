@@ -33,10 +33,9 @@ import FindIdPage from './pages/FindIdPage/FindIdPage';
 import FindPwPage from './pages/FindPwPage/FindPwPage';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { logOut, updateCode } from './store/slice/userSlice';
+import { updateCode, logOutWithError } from './store/slice/userSlice';
 import schedule from 'node-schedule';
-// import { refreshToken } from './utils/utils';
-import api from './api/api';
+import { resetTokenAndReattemptRequest } from './utils/utils';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -51,18 +50,35 @@ import api from './api/api';
 
 function App() {
   const dispatch = useDispatch();
-  const dispatchLogout = async () => {
-    console.log('로그아웃 실행');
 
-    try {
-      const resLogout = await axios.post(api.user.logout(), {
-        withCredentials: true,
-      });
-      dispatch(logOut());
-    } catch (err) {
-      console.log(err);
-    }
+  const logoutwithErrorCallBack = () => {
+    dispatch(
+      logOutWithError({
+        isLogin: false,
+        uid: null,
+        cloverCode: '-1',
+      })
+    );
   };
+
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      console.log(error.response);
+      const { response: errorResponse } = error;
+      const originalRequest = error.config;
+      // 토큰 갱신
+      if (errorResponse.data.success === false) {
+        return await resetTokenAndReattemptRequest(
+          error,
+          logoutwithErrorCallBack
+        );
+      }
+      return Promise.reject(error);
+    }
+  );
 
   // 매일 자정에 클로버 컨디션 코드 -1로 초기화
   const rule = new schedule.RecurrenceRule();
