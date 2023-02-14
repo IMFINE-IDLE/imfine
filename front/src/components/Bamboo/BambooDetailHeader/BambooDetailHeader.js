@@ -27,6 +27,7 @@ function BambooDetailHeader({
 }) {
   const fillHeart = heart ? 'var(--red-color)' : 'none';
   console.log('booleanstatus', heart);
+  console.log('bambooid', bambooId);
   return (
     <BoxHeader>
       <TopDiv>
