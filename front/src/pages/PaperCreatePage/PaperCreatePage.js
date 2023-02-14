@@ -146,9 +146,11 @@ function PaperCreatePage() {
       const res = await axios.post(api.paper.paperWrite(), data, config);
       console.log('upload success', res);
 
+      const id = res.data.data;
       // 업로드성공하면 일기상세화면으로 넘어가야해용
       // 일단 알림
       alert('업로드성공..');
+      navigate(`/paper/${id}`);
     } catch (err) {
       console.error(err);
     }
