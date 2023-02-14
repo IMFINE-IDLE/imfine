@@ -36,7 +36,7 @@ public interface UserService {
 
     void modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto);
 
-    void changePassword(ChangePasswordRequestDto requestDto);
+    void changePassword(FindPasswordRequestDto requestDto);
 
     FindIdResponseDto findId(String email);
 

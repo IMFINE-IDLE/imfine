@@ -13,7 +13,7 @@ import lombok.Setter;
 @Builder
 public class ChangePasswordRequestDto {
 
-    private String uid;
     private String password;
+    private String newPassword;
 
 }

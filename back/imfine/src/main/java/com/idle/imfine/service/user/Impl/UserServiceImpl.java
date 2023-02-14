@@ -311,7 +311,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(ChangePasswordRequestDto requestDto) {
+    public void changePassword(FindPasswordRequestDto requestDto) {
         User user = common.getUserByUid(requestDto.getUid());
         LOGGER.info("[changePassword] 비밀번호 변경 시작");
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
@@ -333,16 +333,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public void checkIdAndEmail(String uid, String email) {
         LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 시작");
-        userRepository.findByUidAndEmail(uid, email)
-                .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
+        if (!userRepository.existsByUidAndEmail(uid, email)) {
+            LOGGER.info("[checkIdAndEmail] 회원 uid & email 불일치");
+            throw new ErrorException(UserErrorCode.USER_NOT_FOUND);
+        }
         LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 성공");
     }
 
     @Override
     public void changePassword(String uid, ChangePasswordRequestDto requestDto) {
+        LOGGER.info("[changePassword] 회원 정보 요청");
         User user = common.getUserByUid(uid);
+
+        LOGGER.info("[changePassword] 비밀번호 비교 수행");
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            LOGGER.info("[changePassword] 비밀번호 불일치");
+            throw new ErrorException(UserErrorCode.USER_WRONG_PASSWORD);
+        }
+        LOGGER.info("[changePassword] 비밀번호 일치");
+
+
         LOGGER.info("[changePassword] 비밀번호 변경 시작");
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
         userRepository.save(user);
         LOGGER.info("[changePassword] 비밀번호 변경 완료");
     }
