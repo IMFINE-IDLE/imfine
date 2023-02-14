@@ -28,6 +28,7 @@ const api = {
     setInitialProfile: () => URL + USERS + '/profile',
     findUserId: (email) => URL + USERS + `/find-id/${email}`,
     findUserPw: (uid, email) => URL + USERS + `/find-password/${uid}/${email}`,
+    changeUserPw: () => URL + USERS + '/find-password/',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },

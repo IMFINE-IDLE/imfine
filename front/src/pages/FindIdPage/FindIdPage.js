@@ -34,7 +34,7 @@ function FindIdPage() {
   };
 
   return (
-    <BoxGrad radius={'0 0 0 0'}>
+    <BoxGrad radius={'0 0 0 0'} height={'100vh'}>
       <NavBarBasic Text={'아이디 찾기'} Back NoRightItem />
       {!userId ? (
         <form style={{ width: '80%', margin: '0 auto' }}>
