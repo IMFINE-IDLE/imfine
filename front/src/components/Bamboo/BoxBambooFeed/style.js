@@ -3,6 +3,8 @@ import { BoxShad } from '../../common/BoxShad/BoxShad';
 
 const BoxBambooOuter = styled.div`
   padding: ${(props) => props.padding || '0px'};
+  margin: 0px;
+  width: 100%;
 `;
 
 const BoxShadBamboo = styled(BoxShad)`
