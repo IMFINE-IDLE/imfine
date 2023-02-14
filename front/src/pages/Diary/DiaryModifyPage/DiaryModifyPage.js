@@ -68,7 +68,15 @@ const DiaryModifyPage = () => {
   };
 
   // 일기장 삭제 요청
-  const fetchDeleteDiary = () => {};
+  const fetchDeleteDiary = async () => {
+    try {
+      await axios.delete(api.diary.getDiaryInfo(diaryId));
+
+      navigate('/diary', { state: { filter: false } });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // 증상 기록 삭제 요청
   const fetchDeleteSymptomRecord = async () => {
@@ -86,7 +94,6 @@ const DiaryModifyPage = () => {
 
   // 입력값을 diaryInfo state에 저장
   const handleDiaryInfoChange = (e) => {
-    console.log(e.target.name);
     setDiaryInfo({
       ...diaryInfo,
       [e.target.name]: e.target.value,
@@ -139,9 +146,6 @@ const DiaryModifyPage = () => {
               canModify={true}
               deleteAllRecord={true}
               handleDeleteAllRecord={handleDeleteAllRecord}
-              // setModalOpen={setSymptomDeleteModalOpen}
-              // setSymptomToDelete={setSymptomToDelete}
-              // onClick={() => setSymptomDeleteModalOpen(true)}
             />
             <FlexDiv justify="end">
               <span
