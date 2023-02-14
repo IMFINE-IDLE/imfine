@@ -517,7 +517,7 @@ public class DiaryServiceImpl implements DiaryService {
         if (relation > 1 && !other.isOpen()) {
             throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
         }
-        List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(user);
+        List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(other);
 
         LOGGER.info("[DiaryServiceImpl.getDiaryMyWrite] 종료");
         return getResponseDiaryListDtos(relation, diaries);
