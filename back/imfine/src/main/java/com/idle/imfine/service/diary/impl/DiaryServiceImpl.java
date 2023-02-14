@@ -343,6 +343,7 @@ public class DiaryServiceImpl implements DiaryService {
                         .diaryId(diary.getId())
                         .title(diary.getTitle())
                         .medicalName(diary.getMedicalCode().getName())
+                        .uid(diary.getWriter().getUid())
                         .name(diary.getWriter().getName())
                         .image(diary.getImage())
                         .subscribeCount(diary.getSubscribeCount())
