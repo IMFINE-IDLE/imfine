@@ -84,7 +84,7 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional
-    public void save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException {
+    public long save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException {
         User user = common.getUserByUid(uid);
 
         ///// 에러처리 똑바로 하기
@@ -145,6 +145,7 @@ public class PaperServiceImpl implements PaperService {
         }
         diary.setPaperCount(diary.getPaperCount() + 1);
         LOGGER.info("[PaperService.save] 일기 저장 종료");
+        return savedPaper.getId();
     }
 
     @Transactional

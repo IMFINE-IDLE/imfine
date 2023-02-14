@@ -13,7 +13,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 public interface PaperService {
-    void save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException;
+    long save(RequestPaperPostDto requestPaperPostDto, String uid) throws IOException;
     void delete(long paperId, String uid);
 
     List<String> modifyPaper(RequestPaperPutDto requestPaperPutDto, String uid) throws IOException;
