@@ -11,6 +11,7 @@ import {
   NicknameInput,
   SubmitBtn,
   ErrorMsg,
+  MedicalBtn,
   ToggleContainer,
   ToggleText,
   ToggleWrapper,
@@ -23,7 +24,7 @@ const ProfileConfigPage = () => {
    * Hooks
    */
   const { uid } = useParams();
-  const { name, open } = useLocation().state;
+  const { name, medicalList, open } = useLocation().state;
 
   // 상세내용 보여주기용 state
   const [showChangeName, setShowChangeName] = useState(false);
@@ -32,6 +33,7 @@ const ProfileConfigPage = () => {
 
   // 값 저장할 state
   const [newName, setNewName] = useState(name);
+  const [medicals, setMedicals] = useState(medicalList);
   const [isOpen, setIsOpen] = useState(open);
 
   // 에러메시지
@@ -122,10 +124,30 @@ const ProfileConfigPage = () => {
         )}
 
         <ProfileConfigOptionBtn
-          onClick={() => navigate(`/profile/${uid}/change-symptom`)}
+          onClick={() => setShowPickMedicals((prev) => !prev)}
         >
           <span>관심 질병/수술 설정하기</span>
         </ProfileConfigOptionBtn>
+
+        {showPickMedicals && (
+          <>
+            <TitleText>내 관심 질병/수술</TitleText>
+            <FlexDiv height="auto" justify="start" padding="1em">
+              {medicals?.map(({ id, name }) => (
+                <MedicalBtn key={id} color="gray">
+                  {name}
+                </MedicalBtn>
+              ))}
+              <MedicalBtn
+                onClick={() => navigate(`/profile/${uid}/change-symptom`)}
+                color="gray700"
+              >
+                <img src="/assets/icons/edit.svg" />
+              </MedicalBtn>
+            </FlexDiv>
+          </>
+        )}
+
         <ProfileConfigOptionBtn
           style={{
             display: 'flex',

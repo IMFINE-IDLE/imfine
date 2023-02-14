@@ -60,6 +60,7 @@ function ProfilePage() {
         condition={userInfo.condition}
         name={userInfo.name}
         open={userInfo.open}
+        medicalList={userInfo.medicalList}
         followingCount={userInfo.followingCount}
         followerCount={userInfo.followerCount}
         relation={userInfo.relation}

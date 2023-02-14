@@ -20,6 +20,7 @@ const ProfileInfo = ({
   condition,
   name,
   open,
+  medicalList,
   followingCount,
   followerCount,
   relation,
@@ -114,7 +115,7 @@ const ProfileInfo = ({
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate(`/profile/${uid}/config`, {
-                            state: { name, open },
+                            state: { name, medicalList, open },
                           });
                         }}
                       >

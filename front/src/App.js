@@ -23,8 +23,7 @@ import NotificationPage from './pages/NotificationPage/NotificationPage';
 import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
 import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
-import ChangeName from './pages/Profile/ChangeName/ChangeName';
-import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
+import ProfileMedicals from './pages/Profile/ProfileMedicals/ProfileMedicals';
 import ReportPage from './pages/Report/ReportPage/ReportPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
 import SignUpSettingPage from './pages/SignUpSettingPage/SignUpSettingPage';
@@ -315,18 +314,10 @@ function App() {
           }
         />
         <Route
-          path="change-name"
+          path="medicals"
           element={
             <PrivateRoute>
-              <ChangeName />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="change-symptom"
-          element={
-            <PrivateRoute>
-              <ChangeSymptom />
+              <ProfileMedicals />
             </PrivateRoute>
           }
         />
