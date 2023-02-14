@@ -113,7 +113,9 @@ const ProfileInfo = ({
                       <ProfileInfoModifyBtn
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/profile/${uid}/config`);
+                          navigate(`/profile/${uid}/config`, {
+                            state: { name, open },
+                          });
                         }}
                       >
                         프로필 수정하기
