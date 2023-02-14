@@ -162,10 +162,11 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
               margin="1em 0.5em"
               onClick={() => {
                 const infoToPaperCreate = {
-                  year: '2023',
-                  month: '01',
-                  day: '01',
+                  year: moment(date).format('YYYY'),
+                  month: moment(date).format('MM'),
+                  day: moment(date).format('DD'),
                 };
+                // 해당 날짜 일기 작성하기
                 navigate('/paper/create', {
                   state: { ...infoToPaperCreate, diaryId },
                 });
