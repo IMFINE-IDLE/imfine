@@ -28,9 +28,7 @@ public class MedicalDepartmentCode {
     private int id;
 
     @Lob
-    @Column(columnDefinition = "mediumblob")
-    private byte[] myMediumBlobField;
-    private String name;
+    @Column(columnDefinition = "mediumtext")
     private String image;
-
+    private String name;
 }

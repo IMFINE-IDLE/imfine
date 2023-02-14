@@ -30,7 +30,7 @@ public class PaperHasSymptom {
     private Paper paper;
 
     @Column(nullable = false)
-    private Integer symptomId;
+    private int symptomId;
 
     @Column(nullable = false)
     private int score;
