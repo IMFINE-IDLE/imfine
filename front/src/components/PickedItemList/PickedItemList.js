@@ -38,66 +38,74 @@ const PickedItemList = ({
   paddingPicked,
 }) => {
   return (
-    <FlexDiv justify="start" padding={paddingPicked || '0.25em 0'} height="2em">
-      <PickedTitle>{title}</PickedTitle>
-      <PickedDivision> | &nbsp; </PickedDivision>
-      {type === 'medical' ? (
-        <PickedContentWrapper width="75%" justify="start">
-          {!medicals || medicals.length === 0 ? (
-            <></>
-          ) : (
-            medicals.map(({ id, name }) => (
-              <PickedIconBtn
-                color={color}
-                pointer={canModify ? true : false}
-                onClick={() => ToggleSymptom('medical', id, name)}
-                key={id}
-              >
-                {name}
-                {canModify && (
-                  <img
-                    src="/assets/icons/delete.svg"
-                    alt="delete"
-                    style={{ marginLeft: '0.3em' }}
-                  />
-                )}
-              </PickedIconBtn>
-            ))
-          )}
-        </PickedContentWrapper>
-      ) : type === 'symptom' ? (
-        <PickedContentWrapper width="75%" justify="start">
-          {!symptoms || symptoms.length === 0 ? (
-            <></>
-          ) : (
-            symptoms.map(({ id, name }) => (
-              <PickedIconBtn
-                color={color}
-                pointer={canModify ? true : false}
-                onClick={() => {
-                  if (deleteAllRecord) handleDeleteAllRecord(id, name);
-                  else ToggleSymptom('symptom', id, name);
-                }}
-                key={id}
-              >
-                {name}
-                {canModify && (
-                  <img
-                    src="/assets/icons/delete.svg"
-                    alt="delete"
-                    style={{ marginLeft: '0.3em' }}
-                  />
-                )}
-              </PickedIconBtn>
-            ))
-          )}
-        </PickedContentWrapper>
-      ) : (
-        <PickedText onClick={onClickUserName} textPointer={textPointer}>
-          {text}
-        </PickedText>
-      )}
-    </FlexDiv>
+    <>
+      <FlexDiv
+        justify="start"
+        padding={paddingPicked || '0.25em 0'}
+        height="2em"
+      >
+        <PickedTitle>{title}</PickedTitle>
+        <PickedDivision> | &nbsp; </PickedDivision>
+        {type === 'medical' ? (
+          <PickedContentWrapper width="75%" justify="start">
+            {!medicals || medicals.length === 0 ? (
+              <></>
+            ) : (
+              medicals.map(({ id, name }) => (
+                <PickedIconBtn
+                  color={color}
+                  pointer={canModify ? true : false}
+                  onClick={() => ToggleSymptom('medical', id, name)}
+                  key={id}
+                >
+                  {name}
+                  {canModify && (
+                    <img
+                      src="/assets/icons/delete.svg"
+                      alt="delete"
+                      style={{ marginLeft: '0.3em' }}
+                    />
+                  )}
+                </PickedIconBtn>
+              ))
+            )}
+          </PickedContentWrapper>
+        ) : type === 'symptom' ? (
+          <PickedContentWrapper width="75%" justify="start">
+            {!symptoms || symptoms.length === 0 ? (
+              <></>
+            ) : (
+              symptoms.map(({ id, name }) => (
+                <PickedIconBtn
+                  color={color}
+                  pointer={canModify ? true : false}
+                  onClick={(e) => {
+                    if (deleteAllRecord) {
+                      e.preventDefault();
+                      handleDeleteAllRecord(id, name);
+                    } else ToggleSymptom('symptom', id, name);
+                  }}
+                  key={id}
+                >
+                  {name}
+                  {canModify && (
+                    <img
+                      src="/assets/icons/delete.svg"
+                      alt="delete"
+                      style={{ marginLeft: '0.3em' }}
+                    />
+                  )}
+                </PickedIconBtn>
+              ))
+            )}
+          </PickedContentWrapper>
+        ) : (
+          <PickedText onClick={onClickUserName} textPointer={textPointer}>
+            {text}
+          </PickedText>
+        )}
+      </FlexDiv>
+    </>
   );
 };
 

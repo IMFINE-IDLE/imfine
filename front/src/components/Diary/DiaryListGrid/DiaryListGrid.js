@@ -15,6 +15,7 @@ const DiaryListGrid = ({ diaryList }) => {
           paperCount,
           subscribeCount,
           title,
+          uid,
         }) => (
           <DiaryItem
             key={diaryId}
@@ -27,6 +28,7 @@ const DiaryListGrid = ({ diaryList }) => {
             paperCount={paperCount}
             subscribeCount={subscribeCount}
             title={title}
+            uid={uid}
           />
         )
       )}

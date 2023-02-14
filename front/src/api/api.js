@@ -86,14 +86,16 @@ const api = {
   diary: {
     postDiary: () => URL + DIARY,
     getDiaryList: () => URL + DIARY + '/list',
-    getDiaryInfo: (params) => URL + DIARY + `/${params}`,
+    getDiaryInfo: (diaryId) => URL + DIARY + `/${diaryId}`,
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
-    deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
+    deleteDiarySubscribe: (diaryId) => URL + DIARY + `/${diaryId}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
     getDiaryPaperItem: (params) =>
       URL + DIARY + `/${params.diaryId}/paper/${params.date}`,
-    getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
-    getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
+    getUserDiaryList: (uid) => URL + DIARY + `/my-write/${uid}`,
+    getUserSubscribeDiaryList: (uid) => URL + DIARY + `/subscribe/${uid}`,
+    postNewDiarySymptom: () => URL + DIARY + '/symptom',
+    deleteDiarySymptom: (id) => URL + DIARY + `/symptom/${id}`,
   },
   symptom: {
     getSymptomList: () => URL + SYMPTOM + '/list',

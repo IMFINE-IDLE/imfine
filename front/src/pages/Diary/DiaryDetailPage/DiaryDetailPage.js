@@ -70,25 +70,25 @@ const DiaryDetailPage = () => {
   if (!diaryInfo) return null;
 
   // 일기장 수정 페이지로 넘길 데이터
-  // const infoToModifyPage = {
-  //   title: diaryInfo.title,
-  //   description: diaryInfo.description,
-  //   medicals: diaryInfo.medicals,
-  //   diaryHasSymptoms: diaryInfo.diaryHasSymptoms,
-  //   open: diaryInfo.open,
-  // };
-
-  // 테스트용
   const infoToModifyPage = {
-    title: 'diaryInfotitle',
-    description: 'diaryInfodescription',
-    medicals: [{ id: 1, name: '질병명' }],
-    diaryHasSymptoms: [
-      { id: 1, name: '증상1' },
-      { id: 2, name: '증상2' },
-    ],
-    open: true,
+    title: diaryInfo?.title,
+    description: diaryInfo?.description,
+    medicals: diaryInfo?.medicals,
+    diaryHasSymptoms: diaryInfo?.diaryHasSymptoms,
+    open: diaryInfo?.open,
   };
+
+  // 테스트용 더미데이터
+  // const infoToModifyPage = {
+  //   title: 'diaryInfotitle',
+  //   description: 'diaryInfodescription',
+  //   medicals: [{ id: 1, name: '질병명' }],
+  //   diaryHasSymptoms: [
+  //     { id: 1, name: '증상1' },
+  //     { id: 2, name: '증상2' },
+  //   ],
+  //   open: true,
+  // };
 
   return (
     <>
@@ -102,10 +102,11 @@ const DiaryDetailPage = () => {
                 <img
                   src="/assets/icons/edit.svg"
                   alt="edit"
-                  style={{ padding: '0.8125em 0' }}
-                  onClick={
-                    (() => navigate(`/diary/${diaryId}/modify`),
-                    { state: infoToModifyPage })
+                  style={{ padding: '0.8125em 0', cursor: 'pointer' }}
+                  onClick={() =>
+                    navigate(`/diary/${diaryId}/modify`, {
+                      state: infoToModifyPage,
+                    })
                   }
                 />
               ) : (
