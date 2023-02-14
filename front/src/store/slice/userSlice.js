@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import moment from 'moment';
 import { Navigate } from 'react-router';
 import api from '../../api/api';
 
@@ -39,9 +40,17 @@ export const logIn = createAsyncThunk(
       const accessToken = res.data.data.accessToken;
       localStorage.setItem('accessToken', accessToken);
       axios.defaults.headers.common['Authorization'] = accessToken;
+
+      const condition = await axios.get(
+        api.user.getCloverCode({
+          uid: userData.uid,
+          date: moment(new Date()).format('YYYY-MM-DD'),
+        })
+      );
       const saveData = {
         uid: userData.uid,
         accessToken,
+        cloverCode: String(condition.data.condition),
       };
 
       return saveData;
@@ -120,6 +129,7 @@ const userSlice = createSlice({
         state.isLogin = true;
         state.accessToken = action.payload.accessToken;
         state.uid = action.payload.uid;
+        state.cloverCode = action.payload.cloverCode;
       })
       .addCase(logIn.rejected, (state, action) => {
         console.log(action.payload.response.data);
@@ -128,7 +138,7 @@ const userSlice = createSlice({
         state.isLogin = false;
         state.accessToken = null;
         state.uid = null;
-        state.cloverCode = '-1';
+        // state.cloverCode = '-1';
       })
       .addCase(logOut.rejected, (state, action) => {
         console.log(action.payload.response.data);

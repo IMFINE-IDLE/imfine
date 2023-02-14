@@ -25,7 +25,7 @@ const ProfileInfo = ({
   fetchUserInfo,
 }) => {
   // 그날 해당 유저의 컨디션
-  const { cloverCode } = useSelector((state) => state.userInfo);
+  const { cloverCode } = useSelector((state) => state.user);
   // 팔로우 여부 체크용 state
   const [followStatus, setFollowStatus] = useState(relation);
   const navigate = useNavigate();

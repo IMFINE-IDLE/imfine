@@ -33,6 +33,8 @@ const api = {
     changeUserPwWithOutLogin: () => URL + USERS + '/find-password/',
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
+    getCloverCode: (params) =>
+      URL + USERS + `/${params.uid}/condition/${params.date}`,
   },
   paper: {
     paperFeed: (page) => URL + PAPER + `/list?page=${page}&tab=date`,
