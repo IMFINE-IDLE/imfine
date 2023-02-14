@@ -25,5 +25,6 @@ public class ResponseDiaryDetailDto {
     private String beginDate;
     private String endedDate;
     private boolean isSubscribe;
+    private boolean isOpen;
     List<ResponseSymptomDto> diaryHasSymptoms;
 }

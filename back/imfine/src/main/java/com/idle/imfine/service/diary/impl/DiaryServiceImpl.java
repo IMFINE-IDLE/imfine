@@ -145,6 +145,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .description(foundDiary.getDescription())
                 .name(foundDiary.getWriter().getName())
                 .medicals(medicals)
+                .isOpen(foundDiary.isOpen())
                 .beginDate(
                         foundDiary.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .endedDate(foundDiary.getEndedAt() != null ? foundDiary.getEndedAt()

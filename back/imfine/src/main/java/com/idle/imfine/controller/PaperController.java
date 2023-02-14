@@ -9,6 +9,8 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponseModifyPaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
+import com.idle.imfine.errors.code.ImageErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.notification.NotificationService;
 import com.idle.imfine.service.paper.PaperService;
@@ -76,8 +78,7 @@ public class PaperController {
             List<String> removeImages = paperService.modifyPaper(requestPaperPutDto, uid);
             fileStore.deleteImages(removeImages);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("이미지 삭제과정에서 에러가 발생했습니다.");
+            throw new ErrorException(ImageErrorCode.IMAGE_SAVE_CONFLICT);
         }
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }

@@ -12,6 +12,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class ResponseSymptomRecordDto {
-    protected Long symptomId;
-    protected int score;
+
+    private int id;
+    private Long symptomId;
+    private int score;
 }

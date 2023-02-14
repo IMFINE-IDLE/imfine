@@ -16,6 +16,7 @@ import com.idle.imfine.data.dto.paper.response.ResponsePaperDtoOnlyMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperSymptomRecordDtoOnlyMainPage;
 import com.idle.imfine.data.dto.symptom.response.ResponsePaperHasSymptomDto;
+import com.idle.imfine.data.dto.symptom.response.ResponseSymptomRecordDto;
 import com.idle.imfine.data.entity.Condition;
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Heart;
@@ -185,20 +186,33 @@ public class PaperServiceImpl implements PaperService {
         LOGGER.info("[PaperService.modifyPaper] 감정 분석 >> 비동기 처리");
         sentimentAnalysis.analyzeText(paper);
 
-        List<Long> symptomIds = new ArrayList<>();
-        Map<Long, Integer> symptomIdByScore = new HashMap<>();
-        requestPaperPutDto.getSymptomList().forEach(
-                responseSymptomRecordDto -> {
-                    symptomIds.add(responseSymptomRecordDto.getSymptomId());
-                    symptomIdByScore.put(responseSymptomRecordDto.getSymptomId(),
-                            responseSymptomRecordDto.getScore());
-                }
-        );
 
-        List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findByIdIn(symptomIds);
-        for (PaperHasSymptom phs : symptoms) {
-            phs.setScore(symptomIdByScore.get(phs.getId()));
+        List<ResponseSymptomRecordDto> putSymptoms = requestPaperPutDto.getSymptomList();
+
+        if (putSymptoms != null) {
+
+            Map<Long, Integer> paperSymptomScoreByIds = new HashMap<>();
+            List<Long> paperSymptomIds = new ArrayList<>();
+            for (ResponseSymptomRecordDto putSymptom : putSymptoms) {
+                if (putSymptom.getSymptomId() == null) {
+                    PaperHasSymptom newPhs = PaperHasSymptom.builder()
+                            .symptomId(putSymptom.getId())
+                            .score(putSymptom.getScore())
+                            .paper(paper)
+                            .build();
+                    paperHasSymptomRepository.save(newPhs);
+                }
+                paperSymptomScoreByIds.put(putSymptom.getSymptomId(), putSymptom.getScore());
+                paperSymptomIds.add(putSymptom.getSymptomId());
+            }
+
+            List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findByIdIn(paperSymptomIds);
+            for (PaperHasSymptom phs : symptoms) {
+                phs.setScore(paperSymptomScoreByIds.get(phs.getId()));
+            }
         }
+
+
         LOGGER.info("[PaperService.modifyPaper] 이미지 삭제 요청");
         List<Image> removeImage = imageRepository.findByIdIn(requestPaperPutDto.getRemoveImages());
         imageRepository.deleteByIdInJPQL(requestPaperPutDto.getRemoveImages());
@@ -497,9 +511,9 @@ public class PaperServiceImpl implements PaperService {
         List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findByPaper(paper);
         List<Symptom> symptomByIdList = diaryHasSymptomRepository.findByDiaryToMap(paper.getDiary());
 
-        Map<Integer, String> symptomById = new HashMap<>();
+        Map<Integer, Symptom> symptomById = new HashMap<>();
         symptomByIdList.forEach(
-                symptom -> symptomById.put(symptom.getId(), symptom.getName())
+                symptom -> symptomById.put(symptom.getId(), symptom)
         );
 
         LOGGER.info("[PaperService.getModifyPaper] 이미지 정보 가져옴");
@@ -513,8 +527,9 @@ public class PaperServiceImpl implements PaperService {
         List<ResponsePaperHasSymptomDto> responsSymptoms = symptoms.stream().map(
                 paperHasSymptom ->
                      ResponsePaperHasSymptomDto.builder()
+                            .id(symptomById.get(paperHasSymptom.getSymptomId()).getId())
                             .symptomId(paperHasSymptom.getId())
-                            .symptomName(symptomById.get(paperHasSymptom.getSymptomId()))
+                            .symptomName(symptomById.get(paperHasSymptom.getSymptomId()).getName())
                             .score(paperHasSymptom.getScore())
                             .build()
         ).collect(Collectors.toList());

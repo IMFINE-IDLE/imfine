@@ -14,6 +14,9 @@ import org.springframework.data.repository.query.Param;
 public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom, Long> {
 
     List<PaperHasSymptom> findByPaper(Paper paper);
+
+    List<PaperHasSymptom> findByIdIn(List<Long> symptomIds);
+
     @Query("select distinct phs from  PaperHasSymptom phs where phs.paper.diary=:diary and phs.paper.date between :startDate and :endDate")
     List<PaperHasSymptom> findPaperHasSymptomByPaperIn(@Param("diary") Diary diary,
             @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
@@ -27,6 +30,4 @@ public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom
 
     @Query("SELECT p.id, phs FROM Paper p JOIN p.paperHasSymptoms phs where p in :papers")
     List<Object[]> findPaperHasSymptomByPaperInMap(@Param("papers")List<Paper> paperList);
-
-    List<PaperHasSymptom> findByIdIn(List<Long> symptomIds);
 }

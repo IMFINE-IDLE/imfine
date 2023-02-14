@@ -30,8 +30,7 @@ public class SymptomCode {
     private String name;
 
     @Lob
-    @Column(columnDefinition = "mediumblob")
-    private byte[] myMediumBlobField;
+    @Column(columnDefinition = "longtext")
     private String image;
 
     @OneToMany(mappedBy = "symptomCodeId")
