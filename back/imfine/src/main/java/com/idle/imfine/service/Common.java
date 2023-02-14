@@ -80,6 +80,11 @@ public class Common {
         return condition != null ? condition.getCondition() : -1;
     }
 
+    public String getDateUserCondition(LocalDate date, User user) {
+        Condition condition = conditionRepository.findByUserAndDate(user, date).orElse(null);
+        return String.valueOf(condition != null ? condition.getCondition() : -1);
+    }
+
     public int getFollowRelation(User user, User other) {
         if (user.getName().equals(other.getName())) {
             return 0;

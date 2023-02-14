@@ -299,7 +299,7 @@ public class PaperServiceImpl implements PaperService {
         List<Paper> paperList = papers.getContent();
         Set<Long> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
                 paperList);
-        List<Condition> papersCondition = conditionRepository.findPaperConditionByPapersList(paperList);
+//        List<Condition> papersCondition = conditionRepository.findPaperConditionByPapersList(paperList);
 
         Map<Long, List<PaperHasSymptom>> map =
                 paperHasSymptomRepository.findPaperHasSymptomByPaperInMap(
@@ -318,24 +318,27 @@ public class PaperServiceImpl implements PaperService {
         return ResponseMainPage.builder()
                 .hasNext(papers.hasNext())
                 .list(papers.stream().map(
-                        paper -> ResponsePaperDtoOnlyMainPage.builder()
-                                .diaryId(paper.getDiary().getId())
-                                .title(paper.getDiary().getTitle())
-                                .content(paper.getContent())
-                                .paperId(paper.getId())
-                                .uid(paper.getDiary().getWriter().getUid())
-                                .commentCount(paper.getCommentCount())
-                                .likeCount(paper.getLikeCount())
-                                .name(paper.getDiary().getWriter().getName())
-                                .myHeart(myHeartPapers.contains(paper.getId()))
-                                .date(paper.getDate())
-                                .createdAt(common.convertDateAllType(paper.getCreatedAt()))
-                                .open(paper.isOpen())
-                                .condition(findPaperCondition(paper, papersCondition))
-                                .image(imageHasPaper.contains(paper.getId()))
-                                .hasNext(papers.hasNext())
-                                .symptomList(makeSymptomList(map, symptomIdByName, paper))
-                                .build()
+                        paper -> {
+                            Diary diary = paper.getDiary();
+                            return ResponsePaperDtoOnlyMainPage.builder()
+                                    .diaryId(diary.getId())
+                                    .title(diary.getTitle())
+                                    .content(paper.getContent())
+                                    .paperId(paper.getId())
+                                    .uid(diary.getWriter().getUid())
+                                    .commentCount(paper.getCommentCount())
+                                    .likeCount(paper.getLikeCount())
+                                    .name(paper.getDiary().getWriter().getName())
+                                    .myHeart(myHeartPapers.contains(paper.getId()))
+                                    .date(paper.getDate())
+                                    .createdAt(common.convertDateAllType(paper.getCreatedAt()))
+                                    .open(paper.isOpen())
+                                    .condition(common.getDateUserCondition(paper.getDate(), diary.getWriter()))
+                                    .image(imageHasPaper.contains(paper.getId()))
+                                    .hasNext(papers.hasNext())
+                                    .symptomList(makeSymptomList(map, symptomIdByName, paper))
+                                    .build();
+                        }
                 ).collect(Collectors.toList()))
                 .build();
     }
@@ -364,34 +367,38 @@ public class PaperServiceImpl implements PaperService {
         List<Comment> paperComments =
                 commentRepository.findCommentsByFetchWriterAndPaperId(paperId);
 
-        List<Long> commentsUsers =
-                paperComments.stream().map(Comment::getId).collect(Collectors.toList());
+//        List<Long> commentsUsers =
+//                paperComments.stream().map(Comment::getId).collect(Collectors.toList());
 
-        List<Condition> commentConditions =
-                conditionRepository.findConditionsByDateAndUserIn(LocalDate.now(), commentsUsers);
-        Map<Long, Integer> commentConditionsByMap = new HashMap<>();
-
-        for (Condition condition : commentConditions) {
-            commentConditionsByMap.put(condition.getUser().getId(), condition.getCondition());
-        }
+//        List<Condition> commentConditions =
+//                conditionRepository.findConditionsByDateAndUserIn(LocalDate.now(), commentsUsers);
+//        Map<Long, Integer> commentConditionsByMap = new HashMap<>();
+//
+//        for (Condition condition : commentConditions) {
+//            commentConditionsByMap.put(condition.getUser().getId(), condition.getCondition());
+//        }
 
         LOGGER.info("[PaperService.getPaperDetail]일기 상세 댓글 조회");
         List<ResponseCommentDto> comments = paperComments.stream().map(
-                comment -> ResponseCommentDto.builder()
-                        .commentId(comment.getId())
-                        .userId(comment.getWriter().getId())
-                        .uid(comment.getWriter().getUid())
-                        .name(comment.getWriter().getName())
-                        .likeCount(comment.getLikeCount())
-                        .declarationCount(comment.getDeclarationCount())
-                        .content(comment.getContent())
-                        .myHeart(myHeartComment.stream().anyMatch(
-                                heartComment -> heartComment.getId() == comment.getId()
-                        ))
-                        .createdAt(common.convertDateAllType(comment.getCreatedAt()))
-                        .userStatus(comment.getWriter().getId() == user.getId() ? 0 : 1)
-                        .condition(String.valueOf(commentConditionsByMap.getOrDefault(comment.getWriter().getId(), 0)))
-                        .build()
+                comment -> {
+                    User writer = comment.getWriter();
+
+                    return ResponseCommentDto.builder()
+                            .commentId(comment.getId())
+                            .userId(writer.getId())
+                            .uid(writer.getUid())
+                            .name(writer.getName())
+                            .likeCount(comment.getLikeCount())
+                            .declarationCount(comment.getDeclarationCount())
+                            .content(comment.getContent())
+                            .myHeart(myHeartComment.stream().anyMatch(
+                                    heartComment -> heartComment.getId() == comment.getId()
+                            ))
+                            .createdAt(common.convertDateAllType(comment.getCreatedAt()))
+                            .userStatus(comment.getWriter().getId() == user.getId() ? 0 : 1)
+                            .condition(common.getDateUserCondition(comment.getCreatedAt().toLocalDate(), writer))
+                            .build();
+                }
         ).collect(Collectors.toList());
 
         int sentiment = paper.getSentiment();
@@ -414,6 +421,7 @@ public class PaperServiceImpl implements PaperService {
                 .likeCount(paper.getLikeCount())
                 .commentCount(paper.getCommentCount())
                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
+                .date(String.valueOf(paper.getDate()))
                 .condition(String.valueOf(
                         conditionRepository.findByUserAndDate(paperDiary.getWriter(), paper.getDate())
                                 .orElseGet(Condition::new).getCondition()))
@@ -518,7 +526,10 @@ public class PaperServiceImpl implements PaperService {
 
         Map<Integer, PaperHasSymptom> symptomById = new HashMap<>();
         symptoms.forEach(
-                symptom -> symptomById.put(symptom.getSymptomId(), symptom)
+                symptom -> {
+                    LOGGER.info("이번 증상의 번호는? {}", symptom.getSymptomId());
+                    symptomById.put(symptom.getSymptomId(), symptom);
+                }
         );
 
         LOGGER.info("[PaperService.getModifyPaper] 이미지 정보 가져옴");
@@ -529,12 +540,12 @@ public class PaperServiceImpl implements PaperService {
                         .build()
         ).collect(Collectors.toList());
 
-        List<ResponsePaperHasSymptomDto> responsSymptoms = symptomList.stream().map(
+        List<ResponsePaperHasSymptomDto> responseSymptoms = symptomList.stream().map(
                 symptom ->{
                     boolean phs = symptomById.containsKey(symptom.getId());
                     return ResponsePaperHasSymptomDto.builder()
                         .id(symptom.getId())
-                        .symptomId(phs ? symptomById.get(symptom.getId()).getSymptomId() : 0)
+                        .symptomId(phs ? symptomById.get(symptom.getId()).getId() : 0)
                         .symptomName(symptom.getName())
                         .score(phs ? symptomById.get(symptom.getId()).getScore() : 0)
                         .build();
@@ -550,7 +561,7 @@ public class PaperServiceImpl implements PaperService {
                 .content(paper.getContent())
                 .open(paper.isOpen())
                 .date(paper.getDate().toString())
-                .symptoms(responsSymptoms)
+                .symptoms(responseSymptoms)
                 .images(responseImage)
                 .build();
     }
@@ -584,4 +595,5 @@ public class PaperServiceImpl implements PaperService {
             return new ArrayList<>();
         }
     }
+
 }
