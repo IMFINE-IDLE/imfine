@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
-import { BtnSignup, ErrorMsg, InputSignUp, Label } from '../SignUpPage/style';
-import { isEmailValid } from '../../utils/utils';
+import { BtnSignup } from '../SignUpPage/style';
 import axios from 'axios';
 import api from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import { DivFindResult, SpanUserId } from './style';
+import FindEmailInput from '../../components/SignUp/FindEmailInput/FindEmailInput';
 
 function FindIdPage() {
   const navigate = useNavigate();
@@ -34,34 +34,16 @@ function FindIdPage() {
   };
 
   return (
-    <BoxGrad radius={'0 0 0 0'}>
+    <BoxGrad radius={'0 0 0 0'} height={'100vh'}>
       <NavBarBasic Text={'아이디 찾기'} Back NoRightItem />
       {!userId ? (
         <form style={{ width: '80%', margin: '0 auto' }}>
-          <Label htmlFor="email">이메일</Label>
-          <InputSignUp
-            value={inputEmail}
-            id="email"
-            type="text"
-            // required
-            autoFocus
-            // maxLength="12"
-            onChange={(e) => {
-              const currInput = e.target.value;
-              // if (currInput.length < 1) {
-              //   alert('이메일을 입력해주세요.');
-              //   return;
-              // }
-              setInputEmail(currInput);
-              if (!isEmailValid(currInput)) {
-                setErrorMsg('유효한 이메일 형식이 아닙니다.');
-              } else {
-                setErrorMsg('');
-              }
-            }}
-            style={errorMsg ? { border: '1px solid var(--red-color)' } : null}
+          <FindEmailInput
+            inputEmail={inputEmail}
+            setInputEmail={setInputEmail}
+            errorMsg={errorMsg}
+            setErrorMsg={setErrorMsg}
           />
-          {errorMsg && <ErrorMsg>{errorMsg}</ErrorMsg>}
           <BtnSignup
             type="sumbmit"
             onClick={(e) => {

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import api from '../../api/api';
-import { updateCode } from '../../store/slice/userInfoSlice';
 import { Clover } from '../common/Clover/Clover';
 import { CloverStatusContainer, CloverWrap } from './style';
+import { updateCode } from '../../store/slice/userSlice';
 
 const CloverModal = ({
   date,

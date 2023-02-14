@@ -10,7 +10,7 @@ import {
   BoxContent,
   BoxTop,
   BoxUser,
-  SpanUser,
+  DivUser,
 } from './style';
 
 function PaperComment({
@@ -57,8 +57,12 @@ function PaperComment({
               alt=""
               width={'50px'}
               height={'50px'}
+              onClick={() => navigate(`/profile/${uid}`)}
             />
-            <SpanUser>{name}</SpanUser>
+            <DivUser onClick={() => navigate(`/profile/${uid}`)}>
+              <span>프로필 보기</span>
+              {name}
+            </DivUser>
             {Boolean(!userStatus) && (
               <FiTrash2
                 onClick={() => {

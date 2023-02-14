@@ -33,8 +33,7 @@ import FindIdPage from './pages/FindIdPage/FindIdPage';
 import FindPwPage from './pages/FindPwPage/FindPwPage';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { logOut, tokenRefresh } from './store/slice/userSlice';
-import { updateCode } from './store/slice/userInfoSlice';
+import { logOut, tokenRefresh, updateCode } from './store/slice/userSlice';
 import schedule from 'node-schedule';
 
 // 뷰포트 사이즈 결정 필요
@@ -51,28 +50,30 @@ import schedule from 'node-schedule';
 function App() {
   const dispatch = useDispatch();
   // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
-  const accessToken = localStorage.getItem('accessToken');
-  if (accessToken !== 'null') {
-    axios.defaults.headers.common['Authorization'] = accessToken;
-    axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        console.log(error.response);
-        if (error.response.data.error === 'EXPIRED_TOKEN') {
-          dispatch(tokenRefresh());
-        }
-        if (
-          error.response.data.error === 'INVALID_REFRESH_TOKEN' ||
-          error.response.data.error === 'WRONG_TYPE_TOKEN'
-        ) {
-          console.log('들어옴');
-          dispatch(logOut());
-        }
-        return Promise.reject(error);
-      }
-    );
-  }
+
   axios.defaults.withCredentials = true;
+  // 디폴트 헤더 설정
+  axios.interceptors.response.use(
+    (response) => {
+      console.log('response');
+      return response;
+    },
+    (error) => {
+      console.log(error.response);
+      // 토큰 갱신
+      if (error.response.data.error === 'EXPIRED_TOKEN') {
+        dispatch(tokenRefresh());
+      } else if (
+        // 로그아웃
+        error.response.data.error === 'INVALID_REFRESH_TOKEN' ||
+        error.response.data.error === 'WRONG_TYPE_TOKEN'
+      ) {
+        console.log('로그아웃 하러 들어옴');
+        dispatch(logOut());
+      }
+      return Promise.reject(error);
+    }
+  );
 
   // 매일 자정에 클로버 컨디션 코드 -1로 초기화
   const rule = new schedule.RecurrenceRule();

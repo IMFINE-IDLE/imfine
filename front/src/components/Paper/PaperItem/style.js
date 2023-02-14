@@ -57,7 +57,7 @@ const Symptom = styled(BtnSymptom)`
 `;
 
 const BoxContent = styled.div`
-  padding: 0.3em 0 1em;
+  padding: 0.7em 0.3em;
   line-height: 1.5em;
   color: var(--icon-color);
 `;

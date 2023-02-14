@@ -174,13 +174,16 @@ function BambooDetailPage() {
           content={bamboo.content}
           leafCount={bamboo.leafCount}
           likeCount={bamboo.likeCount}
+          likeBamboo={likeBamboo}
+          removeLikeBamboo={removeLikeBamboo}
+          heart={bamboo.heart}
         />
         <TopDiv>
           <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
           <ReplyLabel>댓글 {bamboo.leafCount}개</ReplyLabel>
         </TopDiv>
 
-        <ReplyDiv>등록된 댓글이 없습니다?</ReplyDiv>
+        <ReplyDiv>등록된 댓글이 없습니다</ReplyDiv>
         <BambooReplyBox replyBamboo={replyBamboo} />
       </>
     );
