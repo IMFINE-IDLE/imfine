@@ -40,9 +40,8 @@ const DiaryFeedPage = () => {
         },
       });
 
-      console.log('idaryList', res.data.data);
+      // console.log('idaryList', res.data.data);
       await setDiaryList(res.data.data);
-      // console.log(11111111111, type);
     } catch (err) {
       console.error(err);
     }
@@ -65,8 +64,6 @@ const DiaryFeedPage = () => {
       tabContent: <DiaryListGrid diaryList={diaryList} />,
     },
   ];
-
-  // setFiltered(true);
 
   return (
     <>
