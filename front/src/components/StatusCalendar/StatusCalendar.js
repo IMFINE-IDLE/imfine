@@ -82,7 +82,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
 
   useEffect(() => {
     fetchProfileCalendar(date);
-  }, []);
+  }, [isMine]);
 
   // 날짜를 새로 선택할 때마다
   // 해당 날짜의 컨디션 정보를 저장하고 개별 일기 정보를 불러오기
@@ -90,15 +90,6 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
     fetchGetDiaryPaperItem(diaryId, date);
     setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
   }, [date]);
-
-  // // 날짜 선택했을 때 날짜와 클로버 상태 업데이트
-  // const onClickDay = async (date, event) => {
-  //   setDate(date);
-  //   // const cloverOfDayClicked = monthCondition[moment(date).format('D')] || '-1';
-  //   // console.log('cloverOfDayClicked', cloverOfDayClicked);
-  //   // setCloverOfDayClicked(cloverOfDayClicked);
-  //   // fetchGetDiaryPaperItem(diaryId, date);
-  // };
 
   if (!monthCondition) return null;
 
@@ -171,10 +162,11 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
               margin="1em 0.5em"
               onClick={() => {
                 const infoToPaperCreate = {
-                  year: '2023',
-                  month: '01',
-                  day: '01',
+                  year: moment(date).format('YYYY'),
+                  month: moment(date).format('MM'),
+                  day: moment(date).format('DD'),
                 };
+                // 해당 날짜 일기 작성하기
                 navigate('/paper/create', {
                   state: { ...infoToPaperCreate, diaryId },
                 });

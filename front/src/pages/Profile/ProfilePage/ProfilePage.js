@@ -18,7 +18,7 @@ function ProfilePage() {
 
   useEffect(() => {
     fetchUserInfo();
-  }, []);
+  }, [isMine]);
 
   // userInfo 가져오기
   const fetchUserInfo = async () => {

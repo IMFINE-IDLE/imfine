@@ -40,6 +40,7 @@ export const logIn = createAsyncThunk(
       localStorage.setItem('accessToken', accessToken);
       axios.defaults.headers.common['Authorization'] = accessToken;
 
+      // 로그인시 당일 컨디션 불러오기
       const condition = await axios.get(
         api.user.getCloverCode({
           uid: userData.uid,
@@ -49,7 +50,7 @@ export const logIn = createAsyncThunk(
       const saveData = {
         uid: userData.uid,
         accessToken,
-        cloverCode: String(condition.data.condition),
+        cloverCode: String(condition.data.data.condition),
       };
 
       return saveData;
