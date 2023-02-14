@@ -13,6 +13,7 @@ import { ReactComponent as BookmarkSvg } from './bookmark.svg';
 
 import PickedItemList from '../../../components/PickedItemList/PickedItemList';
 import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
+import { useSelector } from 'react-redux';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
@@ -21,12 +22,15 @@ const DiaryDetailPage = () => {
 
   const navigate = useNavigate();
 
+  // 내 일기장인지 여부 확인
+  const isMine = Boolean(
+    diaryInfo?.uid === useSelector((state) => state.user.uid)
+  );
+
   // 일기장 상세정보 가져오기
   const fetchGetDiaryInfo = async () => {
     try {
-      const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.get(api.diary.getDiaryInfo(diaryId));
 
       console.log(res.data.data);
       setDiaryInfo(res.data.data);
@@ -65,9 +69,6 @@ const DiaryDetailPage = () => {
 
   if (!diaryInfo) return null;
 
-  // 내 일기장인지 여부 확인
-  const isMine = Boolean(diaryInfo.uid === localStorage.getItem('uid'));
-
   // 일기장 수정 페이지로 넘길 데이터
   // const infoToModifyPage = {
   //   title: diaryInfo.title,
@@ -91,7 +92,7 @@ const DiaryDetailPage = () => {
 
   return (
     <>
-      <NavBarBasic Back={true} />
+      <NavBarBasic Back={true} BackgroundColor="main" />
       <DiaryBoxGrad radius="0">
         <DiaryInfoContainer radius="25px">
           <FlexDiv justify="space-between">
