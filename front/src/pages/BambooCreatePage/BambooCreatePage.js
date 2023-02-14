@@ -40,6 +40,7 @@ function BambooCreatePage() {
         Text={'대나무 작성'}
       />
       <BambooHeader
+        bottomValue={'3em'}
         title={'대나무숲 외치기'}
         subTitle={'비밀대나무는'}
         secondSubTitle={'24시간 뒤에 사라져요.'}

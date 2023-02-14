@@ -10,11 +10,22 @@ import {
 
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 
-function BambooHeader({ title, subTitle, secondSubTitle, bottom }) {
+function BambooHeader({
+  bottomValue,
+  title,
+  subTitle,
+  secondSubTitle,
+  bottom,
+}) {
   return (
     <div>
-      <BoxHeader>
-        <FlexDiv direction={'row'} padding={'1em 0 0 0 '}>
+      <BoxHeader bottom={bottomValue}>
+        <FlexDiv
+          justify={'flex-start'}
+          align={'flex-start'}
+          direction={'row'}
+          padding={'1em 0 0 0 '}
+        >
           <FlexDiv
             direction={'column'}
             justify={'flex-start'}
@@ -25,8 +36,9 @@ function BambooHeader({ title, subTitle, secondSubTitle, bottom }) {
               direction={'column'}
               justify={'flex-start'}
               align={'flex-start'}
+              padding={'0.3em 0 0 1.3em'}
             >
-              <Content>{subTitle}</Content>
+              <Content padding={''}>{subTitle}</Content>
               <Content>{secondSubTitle}</Content>
             </FlexDiv>
           </FlexDiv>
