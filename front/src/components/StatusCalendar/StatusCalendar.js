@@ -66,7 +66,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
         console.log('p', paperInfo);
       } else {
         const params = {
-          diaryId,
+          diaryId: diaryId,
           date: moment(date).format('YYYY-MM-DD'),
         };
 

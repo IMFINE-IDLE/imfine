@@ -51,55 +51,57 @@ const DiaryPaperItem = ({ paperInfo }) => {
 
   return (
     <>
-      <FlexDiv margin="1em 0" align="start">
-        <Clover width="4em" height="4em" code={paperInfo.condition} />
-        <BoxLT50R25 height="auto">
-          <FlexDiv justify="start">
-            <DiaryPaperSpan
-              size="0.75em"
-              bold={true}
-              style={{
-                paddingLeft: '1em',
-                marginRight: '1em',
-              }}
-            >
-              {moment(new Date(paperInfo.date))
-                .locale('ko')
-                .format('MM.DD ddd')}
-            </DiaryPaperSpan>
-            <DiaryPaperSymptomWrapper
-              width="60%"
-              justify="start"
-              align="center"
-            >
-              {paperInfo.symptomList?.map((symptom) => (
-                <DiaryPaperSymptomDiv key={symptom.id}>
-                  <DiaryPaperSpan color="gray800">
-                    {symptom.name}
-                  </DiaryPaperSpan>
-                  <DiaryPaperSpan color="gray800">
-                    {symptom.score}
-                  </DiaryPaperSpan>
-                </DiaryPaperSymptomDiv>
-              ))}
-            </DiaryPaperSymptomWrapper>
-          </FlexDiv>
-          <FlexDiv padding="0.5em 0" style={{ lineHeight: '1.3em' }}>
-            <DiaryPaperSpan>{paperInfo.content}</DiaryPaperSpan>
-          </FlexDiv>
-          {/* <img /> */}
-          <FlexDiv justify="end">
-            <LikeComment
-              id={paperInfo.paperId}
-              myHeart={paperInfo.myHeart}
-              likeCount={paperInfo.likeCount}
-              commentCount={paperInfo.commentCount}
-              like={paperInfo.likePaper}
-              likeDelete={paperInfo.likePaperDelete}
-            />
-          </FlexDiv>
-        </BoxLT50R25>
-      </FlexDiv>
+      {paperInfo && (
+        <FlexDiv margin="1em 0" align="start">
+          <Clover width="4em" height="4em" code={paperInfo?.condition} />
+          <BoxLT50R25 height="auto">
+            <FlexDiv justify="start">
+              <DiaryPaperSpan
+                size="0.75em"
+                bold={true}
+                style={{
+                  paddingLeft: '1em',
+                  marginRight: '1em',
+                }}
+              >
+                {moment(new Date(paperInfo?.date))
+                  .locale('ko')
+                  .format('MM.DD ddd')}
+              </DiaryPaperSpan>
+              <DiaryPaperSymptomWrapper
+                width="60%"
+                justify="start"
+                align="center"
+              >
+                {paperInfo?.symptomList.map((symptom) => (
+                  <DiaryPaperSymptomDiv key={symptom.id}>
+                    <DiaryPaperSpan color="gray800">
+                      {symptom.name}
+                    </DiaryPaperSpan>
+                    <DiaryPaperSpan color="gray800">
+                      {symptom.score}
+                    </DiaryPaperSpan>
+                  </DiaryPaperSymptomDiv>
+                ))}
+              </DiaryPaperSymptomWrapper>
+            </FlexDiv>
+            <FlexDiv padding="0.5em 0" style={{ lineHeight: '1.3em' }}>
+              <DiaryPaperSpan>{paperInfo?.content}</DiaryPaperSpan>
+            </FlexDiv>
+            {/* <img /> */}
+            <FlexDiv justify="end">
+              <LikeComment
+                id={paperInfo?.paperId}
+                myHeart={paperInfo?.myHeart}
+                likeCount={paperInfo?.likeCount}
+                commentCount={paperInfo?.commentCount}
+                like={paperInfo?.likePaper}
+                likeDelete={paperInfo?.likePaperDelete}
+              />
+            </FlexDiv>
+          </BoxLT50R25>
+        </FlexDiv>
+      )}
     </>
   );
 };
