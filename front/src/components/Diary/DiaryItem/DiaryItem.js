@@ -32,6 +32,7 @@ const DiaryItem = ({
         height="6em"
         style={{
           backgroundImage: `url("https://i8a809.p.ssafy.io/images/${image}")`,
+          backgroundSize: 'cover',
         }}
       >
         <FlexDiv height="auto" align="start">
@@ -59,8 +60,8 @@ const DiaryItem = ({
           <DiaryItemSpan fontSize="0.4em" color="icon">
             {medicalName}
           </DiaryItemSpan>
-          <DiaryItemSpan fontSize="0.9em" padding="0.25em 0">
-            {title}
+          <DiaryItemSpan fontSize="0.8em" padding="0.25em 0">
+            {title.length <= 8 ? title : title.substr(0, 7) + '...'}
           </DiaryItemSpan>
           <DiaryItemSpan fontSize="0.7em">{name}</DiaryItemSpan>
         </FlexDiv>
