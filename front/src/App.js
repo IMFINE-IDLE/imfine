@@ -33,8 +33,7 @@ import FindIdPage from './pages/FindIdPage/FindIdPage';
 import FindPwPage from './pages/FindPwPage/FindPwPage';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { logOut, tokenRefresh } from './store/slice/userSlice';
-import { updateCode } from './store/slice/userInfoSlice';
+import { logOut, tokenRefresh, updateCode } from './store/slice/userSlice';
 import schedule from 'node-schedule';
 
 // 뷰포트 사이즈 결정 필요

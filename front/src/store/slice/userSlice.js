@@ -98,9 +98,14 @@ const userSlice = createSlice({
   initialState: {
     isLogin: false,
     uid: null,
-    // accessToken: null,
+    cloverCode: '-1',
+    accessToken: null,
   },
-  reducers: {},
+  reducers: {
+    updateCode: (state, action) => {
+      state.cloverCode = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signUp.fulfilled, (state, action) => {
@@ -123,6 +128,7 @@ const userSlice = createSlice({
         state.isLogin = false;
         state.accessToken = null;
         state.uid = null;
+        state.cloverCode = '-1';
       })
       .addCase(logOut.rejected, (state, action) => {
         console.log(action.payload.response.data);
@@ -138,4 +144,5 @@ const userSlice = createSlice({
   },
 });
 
+export const { updateCode } = userSlice.actions;
 export default userSlice;

@@ -1,15 +1,13 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import userSlice from './slice/userSlice';
 import menuSlice from './slice/menuSlice';
-import userInfoSlice from './slice/userInfoSlice';
 import storage from 'redux-persist/lib/storage';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistStore from 'redux-persist/es/persistStore';
 
 const rootReducer = combineReducers({
-  menu: menuSlice.reducer,
   user: userSlice.reducer,
-  userInfo: userInfoSlice.reducer,
+  menu: menuSlice.reducer,
 });
 
 const persistConfig = {
