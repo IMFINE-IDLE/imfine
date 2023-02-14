@@ -13,15 +13,18 @@ import {
   TabCenter,
   MainClover,
 } from './style';
+import { useLocation } from 'react-router-dom';
 
 const TabBar = () => {
   const { uid, cloverCode } = useSelector((state) => state.user);
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
+  const { pathname } = useLocation();
+  const isProfile = pathname.startsWith('/profile');
 
   return (
     <div>
-      {cloversOpen && (
+      {cloversOpen && !isProfile && (
         <CloverModal
           currentClover={currentClover}
           setCurrentClover={setCurrentClover}
