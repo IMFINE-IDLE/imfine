@@ -6,7 +6,15 @@ import { Clover } from '../../common/Clover/Clover';
 import Modal from '../../Modal/Modal';
 import { FollowUserBtn, FollowUserContainer, FollowUserWrapper } from './style';
 
-const FollowUser = ({ cloverCode, name, type, relation, uid, setTrigger }) => {
+const FollowUser = ({
+  cloverCode,
+  name,
+  type,
+  relation,
+  uid,
+  setTrigger,
+  noFollowButton,
+}) => {
   const [followStatus, setFollowStatus] = useState(relation);
   // 팔로워 삭제 확인 모달
   const [modalOpen, setModalOpen] = useState(false);
@@ -62,7 +70,7 @@ const FollowUser = ({ cloverCode, name, type, relation, uid, setTrigger }) => {
             {name}
           </span>
         </FollowUserWrapper>
-        {relation === 0 || (
+        {relation === 0 || !noFollowButton || (
           <FollowUserBtn
             color={relation === 3 ? 'main' : 'gray'}
             onClick={() => fetchChangeFollowStatus()}
