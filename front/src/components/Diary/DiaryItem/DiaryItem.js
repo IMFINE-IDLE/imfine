@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
@@ -13,17 +14,26 @@ const DiaryItem = ({
   subscribeCount,
   open,
   title,
+  uid,
 }) => {
   const navigate = useNavigate();
+  const isMine = Boolean(uid === useSelector((state) => state.user.uid));
 
   return (
     <DiaryItemContainer
       onClick={() => {
-        if (open) navigate(`/diary/${diaryId}`);
+        if (open || isMine) navigate(`/diary/${diaryId}`);
       }}
     >
       {open || <DiaryItemPrivate />}
-      <BoxNoShad radius="20px 20px 0 0" color="gray" height="6em">
+      <BoxNoShad
+        radius="20px 20px 0 0"
+        color="gray"
+        height="6em"
+        style={{
+          backgroundImage: `url("https://i8a809.p.ssafy.io/images/${image}")`,
+        }}
+      >
         <FlexDiv height="auto" align="start">
           <FlexDiv>
             <img src="/assets/icons/book-open.svg" alt="paper count" />
@@ -60,23 +70,3 @@ const DiaryItem = ({
 };
 
 export default DiaryItem;
-
-// <BoxShad
-//   width="2em"
-//   height="2em"
-//   radius="50%"
-//   color="light-pink"
-//   padding="0"
-// >
-//   <DiaryItemSpan
-//     fontSize="0.3em"
-//     style={{
-//       position: 'relative',
-//       top: '50%',
-//       left: '50%',
-//       transform: 'translate3d(-50%, -50%, 0)',
-//     }}
-//   >
-//     {medicalName}
-//   </DiaryItemSpan>
-// </BoxShad>
