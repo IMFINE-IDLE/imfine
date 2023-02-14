@@ -151,13 +151,6 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
-    @PostMapping("/check-password")
-    public ResponseEntity<Result> checkPassword(@LoginUser String loginUid, @RequestBody CheckPasswordRequestDto requestDto) {
-        userService.checkPassword(loginUid, requestDto);
-        return ResponseEntity.ok()
-                .body(responseService.getSuccessResult());
-    }
-
 
     @PutMapping("/change-password")
     public ResponseEntity<Result> changePassword(@LoginUser String loginUid, @RequestBody ChangePasswordRequestDto requestDto) {
@@ -181,7 +174,7 @@ public class UserController {
     }
 
     @PutMapping("/find-password")
-    public ResponseEntity<Result> changePassword(@RequestBody ChangePasswordRequestDto requestDto) {
+    public ResponseEntity<Result> findPassword(@RequestBody FindPasswordRequestDto requestDto) {
         userService.changePassword(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
