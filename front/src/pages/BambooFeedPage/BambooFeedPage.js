@@ -10,6 +10,7 @@ import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 
 function BambooFeedPage() {
   const [responseAll, setResponseAll] = useState({});
+  const [myresponseAll, setMyResponseAll] = useState({});
   const [searchFilter, setSearchFilter] = useState('latest');
   const [mySearchFilter, setMySearchFilter] = useState('write');
   // 필터링 타입 props로 설정 필요...
@@ -32,7 +33,7 @@ function BambooFeedPage() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
       console.log('response확인', res.data);
-      setResponseAll(res.data);
+      setMyResponseAll(res.data);
     } catch (err) {
       console.log('err occured', err);
     }
@@ -43,21 +44,6 @@ function BambooFeedPage() {
     fetchMyBambooFeed();
   }, []);
 
-  const myRes = {
-    success: true,
-    status: 200,
-    message: '요청에 성공하였습니다.',
-    data: [
-      {
-        bambooId: 3,
-        content: 'c',
-      },
-      {
-        bambooId: 4,
-        content: 'ddd',
-      },
-    ],
-  };
   const tabArr = [
     {
       idx: 0,
@@ -67,7 +53,7 @@ function BambooFeedPage() {
     {
       idx: 1,
       tabName: '나의활동',
-      tabContent: <BoxBamboo res={responseAll} />,
+      tabContent: <BoxBamboo res={myresponseAll} />,
     },
   ];
   return (
