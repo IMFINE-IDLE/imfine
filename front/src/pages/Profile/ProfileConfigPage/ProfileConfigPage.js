@@ -165,6 +165,7 @@ const ProfileConfigPage = () => {
                 onChange={() => {
                   setIsOpen((prev) => !prev);
                   fetchUpdateOpenStatus(isOpen);
+                  setShowOpenBtn(true);
                 }}
                 checked={isOpen}
               />
@@ -172,6 +173,21 @@ const ProfileConfigPage = () => {
             </ToggleWrapper>
           </ToggleContainer>
         </ProfileConfigOptionBtn>
+
+        {showOpenBtn && (
+          <SubmitBtn
+            radius="20px"
+            height="3.5em"
+            margin="0.5em 0 1.5em 0"
+            type="submit"
+            onClick={(e) => {
+              e.preventDefault();
+              // fetchChangeName();
+            }}
+          >
+            적용하기
+          </SubmitBtn>
+        )}
       </ProfileConfigContainer>
     </>
   );
