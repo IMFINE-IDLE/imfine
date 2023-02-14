@@ -8,8 +8,9 @@ import { Provider } from 'react-redux';
 import store, { persistor } from './store';
 import axios from 'axios';
 import { PersistGate } from 'redux-persist/integration/react';
+import { resetTokenAndReattemptRequest } from './utils/utils';
 
-// // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
+// axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
 axios.defaults.withCredentials = true;
 axios.interceptors.request.use(
   function (config) {
@@ -20,6 +21,28 @@ axios.interceptors.request.use(
     return config;
   },
   function (error) {
+    return Promise.reject(error);
+  }
+);
+
+axios.defaults.withCredentials = true;
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    console.log(error.response);
+    const { response: errorResponse } = error;
+    const originalRequest = error.config;
+    // 토큰 갱신
+    if (errorResponse.data.error === 'EXPIRED_TOKEN') {
+      // return await refreshToken(error);
+      return await resetTokenAndReattemptRequest(error);
+    } else {
+      // 로그아웃
+      console.log('로그아웃 하러 들어옴');
+      // return await dispatchLogout(error);
+    }
     return Promise.reject(error);
   }
 );

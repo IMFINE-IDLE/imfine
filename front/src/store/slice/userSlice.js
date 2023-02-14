@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import moment from 'moment';
-import { Navigate } from 'react-router';
 import api from '../../api/api';
 
 // localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
@@ -81,34 +80,12 @@ export const logOut = createAsyncThunk(
   }
 );
 
-export const tokenRefresh = createAsyncThunk(
-  'user/tokenRefresh',
-  async ({ rejectWithValue }) => {
-    try {
-      console.log('토큰 갱신');
-      const res = await axios.post(api.user.refresh(), {
-        withCredentials: true,
-      });
-      console.log('새로운 토큰', res.data.data.accessToken);
-      const accessToken = res.data.data.accessToken;
-      localStorage.setItem('accessToken', accessToken);
-      axios.defaults.headers.common['Authorization'] = accessToken;
-      return accessToken;
-    } catch (err) {
-      console.log(err);
-      // logOut();
-      return rejectWithValue(err);
-    }
-  }
-);
-
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLogin: false,
     uid: null,
     cloverCode: '-1',
-    accessToken: null,
   },
   reducers: {
     updateCode: (state, action) => {
@@ -119,7 +96,6 @@ const userSlice = createSlice({
     builder
       .addCase(signUp.fulfilled, (state, action) => {
         state.isLogin = true;
-        state.accessToken = action.payload.accessToken;
         state.uid = action.payload.uid;
       })
       .addCase(signUp.rejected, (state, action) => {
@@ -127,7 +103,6 @@ const userSlice = createSlice({
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.isLogin = true;
-        state.accessToken = action.payload.accessToken;
         state.uid = action.payload.uid;
         state.cloverCode = action.payload.cloverCode;
       })
@@ -136,20 +111,11 @@ const userSlice = createSlice({
       })
       .addCase(logOut.fulfilled, (state, action) => {
         state.isLogin = false;
-        state.accessToken = null;
         state.uid = null;
         // state.cloverCode = '-1';
       })
       .addCase(logOut.rejected, (state, action) => {
         console.log(action.payload.response.data);
-      })
-      .addCase(tokenRefresh.fulfilled, (state, action) => {
-        state.accessToken = action.payload.accessToken;
-      })
-      .addCase(tokenRefresh.rejected, (state, action) => {
-        state.isLogin = false;
-        state.accessToken = null;
-        state.uid = null;
       });
   },
 });

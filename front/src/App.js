@@ -33,7 +33,7 @@ import FindIdPage from './pages/FindIdPage/FindIdPage';
 import FindPwPage from './pages/FindPwPage/FindPwPage';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { logOut, tokenRefresh, updateCode } from './store/slice/userSlice';
+import { logOut, updateCode } from './store/slice/userSlice';
 import schedule from 'node-schedule';
 // import { refreshToken } from './utils/utils';
 import api from './api/api';
@@ -51,24 +51,6 @@ import api from './api/api';
 
 function App() {
   const dispatch = useDispatch();
-  // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
-  const refreshToken = async () => {
-    try {
-      console.log('토큰 갱신');
-      const res = await axios.post(api.user.refresh(), {
-        withCredentials: true,
-      });
-      console.log('새로운 토큰', res.data.data.accessToken);
-      const accessToken = res.data.data.accessToken;
-      localStorage.setItem('accessToken', accessToken);
-      axios.defaults.headers.common['Authorization'] = accessToken;
-      dispatch(tokenRefresh());
-      return accessToken;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const dispatchLogout = async () => {
     console.log('로그아웃 실행');
 
@@ -81,28 +63,6 @@ function App() {
       console.log(err);
     }
   };
-
-  axios.defaults.withCredentials = true;
-  axios.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    async (error) => {
-      console.log(error.response);
-      const { response: errorResponse } = error;
-      const originalRequest = error.config;
-      // 토큰 갱신
-      if (errorResponse.data.error === 'EXPIRED_TOKEN') {
-        // return await refreshToken(error);
-        return await refreshToken(error);
-      } else {
-        // 로그아웃
-        console.log('로그아웃 하러 들어옴');
-        // return await dispatchLogout(error);
-      }
-      return Promise.reject(error);
-    }
-  );
 
   // 매일 자정에 클로버 컨디션 코드 -1로 초기화
   const rule = new schedule.RecurrenceRule();
