@@ -39,12 +39,13 @@ public class PaperController {
     @PostMapping
     public ResponseEntity<Result> postPaper(@ModelAttribute RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
         LOGGER.info("일기 생성 api 도착 userId: {} diaryId: {}", uid, requestPaperPostDto.getDiaryId());
+        long paperId = -1;
         try {
-            paperService.save(requestPaperPostDto, uid);
+            paperId = paperService.save(requestPaperPostDto, uid);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ErrorException(ImageErrorCode.IMAGE_SAVE_CONFLICT);
         }
-        return ResponseEntity.ok().body(responseService.getSuccessResult());
+        return ResponseEntity.ok().body(responseService.getSingleResult(paperId));
     }
 
     @GetMapping("/{paper-id}")
