@@ -35,6 +35,8 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { logOut, tokenRefresh, updateCode } from './store/slice/userSlice';
 import schedule from 'node-schedule';
+// import { refreshToken } from './utils/utils';
+import api from './api/api';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -50,26 +52,53 @@ import schedule from 'node-schedule';
 function App() {
   const dispatch = useDispatch();
   // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
+  const refreshToken = async () => {
+    try {
+      console.log('토큰 갱신');
+      const res = await axios.post(api.user.refresh(), {
+        withCredentials: true,
+      });
+      console.log('새로운 토큰', res.data.data.accessToken);
+      const accessToken = res.data.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
+      dispatch(tokenRefresh());
+      return accessToken;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const dispatchLogout = async () => {
+    console.log('로그아웃 실행');
+
+    try {
+      const resLogout = await axios.post(api.user.logout(), {
+        withCredentials: true,
+      });
+      dispatch(logOut());
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   axios.defaults.withCredentials = true;
-  // 디폴트 헤더 설정
   axios.interceptors.response.use(
     (response) => {
-      console.log('response');
       return response;
     },
-    (error) => {
+    async (error) => {
       console.log(error.response);
+      const { response: errorResponse } = error;
+      const originalRequest = error.config;
       // 토큰 갱신
-      if (error.response.data.error === 'EXPIRED_TOKEN') {
-        dispatch(tokenRefresh());
-      } else if (
+      if (errorResponse.data.error === 'EXPIRED_TOKEN') {
+        // return await refreshToken(error);
+        return await refreshToken(error);
+      } else {
         // 로그아웃
-        error.response.data.error === 'INVALID_REFRESH_TOKEN' ||
-        error.response.data.error === 'WRONG_TYPE_TOKEN'
-      ) {
         console.log('로그아웃 하러 들어옴');
-        dispatch(logOut());
+        // return await dispatchLogout(error);
       }
       return Promise.reject(error);
     }
