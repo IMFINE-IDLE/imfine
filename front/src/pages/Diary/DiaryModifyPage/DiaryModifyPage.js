@@ -138,8 +138,23 @@ const DiaryModifyPage = () => {
             />
             <FlexDiv justify="end">
               <span
-                onClick={() => navigate(`/diary/${diaryId}/modify/symptom`)}
-                style={{ fontColor: 'var(--icon-color)', fontSize: '0.9em' }}
+                onClick={() =>
+                  navigate(`/diary/${diaryId}/modify/symptom`, {
+                    state: {
+                      medicals,
+                      symptoms,
+                      diaryId,
+                      title,
+                      description,
+                      open,
+                    },
+                  })
+                }
+                style={{
+                  fontColor: 'var(--icon-color)',
+                  fontSize: '0.9em',
+                  cursor: 'pointer',
+                }}
               >
                 증상 추가하러 가기{' '}
               </span>

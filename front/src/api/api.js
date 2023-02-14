@@ -90,6 +90,7 @@ const api = {
       URL + DIARY + `/${params.diaryId}/paper/${params.date}`,
     getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
     getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
+    postNewDiarySymptom: () => URL + DIARY + '/symptom',
   },
   symptom: {
     getSymptomList: () => URL + SYMPTOM + '/list',
