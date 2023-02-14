@@ -526,7 +526,10 @@ public class PaperServiceImpl implements PaperService {
 
         Map<Integer, PaperHasSymptom> symptomById = new HashMap<>();
         symptoms.forEach(
-                symptom -> symptomById.put(symptom.getSymptomId(), symptom)
+                symptom -> {
+                    LOGGER.info("이번 증상의 번호는? {}", symptom.getSymptomId());
+                    symptomById.put(symptom.getSymptomId(), symptom);
+                }
         );
 
         LOGGER.info("[PaperService.getModifyPaper] 이미지 정보 가져옴");
@@ -537,12 +540,12 @@ public class PaperServiceImpl implements PaperService {
                         .build()
         ).collect(Collectors.toList());
 
-        List<ResponsePaperHasSymptomDto> responsSymptoms = symptomList.stream().map(
+        List<ResponsePaperHasSymptomDto> responseSymptoms = symptomList.stream().map(
                 symptom ->{
                     boolean phs = symptomById.containsKey(symptom.getId());
                     return ResponsePaperHasSymptomDto.builder()
                         .id(symptom.getId())
-                        .symptomId(phs ? symptomById.get(symptom.getId()).getSymptomId() : 0)
+                        .symptomId(phs ? symptomById.get(symptom.getId()).getId() : 0)
                         .symptomName(symptom.getName())
                         .score(phs ? symptomById.get(symptom.getId()).getScore() : 0)
                         .build();
@@ -558,7 +561,7 @@ public class PaperServiceImpl implements PaperService {
                 .content(paper.getContent())
                 .open(paper.isOpen())
                 .date(paper.getDate().toString())
-                .symptoms(responsSymptoms)
+                .symptoms(responseSymptoms)
                 .images(responseImage)
                 .build();
     }
