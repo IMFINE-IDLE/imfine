@@ -367,8 +367,13 @@ public class PaperServiceImpl implements PaperService {
         List<Long> commentsUsers =
                 paperComments.stream().map(Comment::getId).collect(Collectors.toList());
 
-        Map<Long, Integer> commentConditions =
+        List<Condition> commentConditions =
                 conditionRepository.findConditionsByDateAndUserIn(LocalDate.now(), commentsUsers);
+        Map<Long, Integer> commentConditionsByMap = new HashMap<>();
+
+        for (Condition condition : commentConditions) {
+            commentConditionsByMap.put(condition.getUser().getId(), condition.getCondition());
+        }
 
         LOGGER.info("[PaperService.getPaperDetail]일기 상세 댓글 조회");
         List<ResponseCommentDto> comments = paperComments.stream().map(
@@ -385,7 +390,7 @@ public class PaperServiceImpl implements PaperService {
                         ))
                         .createdAt(common.convertDateAllType(comment.getCreatedAt()))
                         .userStatus(comment.getWriter().getId() == user.getId() ? 0 : 1)
-                        .condition(String.valueOf(commentConditions.getOrDefault(comment.getWriter().getId(), 0)))
+                        .condition(String.valueOf(commentConditionsByMap.getOrDefault(comment.getWriter().getId(), 0)))
                         .build()
         ).collect(Collectors.toList());
 
@@ -509,11 +514,11 @@ public class PaperServiceImpl implements PaperService {
 
         List<Image> images = imageRepository.findByPaperId(paper);
         List<PaperHasSymptom> symptoms = paperHasSymptomRepository.findByPaper(paper);
-        List<Symptom> symptomByIdList = diaryHasSymptomRepository.findByDiaryToMap(paper.getDiary());
+        List<Symptom> symptomList = diaryHasSymptomRepository.findByDiaryToMap(paper.getDiary());
 
-        Map<Integer, Symptom> symptomById = new HashMap<>();
-        symptomByIdList.forEach(
-                symptom -> symptomById.put(symptom.getId(), symptom)
+        Map<Integer, PaperHasSymptom> symptomById = new HashMap<>();
+        symptoms.forEach(
+                symptom -> symptomById.put(symptom.getSymptomId(), symptom)
         );
 
         LOGGER.info("[PaperService.getModifyPaper] 이미지 정보 가져옴");
@@ -524,14 +529,16 @@ public class PaperServiceImpl implements PaperService {
                         .build()
         ).collect(Collectors.toList());
 
-        List<ResponsePaperHasSymptomDto> responsSymptoms = symptoms.stream().map(
-                paperHasSymptom ->
-                     ResponsePaperHasSymptomDto.builder()
-                            .id(symptomById.get(paperHasSymptom.getSymptomId()).getId())
-                            .symptomId(paperHasSymptom.getId())
-                            .symptomName(symptomById.get(paperHasSymptom.getSymptomId()).getName())
-                            .score(paperHasSymptom.getScore())
-                            .build()
+        List<ResponsePaperHasSymptomDto> responsSymptoms = symptomList.stream().map(
+                symptom ->{
+                    boolean phs = symptomById.containsKey(symptom.getId());
+                    return ResponsePaperHasSymptomDto.builder()
+                        .id(symptom.getId())
+                        .symptomId(phs ? symptomById.get(symptom.getId()).getSymptomId() : 0)
+                        .symptomName(symptom.getName())
+                        .score(phs ? symptomById.get(symptom.getId()).getScore() : 0)
+                        .build();
+                }
         ).collect(Collectors.toList());
 
 

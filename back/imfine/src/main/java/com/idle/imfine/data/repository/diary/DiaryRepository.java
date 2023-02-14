@@ -112,12 +112,17 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     void deletePaperHasSymptom(@Param("papers") List<Paper> diaryPapers);
 
     @Modifying
-    @Query("delete from Paper p where p in :diary ")
+    @Query("delete from Paper p where p.diary in :diary ")
     void deletePapers(@Param("diary") Diary diary);
 
     @Modifying
     @Query("delete from Heart h "
-            + "where h.contentsId in :papers "
+            + "where h.contentsId in :paperIds "
             + "and h.contentsCodeId = 2 ")
-    void deletePapersHeart(@Param("papers") List<Paper> diaryPapers);
+    void deletePapersHeart(@Param("paperIds") List<Long> diaryPapers);
+
+
+    @Modifying
+    @Query("delete from DiaryHasSymptom dhs Where dhs.diary = :diary ")
+    void deleteDiaryHasSymptomByDiary(@Param("diary") Diary diary);
 }

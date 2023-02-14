@@ -35,7 +35,7 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             + "JOIN Diary d "
             + "ON p.diary.id=d.id "
             + "WHERE d.writer.id=:userId "
-            + "OR d.writer.id IN (SELECT f.id FROM Follow f WHERE f.followingUser.id=:userId) "
+            + "OR d.writer.id IN (SELECT f.followedUser.id FROM Follow f WHERE f.followingUser.id=:userId) "
             + "OR d.id IN (SELECT s.diary.id FROM Subscribe s WHERE s.userId=:userId) ")
     Slice<Paper> getMainPagePaperByHs(@Param("userId") long userId, Pageable pageable);
 
