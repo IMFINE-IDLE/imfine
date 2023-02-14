@@ -82,14 +82,14 @@ public class UserController {
     }
 
     @PostMapping("/check/email/send")
-    public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequestDto requestDto) {
+    public ResponseEntity<Result> sendEmail(@RequestBody SendEmailRequestDto requestDto) {
         emailService.sendEmail(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PostMapping("/check/email/confirm")
-    public ResponseEntity<?> confirmEmail(@RequestBody ConfirmEmailRequestDto requestDto) {
+    public ResponseEntity<Result> confirmEmail(@RequestBody ConfirmEmailRequestDto requestDto) {
         emailService.confirmEmail(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
