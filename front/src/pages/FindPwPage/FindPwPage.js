@@ -1,26 +1,35 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import api from '../../api/api';
 import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
+import ChangePasswordInput from '../../components/SignUp/ChangePasswordInput/ChangePasswordInput';
 import FindEmailInput from '../../components/SignUp/FindEmailInput/FindEmailInput';
 import { BtnSignup, InputSignUp, Label } from '../SignUpPage/style';
 
-// changeFromSettings : 비번 변경에서 진입시 true
+/**
+ * changeFromSettings : 비번 변경에서 진입시 true
+ */
+
 function FindPwPage({ changeFromSettings }) {
   const navigate = useNavigate();
   const [inputEmail, setInputEmail] = useState('');
-  const [emailErrorMsg, setEmailErrorMsg] = useState('');
   const [inputId, setInputId] = useState('');
   const [doneVerify, setDoneVerify] = useState(false);
+
   const [originalPassword, setOriginalPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
 
-  const findPasswordWithOutLogin = async () => {
+  const [emailErrorMsg, setEmailErrorMsg] = useState('');
+  const [confirmPasswordErrorMsg, setConfirmPasswordErrorMsg] = useState('');
+
+  const checkIdEmailWithOutLogin = async () => {
     try {
-      const res = await axios.get(api.user.findUserPw(inputId, inputEmail));
+      const res = await axios.get(
+        api.user.checkUserIdEmail(inputId, inputEmail)
+      );
       console.log(res);
       setDoneVerify(true);
     } catch (err) {
@@ -29,21 +38,39 @@ function FindPwPage({ changeFromSettings }) {
     }
   };
 
-  const checkOriginalPasswordWithLogin = async () => {};
-
-  const changePasswordWithLogin = async () => {};
+  const changePasswordWithLogin = async () => {
+    if (newPassword !== confirmNewPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+    setConfirmPasswordErrorMsg('');
+    const data = {
+      password: originalPassword,
+      newPassword: newPassword,
+    };
+    try {
+      const res = await axios.put(api.user.changeUserPwWithLogin(), data);
+      console.log(res);
+      navigate(-1);
+    } catch (err) {
+      console.log(err);
+      alert(err.response.data.message);
+    }
+  };
 
   const changePasswordWithOutLogin = async () => {
     if (newPassword !== confirmNewPassword) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
+    setConfirmPasswordErrorMsg('');
+
     const data = {
       uid: inputId,
       password: newPassword,
     };
     try {
-      const res = await axios.put(api.user.findUserPw, data);
+      const res = await axios.put(api.user.changeUserPwWithOutLogin(), data);
       console.log(res);
       alert('비밀번호가 성공적으로 변경되었습니다.');
       navigate('/login');
@@ -53,15 +80,22 @@ function FindPwPage({ changeFromSettings }) {
     }
   };
 
-  // 비번 변경에서 진입 (changeFromSettings true) -> 이메일 및 아이디 확인 불필요, 기존 비번 확인 필요
-  // 비번 찾기에서 진입 (changeFromSettings false) -> 이메일 및 아이디 확인 필요, 기존 비번 확인 불필요
+  useEffect(() => {
+    if (changeFromSettings) {
+      setDoneVerify(true);
+    }
+  }, [changeFromSettings]);
+
+  /**
+   * 비번 변경에서 진입 (changeFromSettings true) -> 이메일 및 아이디 확인 불필요, 기존 비번 확인 필요
+   * 비번 찾기에서 진입 (changeFromSettings false) -> 이메일 및 아이디 확인 필요, 기존 비번 확인 불필요
+   */
+
   return (
     <BoxGrad radius={'0 0 0 0'} height={'100vh'}>
       <NavBarBasic Text={'비밀번호 찾기'} Back NoRightItem />
-
-      {!doneVerify || !changeFromSettings ? (
+      {!doneVerify ? (
         <form style={{ width: '80%', margin: '0 auto' }}>
-          {' '}
           <FindEmailInput
             inputEmail={inputEmail}
             setInputEmail={setInputEmail}
@@ -83,7 +117,7 @@ function FindPwPage({ changeFromSettings }) {
             type="sumbmit"
             onClick={(e) => {
               e.preventDefault();
-              findPasswordWithOutLogin();
+              checkIdEmailWithOutLogin();
             }}
           >
             비밀번호 찾기
@@ -100,25 +134,19 @@ function FindPwPage({ changeFromSettings }) {
                   value={originalPassword}
                   id="originalPw"
                   autoComplete="off"
-                  onChange={(e) => setOriginalPassword(e.target.value)}
+                  onChange={(e) => {
+                    setOriginalPassword(e.target.value);
+                  }}
                 />
               </>
             )}
-            <Label htmlFor="newPw">새 비밀번호</Label>
-            <InputSignUp
-              type="password"
-              value={newPassword}
-              id="newPw"
-              autoComplete="off"
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <Label htmlFor="confirmNewPw">새 비밀번호 확인</Label>
-            <InputSignUp
-              type="password"
-              value={confirmNewPassword}
-              id="confirmNewPw"
-              autoComplete="off"
-              onChange={(e) => setConfirmNewPassword(e.target.value)}
+            <ChangePasswordInput
+              newPassword={newPassword}
+              setNewPassword={setNewPassword}
+              confirmNewPassword={confirmNewPassword}
+              setConfirmNewPassword={setConfirmNewPassword}
+              errorMsg={confirmPasswordErrorMsg}
+              setErrorMsg={setConfirmPasswordErrorMsg}
             />
             <BtnSignup
               type="submit"
@@ -131,7 +159,7 @@ function FindPwPage({ changeFromSettings }) {
                 }
               }}
             >
-              회원가입하기
+              비밀번호 변경하기
             </BtnSignup>
           </form>
         </>
