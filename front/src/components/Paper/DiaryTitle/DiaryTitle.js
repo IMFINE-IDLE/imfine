@@ -5,6 +5,8 @@ import { BtnDiary } from './style';
 
 function DiaryTitle({ title, diaryId }) {
   const navigate = useNavigate();
+  const slicedTitle =
+    title?.length > 11 ? title?.substring(0, 11) + '...' : title;
 
   return (
     <BtnDiary
@@ -18,7 +20,7 @@ function DiaryTitle({ title, diaryId }) {
     >
       <FiBook />
       &nbsp;
-      {title}
+      {slicedTitle}
     </BtnDiary>
   );
 }
