@@ -77,7 +77,7 @@ function PaperCreatePage() {
 
   useEffect(() => {
     getDiaries();
-    if (diaryId != '') {
+    if (diaryId !== '') {
       getDiaryInfos();
     }
   }, [diaryId]);
@@ -147,9 +147,7 @@ function PaperCreatePage() {
       console.log('upload success', res);
 
       const id = res.data.data;
-      // 업로드성공하면 일기상세화면으로 넘어가야해용
-      // 일단 알림
-      alert('업로드성공..');
+      alert('일기가 성공적으로 등록되었습니다');
       navigate(`/paper/${id}`);
     } catch (err) {
       console.error(err);
