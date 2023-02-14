@@ -91,6 +91,7 @@ const api = {
     getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
     getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
     postNewDiarySymptom: () => URL + DIARY + '/symptom',
+    deleteDiarySymptom: (id) => URL + DIARY + `/symptom/${id}`,
   },
   symptom: {
     getSymptomList: () => URL + SYMPTOM + '/list',

@@ -71,8 +71,17 @@ const DiaryModifyPage = () => {
   const fetchDeleteDiary = () => {};
 
   // 증상 기록 삭제 요청
-  const fetchDeleteSymptomRecord = () => {
+  const fetchDeleteSymptomRecord = async () => {
     // symptomToDelete 에 저장된 증상을 지운다
+    try {
+      await axios.delete(api.diary.deleteDiarySymptom(symptomToDelete.id));
+      setSymptoms(
+        symptoms.filter((symptom) => symptom.id !== symptomToDelete.id)
+      );
+      setSymptomDeleteModalOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 입력값을 diaryInfo state에 저장
@@ -86,8 +95,8 @@ const DiaryModifyPage = () => {
 
   // 증상 삭제 클릭시 확인 모달 띄우기
   const handleDeleteAllRecord = (id, name) => {
-    setSymptomDeleteModalOpen(true);
     setSymptomToDelete({ id, name });
+    setSymptomDeleteModalOpen(true);
   };
 
   return (
@@ -95,12 +104,7 @@ const DiaryModifyPage = () => {
       <NavBarBasic Back={true} Text="일기장 수정" BackgroundColor={'main'} />
 
       <DiaryBoxGrad radius="0" padding="2em">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            fetchUpdateDiary();
-          }}
-        >
+        <form>
           <DiaryCreateTitleText>
             일기장 제목을 입력해주세요
           </DiaryCreateTitleText>
@@ -135,6 +139,9 @@ const DiaryModifyPage = () => {
               canModify={true}
               deleteAllRecord={true}
               handleDeleteAllRecord={handleDeleteAllRecord}
+              // setModalOpen={setSymptomDeleteModalOpen}
+              // setSymptomToDelete={setSymptomToDelete}
+              // onClick={() => setSymptomDeleteModalOpen(true)}
             />
             <FlexDiv justify="end">
               <span
@@ -188,7 +195,10 @@ const DiaryModifyPage = () => {
               radius="20px"
               height="3.5em"
               margin="4em 0 0 0"
-              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                fetchUpdateDiary();
+              }}
             >
               수정 완료
             </SubmitBtn>
