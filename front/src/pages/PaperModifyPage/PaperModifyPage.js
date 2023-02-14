@@ -47,6 +47,11 @@ function PaperModifyPage() {
   const [symptoms, setSymptoms] = useState([]); // 증상받아오기
   const [scores, setScores] = useState([]); // 증상점수저장하는 State
 
+  // 이미지업로드관련
+  const [original, setOriginal] = useState([]); // 원본이미지저장하기
+  const [deleted, setDeleted] = useState([]); // 지워진 이미지. id값 넣어주어야
+  const [updated, setUpdated] = useState([]); // multipartform으로 넣기
+
   // 날짜 저장하는 state 객체
   const [form, setForm] = useState({
     year: now.getFullYear(),
@@ -91,6 +96,12 @@ function PaperModifyPage() {
           image: item.image,
         }))
       );
+      setOriginal(
+        res.data.data.images.map((item) => ({
+          id: item.id,
+          image: item.image,
+        }))
+      );
       const dates = res.data.data.date.split('-');
       setForm({
         year: dates[0],
@@ -106,6 +117,12 @@ function PaperModifyPage() {
   console.log('print', paperInfo);
   console.log('form', form);
   console.log('files', files);
+  console.log('deleted', deleted);
+  console.log('original', original);
+  console.log('updated', updated);
+  for (let i = 0; i < files.length; i++) {
+    console.log('type', typeof files[i]);
+  }
   console.log('value', value);
   useEffect(() => {
     getDiaries();
@@ -126,16 +143,23 @@ function PaperModifyPage() {
     data.append('paperId', paperId);
     data.append('contents', value);
     data.append('open', isOpen);
-    data.append('date', calendar);
 
-    for (let i = 0; i < files.length; i++) {
-      const blob = await new Blob([files[i]], { type: files[i].type });
-      data.append(`images[${i}]`, blob, files[i].name);
+    // for (let i = 0; i < files.length; i++) {
+    //   const blob = await new Blob([files[i]], { type: files[i].type });
+    //   data.append(`images[${i}]`, blob, files[i].name);
+    // }
+
+    for (let i = 0; i < updated.length; i++) {
+      const blob = await new Blob([updated[i]], { type: updated[i].type });
+      data.append(`putImages[${i}]`, blob, updated[i].name);
     }
 
+    for (let i = 0; i < deleted.length; i++) {
+      data.append(`removeImages[${i}]`, deleted[i]);
+    }
     for (let i = 0; i < symptomScore.length; i++) {
-      data.append(`symptomsList[${i}].symptomId`, symptomScore[i].symptomId);
-      data.append(`symptomsList[${i}].symptomId`, symptomScore[i].score);
+      data.append(`symptomList[${i}].symptomId`, symptomScore[i].symptomId);
+      data.append(`symptomList[${i}].score`, symptomScore[i].score);
     }
 
     // (key: contents) value : 일기장내용
@@ -156,7 +180,7 @@ function PaperModifyPage() {
 
       // 업로드성공하면 일기상세화면으로 넘어가야해용
       // 일단 알림
-      alert('업로드성공..');
+      alert('일기를 성공적으로 수정했습니다');
     } catch (err) {
       console.error(err);
     }
@@ -166,6 +190,7 @@ function PaperModifyPage() {
   const handleSelectImage = (e) => {
     const newFiles = [...e.target.files];
     if (files.length + newFiles.length <= 3) {
+      setUpdated([...updated, ...newFiles]);
       setFiles([...files, ...newFiles]);
     } else {
       alert('이미지는 최대 3개까지만 업로드 가능합니다');
@@ -174,6 +199,13 @@ function PaperModifyPage() {
 
   // 이미지 삭제하기
   const handleRemove = (index) => {
+    if (files[index].image === original[index].image) {
+      setDeleted([...deleted, files[index].id]);
+    }
+    if (updated) {
+      setUpdated(updated.filter((item) => item.name !== files[index].name));
+    }
+
     setFiles(files.filter((_, i) => i !== index));
   };
 
