@@ -27,6 +27,7 @@ const api = {
     refresh: () => URL + USERS + '/refresh',
     setInitialProfile: () => URL + USERS + '/profile',
     findUserId: (email) => URL + USERS + `/find-id/${email}`,
+    findUserPw: (uid, email) => URL + USERS + `/find-password/${uid}/${email}`,
     setCondition: () => URL + USERS + '/condition',
     updateOpenStatus: () => URL + USERS + '/open',
   },
