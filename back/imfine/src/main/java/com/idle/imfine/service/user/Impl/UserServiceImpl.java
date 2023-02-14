@@ -346,8 +346,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public void checkIdAndEmail(String uid, String email) {
         LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 시작");
-        userRepository.findByUidAndEmail(uid, email)
-                .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
+        if (!userRepository.existsByUidAndEmail(uid, email)) {
+            LOGGER.info("[checkIdAndEmail] 회원 uid & email 불일치");
+            throw new ErrorException(UserErrorCode.USER_NOT_FOUND);
+        }
         LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 성공");
     }
 
