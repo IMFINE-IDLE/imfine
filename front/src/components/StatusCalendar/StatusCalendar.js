@@ -91,15 +91,6 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
     setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
   }, [date]);
 
-  // // 날짜 선택했을 때 날짜와 클로버 상태 업데이트
-  // const onClickDay = async (date, event) => {
-  //   setDate(date);
-  //   // const cloverOfDayClicked = monthCondition[moment(date).format('D')] || '-1';
-  //   // console.log('cloverOfDayClicked', cloverOfDayClicked);
-  //   // setCloverOfDayClicked(cloverOfDayClicked);
-  //   // fetchGetDiaryPaperItem(diaryId, date);
-  // };
-
   if (!monthCondition) return null;
 
   return (
