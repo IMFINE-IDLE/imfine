@@ -6,9 +6,11 @@ import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import PickMenuTab from '../../../components/PickMenu/PickMenuTab';
 
 const DiaryAddSymptomPage = () => {
-  const { diaryId, medicals, symptoms, title, description, open } =
+  const { diaryId, medicals, symptoms, title, description, open, from } =
     useLocation().state;
 
+  console.log('medic', medicals);
+  console.log('sympt', symptoms);
   const [pickedMedicals, setPickedMedicals] = useState(medicals);
   const [pickedSymptoms, setPickedSymptoms] = useState(symptoms);
 
@@ -36,7 +38,15 @@ const DiaryAddSymptomPage = () => {
         diaryHasSymptoms: pickedSymptoms,
         open,
       };
-      navigate(`/diary/${diaryId}/modify`, { state: infoToDiaryModify });
+
+      // 이전페이지가 어디었느냐(from)에 따라 navigate 다르게 처리
+      if (from === 'diary') {
+        navigate(`/diary/${diaryId}/modify`, { state: infoToDiaryModify });
+      }
+
+      if (from === 'paper') {
+        navigate(-1);
+      }
     } catch (err) {
       console.error(err);
     }
