@@ -290,15 +290,17 @@ public class DiaryServiceImpl implements DiaryService {
     public void deleteSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto) {
         LOGGER.info("[DiaryServiceImpl.deleteSubscribe]일기장 구독 삭제");
         Diary diary = diaryRepository.getById(requestDiarySubscribeDto.getDiaryId());
-        long userId = userRepository.getByUid(requestDiarySubscribeDto.getUid()).getId();
+        User user = common.getUserByUid(requestDiarySubscribeDto.getUid());
 
-        if (!subscribeRepository.existsByDiaryAndUserId(diary, userId)) {
+        if (!subscribeRepository.existsByDiaryAndUserId(diary, user.getId())) {
             throw new ErrorException(SubscribeErrorCode.SUBSCRIBE_NOT_FOUND);
         }
 
         diary.setSubscribeCount(diary.getSubscribeCount() - 1);
         diaryRepository.save(diary);
-        subscribeRepository.deleteByDiaryAndUserId(diary, userId);
+        LOGGER.info("[DiaryServiceImpl.deleteSubscribe]일기장 구독 >>> ");
+
+        subscribeRepository.deleteSubscribeByDiaryAndUserId(diary, user.getId());
         LOGGER.info("[DiaryServiceImpl.deleteSubscribe]일기장 구독 삭제 종료");
     }
 
@@ -394,19 +396,25 @@ public class DiaryServiceImpl implements DiaryService {
 
         List<Paper> diaryPapers = diaryRepository.findPaperByDiaryFetchPaper(diary);
 
+
+        LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제 {}", diaryPapers);
         if (diaryPapers.size() != 0) {
             List<Comment> comments = diaryRepository.findDiaryComments(diary);
             if (!comments.isEmpty()) {
                 diaryRepository.deleteComments(comments);
                 diaryRepository.deleteCommentsHeart(comments);
             }
+            LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제1");
             diaryRepository.deletePaperHasSymptom(diaryPapers);
-            diaryRepository.deletePapersHeart(diaryPapers);
+            LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제2");
+            diaryRepository.deletePapersHeart(diaryPapers.stream().map(Paper::getId).collect(
+                    Collectors.toList()));
+            LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제3");
             diaryRepository.deletePapers(diary);
         }
 
         LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 하위 엔티티 삭제");
-
+        diaryRepository.deleteDiaryHasSymptomByDiary(diary);
         diaryRepository.delete(diary);
         LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 삭제 종료");
     }

@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 
 @Getter
@@ -27,6 +29,7 @@ public class PaperHasSymptom {
 
     @ManyToOne
     @JoinColumn(name = "paper_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Paper paper;
 
     @Column(nullable = false)
