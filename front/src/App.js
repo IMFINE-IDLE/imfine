@@ -7,6 +7,7 @@ import SettingsPage from './pages/SettingsPage/SettingsPage';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import SearchPage from './pages/SearchPage/SearchPage';
 import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
+import DiaryFilterPage from './pages/Diary/DiaryFilterPage/DiaryFilterPage';
 import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
 import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
 import DiaryCreateConfirmPage from './pages/Diary/DiaryCreateConfirmPage/DiaryCreateConfirmPage';
@@ -173,6 +174,14 @@ function App() {
           element={
             <PrivateRoute>
               <DiaryFeedPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="filter"
+          element={
+            <PrivateRoute>
+              <DiaryFilterPage />
             </PrivateRoute>
           }
         />

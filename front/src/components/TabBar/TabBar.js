@@ -40,7 +40,7 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <Tab>
-          <TabNavLink to="/diary">
+          <TabNavLink to="/diary" state={{ filter: false }}>
             <ActiveBar />
             <DiaryTabSvg stroke="currentColor" />
           </TabNavLink>
