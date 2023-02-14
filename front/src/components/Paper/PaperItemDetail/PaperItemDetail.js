@@ -87,7 +87,11 @@ function PaperItemDetail({ paperId, paper }) {
 
   return (
     <>
-      <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
+      <BoxPaperDetail
+        color="light"
+        radius="0 0 50px 50px"
+        padding="0 1.5em 1.5em"
+      >
         <BoxTop>
           <BoxLeft>
             <img
