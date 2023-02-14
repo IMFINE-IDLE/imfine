@@ -82,6 +82,7 @@ function PaperModifyPage() {
       setPaperInfo(res.data.data);
       setSymptoms(
         res.data.data.symptoms.map((item) => ({
+          id: item.id,
           symptomId: item.symptomId,
           name: item.symptomName,
           score: item.score,
@@ -136,6 +137,7 @@ function PaperModifyPage() {
     const calendar = form.year + '-' + form.month + '-' + form.day;
 
     const symptomScore = symptoms.map((item, index) => ({
+      id: item.id,
       symptomId: item.symptomId,
       score: scores[index],
     }));
@@ -158,8 +160,14 @@ function PaperModifyPage() {
       data.append(`removeImages[${i}]`, deleted[i]);
     }
     for (let i = 0; i < symptomScore.length; i++) {
-      data.append(`symptomList[${i}].symptomId`, symptomScore[i].symptomId);
-      data.append(`symptomList[${i}].score`, symptomScore[i].score);
+      if (symptomScore[i].symptomId !== 0) {
+        data.append(`symptomList[${i}].id`, symptomScore[i].id);
+        data.append(`symptomList[${i}].symptomId`, symptomScore[i].symptomId);
+        data.append(`symptomList[${i}].score`, symptomScore[i].score);
+      } else {
+        data.append(`symptomList[${i}].id`, symptomScore[i].id);
+        data.append(`symptomList[${i}].score`, symptomScore[i].score);
+      }
     }
 
     // (key: contents) value : 일기장내용
@@ -181,6 +189,7 @@ function PaperModifyPage() {
       // 업로드성공하면 일기상세화면으로 넘어가야해용
       // 일단 알림
       alert('일기를 성공적으로 수정했습니다');
+      navigate(`/paper/${paperId}`);
     } catch (err) {
       console.error(err);
     }
