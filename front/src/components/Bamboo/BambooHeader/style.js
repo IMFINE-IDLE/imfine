@@ -6,17 +6,17 @@ const BoxOuter = styled.div`
 `;
 
 const BoxHeader = styled.div`
-  height: 15em;
+  min-height: 150px;
   border-radius: 0px 0px 50px 50px;
   background-color: var(--light-color);
   outline: none;
+  margin-bottom: 6em;
 `;
 
 const TitleHeader = styled.h1`
   color: var(--default-font-color);
   font-weight: 700;
   font-size: 1.5em;
-  padding-top: 2.8em;
   padding-left: 1em;
 `;
 
@@ -41,4 +41,11 @@ const BambooImg = styled.img.attrs({
   float: right;
 `;
 
-export { BoxOuter, BoxHeader, TitleHeader, SubTitleHeader, BambooImg };
+const Content = styled.h1`
+  color: var(--icon-color);
+  padding: 0.5em 0 0.3em 1.5em;
+  text-align: left;
+  width: 100%;
+`;
+
+export { BoxOuter, BoxHeader, TitleHeader, SubTitleHeader, BambooImg, Content };
