@@ -9,6 +9,7 @@ import com.idle.imfine.data.entity.notification.Notification;
 import com.idle.imfine.data.repository.emitter.EmitterRepository;
 import com.idle.imfine.data.repository.notification.NotificationRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
+import com.idle.imfine.errors.exception.ConnectionException;
 import com.idle.imfine.service.Common;
 import com.idle.imfine.service.notification.NotificationService;
 import java.io.IOException;
@@ -18,7 +19,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -149,12 +149,12 @@ public class NotificationServiceImpl implements NotificationService {
         } catch (IOException exception) {
             exception.printStackTrace();
             emitterRepository.deleteById(id);
-            throw new RuntimeException("연결 오류!");
+            throw new ConnectionException("연결 오류!");
         }
     }
 
     public void dtoToSend(ResponseNotificationPost responseDto) {
-        LOGGER.info("알림 보내기 {}", responseDto.toString());
+        LOGGER.info("dtoToSend service");
         Long senderId = responseDto.getSenderId();
         Long receiverId = responseDto.getReceiverId();
         Notification notification = saveNotification(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
@@ -176,7 +176,7 @@ public class NotificationServiceImpl implements NotificationService {
                     sendToClient(emitter, key, "알림이 왔습니다.");
                 }
         );
-        LOGGER.info("sseEmitter {}", sseEmitters.toString());
+        LOGGER.info("sseEmitter {}", sseEmitters);
     }
 
     private Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {

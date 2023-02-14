@@ -3,10 +3,8 @@
 import com.idle.imfine.common.annotation.LoginUser;
 import com.idle.imfine.common.response.ResponseService;
 import com.idle.imfine.common.result.Result;
-import com.idle.imfine.data.dto.declaration.request.RequestDeclarationDto;
 import com.idle.imfine.data.dto.notification.request.RequestNotificationDetailDto;
 import com.idle.imfine.data.dto.notification.response.ResponseNotification;
-import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.service.notification.NotificationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
