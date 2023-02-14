@@ -14,7 +14,7 @@ function BambooBtnFloat() {
               to="/bamboo/create"
               style={{ width: '100%' }}
               color={'light'}
-              margin={'0'}
+              margin={'1em 0'}
               padding={'1em 0.8em'}
               radius={'50px'}
               fontSize={'1em'}
