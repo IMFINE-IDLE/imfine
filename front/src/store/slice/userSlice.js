@@ -56,14 +56,14 @@ export const logOut = createAsyncThunk(
   'user/logOut',
   async (userData, { rejectWithValue }) => {
     console.log('로그아웃 실행');
+    localStorage.setItem('accessToken', null);
 
     try {
       const resLogout = await axios.post(api.user.logout(), {
         withCredentials: true,
       });
       // console.log(resLogout);
-      localStorage.setItem('accessToken', null);
-      <Navigate to="/login" />;
+      // <Navigate to="/login" />;
       return resLogout;
     } catch (err) {
       console.log(err);
@@ -72,21 +72,26 @@ export const logOut = createAsyncThunk(
   }
 );
 
-export const tokenRefresh = createAsyncThunk('user/tokenRefresh', async () => {
-  try {
-    console.log('토큰 갱신');
-    const res = await axios.post(api.user.refresh(), {
-      withCredentials: true,
-    });
-    console.log(res);
-    const accessToken = res.data.data.accessToken;
-    axios.defaults.headers.common['Authorization'] = accessToken;
-    return accessToken;
-  } catch (err) {
-    console.log(err);
-    logOut();
+export const tokenRefresh = createAsyncThunk(
+  'user/tokenRefresh',
+  async ({ rejectWithValue }) => {
+    try {
+      console.log('토큰 갱신');
+      const res = await axios.post(api.user.refresh(), {
+        withCredentials: true,
+      });
+      console.log('새로운 토큰', res.data.data.accessToken);
+      const accessToken = res.data.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
+      return accessToken;
+    } catch (err) {
+      console.log(err);
+      logOut();
+      return rejectWithValue(err);
+    }
   }
-});
+);
 
 const userSlice = createSlice({
   name: 'user',
