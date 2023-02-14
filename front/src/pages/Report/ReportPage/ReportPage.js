@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../../api/api';
 
@@ -32,7 +32,7 @@ function ReportPage() {
   const location = useLocation();
   const type = location.state.type;
   const contentId = location.state.id;
-
+  const navigate = useNavigate();
   console.log('type', type);
   console.log('contentId', contentId);
   const [reportType, setReportType] = useState(1);
@@ -54,6 +54,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -64,6 +65,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -74,6 +76,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -84,6 +87,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -94,6 +98,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
