@@ -35,6 +35,7 @@ public interface UserService {
     void modifyUserOpen(String uid, ModifyUserOepnRequestDto requestDto);
 
     void modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto);
+    void checkPassword(String uid, CheckPasswordRequestDto requestDto);
 
     void changePassword(ChangePasswordRequestDto requestDto);
 

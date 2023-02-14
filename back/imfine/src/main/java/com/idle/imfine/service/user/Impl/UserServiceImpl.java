@@ -311,6 +311,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void checkPassword(String uid, CheckPasswordRequestDto requestDto) {
+        LOGGER.info("[checkPassword] 회원 정보 요청");
+        User user = common.getUserByUid(uid);
+
+        LOGGER.info("[checkPassword] 패스워드 비교 수행");
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            throw new ErrorException(UserErrorCode.USER_WRONG_PASSWORD);
+        }
+
+        LOGGER.info("[checkPassword] 패스워드 일치");
+    }
+
+    @Override
     public void changePassword(ChangePasswordRequestDto requestDto) {
         User user = common.getUserByUid(requestDto.getUid());
         LOGGER.info("[changePassword] 비밀번호 변경 시작");
