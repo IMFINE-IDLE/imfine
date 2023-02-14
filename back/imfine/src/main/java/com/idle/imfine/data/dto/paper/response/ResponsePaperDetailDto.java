@@ -25,6 +25,7 @@ public class ResponsePaperDetailDto {
     private String uid;
     private String createdAt;
     private String condition;
+    private String date;
     private boolean myHeart;
     private List<ResponsePaperSymptomRecordDto> symptomList;
     private List<String> images;

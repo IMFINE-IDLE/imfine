@@ -84,7 +84,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .medicalCode(medicalCode)
                 .title(saveDiary.getTitle())
                 .description(saveDiary.getDescription())
-                .image("background/" + (int) (Math.random() * 10))
+                .image("background/" + (int) (Math.random() * 10) + ".jpg")
                 .active(true)
                 .writer(user)
                 .active(saveDiary.isOpen())
