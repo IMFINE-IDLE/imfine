@@ -82,7 +82,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
 
   useEffect(() => {
     fetchProfileCalendar(date);
-  }, []);
+  }, [isMine]);
 
   // 날짜를 새로 선택할 때마다
   // 해당 날짜의 컨디션 정보를 저장하고 개별 일기 정보를 불러오기

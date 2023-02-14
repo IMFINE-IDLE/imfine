@@ -15,8 +15,7 @@ import {
 } from './style';
 
 const TabBar = () => {
-  const { cloverCode } = useSelector((state) => state.user);
-  const uid = useSelector((state) => state.user.uid);
+  const { uid, cloverCode } = useSelector((state) => state.user);
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
