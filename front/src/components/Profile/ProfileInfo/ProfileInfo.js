@@ -11,6 +11,7 @@ import {
   ProfileInfoWrapper,
   ProfileItemSpan,
   ProfileNickNameWrapper,
+  ProfileInfoModifyBtn,
 } from './style';
 
 const ProfileInfo = ({
@@ -28,6 +29,9 @@ const ProfileInfo = ({
   const { cloverCode } = useSelector((state) => state.user);
   // 팔로우 여부 체크용 state
   const [followStatus, setFollowStatus] = useState(relation);
+  // 수정하기, 설정하기 버튼 오픈
+  const [modifyOpen, setModifyOpen] = useState(false);
+
   const navigate = useNavigate();
 
   // 타인의 프로필 페이지에서 팔로우, 언팔로우 요청
@@ -86,9 +90,46 @@ const ProfileInfo = ({
                 />
               )}
             </div>
-            <div style={{ height: '2.5em' }}>
+            <div
+              style={{
+                height: '2.5em',
+                position: 'relative',
+                cursor: 'pointer',
+              }}
+            >
               {relation === 0 ? (
-                <img src="/assets/icons/more-vertical.svg" alt="more" />
+                <>
+                  <img
+                    src="/assets/icons/more-vertical.svg"
+                    alt="more"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setModifyOpen((prev) => !prev);
+                    }}
+                  />
+
+                  {modifyOpen && (
+                    <>
+                      <ProfileInfoModifyBtn
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/profile/${uid}/config`);
+                        }}
+                      >
+                        프로필 수정하기
+                      </ProfileInfoModifyBtn>
+                      <ProfileInfoModifyBtn
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/settings`);
+                        }}
+                        top="80px"
+                      >
+                        계정 설정하기
+                      </ProfileInfoModifyBtn>
+                    </>
+                  )}
+                </>
               ) : (
                 <ProfileFollowBtn
                   onClick={() => fetchChangeFollowStatus()}

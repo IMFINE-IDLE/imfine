@@ -33,7 +33,7 @@ const ProfileConfigPage = () => {
 
   return (
     <>
-      <NavBarBasic Back={true} Text="프로필 수정" />
+      <NavBarBasic Back={true} Text="프로필 수정" BackgroundColor={'main'} />
 
       <ProfileConfigContainer radius="0">
         <ProfileConfigOptionBtn
