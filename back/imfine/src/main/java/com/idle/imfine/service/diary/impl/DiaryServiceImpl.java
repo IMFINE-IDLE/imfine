@@ -535,6 +535,7 @@ public class DiaryServiceImpl implements DiaryService {
                             .name(diary.getWriter().getName())
                             .paperCount(diary.getPaperCount())
                             .subscribeCount(diary.getSubscribeCount())
+                            .open(diary.isOpen())
                             .image(diary.getImage())
                             .build()
         ).collect(Collectors.toList());
