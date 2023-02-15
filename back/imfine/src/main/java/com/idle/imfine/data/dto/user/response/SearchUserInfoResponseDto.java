@@ -1,6 +1,9 @@
 package com.idle.imfine.data.dto.user.response;
 
 import java.util.List;
+
+import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
+import com.idle.imfine.data.entity.medical.MedicalCode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +15,7 @@ public class SearchUserInfoResponseDto {
     private Boolean open;
     private Integer followingCount;
     private Integer followerCount;
-    private List<String> medicalList;
+    private List<ResponseMedicalListDto> medicalList;
     private int condition;
     private int relation;
 
