@@ -57,7 +57,15 @@ function FindIdPage() {
       ) : (
         <DivFindResult direction={'column'}>
           <SpanUserId>아이디: {userId}</SpanUserId>
-          <BtnSignup onClick={() => navigate('/find-password')}>
+          <BtnSignup
+            onClick={() =>
+              navigate('/find-password', {
+                state: {
+                  changeFromSettings: false,
+                },
+              })
+            }
+          >
             비밀번호 찾기
           </BtnSignup>
           <BtnSignup onClick={() => navigate('/login')}>로그인 하기</BtnSignup>
