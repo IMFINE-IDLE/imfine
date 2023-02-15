@@ -140,19 +140,6 @@ function PaperModifyPage() {
     }
   };
 
-  console.log('diaryinfo', diary);
-  console.log('print', paperInfo);
-  console.log('form', form);
-  console.log('files', files);
-  console.log('deleted', deleted);
-  console.log('original', original);
-  console.log('updated', updated);
-  console.log('info', infoToModifyPage);
-  for (let i = 0; i < files.length; i++) {
-    console.log('type', typeof files[i]);
-  }
-  console.log('value', value);
-
   useEffect(() => {
     getDiaries();
     modifyPaperInfo();
@@ -160,15 +147,6 @@ function PaperModifyPage() {
 
   useEffect(() => {
     getDiaryInfos();
-    // setInfoToModifyPage({
-    //   medicals: res.data.data.medicals,
-    //   diaryHasSymptoms: res.data.data.symptoms,
-    //   diaryId: res.data.data.diaryId,
-    //   title: res.data.data.title,
-    //   description: res.data.data.description,
-    //   open: res.data.data.open,
-    //   from: 'paper',
-    // });
   }, [diaries]);
 
   useEffect(() => {
@@ -183,6 +161,25 @@ function PaperModifyPage() {
     });
   }, [diary]);
 
+  // 일기 작성 업로드 체크
+  const validCheck = (e) => {
+    if (symptoms.length !== 0) {
+      handleUploadImage();
+    } else {
+      alert('일기장을 먼저 선택해주세요');
+    }
+  };
+
+  // 증상 추가 업로드 체크
+  const validSymptomCheck = (e) => {
+    if (symptoms.length !== 0) {
+      navigate(`/diary/${diaryId}/modify/symptom`, {
+        state: infoToModifyPage,
+      });
+    } else {
+      alert('일기장을 먼저 선택해주세요');
+    }
+  };
   // 이미지 서버에 업로드 시키기
   // 일기수정하기
   const handleUploadImage = async () => {
@@ -301,14 +298,7 @@ function PaperModifyPage() {
       </BoxContent>
       <RightDiv>
         <FiArrowRight />
-        <ContentLabel
-          margin="1em 2em 1em 0.3em"
-          onClick={() =>
-            navigate(`/diary/${diaryId}/modify/symptom`, {
-              state: infoToModifyPage,
-            })
-          }
-        >
+        <ContentLabel margin="1em 2em 1em 0.3em" onClick={validSymptomCheck}>
           {' '}
           증상 추가하러 가기
         </ContentLabel>
@@ -361,7 +351,7 @@ function PaperModifyPage() {
         <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
           취소하기
         </BtnUpdate>
-        <BtnUpdate onClick={handleUploadImage}>일기수정</BtnUpdate>
+        <BtnUpdate onClick={validCheck}>일기수정</BtnUpdate>
       </FlexDiv>
     </>
   );
