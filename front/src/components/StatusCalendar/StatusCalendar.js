@@ -25,6 +25,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   const [monthCondition, setMonthCondition] = useState(null);
   // 개별 날짜의 일기 정보 관련 state
   const [paperInfo, setPaperInfo] = useState(null);
+  const [isPaperChanged, setIsPaperChanged] = useState(false);
 
   // 클로버 상태 변경 관련 state
   const [cloverOfDayClicked, setCloverOfDayClicked] = useState('-1');
@@ -80,21 +81,25 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
     }
   };
 
+  // 달력 정보는 유저가 변경될 때마다 새로 불러온다.
   useEffect(() => {
     fetchProfileCalendar(date);
   }, [isMine]);
 
-  // 날짜를 새로 선택할 때마다
-  // 해당 날짜의 컨디션 정보를 저장하고 개별 일기 정보를 불러오기
+  // 특정일의 컨디션 정보는 날짜를 새로 선택할 때마다 업데이트한다.
   useEffect(() => {
-    fetchGetDiaryPaperItem(diaryId, date);
     setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
   }, [date]);
+
+  // 개별 날짜 일기 정보는 날짜가 바뀌거나 개별 일기 상태가 바뀌면 새로 불러온다.
+  useEffect(() => {
+    fetchGetDiaryPaperItem(diaryId, date);
+  }, [date, isPaperChanged]);
 
   if (!monthCondition) return null;
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
       <FlexDiv direction="column">
         <BoxShad height="auto">
           <Calendar
@@ -168,7 +173,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
                 };
                 // 해당 날짜 일기 작성하기
                 navigate('/paper/create', {
-                  state: { info: infoToPaperCreate, dateFixed: true },
+                  state: { ...infoToPaperCreate, diaryId },
                 });
               }}
             >
@@ -181,10 +186,19 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
 
         {isProfile ? (
           paperInfo?.map((paper) => (
-            <DiaryPaperItem paperInfo={paper} key={paper.id} />
+            <DiaryPaperItem
+              paperInfo={paper}
+              key={paper.id}
+              setIsPaperChanged={setIsPaperChanged}
+            />
           ))
+        ) : paperInfo ? (
+          <DiaryPaperItem
+            paperInfo={paperInfo}
+            setIsPaperChanged={setIsPaperChanged}
+          />
         ) : (
-          <DiaryPaperItem paperInfo={paperInfo} />
+          <></>
         )}
       </FlexDiv>
     </div>

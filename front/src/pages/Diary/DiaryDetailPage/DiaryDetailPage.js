@@ -1,24 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../../api/api';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import DiaryTitle from '../../../components/Paper/DiaryTitle/DiaryTitle';
+import PickedItemList from '../../../components/PickedItemList/PickedItemList';
+import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
+import { ReactComponent as BookmarkSvg } from './bookmark.svg';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import { DiaryBoxGrad } from '../DiaryCreateConfirmPage/style';
-import { DiaryInfoContainer, DiaryDateSpan } from './style';
-import DiaryTitle from '../../../components/Paper/DiaryTitle/DiaryTitle';
-import { ReactComponent as BookmarkSvg } from './bookmark.svg';
-
-import PickedItemList from '../../../components/PickedItemList/PickedItemList';
-import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
-import { useSelector } from 'react-redux';
+import { DiaryInfoContainer, DiaryDateSpan, DiaryReportBtn } from './style';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
+  // 일기장 정보 저장
   const [diaryInfo, setDiaryInfo] = useState(null);
+
+  // 증상그래프 여닫기
   const [showGraph, setShowGraph] = useState(false);
+  // 증상그래프 날짜와 타입(주간/월간)
+  const [date, setDate] = useState(new Date());
+  const [type, setType] = useState('week');
+
+  // 신고하기 버튼 여닫기
+  const [reportOpen, setReportOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -90,6 +98,8 @@ const DiaryDetailPage = () => {
   //   open: true,
   // };
 
+  if (!diaryInfo) return null;
+
   return (
     <>
       <NavBarBasic Back={true} BackgroundColor="main" />
@@ -97,7 +107,7 @@ const DiaryDetailPage = () => {
         <DiaryInfoContainer radius="25px">
           <FlexDiv justify="space-between">
             <DiaryTitle title={diaryInfo.title} />
-            <FlexDiv width="4em" justify="space-between">
+            <FlexDiv width="4em" justify="end">
               {isMine ? (
                 <img
                   src="/assets/icons/edit.svg"
@@ -110,28 +120,50 @@ const DiaryDetailPage = () => {
                   }
                 />
               ) : (
-                <BookmarkSvg
-                  onClick={() => {
-                    fetchUpdateSubscribeStatus(diaryInfo.subscribe);
-                    setDiaryInfo((prev) => ({
-                      ...prev,
-                      subscribe: !{ ...prev }.subscribe,
-                    }));
-                  }}
-                  fill={
-                    diaryInfo.subscribe
-                      ? 'var(--main-color)'
-                      : 'var(--gray-color)'
-                  }
-                  stroke={
-                    diaryInfo.subscribe
-                      ? 'var(--main-color)'
-                      : 'var(--gray800-color)'
-                  }
-                  style={{ position: 'relative', top: '-1.5px' }}
-                />
+                <FlexDiv justify="end" style={{ position: 'relative' }}>
+                  <BookmarkSvg
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fetchUpdateSubscribeStatus(diaryInfo.subscribe);
+                      setDiaryInfo((prev) => ({
+                        ...prev,
+                        subscribe: !{ ...prev }.subscribe,
+                      }));
+                    }}
+                    fill={
+                      diaryInfo.subscribe
+                        ? 'var(--main-color)'
+                        : 'var(--gray-color)'
+                    }
+                    stroke={
+                      diaryInfo.subscribe
+                        ? 'var(--main-color)'
+                        : 'var(--gray800-color)'
+                    }
+                    style={{ position: 'relative', top: '-1.5px' }}
+                  />
+                  <img
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setReportOpen((prev) => !prev);
+                    }}
+                    src="/assets/icons/more-vertical.svg"
+                    alt="more"
+                  />
+                  {reportOpen && (
+                    <DiaryReportBtn
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/report', {
+                          state: { id: diaryId, type: 'Diary' },
+                        });
+                      }}
+                    >
+                      신고하기
+                    </DiaryReportBtn>
+                  )}
+                </FlexDiv>
               )}
-              <img src="/assets/icons/more-vertical.svg" alt="more" />
             </FlexDiv>
           </FlexDiv>
           <FlexDiv direction="column">
@@ -194,7 +226,7 @@ const DiaryDetailPage = () => {
         </FlexDiv>
         {showGraph && (
           <BoxShad radius="25px" height="15em" margin="0 0 1.5em 0">
-            <SymptomGraph />
+            <SymptomGraph diaryId={diaryId} date={date} type={type} />
           </BoxShad>
         )}
 
@@ -210,37 +242,3 @@ const DiaryDetailPage = () => {
 };
 
 export default DiaryDetailPage;
-
-// 더미데이터
-// const medicalList = [
-//   {
-//     medicalId: 1,
-//     medicalName: `${diaryInfo.medicalName}`,
-//   },
-// ];
-// const diaryHasSymptoms = [
-//   {
-//     symptomId: 16,
-//     symptomName: '두통',
-//   },
-//   {
-//     symptomId: 17,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 18,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 19,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 14,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 15,
-//     symptomName: '어지러움',
-//   },
-// ];
