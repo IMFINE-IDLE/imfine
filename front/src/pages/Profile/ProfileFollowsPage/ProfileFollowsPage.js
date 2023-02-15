@@ -27,11 +27,11 @@ const ProfileFollowsPage = () => {
   // 팔로잉 또는 팔로워 목록 가져오기
   const fetchFollowList = async () => {
     try {
-      if (type === '팔로잉') {
+      if (followType === '팔로잉') {
         const res = await axios.get(api.profile.getFollowingList(uid));
         setUsers(() => res.data.data);
         setFollowingCnt(res.data.data.length);
-      } else if (type === '팔로워') {
+      } else if (followType === '팔로워') {
         const res = await axios.get(api.profile.getFollowerList(uid));
         setUsers(() => res.data.data);
         setFollowerCnt(res.data.data.length);

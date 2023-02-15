@@ -43,11 +43,19 @@ const ErrorMsg = styled.span`
   color: var(--red-color);
 `;
 
+const OKMsg = styled.span`
+  font-size: 0.75em;
+  color: var(--gray800-color);
+`;
+
 const MedicalBtn = styled.button`
   ${Btn}
-  width: 3.75em;
-  height: 3.75em;
+  width: 5em;
+  height: 5em;
   border-radius: 15px;
+  font-size: 0.75em;
+  padding: 0.5em;
+  margin-right: 0.85em;
 `;
 
 const ToggleContainer = styled.div`
@@ -116,6 +124,7 @@ export {
   NicknameInput,
   SubmitBtn,
   ErrorMsg,
+  OKMsg,
   MedicalBtn,
   ToggleContainer,
   ToggleText,

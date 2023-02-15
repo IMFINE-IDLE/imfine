@@ -14,6 +14,7 @@ const FollowUser = ({
   uid,
   setTrigger,
   noFollowButton,
+  isMine,
 }) => {
   const [followStatus, setFollowStatus] = useState(relation);
   // 팔로워 삭제 확인 모달
@@ -70,13 +71,21 @@ const FollowUser = ({
             {name}
           </span>
         </FollowUserWrapper>
-        {relation === 0 || !noFollowButton || (
-          <FollowUserBtn
-            color={relation === 3 ? 'main' : 'gray'}
-            onClick={() => fetchChangeFollowStatus()}
-          >
-            {relation === 1 ? '언팔로우' : relation === 2 ? '요청됨' : '팔로우'}
-          </FollowUserBtn>
+        {noFollowButton ? (
+          <></>
+        ) : (
+          followStatus === 0 || (
+            <FollowUserBtn
+              color={followStatus === 3 ? 'main' : 'gray'}
+              onClick={() => fetchChangeFollowStatus()}
+            >
+              {followStatus === 1
+                ? '언팔로우'
+                : followStatus === 2
+                ? '요청됨'
+                : '팔로우'}
+            </FollowUserBtn>
+          )
         )}
       </FollowUserContainer>
     );
@@ -99,11 +108,23 @@ const FollowUser = ({
               {name}
             </span>
           </FollowUserWrapper>
-          {followStatus === 0 || (
-            <FollowUserBtn color="gray" onClick={() => setModalOpen(true)}>
-              삭제
-            </FollowUserBtn>
-          )}
+          {followStatus === 0 ||
+            (isMine ? (
+              <FollowUserBtn color="gray" onClick={() => setModalOpen(true)}>
+                삭제
+              </FollowUserBtn>
+            ) : (
+              <FollowUserBtn
+                color={followStatus === 3 ? 'main' : 'gray'}
+                onClick={() => fetchChangeFollowStatus()}
+              >
+                {followStatus === 1
+                  ? '언팔로우'
+                  : followStatus === 2
+                  ? '요청됨'
+                  : '팔로우'}
+              </FollowUserBtn>
+            ))}
         </FollowUserContainer>
 
         {modalOpen && (
