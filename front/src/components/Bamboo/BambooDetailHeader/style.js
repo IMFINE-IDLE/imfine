@@ -40,7 +40,7 @@ const BambooImg = styled.img.attrs({
 
 const Content = styled.h1`
   color: var(--default-font-color);
-  padding: 1em 0;
+  padding: 1.8em;
   text-align: center;
 `;
 
