@@ -7,8 +7,9 @@ export function getTimeDifference(createdAt) {
   let milli = currentTime.getTime() - providedTime.getTime();
   let timeGap = parseInt(milli / 60000);
   // console.log(paperId, timeGap);
-
-  if (timeGap < 60) {
+  if (timeGap < 1) {
+    return '방금전';
+  } else if (timeGap < 60) {
     return `${timeGap}분전`;
   } else if (timeGap >= 60 && timeGap < 60 * 24) {
     return `${parseInt(timeGap / 60)}시간전`;
