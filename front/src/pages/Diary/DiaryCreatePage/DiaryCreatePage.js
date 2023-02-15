@@ -18,8 +18,6 @@ const DiaryCreatePage = () => {
     navigate('/diary/create/confirm', { state: infoToConfirm });
   };
 
-  console.log('medicals picked test', medicalList);
-
   return (
     <>
       <NavBarBasic Back={true} Text="일기장 생성" />
@@ -27,6 +25,7 @@ const DiaryCreatePage = () => {
       <PickMenuTab
         tabCnt={2}
         title="질병/수술"
+        pickOnlyOne={true}
         medicals={medicalList}
         symptoms={symptomList}
         setMedicals={setMedicalList}

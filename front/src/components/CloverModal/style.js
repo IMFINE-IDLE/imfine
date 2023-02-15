@@ -6,9 +6,11 @@ const CloverStatusContainer = styled(BoxShad)`
   ${({ width, isCenter }) => css`
     position: ${isCenter ? 'absolute' : 'fixed'};
     left: calc(50% - ${width} / 2);
-    bottom: ${isCenter ? 'calc(50% - 5.5em)' : '5.2em'};
+    bottom: ${isCenter || '5.2em'};
+    top: ${isCenter && '7em'};
   `}
 `;
+// bottom: ${isCenter ? 'calc(50% - 5.5em)' : '5.2em'};
 
 // 클로버 li 상위 ul
 const CloverWrap = styled.ul`

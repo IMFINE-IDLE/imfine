@@ -40,7 +40,6 @@ const DiaryDetailPage = () => {
     try {
       const res = await axios.get(api.diary.getDiaryInfo(diaryId));
 
-      console.log(res.data.data);
       setDiaryInfo(res.data.data);
     } catch (err) {
       console.error(err);
@@ -140,7 +139,11 @@ const DiaryDetailPage = () => {
                         ? 'var(--main-color)'
                         : 'var(--gray800-color)'
                     }
-                    style={{ position: 'relative', top: '-1.5px' }}
+                    style={{
+                      position: 'relative',
+                      top: '-1.5px',
+                      cursor: 'pointer',
+                    }}
                   />
                   <img
                     onClick={(e) => {

@@ -13,25 +13,34 @@ import {
   TabCenter,
   MainClover,
 } from './style';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
 const TabBar = () => {
   const { uid, cloverCode } = useSelector((state) => state.user);
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
+
+  // 내 프로필에서는 하단탭바 모달 안 뜨도록 함(달력에서 컨디션 변경)
   const { pathname } = useLocation();
-  const isProfile = pathname.startsWith('/profile');
+  const uidParams = useParams().uid;
+  let openCloverModal = true;
+  if (pathname.startsWith('/profile') && uid === uidParams)
+    openCloverModal = false;
 
   return (
     <div>
-      {cloversOpen && !isProfile && (
-        <CloverModal
-          currentClover={currentClover}
-          setCurrentClover={setCurrentClover}
-          setCloversOpen={setCloversOpen}
-          center={false}
-          date={new Date()}
-        />
+      {openCloverModal ? (
+        cloversOpen && (
+          <CloverModal
+            currentClover={currentClover}
+            setCurrentClover={setCurrentClover}
+            setCloversOpen={setCloversOpen}
+            center={false}
+            date={new Date()}
+          />
+        )
+      ) : (
+        <></>
       )}
 
       <TabContainer>
