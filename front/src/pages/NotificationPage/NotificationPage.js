@@ -64,14 +64,14 @@ function NotificationPage() {
   if (unReadItems.length === 0) {
     return (
       <>
-        <NavBarBasic />
-        <FlexDiv>모든 알림을 확인했어요.</FlexDiv>
+        <NavBarBasic Back={true} Text="" BackgroundColor={'undefined'} />
+        <FlexDiv>새로운 알림이 없어요</FlexDiv>
       </>
     );
   }
   return (
     <>
-      <NavBarBasic />
+      <NavBarBasic Back={true} Text="" BackgroundColor={'undefined'} />
       <div>
         {notifications.map((item) => {
           return (
