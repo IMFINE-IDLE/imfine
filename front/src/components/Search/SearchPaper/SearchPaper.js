@@ -1,5 +1,6 @@
 import React from 'react';
 import PaperList from '../../Paper/PaperList/PaperList';
+import SearchNoResult from '../SearchNoResult/SearchNoResult';
 import { BoxSearchPaper } from './style';
 
 function SearchPaper({ paperList }) {
@@ -8,7 +9,7 @@ function SearchPaper({ paperList }) {
       {paperList.length > 0 ? (
         <PaperList paperList={paperList} />
       ) : (
-        <span>검색 결과를 찾을 수 없습니다.</span>
+        <SearchNoResult />
       )}
     </BoxSearchPaper>
   );
