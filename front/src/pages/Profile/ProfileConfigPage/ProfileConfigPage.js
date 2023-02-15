@@ -11,6 +11,7 @@ import {
   NicknameInput,
   SubmitBtn,
   ErrorMsg,
+  OKMsg,
   MedicalBtn,
   ToggleContainer,
   ToggleText,
@@ -24,19 +25,19 @@ const ProfileConfigPage = () => {
    * Hooks
    */
   const { uid } = useParams();
-  const { name, medicalList, open } = useLocation().state;
+  const { name, medicalList, open, medicalsOpen } = useLocation().state;
 
   // 상세내용 보여주기용 state
   const [showChangeName, setShowChangeName] = useState(false);
-  const [showPickMedicals, setShowPickMedicals] = useState(false);
-  const [showOpenBtn, setShowOpenBtn] = useState(false);
+  const [showPickMedicals, setShowPickMedicals] = useState(medicalsOpen);
 
   // 값 저장할 state
   const [newName, setNewName] = useState(name);
   const [medicals, setMedicals] = useState(medicalList);
   const [isOpen, setIsOpen] = useState(open);
 
-  // 에러메시지
+  // 성공메시지, 에러메시지
+  const [nameOKMsg, setNameOKMsg] = useState('');
   const [nameErrorMsg, setNameErrMsg] = useState('');
 
   const navigate = useNavigate();
@@ -45,17 +46,15 @@ const ProfileConfigPage = () => {
    * Functions
    */
 
-  // 닉네임 변경 api 요청
-  const fetchChangeName = async () => {
+  // 닉네임 중복체크
+  const fetchCheckNameDuplicated = async () => {
+    setNameErrMsg('');
+    setNameOKMsg('');
     try {
-      // 닉네임 중복체크
       const res = await axios.get(api.user.checkName(newName));
-      setNameErrMsg('');
 
-      // 중복체크 응답이 성공일 때 닉네임 변경 요청
       if (res.status === 200) {
-        await axios.put(api.user.changeName(), { name: newName });
-        setShowChangeName(false);
+        setNameOKMsg('사용 가능한 닉네임입니다');
       }
     } catch (err) {
       setNameErrMsg(err.response.data.message);
@@ -63,11 +62,64 @@ const ProfileConfigPage = () => {
     }
   };
 
-  // 공개, 비공개 여부 api 요청
-  const fetchUpdateOpenStatus = async (open) => {
+  // 닉네임 변경 요청
+  const fetchChangeName = async () => {
+    setNameErrMsg('');
+    setNameOKMsg('');
     try {
-      const res = await axios.put(api.user.updateOpenStatus(), { open });
+      const res = await axios.get(api.user.checkName(newName));
+
+      // 중복체크 응답이 성공일 때 닉네임 변경 요청
+      if (res.status === 200) {
+        await axios.put(api.user.changeName(), { name: newName });
+      }
+    } catch (err) {
+      setNameErrMsg(err.response.data.message);
+      console.error(err);
+    }
+  };
+
+  // 관심 질병/수술 변경 요청
+  const fetchChangeMedicals = async () => {
+    try {
+      console.log(
+        '1111111111',
+        medicals.map((medical) => medical.id)
+      );
+      const res = await axios.put(api.user.changeMedical(), {
+        medicalList: medicals.map((medical) => medical.id),
+      });
       console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 공개, 비공개 변경 요청
+  const fetchUpdateOpenStatus = async () => {
+    try {
+      const res = await axios.put(api.user.updateOpenStatus(), {
+        open: isOpen,
+      });
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 변경사항 반영하기 버튼 클릭시
+  const handleSubmit = async () => {
+    try {
+      // 닉네임이 변경되었을 경우 변경요청
+      if (newName !== name) await fetchChangeName();
+
+      // 관심 질병/수술이 변경되었을 경우 변경요청
+      if ([...medicalList] !== [...medicals]) await fetchChangeMedicals();
+
+      // 공개/비공개 설정이 변경되었을 경우 변경요청
+      if (open !== isOpen) await fetchUpdateOpenStatus();
+
+      navigate(`/profile/${uid}`);
     } catch (err) {
       console.error(err);
     }
@@ -89,6 +141,7 @@ const ProfileConfigPage = () => {
             <FlexDiv height="auto" justify="space-between">
               <TitleText>변경할 닉네임을 적어주세요</TitleText>
               {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
+              {nameOKMsg && <OKMsg>{nameOKMsg}</OKMsg>}
             </FlexDiv>
             <form>
               <NicknameInput
@@ -114,10 +167,10 @@ const ProfileConfigPage = () => {
                 type="submit"
                 onClick={(e) => {
                   e.preventDefault();
-                  fetchChangeName();
+                  fetchCheckNameDuplicated();
                 }}
               >
-                변경하기
+                중복 체크하기
               </SubmitBtn>
             </form>
           </>
@@ -132,17 +185,26 @@ const ProfileConfigPage = () => {
         {showPickMedicals && (
           <>
             <TitleText>내 관심 질병/수술</TitleText>
-            <FlexDiv height="auto" justify="start" padding="1em">
+            <FlexDiv
+              height="auto"
+              justify="start"
+              padding="1em 0.2em"
+              wrap="wrap"
+            >
               {medicals?.map(({ id, name }) => (
                 <MedicalBtn key={id} color="gray">
                   {name}
                 </MedicalBtn>
               ))}
               <MedicalBtn
-                onClick={() => navigate(`/profile/${uid}/change-symptom`)}
+                onClick={() =>
+                  navigate(`/profile/${uid}/medicals`, {
+                    state: { uid, newName, medicals, isOpen },
+                  })
+                }
                 color="gray700"
               >
-                <img src="/assets/icons/edit.svg" />
+                <img src="/assets/icons/edit.svg" alt="edit" />
               </MedicalBtn>
             </FlexDiv>
           </>
@@ -162,11 +224,7 @@ const ProfileConfigPage = () => {
               <Toggle
                 id="toggle"
                 type="checkbox"
-                onChange={() => {
-                  setIsOpen((prev) => !prev);
-                  fetchUpdateOpenStatus(isOpen);
-                  setShowOpenBtn(true);
-                }}
+                onChange={() => setIsOpen((prev) => !prev)}
                 checked={isOpen}
               />
               <ToggleLabel htmlFor="toggle" />
@@ -174,20 +232,18 @@ const ProfileConfigPage = () => {
           </ToggleContainer>
         </ProfileConfigOptionBtn>
 
-        {showOpenBtn && (
-          <SubmitBtn
-            radius="20px"
-            height="3.5em"
-            margin="0.5em 0 1.5em 0"
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              // fetchChangeName();
-            }}
-          >
-            적용하기
-          </SubmitBtn>
-        )}
+        <SubmitBtn
+          radius="20px"
+          height="3.5em"
+          margin="0.5em 0 1.5em 0"
+          type="submit"
+          onClick={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
+          저장하고 프로필로 돌아가기
+        </SubmitBtn>
       </ProfileConfigContainer>
     </>
   );

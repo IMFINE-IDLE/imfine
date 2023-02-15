@@ -31,8 +31,9 @@ const api = {
       URL + USERS + `/find-password/${uid}/${email}`,
     changeUserPwWithLogin: () => URL + USERS + '',
     changeUserPwWithOutLogin: () => URL + USERS + '/find-password/',
-    changeName: () => URL + USERS + '/name',
     setCondition: () => URL + USERS + '/condition',
+    changeName: () => URL + USERS + '/name',
+    changeMedical: () => URL + USERS + '/medical',
     updateOpenStatus: () => URL + USERS + '/open',
     getCloverCode: (params) =>
       URL + USERS + `/${params.uid}/condition/${params.date}`,
