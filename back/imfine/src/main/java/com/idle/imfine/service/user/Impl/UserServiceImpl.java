@@ -1,6 +1,7 @@
 package com.idle.imfine.service.user.Impl;
 
 import com.idle.imfine.config.security.JwtTokenProvider;
+import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
@@ -239,10 +240,14 @@ public class UserServiceImpl implements UserService {
         int relation = common.getFollowRelation(user, other);
 
         List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(other);
-        List<String> medicalList = new ArrayList<>();
+        List<ResponseMedicalListDto> medicalList = new ArrayList<>();
 
         for (UserHasMedical userHasMedical : medicalCodeList) {
-            medicalList.add(userHasMedical.getMedicalCode().getName());
+            ResponseMedicalListDto medical = ResponseMedicalListDto.builder()
+                    .id(userHasMedical.getMedicalCode().getId())
+                    .name(userHasMedical.getMedicalCode().getName())
+                    .build();
+            medicalList.add(medical);
         }
 
         return SearchUserInfoResponseDto.builder()
