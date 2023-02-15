@@ -171,7 +171,7 @@ const PickMenuTab = ({
             tabContent: (
               <PickMenu
                 type="medical"
-                dataList={medicals}
+                dataList={medicalMenuList}
                 setPickedMedicals={setMedicals}
                 ToggleSymptom={ToggleSymptom}
                 ref={refs}
@@ -184,7 +184,7 @@ const PickMenuTab = ({
             tabContent: (
               <PickMenu
                 type="symptom"
-                dataList={symptoms}
+                dataList={symptomMenuList}
                 setPickedSymptoms={setSymptoms}
                 ToggleSymptom={ToggleSymptom}
                 ref={refs}
