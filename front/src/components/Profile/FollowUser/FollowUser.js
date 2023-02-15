@@ -22,6 +22,9 @@ const FollowUser = ({
 
   const navigate = useNavigate();
 
+  // 테스트용 더미데이터. 나중에 서버에서 받아올 것
+  const open = false;
+
   // 팔로잉 목록에서 팔로우 요청, 언팔로우 요청 보내기
   const fetchChangeFollowStatus = async () => {
     try {
@@ -31,10 +34,10 @@ const FollowUser = ({
         setFollowStatus(3);
         setTrigger((prev) => !prev);
       }
-      // 현재 팔로우하고 있지 않으면 팔로우 요청을 보내고 relation을 1로 변경
+      // 현재 팔로우하고 있지 않으면 팔로우 요청을 보내고 relation을 1(공개유저) 또는 2(비공개유저)로 변경
       else if (followStatus === 3) {
         await axios.post(api.profile.follow(), { uid });
-        setFollowStatus(1);
+        setFollowStatus(open === true ? 1 : 2);
         setTrigger((prev) => !prev);
       }
     } catch (err) {
@@ -70,6 +73,13 @@ const FollowUser = ({
           >
             {name}
           </span>
+          {open || (
+            <img
+              src="/assets/icons/lock.svg"
+              alt="lock"
+              style={{ position: 'inline', paddingLeft: '0.3em' }}
+            />
+          )}
         </FollowUserWrapper>
         {noFollowButton ? (
           <></>

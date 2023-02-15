@@ -5,8 +5,8 @@ const FollowUserContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5em;
+  align-items: start;
+  margin-bottom: 0.8em;
 `;
 
 const FollowUserWrapper = styled.div`

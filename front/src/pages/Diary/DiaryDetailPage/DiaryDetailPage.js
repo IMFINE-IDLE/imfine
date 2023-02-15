@@ -140,7 +140,11 @@ const DiaryDetailPage = () => {
                         ? 'var(--main-color)'
                         : 'var(--gray800-color)'
                     }
-                    style={{ position: 'relative', top: '-1.5px' }}
+                    style={{
+                      position: 'relative',
+                      top: '-1.5px',
+                      cursor: 'pointer',
+                    }}
                   />
                   <img
                     onClick={(e) => {

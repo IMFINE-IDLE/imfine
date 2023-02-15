@@ -19,6 +19,7 @@ const ProfileFollowListWrapper = styled.div`
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  height: calc(100% - 1.5em);
 
   &::-webkit-scrollbar {
     display: none;
