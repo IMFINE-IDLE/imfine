@@ -190,6 +190,7 @@ public class FollowServiceImpl implements FollowService {
             FollowResponseDto responseDto = FollowResponseDto.builder()
                     .uid(following.getUid())
                     .name(following.getName())
+                    .open(following.isOpen())
                     .condition(condition)
                     .relation(relation)
                     .build();
@@ -217,6 +218,7 @@ public class FollowServiceImpl implements FollowService {
             FollowResponseDto responseDto = FollowResponseDto.builder()
                     .uid(follower.getUid())
                     .name(follower.getName())
+                    .open(follower.isOpen())
                     .condition(condition)
                     .relation(relation)
                     .build();
