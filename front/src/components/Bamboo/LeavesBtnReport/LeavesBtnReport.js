@@ -3,16 +3,15 @@ import React, { useState } from 'react';
 import { FiMoreVertical } from 'react-icons/fi';
 import api from '../../../api/api';
 import { BtnSmall } from './style';
-
+import { useNavigate } from 'react-router-dom';
 function LeavesBtnReport({ LeafId }) {
   // 댓글 신고 컴포넌트
   const [isClicked, setIsClicked] = useState(false);
-  const reportPaper = async (LeafId) => {
-    try {
-      const res = await axios.post(api.leaf.reportLeaf(LeafId));
-    } catch (err) {
-      console.log(err);
-    }
+  const navigate = useNavigate();
+  const reportPaper = () => {
+    navigate(`/report`, {
+      state: { id: `${LeafId}`, type: 'Leaf' },
+    });
   };
   return (
     <div style={{ cursor: 'pointer', position: 'relative' }}>
@@ -26,7 +25,7 @@ function LeavesBtnReport({ LeafId }) {
         <BtnSmall
           onClick={(e) => {
             e.stopPropagation();
-            reportPaper(LeafId);
+            reportPaper();
           }}
         >
           신고하기

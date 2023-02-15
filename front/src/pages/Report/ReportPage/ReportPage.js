@@ -94,7 +94,7 @@ function ReportPage() {
     } else if (type === 'Leaf') {
       try {
         console.log('urlroute', url);
-        await axios.post(api.report.reportLeaf, {
+        await axios.post(api.report.reportLeaf(), {
           type: reportType,
           contentsId: contentId,
         });
