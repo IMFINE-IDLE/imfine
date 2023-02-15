@@ -18,8 +18,6 @@ const DiaryItem = ({
 }) => {
   const navigate = useNavigate();
   const isMine = Boolean(uid === useSelector((state) => state.user.uid));
-  console.log(uid);
-  console.log(isMine);
 
   return (
     <DiaryItemContainer

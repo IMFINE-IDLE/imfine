@@ -33,7 +33,6 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
 
   const navigate = useNavigate();
 
-  console.log(paperInfo);
   /*
    * Functions
    */
@@ -73,7 +72,6 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
         const res = await axios.get(api.diary.getDiaryPaperItem(params));
 
         await setPaperInfo(res.data.data);
-        console.log('diarypaper res', res.data.data);
       }
     } catch (err) {
       console.error(err);

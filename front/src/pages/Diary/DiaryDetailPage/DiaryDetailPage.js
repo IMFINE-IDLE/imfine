@@ -40,7 +40,6 @@ const DiaryDetailPage = () => {
     try {
       const res = await axios.get(api.diary.getDiaryInfo(diaryId));
 
-      console.log(res.data.data);
       setDiaryInfo(res.data.data);
     } catch (err) {
       console.error(err);

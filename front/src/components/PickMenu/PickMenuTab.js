@@ -78,7 +78,7 @@ const PickMenuTab = ({
     } else {
       prevList = [...symptoms];
     }
-    console.log(prevList);
+
     let idx = prevList.findIndex((item) => item.id === itemId);
     // addOnly가 true일 경우 추가만 가능
     if (addOnly) {

@@ -18,8 +18,6 @@ const DiaryCreatePage = () => {
     navigate('/diary/create/confirm', { state: infoToConfirm });
   };
 
-  console.log('medicals picked test', medicalList);
-
   return (
     <>
       <NavBarBasic Back={true} Text="일기장 생성" />
