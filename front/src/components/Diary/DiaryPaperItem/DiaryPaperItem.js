@@ -1,75 +1,78 @@
-import React from 'react';
+import React, { useState } from 'react';
+import moment from 'moment';
+import 'moment/locale/ko';
+import { FiHeart, FiMessageCircle } from 'react-icons/fi';
 import { Clover } from '../../common/Clover/Clover';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import { BoxLT50R25 } from '../../common/BoxLT50R25/BoxLT50R25';
-import moment from 'moment';
-import 'moment/locale/ko';
-import LikeComment from '../../Paper/LikeComment/LikeComment';
 
 import {
   DiaryPaperSpan,
   DiaryPaperSymptomWrapper,
   DiaryPaperSymptomDiv,
 } from './style';
+import axios from 'axios';
+import api from '../../../api/api';
+import { SpanLikeCmt } from '../../Paper/LikeComment/style';
+import { useNavigate } from 'react-router-dom';
 
-const DiaryPaperItem = ({ paperInfo }) => {
-  console.log('props', paperInfo);
+const DiaryPaperItem = ({ paperInfo, setIsPaperChanged }) => {
+  const [isLiked, setIsLiked] = useState(paperInfo.myHeart);
+  const [localLikeCount, setLocalLikeCount] = useState(paperInfo.likeCount);
+  const fillHeart = isLiked ? 'var(--red-color)' : 'none';
 
-  // // 일기 좋아요 등록
-  // const likePaper = async (paperId) => {
-  //   try {
-  //     const res = await axios.post(
-  //       api.paper.paperLikePost(),
-  //       {
-  //         contentId: paperId,
-  //       },
-  //       { headers: { Authorization: localStorage.getItem('accessToken') } }
-  //     );
-  //     console.log(res);
-  //     fetchGetDiaryPaperItem(diaryId, createdAt);
-  //   } catch (err) {
-  //     console.log(err.response.data);
-  //   }
-  // };
+  const navigate = useNavigate();
 
-  // // 일기 좋아요 취소
-  // const likePaperDelete = async (paperId) => {
-  //   try {
-  //     const res = await axios.delete(api.paper.paperLikeDelete(paperId), {
-  //       headers: { Authorization: localStorage.getItem('accessToken') },
-  //     });
-  //     console.log(res);
-  //     fetchGetDiaryPaperItem(diaryId, createdAt);
-  //   } catch (err) {
-  //     console.log(err.response.data);
-  //   }
-  // };
+  // 일기 좋아요 등록
+  const likePaper = async () => {
+    try {
+      await axios.post(api.paper.paperLikePost(), {
+        contentId: paperInfo.paperId,
+      });
 
-  // console.log(symptomList);
+      setIsPaperChanged((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  // 댓글 작업 필요
+  // 일기 좋아요 취소
+  const likePaperDelete = async () => {
+    try {
+      await axios.delete(api.paper.paperLikeDelete(paperInfo.paperId));
+
+      setIsPaperChanged((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
       {paperInfo && (
         <FlexDiv margin="1em 0" align="start">
-          <Clover width="4em" height="4em" code={paperInfo?.condition} />
-          <BoxLT50R25 height="auto">
+          <Clover width="3.5em" height="3.5em" code={paperInfo?.condition} />
+          <BoxLT50R25
+            height="auto"
+            width="calc(100% - 3em)"
+            onClick={() => navigate(`/paper/${paperInfo?.paperId}`)}
+          >
             <FlexDiv justify="start">
               <DiaryPaperSpan
                 size="0.75em"
                 bold={true}
                 style={{
-                  paddingLeft: '1em',
-                  marginRight: '1em',
+                  paddingLeft: '0.2em',
+                  marginRight: '0.5em',
                 }}
+                isDate={true}
               >
                 {moment(new Date(paperInfo?.date))
                   .locale('ko')
-                  .format('MM.DD ddd')}
+                  .format('MM.DD \n ddd')}
               </DiaryPaperSpan>
               <DiaryPaperSymptomWrapper
-                width="60%"
+                width="calc(100% - 1.5em)"
                 justify="start"
                 align="center"
               >
@@ -85,19 +88,39 @@ const DiaryPaperItem = ({ paperInfo }) => {
                 ))}
               </DiaryPaperSymptomWrapper>
             </FlexDiv>
-            <FlexDiv padding="0.5em 0" style={{ lineHeight: '1.3em' }}>
+            <FlexDiv
+              padding="0.8em 0"
+              style={{ lineHeight: '1.3em' }}
+              justify="start"
+            >
               <DiaryPaperSpan>{paperInfo?.content}</DiaryPaperSpan>
             </FlexDiv>
-            {/* <img /> */}
+
             <FlexDiv justify="end">
-              <LikeComment
-                id={paperInfo?.paperId}
-                myHeart={paperInfo?.myHeart}
-                likeCount={paperInfo?.likeCount}
-                commentCount={paperInfo?.commentCount}
-                like={paperInfo?.likePaper}
-                likeDelete={paperInfo?.likePaperDelete}
-              />
+              <div>
+                <FiHeart
+                  style={{
+                    color: 'var(--red-color)',
+                    fill: fillHeart,
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (isLiked) {
+                      likePaperDelete();
+                      setLocalLikeCount((prev) => prev - 1);
+                      setIsLiked((prev) => !prev);
+                    } else {
+                      likePaper();
+                      setLocalLikeCount((prev) => prev + 1);
+                      setIsLiked((prev) => !prev);
+                    }
+                  }}
+                />
+
+                <SpanLikeCmt>{localLikeCount}</SpanLikeCmt>
+                <FiMessageCircle />
+                <SpanLikeCmt>{paperInfo.commentCount}</SpanLikeCmt>
+              </div>
             </FlexDiv>
           </BoxLT50R25>
         </FlexDiv>
