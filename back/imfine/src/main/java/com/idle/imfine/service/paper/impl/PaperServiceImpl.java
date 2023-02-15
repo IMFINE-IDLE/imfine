@@ -412,20 +412,20 @@ public class PaperServiceImpl implements PaperService {
         LOGGER.info("[PaperService.getPaperDetail] Music URL: {}", musicURL);
 
         LOGGER.info("[PaperService.getPaperDetail]일기 상세 종료");
+
+        User writer = paper.getDiary().getWriter();
         return ResponsePaperDetailDto.builder()
                 .diaryId(paperDiary.getId())
                 .title(paperDiary.getTitle())
-                .uid(paperDiary.getWriter().getUid())
+                .uid(writer.getUid())
                 .userStatus(user.getId() == paperDiary.getWriter().getId() ? 0 : 1)
-                .name(paperDiary.getWriter().getName())
+                .name(writer.getName())
                 .content(paper.getContent())
                 .likeCount(paper.getLikeCount())
                 .commentCount(paper.getCommentCount())
                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                 .date(String.valueOf(paper.getDate()))
-                .condition(String.valueOf(
-                        conditionRepository.findByUserAndDate(paperDiary.getWriter(), paper.getDate())
-                                .orElseGet(Condition::new).getCondition()))
+                .condition(common.getDateUserCondition(paper.getDate(), writer))
                 .symptomList(responsePaperSymptomRecords)
                 .images(paper.getImages().stream().map(
                         Image::getPath
