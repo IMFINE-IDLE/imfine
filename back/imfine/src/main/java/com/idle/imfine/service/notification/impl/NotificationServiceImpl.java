@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RequiredArgsConstructor
-@Transactional
 @Service
 public class NotificationServiceImpl implements NotificationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServiceImpl.class);
@@ -37,11 +36,12 @@ public class NotificationServiceImpl implements NotificationService {
     private final Common common;
 
     @Override
+    @Transactional
     public List<ResponseNotification> showList(String uid, Pageable pageable) {
         User user = userRepository.getByUid(uid);
 
         List<ResponseNotification> responseNotificationList = new ArrayList<>();
-        Slice<Notification> all = notificationRepository.findByRecieverId(user.getId(), pageable);
+        Slice<Notification> all = notificationRepository.findByRecieverIdOrderByCreatedAtDesc(user.getId(), pageable);
 
         for (Notification n : all) {
             User sender = userRepository.getById(n.getSenderId());
@@ -108,6 +108,7 @@ public class NotificationServiceImpl implements NotificationService {
         return msg;
     }
     @Override
+    @Transactional
     public void checkNotification(RequestNotificationDetailDto requestNotificationDetailDto, String uid) {
         User user = userRepository.getByUid(uid);
         Notification notification = notificationRepository.getByIdAndRecieverId(
@@ -153,21 +154,13 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
 
-    public void dtoToSend(ResponseNotificationPost responseDto) {
-        LOGGER.info("dtoToSend service");
-        Long senderId = responseDto.getSenderId();
-        Long receiverId = responseDto.getReceiverId();
-        Notification notification = saveNotification(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
-                responseDto.getContentsId(), responseDto.getType());
-        if (!senderId.equals(receiverId)) {
-            send(notification);
-        }
-    }
-    public void send(Notification newNotification) {
+    @Transactional(readOnly = true)
+    public void send(long notificationId) {
         LOGGER.info("send event 들어옴");
-        User user = userRepository.getById(newNotification.getRecieverId());
+        Notification notification = notificationRepository.findById(notificationId).get();
+        LOGGER.info("notification {}", notification.getRecieverId());
+        User user = userRepository.findById(notification.getRecieverId()).get();
         String id = String.valueOf(user.getUid());
-        Notification notification = newNotification;
 
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMemberId(id);
         sseEmitters.forEach(
@@ -179,7 +172,19 @@ public class NotificationServiceImpl implements NotificationService {
         LOGGER.info("sseEmitter {}", sseEmitters);
     }
 
-    private Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
+    public void dtoToSend(ResponseNotificationPost responseDto) {
+        LOGGER.info("dtoToSend service");
+        Long senderId = responseDto.getSenderId();
+        Long receiverId = responseDto.getReceiverId();
+        Notification notification = saveNotification(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
+                responseDto.getContentsId(), responseDto.getType());
+        if (!senderId.equals(receiverId)) {
+            send(notification.getId());
+        }
+    }
+
+    @Transactional
+    public Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type) {
         LOGGER.info("알림 저장 service");
         Notification notification = Notification.builder()
                 .senderId(senderId)
@@ -188,7 +193,6 @@ public class NotificationServiceImpl implements NotificationService {
                 .contentsId(contentsId)
                 .type(type)
                 .build();
-        notificationRepository.save(notification);
-        return notification;
+        return notificationRepository.save(notification);
     }
 }

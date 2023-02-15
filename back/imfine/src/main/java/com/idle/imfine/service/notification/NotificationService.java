@@ -14,6 +14,7 @@ public interface NotificationService {
     void checkNotification(RequestNotificationDetailDto requestNotificationDetailDto, String uid);
     SseEmitter subscribe(String uid, String lastEventId);
     void dtoToSend(ResponseNotificationPost responseDto);
-    void send(Notification notification);
+    void send(long notificationId);
+    Notification saveNotification(Long senderId, Long recieverId, int contenstsCodeId, Long contentsId, int type);
 
 }
