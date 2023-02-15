@@ -57,6 +57,7 @@ function App() {
         cloverCode: '-1',
       })
     );
+    localStorage.setItem('accessToken', null);
   };
 
   // 토큰 갱신 및 기존 요청 재요청
@@ -74,6 +75,8 @@ function App() {
           error,
           logoutwithErrorCallBack
         );
+      } else if (errorResponse.data.error.includes('TOKEN')) {
+        logoutwithErrorCallBack();
       }
       return Promise.reject(error);
     }
