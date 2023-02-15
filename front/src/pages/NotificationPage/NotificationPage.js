@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../api/api';
@@ -8,24 +8,48 @@ import NotificationItem from '../../components/Notification/NotificationItem/Not
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
 function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
+  const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasNext, setHasNext] = useState(false);
+  const observerRef = useRef();
+
   const [read, setRead] = useState([]);
+
+  const observer = (element) => {
+    if (isLoading) return;
+
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting && hasNext) {
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    element && observerRef.current.observe(element);
+  };
   const userId = useSelector((state) => {
     return state.user.uid;
   });
   // 알림 리스트 GET
-  const fetchNotificationsDetail = async () => {
+  const fetchNotificationsDetail = async (pagination) => {
     try {
-      const res = await axios.get(api.notifications.getNotifications());
+      const res = await axios.get(
+        api.notifications.getNotifications(pagination)
+      );
       console.log('notifications list res', res.data.data);
-      setNotifications(res.data.data);
+      setIsLoading(false);
+      setNotifications((prev) => prev.concat(res.data.data));
+      setHasNext(notifications[notifications.length - 1].hasNext);
     } catch (error) {
       console.log('err', error);
     }
   };
 
   useEffect(() => {
-    fetchNotificationsDetail();
-  }, []);
+    fetchNotificationsDetail(page);
+  }, [page]);
 
   useEffect(() => {
     let eventSource = new EventSourcePolyfill(
@@ -75,16 +99,20 @@ function NotificationPage() {
       <div>
         {notifications.map((item) => {
           return (
-            <NotificationItem
-              key={item.notificationId}
-              notificationId={item.notificationId}
-              title={item.contentsCodeId}
-              msg={item.msg}
-              showButton={item.showButton}
-              senderUid={item.senderUid}
-              navigateId={item.contentsId}
-              check={item.check}
-            />
+            <>
+              <NotificationItem
+                key={item.notificationId}
+                notificationId={item.notificationId}
+                title={item.contentsCodeId}
+                msg={item.msg}
+                showButton={item.showButton}
+                senderUid={item.senderUid}
+                navigateId={item.contentsId}
+                check={item.check}
+              />
+              <div ref={observer} />
+              {isLoading && <p>로딩중...</p>}
+            </>
           );
         })}
       </div>
