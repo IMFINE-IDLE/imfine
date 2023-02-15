@@ -31,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -297,11 +298,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto) {
         User user = common.getUserByUid(uid);
 
-        LOGGER.info("일단 전부 삭제....");
+        LOGGER.info("[modifyUserMedicalList] 전부 삭제 시작");
         userHasMedicalRepository.deleteAllByUser(user);
+        LOGGER.info("[modifyUserMedicalList] 전부 삭제 완료");
+
 
         for (Integer code : requestDto.getMedicalList()) {
             MedicalCode medicalCode = medicalCodeRepository.findById(code)
