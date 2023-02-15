@@ -87,6 +87,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .image("background/" + (int) (Math.random() * 10) + ".jpg")
                 .active(true)
                 .writer(user)
+                .open(saveDiary.isOpen())
                 .active(saveDiary.isOpen())
                 .build();
 
@@ -168,11 +169,11 @@ public class DiaryServiceImpl implements DiaryService {
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
 
-        List<Symptom> symptomByDiary = diaryHasSymptomRepository.getAllByDiaryIdSymptomMap(
+        List<DiaryHasSymptom> symptomByDiary = diaryHasSymptomRepository.getAllByDiaryIdSymptomMap(
                 diary);
         Map<Integer, String> symptomIdByName = new HashMap<>();
         symptomByDiary.forEach(
-                symptom -> symptomIdByName.put(symptom.getId(), symptom.getName())
+                symptom -> symptomIdByName.put(symptom.getSymptom().getId(), symptom.getSymptom().getName())
         );
 
         List<PaperHasSymptom> paperHasSymptoms = paperHasSymptomRepository.findPaperHasSymptomByPaperIn(
