@@ -69,7 +69,7 @@ function App() {
       const { response: errorResponse } = error;
       const originalRequest = error.config;
       // 토큰 갱신
-      if (errorResponse.data.success === false) {
+      if (errorResponse.data.error === 'EXPIRED_TOKEN') {
         return await resetTokenAndReattemptRequest(
           error,
           logoutwithErrorCallBack

@@ -12,6 +12,7 @@ const ImageModal = styled.div`
   img {
     width: 100%;
   }
+  z-index: 998;
 `;
 
 export { ImageModal };

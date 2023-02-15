@@ -5,7 +5,7 @@ const BoxSearchResult = styled(BoxGrad)`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.2em 1em 5.5em;
+  padding: 0 1em 5.5em;
   border-radius: 0;
 `;
 
