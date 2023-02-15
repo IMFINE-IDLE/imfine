@@ -32,8 +32,9 @@ import FindIdPage from './pages/FindIdPage/FindIdPage';
 import FindPwPage from './pages/FindPwPage/FindPwPage';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { logOut, tokenRefresh, updateCode } from './store/slice/userSlice';
+import { updateCode, logOutWithError } from './store/slice/userSlice';
 import schedule from 'node-schedule';
+import { resetTokenAndReattemptRequest } from './utils/utils';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -48,27 +49,31 @@ import schedule from 'node-schedule';
 
 function App() {
   const dispatch = useDispatch();
-  // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
 
-  axios.defaults.withCredentials = true;
-  // 디폴트 헤더 설정
+  const logoutwithErrorCallBack = () => {
+    dispatch(
+      logOutWithError({
+        isLogin: false,
+        uid: null,
+        cloverCode: '-1',
+      })
+    );
+  };
+
   axios.interceptors.response.use(
     (response) => {
-      console.log('response');
       return response;
     },
-    (error) => {
+    async (error) => {
       console.log(error.response);
+      const { response: errorResponse } = error;
+      const originalRequest = error.config;
       // 토큰 갱신
-      if (error.response.data.error === 'EXPIRED_TOKEN') {
-        dispatch(tokenRefresh());
-      } else if (
-        // 로그아웃
-        error.response.data.error === 'INVALID_REFRESH_TOKEN' ||
-        error.response.data.error === 'WRONG_TYPE_TOKEN'
-      ) {
-        console.log('로그아웃 하러 들어옴');
-        dispatch(logOut());
+      if (errorResponse.data.success === false) {
+        return await resetTokenAndReattemptRequest(
+          error,
+          logoutwithErrorCallBack
+        );
       }
       return Promise.reject(error);
     }
