@@ -505,13 +505,10 @@ public class DiaryServiceImpl implements DiaryService {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
         int relation = common.getFollowRelation(user, other);
-        if (relation > 1 && !other.isOpen()) {
-            throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
-        }
         List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(other);
 
         LOGGER.info("[DiaryServiceImpl.getDiarySubscribe]내가 구독한 일기장 조회 종료");
-        return getResponseDiaryListDtos(relation, diaries);
+        return getResponseDiaryListDtos(diaries);
     }
 
 
@@ -522,17 +519,13 @@ public class DiaryServiceImpl implements DiaryService {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
         int relation = common.getFollowRelation(user, other);
-        if (relation > 1 && !other.isOpen()) {
-            throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
-        }
         List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(other);
 
         LOGGER.info("[DiaryServiceImpl.getDiaryMyWrite] 종료");
-        return getResponseDiaryListDtos(relation, diaries);
+        return getResponseDiaryListDtos(diaries);
     }
-    private List<ResponseDiaryListDto> getResponseDiaryListDtos(int relation, List<Diary> diaries) {
+    private List<ResponseDiaryListDto> getResponseDiaryListDtos(List<Diary> diaries) {
         return diaries.stream()
-                .filter(diary -> diary.isOpen() || relation == 0)
                 .map(
                     diary -> ResponseDiaryListDto.builder()
                             .uid(diary.getWriter().getUid())
