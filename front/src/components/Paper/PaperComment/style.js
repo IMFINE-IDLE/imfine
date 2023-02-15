@@ -41,9 +41,18 @@ const DivUser = styled.div`
 `;
 
 const BoxBtns = styled.div`
+  position: absolute;
+  right: 1em;
   display: flex;
   align-items: center;
   color: var(--gray800-color);
+`;
+
+const BtnCommentHeart = styled.div`
+  position: absolute;
+  right: 2em;
+  display: inline-block;
+  width: 50px;
 `;
 
 const BoxContent = styled.div`
@@ -52,4 +61,12 @@ const BoxContent = styled.div`
   line-height: 1.2rem;
 `;
 
-export { BoxCommentItem, BoxTop, BoxUser, DivUser, BoxBtns, BoxContent };
+export {
+  BoxCommentItem,
+  BoxTop,
+  BoxUser,
+  DivUser,
+  BoxBtns,
+  BtnCommentHeart,
+  BoxContent,
+};
