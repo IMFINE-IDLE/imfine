@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
-
+import { Btn } from '../../common/Btn/Btn';
 const ColumnDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -37,4 +37,19 @@ const Content = styled.div`
   color: var(--icon-color);
 `;
 
-export { ColumnDiv, BoxNoShadLeaves, TopDiv, TitleLabel, BottomDiv, Content };
+const BtnUpdate = styled.button`
+  ${Btn}
+  margin-top: 1em;
+  margin-left: 1em;
+  margin-right: 1em;
+  display: inline-block;
+`;
+export {
+  ColumnDiv,
+  BoxNoShadLeaves,
+  TopDiv,
+  TitleLabel,
+  BottomDiv,
+  Content,
+  BtnUpdate,
+};
