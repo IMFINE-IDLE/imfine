@@ -483,6 +483,7 @@ public class PaperServiceImpl implements PaperService {
                         .condition(String.format("%d",conditionRepository.findByUserAndDate(paper.getDiary()
                                 .getWriter(), paper.getDate()).orElseGet(Condition::new).getCondition()))
                         .image(!imageRepository.findByPaperId(paper).isEmpty())
+                        .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, paper.getId()))
                         .symptomList(makeSymptomListByPaper(paper))
                         .build()
         ).collect(Collectors.toList());
