@@ -105,12 +105,14 @@ function PaperItemDetail({ paperId, paper }) {
                 {/* {isPlaying ? <p>Playing...</p> : <p>Paused</p>} */}
               </BoxTopAudio>
             </div>
-            <BtnReport
-              paperId={paperId}
-              apiFunc={() => {
-                setPaperReportModalOpen(true);
-              }}
-            />
+            {userStatus !== 0 && (
+              <BtnReport
+                paperId={paperId}
+                apiFunc={() => {
+                  setPaperReportModalOpen(true);
+                }}
+              />
+            )}
           </BoxRight>
         </BoxTop>
         <BoxContent>
