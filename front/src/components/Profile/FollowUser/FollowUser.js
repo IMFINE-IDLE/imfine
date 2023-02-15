@@ -70,7 +70,7 @@ const FollowUser = ({
             {name}
           </span>
         </FollowUserWrapper>
-        {relation === 0 || !noFollowButton || (
+        {(relation === 0 || !noFollowButton) && (
           <FollowUserBtn
             color={relation === 3 ? 'main' : 'gray'}
             onClick={() => fetchChangeFollowStatus()}
