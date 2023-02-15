@@ -27,6 +27,7 @@ const DiaryCreatePage = () => {
       <PickMenuTab
         tabCnt={2}
         title="질병/수술"
+        pickOnlyOne={true}
         medicals={medicalList}
         symptoms={symptomList}
         setMedicals={setMedicalList}
