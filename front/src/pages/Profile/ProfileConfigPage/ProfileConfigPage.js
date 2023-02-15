@@ -25,12 +25,11 @@ const ProfileConfigPage = () => {
    * Hooks
    */
   const { uid } = useParams();
-  const { name, medicalList, open } = useLocation().state;
-  console.log('mlist', medicalList);
+  const { name, medicalList, open, medicalsOpen } = useLocation().state;
 
   // 상세내용 보여주기용 state
   const [showChangeName, setShowChangeName] = useState(false);
-  const [showPickMedicals, setShowPickMedicals] = useState(false);
+  const [showPickMedicals, setShowPickMedicals] = useState(medicalsOpen);
 
   // 값 저장할 state
   const [newName, setNewName] = useState(name);
@@ -83,6 +82,10 @@ const ProfileConfigPage = () => {
   // 관심 질병/수술 변경 요청
   const fetchChangeMedicals = async () => {
     try {
+      console.log(
+        '1111111111',
+        medicals.map((medical) => medical.id)
+      );
       const res = await axios.put(api.user.changeMedical(), {
         medicalList: medicals.map((medical) => medical.id),
       });
@@ -104,6 +107,7 @@ const ProfileConfigPage = () => {
     }
   };
 
+  // 변경사항 반영하기 버튼 클릭시
   const handleSubmit = async () => {
     try {
       // 닉네임이 변경되었을 경우 변경요청
@@ -181,7 +185,12 @@ const ProfileConfigPage = () => {
         {showPickMedicals && (
           <>
             <TitleText>내 관심 질병/수술</TitleText>
-            <FlexDiv height="auto" justify="start" padding="1em">
+            <FlexDiv
+              height="auto"
+              justify="start"
+              padding="1em 0.2em"
+              wrap="wrap"
+            >
               {medicals?.map(({ id, name }) => (
                 <MedicalBtn key={id} color="gray">
                   {name}

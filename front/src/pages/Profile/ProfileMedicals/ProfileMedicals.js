@@ -16,6 +16,7 @@ const ProfileMedicals = () => {
       name: newName,
       medicalList: pickedMedicals,
       open: isOpen,
+      medicalsOpen: true,
     };
     navigate(`/profile/${uid}/config`, { state: infoToProfileConfig });
   };

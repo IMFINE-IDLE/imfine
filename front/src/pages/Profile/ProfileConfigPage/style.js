@@ -55,7 +55,7 @@ const MedicalBtn = styled.button`
   border-radius: 15px;
   font-size: 0.75em;
   padding: 0.5em;
-  margin-right: 1em;
+  margin-right: 0.85em;
 `;
 
 const ToggleContainer = styled.div`

@@ -115,7 +115,12 @@ const ProfileInfo = ({
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate(`/profile/${uid}/config`, {
-                            state: { name, medicalList, open },
+                            state: {
+                              name,
+                              medicalList,
+                              open,
+                              medicalsOpen: false,
+                            },
                           });
                         }}
                       >
