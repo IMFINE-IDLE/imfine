@@ -31,11 +31,8 @@ import {
 function PaperCreatePage() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log('locations unknown', location.state);
   const dateFixed = location.state.dateFixed;
-  console.log('whyrano?', dateFixed);
   const { year, month, day } = location.state.info;
-  console.log('whyrano', year, month, day);
   // 이미지 업로드 개수 3개까지 MAX
   const now = new Date();
   const [diaries, setDiaries] = useState([]); // dropdown에 나올 일기장 선택값들 저장
@@ -64,7 +61,6 @@ function PaperCreatePage() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
       setDiaries(res.data.data);
-      console.log('내가만든다이어리', res.data.data);
     } catch (res) {
       console.log('err', res.data);
     }
@@ -115,10 +111,25 @@ function PaperCreatePage() {
     });
   }, []);
 
-  console.log('take a look', diary);
-  console.log('setting symptoms?', symptoms);
-  console.log('set scores', scores);
-  console.log('today?', form);
+  // 일기 작성 업로드 체크
+  const validCheck = (e) => {
+    if (symptoms.length !== 0) {
+      handleUploadImage();
+    } else {
+      alert('일기장을 먼저 선택해주세요');
+    }
+  };
+
+  // 증상 추가 업로드 체크
+  const validSymptomCheck = (e) => {
+    if (symptoms.length !== 0) {
+      navigate(`/diary/${diaryId}/modify/symptom`, {
+        state: infoToModifyPage,
+      });
+    } else {
+      alert('일기장을 먼저 선택해주세요');
+    }
+  };
   // 이미지 서버에 업로드 시키기
   // multipart 업로드
   const handleUploadImage = async () => {
@@ -159,13 +170,16 @@ function PaperCreatePage() {
       };
 
       const res = await axios.post(api.paper.paperWrite(), data, config);
-      console.log('upload success', res);
 
+      if (res.data.message === '해당 날짜는 이미 작성했습니다.') {
+        alert('이미 작성된 날짜입니다.');
+        navigate(-1);
+      }
       const id = res.data.data;
       alert('일기가 성공적으로 등록되었습니다');
       navigate(`/paper/${id}`);
     } catch (err) {
-      console.error(err);
+      console.error('err', err);
     }
   };
 
@@ -220,14 +234,7 @@ function PaperCreatePage() {
       </BoxContent>
       <RightDiv>
         <FiArrowRight />
-        <ContentLabel
-          margin="1em 2em 1em 0.3em"
-          onClick={() =>
-            navigate(`/diary/${diaryId}/modify/symptom`, {
-              state: infoToModifyPage,
-            })
-          }
-        >
+        <ContentLabel margin="1em 2em 1em 0.3em" onClick={validSymptomCheck}>
           {' '}
           증상 추가하러 가기
         </ContentLabel>
@@ -280,7 +287,7 @@ function PaperCreatePage() {
         <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
           취소하기
         </BtnUpdate>
-        <BtnUpdate onClick={handleUploadImage}>일기쓰기</BtnUpdate>
+        <BtnUpdate onClick={validCheck}>일기쓰기</BtnUpdate>
       </FlexDiv>
     </>
   );

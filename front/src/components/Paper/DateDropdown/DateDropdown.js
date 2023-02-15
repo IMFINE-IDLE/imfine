@@ -10,7 +10,6 @@ function DateDropdown({
   value,
   state,
 }) {
-  console.log('date', selectYear, selectMonth, selectDay, value);
   const now = new Date();
   let years = [];
   for (let y = now.getFullYear(); y >= 1930; y -= 1) {
