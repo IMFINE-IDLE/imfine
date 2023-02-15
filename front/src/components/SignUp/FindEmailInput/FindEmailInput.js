@@ -1,6 +1,6 @@
 import React from 'react';
 import { ErrorMsg, InputSignUp, Label } from '../../../pages/SignUpPage/style';
-import { isEmailValid } from '../../../utils/utils';
+import { isEmailValid } from '../../../utils/userUtils';
 
 function FindEmailInput({ inputEmail, setInputEmail, errorMsg, setErrorMsg }) {
   return (

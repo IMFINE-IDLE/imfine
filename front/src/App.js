@@ -34,7 +34,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { updateCode, logOutWithError } from './store/slice/userSlice';
 import schedule from 'node-schedule';
-import { resetTokenAndReattemptRequest } from './utils/utils';
+import { resetTokenAndReattemptRequest } from './utils/userUtils';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -60,6 +60,7 @@ function App() {
     );
   };
 
+  // 토큰 갱신 및 기존 요청 재요청
   axios.interceptors.response.use(
     (response) => {
       return response;

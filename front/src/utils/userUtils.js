@@ -1,17 +1,11 @@
 import axios from 'axios';
 import api from '../api/api';
 
-export const isEmailValid = (email) => {
-  const emailRegex =
-    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
-
-  return emailRegex.test(email);
-};
-
-// axios 토큰 갱신
 let isAlreadyFetchingAccessToken = false;
 let subscribers = [];
-
+/**
+ * 토큰을 갱신하고 기존 요청을 처리
+ */
 export const resetTokenAndReattemptRequest = async (
   error,
   dispatchCallback
@@ -45,22 +39,36 @@ export const resetTokenAndReattemptRequest = async (
       return retryOriginalRequest;
     }
   } catch (err) {
-    // logOut()
     console.log(err);
     // console.log('로그아웃 하러 들어옴');
     localStorage.setItem('accessToken', null);
-    // window.location.href = '/login';
     dispatchCallback();
 
     return Promise.reject(error);
   }
 };
 
+/**
+ * 기존 요청들을 처리하기 위해 배열에 담기
+ */
 function addSubscriber(callback) {
   subscribers.push(callback);
 }
 
+/**
+ * 기존 요청들 처리 및 배열 초기화
+ */
 function onAccessTokenFetched(accessToken) {
   subscribers.forEach((callback) => callback(accessToken));
   subscribers = [];
 }
+
+/**
+ * 이메일 유효성 검증 함수
+ */
+export const isEmailValid = (email) => {
+  const emailRegex =
+    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
+
+  return emailRegex.test(email);
+};
