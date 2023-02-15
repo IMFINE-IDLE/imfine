@@ -2,6 +2,7 @@ import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import DiaryItem from '../DiaryItem/DiaryItem';
 
 const DiaryListGrid = ({ diaryList }) => {
+  console.log(diaryList);
   return (
     <FlexDiv wrap="wrap" gap="1.25em 5%" justify="start">
       {diaryList?.map(
@@ -13,6 +14,7 @@ const DiaryListGrid = ({ diaryList }) => {
           name,
           open,
           paperCount,
+          paperId,
           subscribeCount,
           title,
           uid,

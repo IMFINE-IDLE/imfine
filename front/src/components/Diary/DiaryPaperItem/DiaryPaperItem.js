@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/ko';
 import { FiHeart, FiMessageCircle } from 'react-icons/fi';
-import LikeComment from '../../Paper/LikeComment/LikeComment';
 import { Clover } from '../../common/Clover/Clover';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import { BoxLT50R25 } from '../../common/BoxLT50R25/BoxLT50R25';
@@ -15,21 +14,22 @@ import {
 import axios from 'axios';
 import api from '../../../api/api';
 import { SpanLikeCmt } from '../../Paper/LikeComment/style';
+import { useNavigate } from 'react-router-dom';
 
 const DiaryPaperItem = ({ paperInfo, setIsPaperChanged }) => {
   const [isLiked, setIsLiked] = useState(paperInfo.myHeart);
   const [localLikeCount, setLocalLikeCount] = useState(paperInfo.likeCount);
   const fillHeart = isLiked ? 'var(--red-color)' : 'none';
-  console.log('props', paperInfo);
-  console.log('isliked', isLiked);
+
+  const navigate = useNavigate();
 
   // 일기 좋아요 등록
   const likePaper = async () => {
     try {
-      const res = await axios.post(api.paper.paperLikePost(), {
+      await axios.post(api.paper.paperLikePost(), {
         contentId: paperInfo.paperId,
       });
-      console.log('like', res);
+
       setIsPaperChanged((prev) => !prev);
     } catch (err) {
       console.error(err);
@@ -39,26 +39,24 @@ const DiaryPaperItem = ({ paperInfo, setIsPaperChanged }) => {
   // 일기 좋아요 취소
   const likePaperDelete = async () => {
     try {
-      const res = await axios.delete(
-        api.paper.paperLikeDelete(paperInfo.paperId)
-      );
-      console.log(res);
+      await axios.delete(api.paper.paperLikeDelete(paperInfo.paperId));
+
       setIsPaperChanged((prev) => !prev);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // console.log(symptomList);
-
-  // 댓글 작업 필요
-
   return (
     <>
       {paperInfo && (
         <FlexDiv margin="1em 0" align="start">
           <Clover width="3.5em" height="3.5em" code={paperInfo?.condition} />
-          <BoxLT50R25 height="auto" width="calc(100% - 3em)">
+          <BoxLT50R25
+            height="auto"
+            width="calc(100% - 3em)"
+            onClick={() => navigate(`/paper/${paperInfo?.paperId}`)}
+          >
             <FlexDiv justify="start">
               <DiaryPaperSpan
                 size="0.75em"
