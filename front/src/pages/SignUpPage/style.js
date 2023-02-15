@@ -3,8 +3,8 @@ import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
 import { Btn } from '../../components/common/Btn/Btn';
 import { InputGray } from '../../components/common/InputGray/InputGray';
 
-const BoxSignUp = styled.div`
-  padding: 2em;
+const BoxTopSignUp = styled.div`
+  padding: 1em 2em 1.5em;
 `;
 
 const TitleSignUp = styled.h1`
@@ -69,7 +69,7 @@ const DivEmail = styled.div`
 `;
 
 export {
-  BoxSignUp,
+  BoxTopSignUp,
   TitleSignUp,
   CloverImg,
   BoxInnerSignup,

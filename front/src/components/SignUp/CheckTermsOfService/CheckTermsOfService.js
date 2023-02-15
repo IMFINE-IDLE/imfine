@@ -5,7 +5,7 @@ import { BoxCheck } from './style';
 function CheckTermsOfService({ checkedTerms, setCheckedTerms }) {
   return (
     <BoxCheck onClick={() => setCheckedTerms((prev) => !prev)}>
-      <span>
+      <span style={{ fontSize: '13px' }}>
         <FiCheckCircle
           size={'16px'}
           style={{
