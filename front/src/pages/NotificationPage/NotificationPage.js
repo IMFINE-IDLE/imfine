@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../api/api';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -7,6 +8,9 @@ import NotificationItem from '../../components/Notification/NotificationItem/Not
 function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
 
+  const userId = useSelector((state) => {
+    return state.user.uid;
+  });
   // 알림 리스트 GET
   const fetchNotificationsDetail = async () => {
     try {
@@ -23,9 +27,8 @@ function NotificationPage() {
   }, []);
 
   useEffect(() => {
-    let uid = localStorage.getItem('uid'); //uid로 할수 있나
     let eventSource = new EventSourcePolyfill(
-      `https://i8a809.p.ssafy.io/api/sse?uid=${uid}`,
+      `https://i8a809.p.ssafy.io/api/sse?uid=${userId}`,
       { withCredentials: true, heartbeatTimeout: 120000 }
     );
     console.log('event url', eventSource);

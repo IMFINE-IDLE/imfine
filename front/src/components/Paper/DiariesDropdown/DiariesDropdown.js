@@ -11,6 +11,10 @@ function DiariesDropdown({ isdisabled, value, state, diaries }) {
           value={value}
           onChange={(e) => state(e.target.value)}
         >
+          {' '}
+          <Options value="" disabled hidden>
+            {'일기장을 선택하세요'}
+          </Options>
           {diaries.map((diary) => (
             <Options value={diary.diaryId} key={diary.diaryId}>
               {diary.title}
