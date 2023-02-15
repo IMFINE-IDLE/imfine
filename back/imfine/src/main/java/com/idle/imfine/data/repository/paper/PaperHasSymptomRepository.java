@@ -17,7 +17,7 @@ public interface PaperHasSymptomRepository extends JpaRepository<PaperHasSymptom
 
     List<PaperHasSymptom> findByIdIn(List<Long> symptomIds);
 
-    @Query("select distinct phs from  PaperHasSymptom phs where phs.paper.diary=:diary and phs.paper.date between :startDate and :endDate")
+    @Query("select distinct phs from  PaperHasSymptom phs join phs.paper p where p.diary=:diary and p.date between :startDate and :endDate")
     List<PaperHasSymptom> findPaperHasSymptomByPaperIn(@Param("diary") Diary diary,
             @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     @Modifying
