@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../../api/api';
 import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
+import DiaryTitle from '../../../components/Paper/DiaryTitle/DiaryTitle';
+import PickedItemList from '../../../components/PickedItemList/PickedItemList';
+import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
+import { ReactComponent as BookmarkSvg } from './bookmark.svg';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import { DiaryBoxGrad } from '../DiaryCreateConfirmPage/style';
-import { DiaryInfoContainer, DiaryDateSpan } from './style';
-import DiaryTitle from '../../../components/Paper/DiaryTitle/DiaryTitle';
-import { ReactComponent as BookmarkSvg } from './bookmark.svg';
-
-import PickedItemList from '../../../components/PickedItemList/PickedItemList';
-import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
-import { useSelector } from 'react-redux';
+import { DiaryInfoContainer, DiaryDateSpan, DiaryReportBtn } from './style';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
   const [diaryInfo, setDiaryInfo] = useState(null);
   const [showGraph, setShowGraph] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -112,9 +112,10 @@ const DiaryDetailPage = () => {
                   }
                 />
               ) : (
-                <>
+                <FlexDiv justify="end" style={{ position: 'relative' }}>
                   <BookmarkSvg
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       fetchUpdateSubscribeStatus(diaryInfo.subscribe);
                       setDiaryInfo((prev) => ({
                         ...prev,
@@ -133,8 +134,27 @@ const DiaryDetailPage = () => {
                     }
                     style={{ position: 'relative', top: '-1.5px' }}
                   />
-                  <img src="/assets/icons/more-vertical.svg" alt="more" />
-                </>
+                  <img
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setReportOpen((prev) => !prev);
+                    }}
+                    src="/assets/icons/more-vertical.svg"
+                    alt="more"
+                  />
+                  {reportOpen && (
+                    <DiaryReportBtn
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/report', {
+                          state: { id: diaryId, type: 'Diary' },
+                        });
+                      }}
+                    >
+                      신고하기
+                    </DiaryReportBtn>
+                  )}
+                </FlexDiv>
               )}
             </FlexDiv>
           </FlexDiv>

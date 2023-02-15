@@ -63,7 +63,7 @@ const DiaryItem = ({
             {medicalName}
           </DiaryItemSpan>
           <DiaryItemSpan fontSize="0.8em" padding="0.25em 0">
-            {title.length <= 8 ? title : title.substr(0, 7) + '...'}
+            {title.length <= 7 ? title : title.substr(0, 6) + '...'}
           </DiaryItemSpan>
           <DiaryItemSpan fontSize="0.7em">{name}</DiaryItemSpan>
         </FlexDiv>

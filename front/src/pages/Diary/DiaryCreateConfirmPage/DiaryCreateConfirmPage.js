@@ -24,28 +24,26 @@ import {
 function DiaryCreateConfirmPage() {
   const { medicalList, symptomList } = useLocation().state;
 
+  // 일기장 정보를 저장할 state
   const [diaryInfo, setDiaryInfo] = useState({
     title: '',
     description: '',
   });
   const [isOpen, setIsOpen] = useState(true);
+
   const navigate = useNavigate();
 
   // 일기장 생성 요청
   const fetchPostDiary = async () => {
     try {
-      const res = await axios.post(
-        api.diary.postDiary(),
-        {
-          medicalId: medicalList[0].id,
-          open: isOpen,
-          title: diaryInfo.title,
-          description: diaryInfo.description,
-          image: '1',
-          symptom: symptomList?.map((symptom) => symptom.id),
-        }
-        // { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
+      const res = await axios.post(api.diary.postDiary(), {
+        medicalId: medicalList[0].id,
+        open: isOpen,
+        title: diaryInfo.title,
+        description: diaryInfo.description,
+        image: '1',
+        symptom: symptomList?.map((symptom) => symptom.id),
+      });
 
       navigate(`/diary/${res.data.data}`);
     } catch (err) {
@@ -86,11 +84,13 @@ function DiaryCreateConfirmPage() {
           <DiaryCreateTitleText>
             일기장 제목을 입력해주세요
           </DiaryCreateTitleText>
+
           <DiaryCreateInput
             name="title"
-            maxLength={20}
+            maxLength={12}
             required
             onChange={handleDiaryInfoChange}
+            type="text"
           />
           <DiaryCreateTitleText>
             일기장 설명을 입력해주세요
