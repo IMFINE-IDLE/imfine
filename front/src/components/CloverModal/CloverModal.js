@@ -46,9 +46,6 @@ const CloverModal = ({
     try {
       // 컨디션 최초 설정이면 post 요청, 수정이면 put 요청
       const method = currentClover === '-1' ? 'post' : 'put';
-      console.log('method', method);
-      console.log('newcon', newCondition);
-      console.log('date', date);
 
       await axios({
         method: method,
@@ -56,9 +53,6 @@ const CloverModal = ({
         data: {
           date: moment(date).format('YYYY-MM-DD'),
           condition: newCondition,
-        },
-        headers: {
-          Authorization: localStorage.getItem('accessToken'),
         },
       });
 
