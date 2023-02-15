@@ -1,7 +1,12 @@
 import React from 'react';
+import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 
 const ProfileMedicals = () => {
-  return <div>ProfileMedicals</div>;
+  return (
+    <>
+      <NavBarBasic />
+    </>
+  );
 };
 
 export default ProfileMedicals;

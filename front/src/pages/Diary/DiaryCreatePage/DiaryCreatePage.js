@@ -34,16 +34,6 @@ const DiaryCreatePage = () => {
         onSubmitBtnClick={handleSubmit}
         submitBtnText="선택 완료"
       />
-
-      {/* <SubmitBtn
-        radius="20px"
-        height="3.5em"
-        margin="4em 0 0 0"
-        type="submit"
-        onClick={() => navigate('/diary/create/confirm')}
-      >
-        선택 완료
-      </SubmitBtn> */}
     </>
   );
 };

@@ -43,6 +43,11 @@ const ErrorMsg = styled.span`
   color: var(--red-color);
 `;
 
+const OKMsg = styled.span`
+  font-size: 0.75em;
+  color: var(--gray800-color);
+`;
+
 const MedicalBtn = styled.button`
   ${Btn}
   width: 3.75em;
@@ -116,6 +121,7 @@ export {
   NicknameInput,
   SubmitBtn,
   ErrorMsg,
+  OKMsg,
   MedicalBtn,
   ToggleContainer,
   ToggleText,
