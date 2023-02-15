@@ -39,13 +39,8 @@ function PaperFeedPage() {
   // 일기 피드 조회
   const fetchPaperFeed = async (pagination) => {
     try {
-      const res = await axios.get(api.paper.paperFeed(pagination), {
-        // headers: {
-        //   Authorization: accessToken,
-        // },
-        // headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log(res.data);
+      const res = await axios.get(api.paper.paperFeed(pagination));
+      // console.log(res.data);
       setIsLoading(false);
       setPaperList((prev) => prev.concat(res.data.data.list));
       setHasNext(res.data.data.hasNext);

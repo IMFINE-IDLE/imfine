@@ -9,6 +9,7 @@ const BoxPaper = styled(BoxLT50)`
   cursor: pointer;
   z-index: 1;
   height: auto;
+  overflow: hidden;
 `;
 
 const BoxTop = styled.div`
@@ -50,14 +51,24 @@ const BoxRight = styled.div`
   flex: 1;
 `;
 
+const BoxSymptomList = styled.div`
+  /* overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  } */
+`;
+
 const Symptom = styled(BtnSymptom)`
-  display: inline;
+  display: inline-block;
   width: auto;
   background-color: var(--light-color);
+  padding: 0.2em 0.5em;
 `;
 
 const BoxContent = styled.div`
-  padding: 0.7em 0.3em;
+  padding: 0.5em 0.3em 0.7em;
   line-height: 1.5em;
   color: var(--icon-color);
 `;
@@ -72,8 +83,10 @@ const BoxBottom = styled.div`
 const SpanDate = styled.span`
   font-weight: 400;
   color: var(--icon-color);
-  font-size: 14px;
+  font-size: 13px;
   margin-left: 0.2em;
+  line-height: 1rem;
+  vertical-align: middle;
 `;
 
 export {
@@ -81,6 +94,7 @@ export {
   BoxTop,
   BoxLeft,
   BoxRight,
+  BoxSymptomList,
   Symptom,
   BoxContent,
   BoxBottom,

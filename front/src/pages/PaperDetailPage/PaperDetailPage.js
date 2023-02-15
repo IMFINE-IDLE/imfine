@@ -93,7 +93,7 @@ function PaperDetailPage() {
 
   return (
     <>
-      <NavBarBasic Back BackgroundColor={'light'} />
+      <NavBarBasic Back BackgroundColor={'light'} BackFromPaperDetail />
       <PaperItemDetail paper={paperDetail} paperId={paperId} />
       <BoxComment>
         <FiMessageCircle />

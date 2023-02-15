@@ -8,7 +8,6 @@ import { Provider } from 'react-redux';
 import store, { persistor } from './store';
 import axios from 'axios';
 import { PersistGate } from 'redux-persist/integration/react';
-import { resetTokenAndReattemptRequest } from './utils/utils';
 
 // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
 axios.defaults.withCredentials = true;
