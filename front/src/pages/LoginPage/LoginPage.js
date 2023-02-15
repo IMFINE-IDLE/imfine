@@ -20,6 +20,14 @@ function Login() {
   const [uid, setUid] = useInput('');
   const [password, setPassword] = useInput('');
   const logInByData = async () => {
+    if (uid.length < 1) {
+      alert('아이디를 입력해주세요.');
+      return;
+    }
+    if (password.length < 1) {
+      alert('비밀번호를 입력해주세요.');
+      return;
+    }
     const userData = {
       uid,
       password,
