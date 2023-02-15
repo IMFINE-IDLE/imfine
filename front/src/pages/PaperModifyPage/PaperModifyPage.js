@@ -16,7 +16,7 @@ import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCre
 import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropdown';
 import DateDropdown from '../../components/Paper/DateDropdown/DateDropdown';
 import ModifyBoxSymptom from '../../components/Paper/ModifyBoxSymptom/ModifyBoxSymptom';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
@@ -32,13 +32,14 @@ import DiaryInfo from '../../components/Diary/DiaryInfo/DiaryInfo';
 import ModifyPreviewImage from '../../components/Paper/PreviewImage/ModifyPreviewImage';
 function PaperModifyPage() {
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const diaryId = location.state.diaryId;
+  console.log('dd', diaryId);
   const { paperId } = useParams();
   // 이미지 업로드 개수 3개까지 MAX
   const now = new Date();
-
   const [diaries, setDiaries] = useState([]); // dropdown에 나올 일기장 선택값들 저장
-  const [diaryId, setDiaryId] = useState(''); // dropdown 선택 시 일기장 아이디값 저장
+  //const [diaryId, setDiaryId] = useState(''); // dropdown 선택 시 일기장 아이디값 저장
   const [diary, setDiary] = useState(''); // 일기장 상세정보
   const [value, setValue] = useState(''); // 일기내용
   const [files, setFiles] = useState([]); // 이미지미리뵈기
@@ -59,6 +60,8 @@ function PaperModifyPage() {
     day: '01',
   });
 
+  // 증상 수정 페이지에 넘길 정보
+  const [infoToModifyPage, setInfoToModifyPage] = useState({});
   // 수정할 일기 정보 저장하는 useState();
   const [paperInfo, setPaperInfo] = useState([]);
 
@@ -74,6 +77,18 @@ function PaperModifyPage() {
     }
   };
 
+  // 해당 다이어리(일기장) 정보 불러오기
+  const getDiaryInfos = async () => {
+    try {
+      const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log('일기장 상세정보', res.data.data);
+      setDiary(res.data.data);
+    } catch (res) {
+      console.log('err', res.data);
+    }
+  };
   // 일기 수정시 필요한 정보 받아오기
   const modifyPaperInfo = async () => {
     try {
@@ -110,25 +125,63 @@ function PaperModifyPage() {
         day: dates[2],
       });
       setIsOpen(res.data.data.open);
+      //setDiaryId(res.data.data.diaryId);
+      // setInfoToModifyPage({
+      //   medicals: res.data.data.medicals,
+      //   diaryHasSymptoms: res.data.data.symptoms,
+      //   diaryId: res.data.data.diaryId,
+      //   title: res.data.data.title,
+      //   description: res.data.data.description,
+      //   open: res.data.data.open,
+      //   from: 'paper',
+      // });
     } catch (error) {
       console.log('error', error);
     }
   };
 
+  console.log('diaryinfo', diary);
   console.log('print', paperInfo);
   console.log('form', form);
   console.log('files', files);
   console.log('deleted', deleted);
   console.log('original', original);
   console.log('updated', updated);
+  console.log('info', infoToModifyPage);
   for (let i = 0; i < files.length; i++) {
     console.log('type', typeof files[i]);
   }
   console.log('value', value);
+
   useEffect(() => {
     getDiaries();
     modifyPaperInfo();
   }, []);
+
+  useEffect(() => {
+    getDiaryInfos();
+    // setInfoToModifyPage({
+    //   medicals: res.data.data.medicals,
+    //   diaryHasSymptoms: res.data.data.symptoms,
+    //   diaryId: res.data.data.diaryId,
+    //   title: res.data.data.title,
+    //   description: res.data.data.description,
+    //   open: res.data.data.open,
+    //   from: 'paper',
+    // });
+  }, [diaries]);
+
+  useEffect(() => {
+    setInfoToModifyPage({
+      medicals: diary.medicals,
+      symptoms: diary.diaryHasSymptoms,
+      diaryId: diaryId,
+      title: diary.title,
+      description: diary.description,
+      open: diary.open,
+      from: 'paper',
+    });
+  }, [diary]);
 
   // 이미지 서버에 업로드 시키기
   // 일기수정하기
@@ -250,7 +303,11 @@ function PaperModifyPage() {
         <FiArrowRight />
         <ContentLabel
           margin="1em 2em 1em 0.3em"
-          onClick={() => navigate('/paper/symptom')}
+          onClick={() =>
+            navigate(`/diary/${diaryId}/modify/symptom`, {
+              state: infoToModifyPage,
+            })
+          }
         >
           {' '}
           증상 추가하러 가기

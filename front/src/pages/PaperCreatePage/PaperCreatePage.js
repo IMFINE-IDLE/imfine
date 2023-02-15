@@ -48,6 +48,8 @@ function PaperCreatePage() {
   const [symptoms, setSymptoms] = useState([]); // 증상받아오기
   const [scores, setScores] = useState([]); // 증상점수저장하는 State
 
+  // 증상 수정 페이지에 넘길 정보
+  const [infoToModifyPage, setInfoToModifyPage] = useState({});
   // API 처리부분
   // 사용자가 작성한 다이어리 정보 받아오기
   const getDiaries = async () => {
@@ -68,8 +70,25 @@ function PaperCreatePage() {
       const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
-      console.log('일기장 상세정보', res.data.data);
       setDiary(res.data.data);
+      if (res.data.data) {
+        setSymptoms(
+          res.data.data.diaryHasSymptoms.map((item) => ({
+            symptomId: item.symptomId,
+            name: item.name,
+          }))
+        );
+        setScores(Array(res.data.data.diaryHasSymptoms.length).fill(0));
+      }
+      setInfoToModifyPage({
+        medicals: res.data.data.medicals,
+        symptoms: res.data.data.diaryHasSymptoms,
+        diaryId: res.data.data.diaryId,
+        title: res.data.data.title,
+        description: res.data.data.description,
+        open: res.data.data.open,
+        from: 'paper',
+      });
     } catch (res) {
       console.log('err', res.data);
     }
@@ -77,32 +96,14 @@ function PaperCreatePage() {
 
   useEffect(() => {
     getDiaries();
-    if (diaryId != '') {
+    if (diaryId !== '') {
       getDiaryInfos();
     }
   }, [diaryId]);
 
-  // 일기장 선택될때마다 해당 일기장의 Symptom 정보끌고오기
-  useEffect(() => {
-    if (diary) {
-      console.log('diaryInfo', diary.diaryHasSymptoms);
-      setSymptoms(
-        diary.diaryHasSymptoms.map((item) => ({
-          symptomId: item.symptomId,
-          name: item.name,
-        }))
-      );
-      setScores(Array(diary.diaryHasSymptoms.length).fill(0));
-    }
-    //setSymptomScore(diary.diaryHasSymptoms.symptomId);
-  }, [diary]);
-  console.log('증상값 모음', scores);
-  console.log('setSymptoms', symptoms);
-
-  useEffect(() => {
-    if (symptoms) {
-    }
-  }, [symptoms]);
+  console.log('take a look', diary);
+  console.log('setting symptoms?', symptoms);
+  console.log('set scores', scores);
 
   // 이미지 서버에 업로드 시키기
   // multipart 업로드
@@ -147,9 +148,7 @@ function PaperCreatePage() {
       console.log('upload success', res);
 
       const id = res.data.data;
-      // 업로드성공하면 일기상세화면으로 넘어가야해용
-      // 일단 알림
-      alert('업로드성공..');
+      alert('일기가 성공적으로 등록되었습니다');
       navigate(`/paper/${id}`);
     } catch (err) {
       console.error(err);
@@ -202,7 +201,11 @@ function PaperCreatePage() {
         <FiArrowRight />
         <ContentLabel
           margin="1em 2em 1em 0.3em"
-          onClick={() => navigate('/paper/symptom')}
+          onClick={() =>
+            navigate(`/diary/${diaryId}/modify/symptom`, {
+              state: infoToModifyPage,
+            })
+          }
         >
           {' '}
           증상 추가하러 가기

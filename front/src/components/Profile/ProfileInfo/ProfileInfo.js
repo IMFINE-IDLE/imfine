@@ -20,6 +20,7 @@ const ProfileInfo = ({
   condition,
   name,
   open,
+  medicalList,
   followingCount,
   followerCount,
   relation,
@@ -113,7 +114,9 @@ const ProfileInfo = ({
                       <ProfileInfoModifyBtn
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/profile/${uid}/config`);
+                          navigate(`/profile/${uid}/config`, {
+                            state: { name, medicalList, open },
+                          });
                         }}
                       >
                         프로필 수정하기

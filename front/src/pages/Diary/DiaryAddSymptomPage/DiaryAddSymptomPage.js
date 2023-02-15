@@ -6,9 +6,9 @@ import NavBarBasic from '../../../components/NavBarBasic/NavBarBasic';
 import PickMenuTab from '../../../components/PickMenu/PickMenuTab';
 
 const DiaryAddSymptomPage = () => {
-  const { diaryId, medicals, symptoms, title, description, open } =
+  const { diaryId, medicals, symptoms, title, description, open, from } =
     useLocation().state;
-
+  // 추가해준 from으로 이전페이지가 어디었는지 다르게 처리를 해줄거에요
   const [pickedMedicals, setPickedMedicals] = useState(medicals);
   const [pickedSymptoms, setPickedSymptoms] = useState(symptoms);
 
@@ -36,7 +36,15 @@ const DiaryAddSymptomPage = () => {
         diaryHasSymptoms: pickedSymptoms,
         open,
       };
-      navigate(`/diary/${diaryId}/modify`, { state: infoToDiaryModify });
+
+      // 이전페이지가 어디었느냐(from)에 따라 navigate 다르게 처리
+      if (from === 'diary') {
+        navigate(`/diary/${diaryId}/modify`, { state: infoToDiaryModify });
+      }
+      // 이전페이지가 paper(일기쓰기.일기수정페이지)였다면 그냥 이전페이지로 보내버리기
+      if (from === 'paper') {
+        navigate(-1);
+      }
     } catch (err) {
       console.error(err);
     }

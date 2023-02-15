@@ -17,6 +17,39 @@ const ProfileConfigOptionBtn = styled.button`
   margin-bottom: 1em;
 `;
 
+const TitleText = styled.span`
+  color: var(--icon-color);
+  font-size: 1em;
+  font-weight: 700;
+  padding: 0 0 0.5em 0.5em;
+`;
+
+const NicknameInput = styled.input`
+  border: 0;
+  background-color: var(--gray-color);
+  border-radius: 20px;
+  outline: none;
+  padding: 1em;
+  width: 100%;
+  height: 4.05em;
+`;
+
+const SubmitBtn = styled.button`
+  ${Btn}
+`;
+
+const ErrorMsg = styled.span`
+  font-size: 0.75em;
+  color: var(--red-color);
+`;
+
+const MedicalBtn = styled.button`
+  ${Btn}
+  width: 3.75em;
+  height: 3.75em;
+  border-radius: 15px;
+`;
+
 const ToggleContainer = styled.div`
   display: flex;
   align-items: center;
@@ -79,6 +112,11 @@ const Toggle = styled.input`
 export {
   ProfileConfigContainer,
   ProfileConfigOptionBtn,
+  TitleText,
+  NicknameInput,
+  SubmitBtn,
+  ErrorMsg,
+  MedicalBtn,
   ToggleContainer,
   ToggleText,
   ToggleWrapper,
