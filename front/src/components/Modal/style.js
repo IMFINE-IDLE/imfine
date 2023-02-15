@@ -8,6 +8,7 @@ const BoxModal = styled.div`
   justify-content: center;
   align-items: center;
   background: rgba(248, 250, 249, 0.8);
+  z-index: 998;
 `;
 
 const BoxInnerModal = styled.div`
@@ -20,7 +21,7 @@ const BoxInnerModal = styled.div`
   align-items: center;
   padding: 1em;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-  z-index: 1;
+  z-index: 999;
   background-color: white;
 `;
 
@@ -29,7 +30,7 @@ const ModalClose = styled.span`
   top: 1.2em;
   right: 1.5em;
   cursor: pointer;
-  z-index: 2;
+  z-index: 1000;
 `;
 
 const ModalContent = styled.div`
