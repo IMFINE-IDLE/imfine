@@ -10,7 +10,8 @@ const BoxTopAudio = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.1em;
+  /* padding: 0.1em; */
+  margin-left: -0.8em;
 `;
 
 const AudioPlayer = styled.audio`
@@ -38,10 +39,18 @@ const BoxBottemLeft = styled.div`
   gap: 0 0.3em;
 `;
 
+const SpanPaperDate = styled.div`
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--icon-color);
+  padding: 0.5em;
+`;
+
 export {
   BoxPaperDetail,
   BoxTopAudio,
   AudioPlayer,
   BoxBottomDetail,
   BoxBottemLeft,
+  SpanPaperDate,
 };
