@@ -87,6 +87,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .image("background/" + (int) (Math.random() * 10) + ".jpg")
                 .active(true)
                 .writer(user)
+                .open(saveDiary.isOpen())
                 .active(saveDiary.isOpen())
                 .build();
 
