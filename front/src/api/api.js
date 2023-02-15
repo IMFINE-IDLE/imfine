@@ -30,8 +30,8 @@ const api = {
     findUserId: (email) => URL + USERS + `/find-id/${email}`,
     checkUserIdEmail: (uid, email) =>
       URL + USERS + `/find-password/${uid}/${email}`,
-    changeUserPwWithLogin: () => URL + USERS + '',
-    changeUserPwWithOutLogin: () => URL + USERS + '/find-password/',
+    changeUserPwWithOutLogin: () => URL + USERS + '/find-password',
+    changeUserPwWithLogin: () => URL + USERS + '/change-password',
     setCondition: () => URL + USERS + '/condition',
     changeName: () => URL + USERS + '/name',
     changeMedical: () => URL + USERS + '/medical',
