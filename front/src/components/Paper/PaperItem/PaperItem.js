@@ -15,6 +15,7 @@ import {
   BoxLeft,
   BoxContent,
   SpanDate,
+  BoxSymptomList,
 } from './style';
 
 function PaperItem({ paper }) {
@@ -69,7 +70,7 @@ function PaperItem({ paper }) {
               <div style={{ padding: '.5em .3em' }}>
                 <p style={{ fontWeight: '700' }}>{name}</p>
               </div>
-              <div>
+              <BoxSymptomList>
                 {symptomList?.map((symptom) => {
                   return (
                     <Symptom key={symptom?.symptomId}>
@@ -77,7 +78,7 @@ function PaperItem({ paper }) {
                     </Symptom>
                   );
                 })}
-              </div>
+              </BoxSymptomList>
             </div>
             {!isMine && (
               <BtnReport
