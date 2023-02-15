@@ -51,8 +51,8 @@ function Modal({ type, action, setModalOpen, apiFunc }) {
     text = `해당 팔로워를 ${action}할까요?`;
   } else if (type === '증상기록삭제') {
     text = '해당 증상의 모든 기록이 삭제됩니다. 정말 삭제할까요?';
-  } else if (type === '탈퇴') {
-    text = '정말로 탈퇴할까요?';
+  } else if (type === '탈퇴' || type === '로그아웃') {
+    text = `정말로 ${type}할까요?`;
   }
 
   return (
