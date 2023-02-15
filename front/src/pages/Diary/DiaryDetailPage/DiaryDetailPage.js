@@ -16,8 +16,16 @@ import { DiaryInfoContainer, DiaryDateSpan, DiaryReportBtn } from './style';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
+  // 일기장 정보 저장
   const [diaryInfo, setDiaryInfo] = useState(null);
+
+  // 증상그래프 여닫기
   const [showGraph, setShowGraph] = useState(false);
+  // 증상그래프 날짜와 타입(주간/월간)
+  const [date, setDate] = useState(new Date());
+  const [type, setType] = useState('week');
+
+  // 신고하기 버튼 여닫기
   const [reportOpen, setReportOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -218,7 +226,7 @@ const DiaryDetailPage = () => {
         </FlexDiv>
         {showGraph && (
           <BoxShad radius="25px" height="15em" margin="0 0 1.5em 0">
-            <SymptomGraph />
+            <SymptomGraph diaryId={diaryId} date={date} type={type} />
           </BoxShad>
         )}
 
