@@ -168,7 +168,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
                 };
                 // 해당 날짜 일기 작성하기
                 navigate('/paper/create', {
-                  state: { ...infoToPaperCreate, diaryId },
+                  state: { info: infoToPaperCreate, dateFixed: true },
                 });
               }}
             >
