@@ -3,10 +3,11 @@ import { BoxLT50R25 } from '../../common/BoxLT50R25/BoxLT50R25';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 
 const DiaryPaperSpan = styled.span`
-  ${({ color, size, bold }) => css`
+  ${({ color, size, bold, isDate }) => css`
     color: ${color ? 'var(--' + color + '-color)' : 'var(--icon-color)'};
     font-size: ${size || '1em'};
     font-weight: ${bold ? '700' : '400'};
+    white-space: ${isDate ? 'pre' : 'nowrap'};
   `}
 `;
 
