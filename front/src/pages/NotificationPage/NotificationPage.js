@@ -5,9 +5,10 @@ import api from '../../api/api';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import NotificationItem from '../../components/Notification/NotificationItem/NotificationItem';
+import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
 function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
-
+  const [read, setRead] = useState([]);
   const userId = useSelector((state) => {
     return state.user.uid;
   });
@@ -57,6 +58,17 @@ function NotificationPage() {
     });
   }, []);
 
+  const unReadItems = notifications.filter((index) => !index.check);
+  console.log('unread count', unReadItems.length);
+
+  if (unReadItems.length === 0) {
+    return (
+      <>
+        <NavBarBasic />
+        <FlexDiv>모든 알림을 확인했어요.</FlexDiv>
+      </>
+    );
+  }
   return (
     <>
       <NavBarBasic />
