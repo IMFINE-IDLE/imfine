@@ -119,6 +119,13 @@ const CustomizedDot = (props) => {
 };
 
 const SymptomGraph = () => {
+  const fetchGraphData = async () => {
+    try {
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart

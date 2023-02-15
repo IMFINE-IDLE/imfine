@@ -22,15 +22,8 @@ import {
 } from './style';
 
 function DiaryCreateConfirmPage() {
-  // 임시. 나중에 앞 페이지에서 프롭스로 받아올 것
   const { medicalList, symptomList } = useLocation().state;
-  // const state = useLocation();
-  // console.log(state);
-  // const medicals = [{ id: 1, name: '질병명' }];
-  // const symptoms = [
-  //   { id: 1, name: '증상1' },
-  //   { id: 2, name: '증상2' },
-  // ];
+
   const [diaryInfo, setDiaryInfo] = useState({
     title: '',
     description: '',

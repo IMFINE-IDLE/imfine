@@ -192,11 +192,13 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
               setIsPaperChanged={setIsPaperChanged}
             />
           ))
-        ) : (
+        ) : paperInfo ? (
           <DiaryPaperItem
             paperInfo={paperInfo}
             setIsPaperChanged={setIsPaperChanged}
           />
+        ) : (
+          <></>
         )}
       </FlexDiv>
     </div>

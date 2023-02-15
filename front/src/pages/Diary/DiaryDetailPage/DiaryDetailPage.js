@@ -90,6 +90,8 @@ const DiaryDetailPage = () => {
   //   open: true,
   // };
 
+  if (!diaryInfo) return null;
+
   return (
     <>
       <NavBarBasic Back={true} BackgroundColor="main" />
@@ -97,7 +99,7 @@ const DiaryDetailPage = () => {
         <DiaryInfoContainer radius="25px">
           <FlexDiv justify="space-between">
             <DiaryTitle title={diaryInfo.title} />
-            <FlexDiv width="4em" justify="space-between">
+            <FlexDiv width="4em" justify="end">
               {isMine ? (
                 <img
                   src="/assets/icons/edit.svg"
@@ -110,28 +112,30 @@ const DiaryDetailPage = () => {
                   }
                 />
               ) : (
-                <BookmarkSvg
-                  onClick={() => {
-                    fetchUpdateSubscribeStatus(diaryInfo.subscribe);
-                    setDiaryInfo((prev) => ({
-                      ...prev,
-                      subscribe: !{ ...prev }.subscribe,
-                    }));
-                  }}
-                  fill={
-                    diaryInfo.subscribe
-                      ? 'var(--main-color)'
-                      : 'var(--gray-color)'
-                  }
-                  stroke={
-                    diaryInfo.subscribe
-                      ? 'var(--main-color)'
-                      : 'var(--gray800-color)'
-                  }
-                  style={{ position: 'relative', top: '-1.5px' }}
-                />
+                <>
+                  <BookmarkSvg
+                    onClick={() => {
+                      fetchUpdateSubscribeStatus(diaryInfo.subscribe);
+                      setDiaryInfo((prev) => ({
+                        ...prev,
+                        subscribe: !{ ...prev }.subscribe,
+                      }));
+                    }}
+                    fill={
+                      diaryInfo.subscribe
+                        ? 'var(--main-color)'
+                        : 'var(--gray-color)'
+                    }
+                    stroke={
+                      diaryInfo.subscribe
+                        ? 'var(--main-color)'
+                        : 'var(--gray800-color)'
+                    }
+                    style={{ position: 'relative', top: '-1.5px' }}
+                  />
+                  <img src="/assets/icons/more-vertical.svg" alt="more" />
+                </>
               )}
-              <img src="/assets/icons/more-vertical.svg" alt="more" />
             </FlexDiv>
           </FlexDiv>
           <FlexDiv direction="column">
@@ -210,37 +214,3 @@ const DiaryDetailPage = () => {
 };
 
 export default DiaryDetailPage;
-
-// 더미데이터
-// const medicalList = [
-//   {
-//     medicalId: 1,
-//     medicalName: `${diaryInfo.medicalName}`,
-//   },
-// ];
-// const diaryHasSymptoms = [
-//   {
-//     symptomId: 16,
-//     symptomName: '두통',
-//   },
-//   {
-//     symptomId: 17,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 18,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 19,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 14,
-//     symptomName: '어지러움',
-//   },
-//   {
-//     symptomId: 15,
-//     symptomName: '어지러움',
-//   },
-// ];
