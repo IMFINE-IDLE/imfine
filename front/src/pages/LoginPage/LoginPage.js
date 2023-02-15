@@ -33,8 +33,7 @@ function Login() {
       password,
     };
     try {
-      const success = await dispatch(logIn(userData)).unwrap();
-      // console.log(success);
+      await dispatch(logIn(userData)).unwrap();
       navigate('/');
     } catch (rejectWithValue) {
       console.log(rejectWithValue);
@@ -92,7 +91,15 @@ function Login() {
               아이디 찾기
             </SpanOption>
             |
-            <SpanOption onClick={() => navigate('/find-password')}>
+            <SpanOption
+              onClick={() =>
+                navigate('/find-password', {
+                  state: {
+                    changeFromSettings: false,
+                  },
+                })
+              }
+            >
               비밀번호 찾기
             </SpanOption>
             |

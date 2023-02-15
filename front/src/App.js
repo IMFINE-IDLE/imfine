@@ -116,14 +116,7 @@ function App() {
           </PublicRoute>
         }
       />
-      <Route
-        path="/find-password"
-        element={
-          <PublicRoute>
-            <FindPwPage />
-          </PublicRoute>
-        }
-      />
+      <Route path="/find-password" element={<FindPwPage />} />
       <Route
         path="/signup"
         element={

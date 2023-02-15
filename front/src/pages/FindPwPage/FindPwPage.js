@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import api from '../../api/api';
 import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
@@ -12,7 +12,9 @@ import { BtnSignup, InputSignUp, Label } from '../SignUpPage/style';
  * changeFromSettings : 비번 변경에서 진입시 true
  */
 
-function FindPwPage({ changeFromSettings }) {
+function FindPwPage() {
+  const location = useLocation();
+  const changeFromSettings = location.state.changeFromSettings;
   const navigate = useNavigate();
   const [inputEmail, setInputEmail] = useState('');
   const [inputId, setInputId] = useState('');

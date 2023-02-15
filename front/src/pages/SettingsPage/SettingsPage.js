@@ -35,7 +35,15 @@ const SettingsPage = () => {
       <NavBarBasic Back={true} Text="계정 설정" BackgroundColor={'main'} />
 
       <ProfileConfigContainer radius="0" height="calc(100vh - 71px)">
-        <ProfileConfigOptionBtn onClick={() => navigate(`/change-password`)}>
+        <ProfileConfigOptionBtn
+          onClick={() =>
+            navigate(`/find-password`, {
+              state: {
+                changeFromSettings: true,
+              },
+            })
+          }
+        >
           <span>비밀번호 변경하기</span>
         </ProfileConfigOptionBtn>
         <ProfileConfigOptionBtn
