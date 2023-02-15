@@ -26,11 +26,11 @@ const ProfileConfigPage = () => {
    */
   const { uid } = useParams();
   const { name, medicalList, open } = useLocation().state;
+  console.log('mlist', medicalList);
 
   // 상세내용 보여주기용 state
   const [showChangeName, setShowChangeName] = useState(false);
   const [showPickMedicals, setShowPickMedicals] = useState(false);
-  const [showOpenBtn, setShowOpenBtn] = useState(false);
 
   // 값 저장할 state
   const [newName, setNewName] = useState(name);
@@ -84,7 +84,7 @@ const ProfileConfigPage = () => {
   const fetchChangeMedicals = async () => {
     try {
       const res = await axios.put(api.user.changeMedical(), {
-        medicalList: medicals,
+        medicalList: medicals.map((medical) => medical.id),
       });
       console.log(res.data);
     } catch (err) {
@@ -188,7 +188,11 @@ const ProfileConfigPage = () => {
                 </MedicalBtn>
               ))}
               <MedicalBtn
-                onClick={() => navigate(`/profile/${uid}/medicals`)}
+                onClick={() =>
+                  navigate(`/profile/${uid}/medicals`, {
+                    state: { uid, newName, medicals, isOpen },
+                  })
+                }
                 color="gray700"
               >
                 <img src="/assets/icons/edit.svg" alt="edit" />

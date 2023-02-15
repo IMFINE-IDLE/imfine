@@ -18,7 +18,7 @@ const DiaryFilterPage = () => {
 
   return (
     <>
-      <NavBarBasic Back={true} Text={'필터 선택하기'} />
+      <NavBarBasic Back={true} Text={'필터 선택'} />
       <PickMenuTab
         tabCnt={2}
         medicals={pickedMedicals}
