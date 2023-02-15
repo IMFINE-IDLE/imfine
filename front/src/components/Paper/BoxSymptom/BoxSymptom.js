@@ -22,7 +22,7 @@ function BoxSymptom({ symptomList, values, state }) {
                 count={5}
                 size={25}
                 onChange={(newScore) =>
-                  state(values.map((v, i) => (i === index ? newScore : v)))
+                  state(values.map((v, i) => (i === index ? newScore * 2 : v)))
                 }
                 value={v}
                 activeColor="#A9D7D0"
