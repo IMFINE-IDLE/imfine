@@ -30,6 +30,8 @@ const DiaryModifyPage = () => {
   const { diaryId } = useParams();
   const { title, description, medicals, diaryHasSymptoms, open } =
     useLocation().state;
+  // 증상 추가 화면 재활용을 위한 값 추가
+  const from = 'diary';
 
   // 수정사항 반영을 위한 state
   const [diaryInfo, setDiaryInfo] = useState({
@@ -158,6 +160,7 @@ const DiaryModifyPage = () => {
                       title,
                       description,
                       open,
+                      from,
                     },
                   })
                 }

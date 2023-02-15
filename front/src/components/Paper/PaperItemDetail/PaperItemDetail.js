@@ -150,7 +150,9 @@ function PaperItemDetail({ paperId, paper }) {
               <>
                 <FiEdit
                   onClick={() => {
-                    navigate(`/paper/modify/${paperId}`);
+                    navigate(`/paper/modify/${paperId}`, {
+                      state: { diaryId: `${diaryId}` },
+                    });
                   }}
                 />
                 <FiTrash2
