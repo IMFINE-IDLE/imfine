@@ -16,7 +16,7 @@ import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCre
 import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropdown';
 import DateDropdown from '../../components/Paper/DateDropdown/DateDropdown';
 import SymptomRating from '../../components/Paper/BoxSymptom/BoxSymptom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
@@ -30,6 +30,12 @@ import {
 } from '../../components/PickSymptom/style';
 function PaperCreatePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log('locations unknown', location.state);
+  const dateFixed = location.state.dateFixed;
+  console.log('whyrano?', dateFixed);
+  const { year, month, day } = location.state.info;
+  console.log('whyrano', year, month, day);
   // 이미지 업로드 개수 3개까지 MAX
   const now = new Date();
   const [diaries, setDiaries] = useState([]); // dropdown에 나올 일기장 선택값들 저장
@@ -101,10 +107,18 @@ function PaperCreatePage() {
     }
   }, [diaryId]);
 
+  useEffect(() => {
+    setForm({
+      year: year,
+      month: month,
+      day: day,
+    });
+  }, []);
+
   console.log('take a look', diary);
   console.log('setting symptoms?', symptoms);
   console.log('set scores', scores);
-
+  console.log('today?', form);
   // 이미지 서버에 업로드 시키기
   // multipart 업로드
   const handleUploadImage = async () => {
@@ -185,7 +199,14 @@ function PaperCreatePage() {
           state={setDiaryId}
           diaries={diaries}
         />
-        <DateDropdown value={form} state={setForm} />
+        <DateDropdown
+          selectYear={year}
+          selectMonth={month}
+          selectDay={day}
+          value={form}
+          state={setForm}
+          isdisabled={dateFixed}
+        />
       </BoxPaperDetail>
       <TopDiv>
         <ContentLabel>증상을 체크해주세요.</ContentLabel>
