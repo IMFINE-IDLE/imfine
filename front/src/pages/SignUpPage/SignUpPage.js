@@ -10,7 +10,7 @@ import VerfifyEmailTimer from '../../components/SignUp/VerifyEmailTimer/VerifyEm
 import CheckTermsOfService from '../../components/SignUp/CheckTermsOfService/CheckTermsOfService';
 import { signUp } from '../../store/slice/userSlice';
 import {
-  BoxSignUp,
+  BoxTopSignUp,
   TitleSignUp,
   CloverImg,
   BoxInnerSignup,
@@ -320,160 +320,152 @@ function SignUpPage() {
 
   return (
     <>
-      <div>
-        <BoxSignUp>
-          <CloverImg />
-          <TitleSignUp>회원가입</TitleSignUp>
-        </BoxSignUp>
-        <BoxInnerSignup>
-          <form action="">
-            <Label htmlFor="idInput">아이디</Label>
-            <InfoSpan>&nbsp;최대 12자</InfoSpan>
-            <InputSignUp
-              value={id}
-              id="idInput"
-              type="text"
-              // required
-              autoFocus
-              // maxLength="12"
-              onChange={(e) => inputEvent({ id: e.target.value })}
-              style={
-                idErrorMsg ? { border: '1px solid var(--red-color)' } : null
-              }
-            />
-            {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
+      <BoxTopSignUp>
+        <CloverImg />
+        <TitleSignUp>회원가입</TitleSignUp>
+      </BoxTopSignUp>
+      <BoxInnerSignup>
+        <form action="">
+          <Label htmlFor="idInput">아이디</Label>
+          <InfoSpan>&nbsp;최대 12자</InfoSpan>
+          <InputSignUp
+            value={id}
+            id="idInput"
+            type="text"
+            // required
+            autoFocus
+            // maxLength="12"
+            onChange={(e) => inputEvent({ id: e.target.value })}
+            style={idErrorMsg ? { border: '1px solid var(--red-color)' } : null}
+          />
+          {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
 
-            <Label htmlFor="nameInput">닉네임</Label>
-            <InfoSpan>&nbsp;최대 10자</InfoSpan>
-            <InputSignUp
-              value={name}
-              id="nameInput"
-              type="text"
-              // required
-              // maxLength="10"
-              onChange={(e) => inputEvent({ name: e.target.value })}
-              style={
-                nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
-              }
-            />
-            {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
+          <Label htmlFor="nameInput">닉네임</Label>
+          <InfoSpan>&nbsp;최대 10자</InfoSpan>
+          <InputSignUp
+            value={name}
+            id="nameInput"
+            type="text"
+            // required
+            // maxLength="10"
+            onChange={(e) => inputEvent({ name: e.target.value })}
+            style={
+              nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
+            }
+          />
+          {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
 
-            <Label htmlFor="emailInput">이메일</Label>
-            <DivEmail>
-              <InputSignUp
-                value={email}
-                id="emailInput"
-                type="email"
-                // required
-                onChange={(e) => inputEvent({ email: e.target.value })}
-                style={
-                  emailErrorMsg
-                    ? { border: '1px solid var(--red-color)' }
-                    : null
-                }
-                readOnly={doneEmailVerify ? true : false}
+          <Label htmlFor="emailInput">이메일</Label>
+          <DivEmail>
+            <InputSignUp
+              value={email}
+              id="emailInput"
+              type="email"
+              // required
+              onChange={(e) => inputEvent({ email: e.target.value })}
+              style={
+                emailErrorMsg ? { border: '1px solid var(--red-color)' } : null
+              }
+              readOnly={doneEmailVerify ? true : false}
+            />
+            {!doneEmailVerify && (
+              <BtnEmailCheck
+                email={email}
+                emailVerify={emailVerify}
+                setEmailVerify={setEmailVerify}
+                sendVerifyEmail={sendVerifyEmail}
               />
-              {!doneEmailVerify && (
-                <BtnEmailCheck
-                  email={email}
-                  emailVerify={emailVerify}
-                  setEmailVerify={setEmailVerify}
-                  sendVerifyEmail={sendVerifyEmail}
-                />
-              )}
-            </DivEmail>
-            {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
-
-            {emailVerify === 'emailSent' && !doneEmailVerify ? (
-              <>
-                <Label htmlFor="emailCodeInput">인증코드 입력</Label>
-                <GuideMsg>이메일로 전송된 인증코드를 입력해주세요.</GuideMsg>
-                <DivEmail>
-                  <InputSignUp
-                    value={emailCode}
-                    id="emailCodeInput"
-                    type="text"
-                    autoComplete="off"
-                    // required
-                    onChange={(e) => inputEvent({ emailCode: e.target.value })}
-                    style={
-                      emailVerifyErrorMsg
-                        ? { border: '1px solid var(--red-color)' }
-                        : null
-                    }
-                  />
-                  <VerfifyEmailTimer
-                    timeLeft={timeLeft}
-                    setTimeLeft={setTimeLeft}
-                  />
-                  <BtnEmailCodeCheck
-                    emailCode={emailCode}
-                    confirmVerifyEmailCode={confirmVerifyEmailCode}
-                  />
-                </DivEmail>
-                {emailVerifyErrorMsg && (
-                  <ErrorMsg>{emailVerifyErrorMsg}</ErrorMsg>
-                )}
-              </>
-            ) : null}
-
-            <Label htmlFor="passwordInput">비밀번호</Label>
-            <InputSignUp
-              value={password}
-              id="passwordInput"
-              type="password"
-              autoComplete="off"
-              // required
-              onChange={(e) => inputEvent({ password: e.target.value })}
-              style={
-                pwErrorMsg ? { border: '1px solid var(--red-color)' } : null
-              }
-            />
-            {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
-
-            <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
-            <InputSignUp
-              value={confirmPassword}
-              id="confirmPasswordInput"
-              type="password"
-              autoComplete="off"
-              // required
-              onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
-              style={
-                confirmPwErrorMsg
-                  ? { border: '1px solid var(--red-color)' }
-                  : null
-              }
-            />
-            {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
-
-            <CheckTermsOfService
-              checkedTerms={checkedTerms}
-              setCheckedTerms={setCheckedTerms}
-            />
-            {isValid ? (
-              <BtnSignup
-                type="submit"
-                onClick={(e) => {
-                  e.preventDefault();
-                  signUpByData();
-                }}
-              >
-                회원가입하기
-              </BtnSignup>
-            ) : (
-              <BtnSignup
-                type="button"
-                color={'gray700'}
-                disabled
-                style={{ cursor: 'not-allowed' }}
-              >
-                회원가입하기
-              </BtnSignup>
             )}
-          </form>
-        </BoxInnerSignup>
-      </div>
+          </DivEmail>
+          {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
+
+          {emailVerify === 'emailSent' && !doneEmailVerify ? (
+            <>
+              <Label htmlFor="emailCodeInput">인증코드 입력</Label>
+              <GuideMsg>이메일로 전송된 인증코드를 입력해주세요.</GuideMsg>
+              <DivEmail>
+                <InputSignUp
+                  value={emailCode}
+                  id="emailCodeInput"
+                  type="text"
+                  autoComplete="off"
+                  // required
+                  onChange={(e) => inputEvent({ emailCode: e.target.value })}
+                  style={
+                    emailVerifyErrorMsg
+                      ? { border: '1px solid var(--red-color)' }
+                      : null
+                  }
+                />
+                <VerfifyEmailTimer
+                  timeLeft={timeLeft}
+                  setTimeLeft={setTimeLeft}
+                />
+                <BtnEmailCodeCheck
+                  emailCode={emailCode}
+                  confirmVerifyEmailCode={confirmVerifyEmailCode}
+                />
+              </DivEmail>
+              {emailVerifyErrorMsg && (
+                <ErrorMsg>{emailVerifyErrorMsg}</ErrorMsg>
+              )}
+            </>
+          ) : null}
+
+          <Label htmlFor="passwordInput">비밀번호</Label>
+          <InputSignUp
+            value={password}
+            id="passwordInput"
+            type="password"
+            autoComplete="off"
+            // required
+            onChange={(e) => inputEvent({ password: e.target.value })}
+            style={pwErrorMsg ? { border: '1px solid var(--red-color)' } : null}
+          />
+          {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
+
+          <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
+          <InputSignUp
+            value={confirmPassword}
+            id="confirmPasswordInput"
+            type="password"
+            autoComplete="off"
+            // required
+            onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
+            style={
+              confirmPwErrorMsg
+                ? { border: '1px solid var(--red-color)' }
+                : null
+            }
+          />
+          {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
+
+          <CheckTermsOfService
+            checkedTerms={checkedTerms}
+            setCheckedTerms={setCheckedTerms}
+          />
+          {isValid ? (
+            <BtnSignup
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                signUpByData();
+              }}
+            >
+              회원가입하기
+            </BtnSignup>
+          ) : (
+            <BtnSignup
+              type="button"
+              color={'gray700'}
+              disabled
+              style={{ cursor: 'not-allowed' }}
+            >
+              회원가입하기
+            </BtnSignup>
+          )}
+        </form>
+      </BoxInnerSignup>
     </>
   );
 }

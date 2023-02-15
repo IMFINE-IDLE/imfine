@@ -53,6 +53,7 @@ function FindPwPage() {
     try {
       const res = await axios.put(api.user.changeUserPwWithLogin(), data);
       console.log(res);
+      alert('비밀번호가 성공적으로 변경되었습니다.');
       navigate(-1);
     } catch (err) {
       console.log(err);
