@@ -115,7 +115,7 @@ const SymptomGraph = ({ diaryId, date, type }) => {
         {/* <YAxis ticks={[0, 2, 4, 6, 8, 10]} width={20} /> */}
         <Tooltip />
         <Legend />
-        {dataKeys.map((symptom, idx) => (
+        {dataKeys?.map((symptom, idx) => (
           <Line
             type="monotone"
             dataKey={symptom}
