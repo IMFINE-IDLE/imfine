@@ -10,7 +10,9 @@ import {
   TitleLabel,
   BottomDiv,
   Content,
+  BtnUpdate,
 } from './style';
+import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 
 // showButton true -> 팔로우 버튼 설정?
 function NotificationItem({
@@ -22,6 +24,9 @@ function NotificationItem({
   navigateId,
   check,
 }) {
+  const navigate = useNavigate();
+  const [followerID, setFollowerId] = useState('');
+  // 읽음처리
   const readPost = async () => {
     try {
       await axios.post(api.notifications.readNotification(), {
@@ -32,10 +37,24 @@ function NotificationItem({
       console.log('err, error');
     }
   };
-  const navigate = useNavigate();
-
-  console.log('아이디', navigateId);
-
+  // POST 6번 & 비공개일때 팔로우 수락
+  const allowFollower = async () => {
+    try {
+      await axios.post(api.follow.allowFollow(), {
+        uid: senderUid,
+      });
+    } catch (error) {
+      console.log('err', error);
+    }
+  };
+  // DEL 6번 & 비공개일때 팔로우 거절
+  const declineFollower = async () => {
+    try {
+      await axios.delete(api.follow.declineFollow(senderUid));
+    } catch (error) {
+      console.log('err', error);
+    }
+  };
   if (check) {
     return <></>;
   } else {
@@ -52,7 +71,7 @@ function NotificationItem({
                 <BottomDiv
                   onClick={() => {
                     readPost();
-                    navigate(`/diary/${senderUid}`);
+                    navigate(`/diary/${navigateId}`);
                   }}
                 >
                   <Content>{msg}</Content>
@@ -76,7 +95,7 @@ function NotificationItem({
                 <BottomDiv
                   onClick={() => {
                     readPost();
-                    navigate(`/diary/${senderUid}`);
+                    navigate(`/diary/${navigateId}`);
                   }}
                 >
                   <Content>{msg}</Content>
@@ -88,7 +107,8 @@ function NotificationItem({
       );
     }
     // 팔로우알림
-    if (title === 6) {
+    // 현재 로그인한 사용자가 공개유저일때
+    if (title === 6 && !showButton) {
       return (
         <>
           <div>
@@ -105,6 +125,37 @@ function NotificationItem({
                 >
                   <Content>{msg}</Content>
                 </BottomDiv>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    }
+    // 현재 로그인한 사용자가 비공개유저일때
+    if (title === 6 && showButton) {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel> 팔로우신청 </TitleLabel>
+                </TopDiv>
+                <BottomDiv>
+                  <Content>{msg}</Content>
+                </BottomDiv>
+                <FlexDiv direction={'row'}>
+                  <BtnUpdate
+                    onClick={() => {
+                      allowFollower();
+                      readPost();
+                      navigate(`/profile/${senderUid}`);
+                    }}
+                  >
+                    {' '}
+                    수락하기
+                  </BtnUpdate>
+                </FlexDiv>
               </BoxNoShadLeaves>
             </ColumnDiv>
           </div>

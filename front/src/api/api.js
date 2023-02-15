@@ -13,6 +13,7 @@ const NOTIFICATION = '/notification';
 const SYMPTOM = '/symptom';
 const MEDICAL = '/medical';
 const SEARCH = '/search';
+const FOLLOW = '/follow';
 
 const api = {
   user: {
@@ -120,6 +121,10 @@ const api = {
     reportDiary: () => URL + REPORT + DIARY,
     reportPaper: () => URL + REPORT + PAPER,
     reportComment: () => URL + REPORT + COMMENT,
+  },
+  follow: {
+    allowFollow: () => URL + USERS + FOLLOW + '/allow',
+    declineFollow: (userId) => URL + FOLLOW + `/decline/${userId}`,
   },
 };
 
