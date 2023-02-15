@@ -535,6 +535,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .filter(diary -> diary.isOpen() || relation == 0)
                 .map(
                     diary -> ResponseDiaryListDto.builder()
+                            .uid(diary.getWriter().getUid())
                             .diaryId(diary.getId())
                             .title(diary.getTitle())
                             .medicalName(diary.getMedicalCode().getName())
