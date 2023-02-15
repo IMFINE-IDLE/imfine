@@ -548,6 +548,7 @@ public class PaperServiceImpl implements PaperService {
                     return ResponsePaperHasSymptomDto.builder()
                         .id(symptom.getId())
                         .symptomId(phs ? symptomById.get(symptom.getId()).getId() : 0)
+                        .score(phs ? symptomById.get(symptom.getId()).getScore() : 0)
                         .symptomName(symptom.getName())
                         .score(phs ? symptomById.get(symptom.getId()).getScore() : 0)
                         .build();
