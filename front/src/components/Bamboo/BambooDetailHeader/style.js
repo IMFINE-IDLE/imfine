@@ -41,7 +41,7 @@ const BambooImg = styled.img.attrs({
 const Content = styled.h1`
   color: var(--default-font-color);
   padding: 1.8em;
-  text-align: center;
+  text-align: left;
 `;
 
 const LabelOuter = styled.div`
