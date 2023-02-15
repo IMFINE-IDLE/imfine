@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import LoginPage from './pages/LoginPage/LoginPage';
-import LogOutPage from './pages/LogOutPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
@@ -117,22 +116,7 @@ function App() {
           </PublicRoute>
         }
       />
-      <Route
-        path="/find-password"
-        element={
-          <PublicRoute>
-            <FindPwPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/logout"
-        element={
-          <PrivateRoute>
-            <LogOutPage />
-          </PrivateRoute>
-        }
-      />
+      <Route path="/find-password" element={<FindPwPage />} />
       <Route
         path="/signup"
         element={

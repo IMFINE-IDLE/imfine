@@ -10,6 +10,7 @@ import {
   BoxContent,
   BoxTop,
   BoxUser,
+  BtnCommentHeart,
   DivUser,
 } from './style';
 
@@ -73,7 +74,7 @@ function PaperComment({
             )}
           </BoxUser>
           <BoxBtns>
-            <div style={{ marginRight: '.2em' }}>
+            <BtnCommentHeart>
               <FiHeart
                 style={{
                   color: 'var(--red-color)',
@@ -102,7 +103,7 @@ function PaperComment({
               >
                 {localLikeCount}
               </span>
-            </div>
+            </BtnCommentHeart>
             <BtnReport apiFunc={() => setCommentReportModalOpen(true)} />
           </BoxBtns>
         </BoxTop>
