@@ -1,5 +1,5 @@
-const URL = 'http://localhost:8080/api';
-// const URL = 'https://i8a809.p.ssafy.io/api';
+// const URL = 'http://localhost:8080/api';
+const URL = 'https://i8a809.p.ssafy.io/api';
 
 const USERS = '/user';
 const CHECK = '/check';
