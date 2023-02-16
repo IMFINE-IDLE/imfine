@@ -79,6 +79,8 @@ function App() {
       } else if (errorResponse.data.error.includes('TOKEN')) {
         // 기타 에러일경우 로그아웃 처리
         logoutwithErrorCallBack();
+      } else if (errorResponse.data.error.includes('TOKEN')) {
+        logoutwithErrorCallBack();
       }
       return Promise.reject(error);
     }
