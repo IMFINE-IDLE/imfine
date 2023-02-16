@@ -119,7 +119,7 @@ const SymptomGraph = ({ diaryId, date, type }) => {
           <Line
             type="monotone"
             dataKey={symptom}
-            stroke={`var(--${colors[idx]}-color)`}
+            stroke={`var(--${colors[idx % 9]}-color)`}
             strokeWidth={2}
             legendType="circle"
             key={symptom}
