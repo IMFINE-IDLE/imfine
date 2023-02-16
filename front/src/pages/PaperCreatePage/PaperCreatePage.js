@@ -85,7 +85,7 @@ function PaperCreatePage() {
       setInfoToModifyPage({
         medicals: res.data.data.medicals,
         symptoms: res.data.data.diaryHasSymptoms,
-        diaryId: res.data.data.diaryId,
+        diaryId: diaryId,
         title: res.data.data.title,
         description: res.data.data.description,
         open: res.data.data.open,
@@ -153,7 +153,7 @@ function PaperCreatePage() {
 
     for (let i = 0; i < symptomScore.length; i++) {
       data.append(`symptoms[${i}].symptomId`, symptomScore[i].symptomId);
-      data.append(`symptoms[${i}].symptomId`, symptomScore[i].score);
+      data.append(`symptoms[${i}].score`, symptomScore[i].score);
     }
 
     // (key: contents) value : 일기장내용
