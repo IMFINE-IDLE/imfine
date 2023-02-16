@@ -34,6 +34,7 @@ import { useDispatch } from 'react-redux';
 import { updateCode, logOutWithError } from './store/slice/userSlice';
 import schedule from 'node-schedule';
 import { refreshTokenAndResendRequest } from './utils/userUtils';
+import OnboardingPage from './pages/OnBoardingPage/OnboardingPage';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -105,6 +106,30 @@ function App() {
         }
       />
       <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <SignUpPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/signup/setting"
+        element={
+          <PrivateRoute>
+            <SignUpSettingPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/onboarding"
+        element={
+          <PrivateRoute>
+            <OnboardingPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/login"
         element={
           <PublicRoute>
@@ -121,22 +146,7 @@ function App() {
         }
       />
       <Route path="/find-password" element={<FindPwPage />} />
-      <Route
-        path="/signup"
-        element={
-          <PublicRoute>
-            <SignUpPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/signup/setting"
-        element={
-          <PrivateRoute>
-            <SignUpSettingPage />
-          </PrivateRoute>
-        }
-      />
+
       <Route
         path="/home"
         element={
