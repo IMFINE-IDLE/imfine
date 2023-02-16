@@ -166,16 +166,15 @@ function PaperCreatePage() {
       };
 
       const res = await axios.post(api.paper.paperWrite(), data, config);
-
-      if (res.data.message === '해당 날짜는 이미 작성했습니다.') {
-        alert('이미 작성된 날짜입니다.');
-        navigate(-1);
-      }
       const id = res.data.data;
       alert('일기가 성공적으로 등록되었습니다');
       navigate(`/paper/${id}`);
     } catch (err) {
       console.error('err', err);
+      if (err.response.status === 409) {
+        alert('이미 작성된 날짜입니다.');
+        navigate(-1);
+      }
     }
   };
 
