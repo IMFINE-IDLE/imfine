@@ -46,6 +46,8 @@ const PickMenu = forwardRef(
 
     // 메뉴 하나 클릭했을 때
     const handleMenuClick = (e, idx, id) => {
+      e.preventDefault();
+
       // 최초 클릭시 클릭된 메뉴의 id와 행의 idx를 저장하고 subMenu 영역 열기
       if (!clickedMenuId.current) {
         clickedMenuId.current = id;
@@ -83,7 +85,7 @@ const PickMenu = forwardRef(
             ref={(el) => (subMenuSection.current[idx] = el)}
             key={idx}
           >
-            <FlexDiv justify="space-bewteen" gap="1.5em" padding="0 0 1em 0">
+            <FlexDiv justify="space-between" align="start" padding="0 0 1em 0">
               {dataList.map(({ id, name, image }) => (
                 <IconSymptom
                   type={type}
