@@ -161,10 +161,17 @@ public class PaperServiceImpl implements PaperService {
         paperDiary.setPaperCount(paperDiary.getPaperCount() - 1);
 
         LOGGER.info("[PaperService.delete] 일기 삭제 service");
-        if (foundPaper.getComments().isEmpty()) {
-            heartRepository.deleteByCommentsId(foundPaper.getComments());
+        if (!foundPaper.getComments().isEmpty()) {
+            LOGGER.info("[PaperService.delete] 일기 댓글관련 삭제1");
+            List<Comment> comments = paperRepository.findByIdFetchComments(foundPaper.getId());
+            LOGGER.info("[PaperService.delete] 일기 댓글관련 삭제2");
+            heartRepository.deleteByContentsCodeIdAndContentsId(
+                    3, comments.stream().map(Comment::getId).collect(Collectors.toList()));
+            LOGGER.info("[PaperService.delete] 일기 댓글관련 삭제3");
+            commentRepository.deleteByCommentIds(foundPaper.getId());
         }
-        commentRepository.deleteByCommentIds(foundPaper.getId());
+
+        heartRepository.deleteHeartsByContentsCodeIdAndContentsId(2, foundPaper.getId());
         paperHasSymptomRepository.deleteByPaper(foundPaper.getId());
         paperRepository.deleteById(paperId);
 
@@ -350,11 +357,13 @@ public class PaperServiceImpl implements PaperService {
     public ResponsePaperDetailDto getPaperDetail(long paperId, String uid) {
         LOGGER.info("[PaperService.getPaperDetail]일기 상세 service");
         User user = common.getUserByUid(uid);
-
         // 에러처리 똑바로 하기
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
         Diary paperDiary = paper.getDiary();
+        if (!paper.isOpen() && user.getId() != paper.getDiary().getId()) {
+            throw new ErrorException(PaperErrorCode.PAPER_NOT_AUTHORIZED);
+        }
 
         LOGGER.info("[PaperService.getPaperDetail]일기 상세 자료 조회");
         List<DiaryHasSymptom> diaryHasSymptoms = paperDiary.getDiaryHasSymptoms();

@@ -18,6 +18,6 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     void deleteHeartsByContentsCodeIdAndContentsId(@Param("contentsCodeId") int contentsCodeId, @Param("contentsId") long contentsId);
 
     @Modifying
-    @Query("delete from Heart h where h.contentsCodeId=3 and h.contentsCodeId=:comments")
-    void deleteByCommentsId(@Param("comments") List<Comment> comments);
+    @Query("delete from Heart h where h.contentsCodeId=:contentsCodeId and h.contentsId in :contentsIds")
+    void deleteByContentsCodeIdAndContentsId(@Param("contentsCodeId") int contentsCodeId, @Param("contentsIds") List<Long> contentsIds);
 }
