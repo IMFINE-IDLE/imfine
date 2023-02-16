@@ -95,7 +95,7 @@ function NotificationItem({
                 <BottomDiv
                   onClick={() => {
                     readPost();
-                    navigate(`/diary/${navigateId}`);
+                    navigate(`/paper/${navigateId}`);
                   }}
                 >
                   <Content>{msg}</Content>

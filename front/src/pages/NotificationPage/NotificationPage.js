@@ -43,7 +43,8 @@ function NotificationPage() {
       console.log('notifications list res', res.data.data);
       setIsLoading(false);
       setNotifications((prev) => prev.concat(res.data.data));
-      setHasNext(notifications[notifications.length - 1].hasNext);
+      const data = res.data.data[res.data.data.length - 1];
+      setHasNext(data.hasNext);
     } catch (error) {
       console.log('err', error);
     }
@@ -86,7 +87,7 @@ function NotificationPage() {
 
   const unReadItems = notifications.filter((index) => !index.check);
   console.log('unread count', unReadItems.length);
-
+  console.log('hasnext?', hasNext);
   return (
     <>
       <NavBarBasic
@@ -123,12 +124,12 @@ function NotificationPage() {
                     navigateId={item.contentsId}
                     check={item.check}
                   />
-                  <div ref={observer} />
-                  {isLoading && <p>로딩중...</p>}
                 </>
               );
             })}
           </div>
+          <div ref={observer} />
+          {isLoading && <p>로딩중...</p>}
         </>
       )}
     </>

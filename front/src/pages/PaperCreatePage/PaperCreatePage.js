@@ -166,16 +166,15 @@ function PaperCreatePage() {
       };
 
       const res = await axios.post(api.paper.paperWrite(), data, config);
-
-      if (res.data.message === '해당 날짜는 이미 작성했습니다.') {
-        alert('이미 작성된 날짜입니다.');
-        navigate(-1);
-      }
       const id = res.data.data;
       alert('일기가 성공적으로 등록되었습니다');
       navigate(`/paper/${id}`);
     } catch (err) {
       console.error('err', err);
+      if (err.response.status === 409) {
+        alert('이미 작성된 날짜입니다.');
+        navigate(-1);
+      }
     }
   };
 
@@ -301,7 +300,10 @@ function PaperCreatePage() {
             </InputContainer>
           </FlexDiv>
           <FlexDiv direction="row" justify="flex-start">
-            <ContentLabel> 일기 비공개 설정하기</ContentLabel>
+            <ContentLabel margin={'1.5em 1em 1.5em 2em'}>
+              {' '}
+              일기 공개 범위
+            </ContentLabel>
             <ToggleContainer>
               <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
               <ToggleWrapper isOpen={isOpen}>

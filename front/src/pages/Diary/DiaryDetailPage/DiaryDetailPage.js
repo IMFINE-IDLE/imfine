@@ -43,7 +43,10 @@ const DiaryDetailPage = () => {
 
       setDiaryInfo(res.data.data);
     } catch (err) {
-      console.error(err);
+      if (err.response.status === 404) {
+        alert('존재하지 않는 일기입니다');
+        navigate(-1);
+      }
     }
   };
 
