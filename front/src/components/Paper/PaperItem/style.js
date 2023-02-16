@@ -1,3 +1,4 @@
+import { FiImage } from 'react-icons/fi';
 import styled from 'styled-components';
 import { BoxLT50 } from '../../common/BoxLT50/BoxLT50';
 import { BtnSymptom } from '../../PickSymptom/style';
@@ -89,6 +90,11 @@ const SpanDate = styled.span`
   vertical-align: middle;
 `;
 
+const IconImg = styled(FiImage)`
+  vertical-align: middle;
+  margin: -0.1em 0 0 0.2em;
+`;
+
 export {
   BoxPaper,
   BoxTop,
@@ -99,4 +105,5 @@ export {
   BoxContent,
   BoxBottom,
   SpanDate,
+  IconImg,
 };

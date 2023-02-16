@@ -19,7 +19,7 @@ function PaperFeedPage() {
   const [paperList, setPaperList] = useState([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasNext, setHasNext] = useState(false);
+  const [hasNext, setHasNext] = useState(true);
   const observerRef = useRef();
   const observer = (element) => {
     if (isLoading) return;
@@ -30,6 +30,7 @@ function PaperFeedPage() {
       const first = entries[0];
       if (first.isIntersecting && hasNext) {
         setPage((prev) => prev + 1);
+        setIsLoading(true);
       }
     });
 
@@ -43,7 +44,7 @@ function PaperFeedPage() {
       // console.log(res.data);
       setIsLoading(false);
       setPaperList((prev) => prev.concat(res.data.data.list));
-      setHasNext(res.data.data.hasNext);
+      setHasNext((prev) => (prev = res.data.data.hasNext));
     } catch (err) {
       console.log(err.response);
     }
@@ -77,9 +78,9 @@ function PaperFeedPage() {
             <BtnFloat />
             <Circle small />
             <Circle />
+            <div ref={observer} />
+            {isLoading && <p>로딩중...</p>}
           </BoxPaperFeed>
-          <div ref={observer} />
-          {isLoading && <p>로딩중...</p>}
         </>
       )}
 
