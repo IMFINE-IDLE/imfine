@@ -14,9 +14,6 @@ function NotificationPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
   const observerRef = useRef();
-
-  const [read, setRead] = useState([]);
-
   const observer = (element) => {
     if (isLoading) return;
 
@@ -26,6 +23,7 @@ function NotificationPage() {
       const first = entries[0];
       if (first.isIntersecting && hasNext) {
         setPage((prev) => prev + 1);
+        setIsLoading(true);
       }
     });
 
@@ -40,11 +38,14 @@ function NotificationPage() {
       const res = await axios.get(
         api.notifications.getNotifications(pagination)
       );
-      console.log('notifications list res', res.data.data);
       setIsLoading(false);
-      setNotifications((prev) => prev.concat(res.data.data));
+      //notifications.filter((index) => !index.check);
+      const resAll = res.data.data;
+      const unRead = resAll.filter((index) => !index.check);
+
+      setNotifications((prev) => prev.concat(unRead));
       const data = res.data.data[res.data.data.length - 1];
-      setHasNext(data.hasNext);
+      setHasNext((prev) => (prev = data.hasNext));
     } catch (error) {
       console.log('err', error);
     }
@@ -111,7 +112,7 @@ function NotificationPage() {
       ) : (
         <>
           <div>
-            {notifications.map((item) => {
+            {unReadItems.map((item) => {
               return (
                 <>
                   <NotificationItem
@@ -128,10 +129,10 @@ function NotificationPage() {
               );
             })}
           </div>
-          <div ref={observer} />
-          {isLoading && <p>로딩중...</p>}
         </>
       )}
+      <div ref={observer} />
+      {isLoading && <p>로딩중...</p>}
     </>
   );
 }
