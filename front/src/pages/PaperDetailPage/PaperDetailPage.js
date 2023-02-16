@@ -17,7 +17,7 @@ function PaperDetailPage() {
   const { paperId } = useParams();
   const [paperDetail, setPaperDetail] = useState({});
   const commentBoxRef = useRef();
-  const isMounted = useRef(2);
+  const isCommentCreated = useRef(false);
 
   const scrollToBottom = () => {
     commentBoxRef.current?.scrollIntoView({
@@ -45,10 +45,9 @@ function PaperDetailPage() {
 
   useEffect(() => {
     console.log('come in');
-    if (!isMounted.current) {
+    if (isCommentCreated.current) {
       scrollToBottom();
-    } else {
-      isMounted.current -= 1;
+      isCommentCreated.current = false;
     }
   }, [paperDetail]);
 
@@ -61,6 +60,7 @@ function PaperDetailPage() {
       });
       console.log(res);
       fetchPaperDetail();
+      isCommentCreated.current = true;
     } catch (err) {
       console.log(err.response.data);
     }
