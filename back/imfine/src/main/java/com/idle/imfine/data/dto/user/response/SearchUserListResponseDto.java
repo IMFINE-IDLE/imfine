@@ -16,6 +16,7 @@ public class SearchUserListResponseDto {
     private String uid;
     private String name;
     private int relation;
+    private boolean open;
     private boolean hasNext;
     private int condition;
 }

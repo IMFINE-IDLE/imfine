@@ -115,6 +115,7 @@ public class SearchServiceImpl implements SearchService {
                     .relation(relation)
                     .condition(condition)
                     .hasNext(users.hasNext())
+                    .open(u.isOpen())
                     .build();
             userList.add(responseDto);
         }
