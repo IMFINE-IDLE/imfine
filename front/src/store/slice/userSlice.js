@@ -65,14 +65,13 @@ export const logOut = createAsyncThunk(
   'user/logOut',
   async (userData, { rejectWithValue }) => {
     console.log('정상적 상황에서 로그아웃 실행');
-    // localStorage.setItem('accessToken', null);
+    localStorage.setItem('accessToken', null);
 
     try {
       const resLogout = await axios.post(api.user.logout(), {
         withCredentials: true,
       });
       console.log(resLogout);
-      // <Navigate to="/login" />;
       return resLogout;
     } catch (err) {
       console.log(err);
