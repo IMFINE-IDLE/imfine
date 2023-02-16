@@ -115,7 +115,7 @@ const api = {
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
-    getNotifications: () => URL + NOTIFICATION + '/list',
+    getNotifications: (page) => URL + NOTIFICATION + `/list?page=${page}`,
     readNotification: () => URL + NOTIFICATION + '/check',
   },
   report: {

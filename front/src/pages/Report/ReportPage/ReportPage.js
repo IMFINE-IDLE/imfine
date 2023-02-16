@@ -94,7 +94,7 @@ function ReportPage() {
     } else if (type === 'Leaf') {
       try {
         console.log('urlroute', url);
-        await axios.post(api.report.reportLeaf, {
+        await axios.post(api.report.reportLeaf(), {
           type: reportType,
           contentsId: contentId,
         });
@@ -109,7 +109,7 @@ function ReportPage() {
 
   return (
     <div>
-      <NavBarBasic />
+      <NavBarBasic Back={true} Text={'신고하기'} NoRightItem={true} />
       <BoxInnerReport>
         <Label> 요청 유형을 선택해주세요. </Label>
 
