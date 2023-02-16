@@ -9,6 +9,7 @@ import { BoxComment } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
 import CommentCreate from '../../components/Paper/CommentCreate/CommentCreate';
 import { useCallback } from 'react';
+import BtnToTop from '../../components/Paper/BtnToTop/BtnToTop';
 
 function PaperDetailPage() {
   const { paperId } = useParams();
@@ -107,6 +108,7 @@ function PaperDetailPage() {
             likeCommentDelete={likeCommentDelete}
           />
         ))}
+        {paperDetail?.comments?.length > 0 && <BtnToTop />}
       </BoxComment>
       <CommentCreate createComment={createComment} />
     </>
