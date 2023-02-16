@@ -506,7 +506,7 @@ public class DiaryServiceImpl implements DiaryService {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
         int relation = common.getFollowRelation(user, other);
-        List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(other);
+        List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(other.getId());
 
         LOGGER.info("[DiaryServiceImpl.getDiarySubscribe]내가 구독한 일기장 조회 종료");
         return getResponseDiaryListDtos(diaries);
