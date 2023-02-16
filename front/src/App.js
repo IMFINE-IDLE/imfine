@@ -35,6 +35,7 @@ import { updateCode, logOutWithError } from './store/slice/userSlice';
 import schedule from 'node-schedule';
 import { refreshTokenAndResendRequest } from './utils/userUtils';
 import OnboardingPage from './pages/OnBoardingPage/OnboardingPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -344,6 +345,7 @@ function App() {
           </PrivateRoute>
         }
       ></Route>
+      <Route path="/*" element={<NotFoundPage />} />
     </Routes>
     // </Wrapper>
   );
