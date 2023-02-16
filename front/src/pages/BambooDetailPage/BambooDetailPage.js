@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import BambooDetailHeader from '../../components/Bamboo/BambooDetailHeader/BambooDetailHeader';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import BoxLeavesFeed from '../../components/Bamboo/BoxLeavesFeed/BoxLeavesFeed';
-import { TopDiv, ReplyLabel, ReplyDiv } from './style';
+import { TopDiv, ReplyLabel, ReplyDiv, BoxComment } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
 import BambooReplyBox from '../../components/Bamboo/BambooReplyBox/BambooReplyBox';
 import { useNavigate } from 'react-router-dom';
@@ -117,77 +117,127 @@ function BambooDetailPage() {
     fetchBambooDetail();
   }, []);
 
-  if (bamboo.leafCount > 0) {
-    return (
-      <>
-        <NavBarBasic
-          TextColor={'icon'}
-          BackgroundColor={'light'}
-          Back={true}
-          Text={' '}
-        />
-
-        <BambooDetailHeader
-          bambooId={bamboo.bambooId}
-          content={bamboo.content}
-          leafCount={bamboo.leafCount}
-          likeCount={bamboo.likeCount}
-          likeBamboo={likeBamboo}
-          removeLikeBamboo={removeLikeBamboo}
-          heart={bamboo.heart}
-        />
+  return (
+    <>
+      <NavBarBasic
+        TextColor={'icon'}
+        BackgroundColor={'light'}
+        Back={true}
+        Text={' '}
+      />
+      <BambooDetailHeader
+        bambooId={bamboo.bambooId}
+        content={bamboo.content}
+        leafCount={bamboo.leafCount}
+        likeCount={bamboo.likeCount}
+        likeBamboo={likeBamboo}
+        removeLikeBamboo={removeLikeBamboo}
+        heart={bamboo.heart}
+      />
+      <BoxComment>
         <TopDiv>
           <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
           <ReplyLabel>댓글 {bamboo.leafCount}개</ReplyLabel>
         </TopDiv>
+        {bamboo.leafCount !== 0 ? (
+          <>
+            <div>
+              {leaves.map((leaf) => {
+                return (
+                  <BoxLeavesFeed
+                    likeCount={leaf.likeCount}
+                    content={leaf.content}
+                    key={leaf.leafId}
+                    leafId={leaf.leafId}
+                    likeLeaf={likeLeaf}
+                    deleteLikeLeaf={deleteLikeLeaf}
+                    heart={leaf.heart}
+                  />
+                );
+              })}
+            </div>
+          </>
+        ) : (
+          <>
+            <ReplyDiv>등록된 댓글이 없습니다</ReplyDiv>
+          </>
+        )}
+      </BoxComment>
+      <div></div>
+      <BambooReplyBox replyBamboo={replyBamboo} />
+    </>
+  );
+  // if (bamboo.leafCount > 0) {
+  //   return (
+  //     <>
+  //       <NavBarBasic
+  //         TextColor={'icon'}
+  //         BackgroundColor={'light'}
+  //         Back={true}
+  //         Text={' '}
+  //       />
 
-        <div>
-          {leaves.map((leaf) => {
-            return (
-              <BoxLeavesFeed
-                likeCount={leaf.likeCount}
-                content={leaf.content}
-                key={leaf.leafId}
-                leafId={leaf.leafId}
-                likeLeaf={likeLeaf}
-                deleteLikeLeaf={deleteLikeLeaf}
-                heart={leaf.heart}
-              />
-            );
-          })}
-        </div>
-        <BambooReplyBox replyBamboo={replyBamboo} />
-      </>
-    );
-  } else {
-    return (
-      <>
-        <NavBarBasic
-          TextColor={'icon'}
-          BackgroundColor={'light'}
-          Back={true}
-          Text={''}
-        />
+  //       <BambooDetailHeader
+  //         bambooId={bamboo.bambooId}
+  //         content={bamboo.content}
+  //         leafCount={bamboo.leafCount}
+  //         likeCount={bamboo.likeCount}
+  //         likeBamboo={likeBamboo}
+  //         removeLikeBamboo={removeLikeBamboo}
+  //         heart={bamboo.heart}
+  //       />
+  //       <TopDiv>
+  //         <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
+  //         <ReplyLabel>댓글 {bamboo.leafCount}개</ReplyLabel>
+  //       </TopDiv>
 
-        <BambooDetailHeader
-          bambooId={bamboo.bambooId}
-          content={bamboo.content}
-          leafCount={bamboo.leafCount}
-          likeCount={bamboo.likeCount}
-          likeBamboo={likeBamboo}
-          removeLikeBamboo={removeLikeBamboo}
-          heart={bamboo.heart}
-        />
-        <TopDiv>
-          <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
-          <ReplyLabel>댓글 {bamboo.leafCount}개</ReplyLabel>
-        </TopDiv>
+  //       <div>
+  //         {leaves.map((leaf) => {
+  //           return (
+  //             <BoxLeavesFeed
+  //               likeCount={leaf.likeCount}
+  //               content={leaf.content}
+  //               key={leaf.leafId}
+  //               leafId={leaf.leafId}
+  //               likeLeaf={likeLeaf}
+  //               deleteLikeLeaf={deleteLikeLeaf}
+  //               heart={leaf.heart}
+  //             />
+  //           );
+  //         })}
+  //       </div>
+  //       <BambooReplyBox replyBamboo={replyBamboo} />
+  //     </>
+  //   );
+  // } else {
+  //   return (
+  //     <>
+  //       <NavBarBasic
+  //         TextColor={'icon'}
+  //         BackgroundColor={'light'}
+  //         Back={true}
+  //         Text={''}
+  //       />
 
-        <ReplyDiv>등록된 댓글이 없습니다</ReplyDiv>
-        <BambooReplyBox replyBamboo={replyBamboo} />
-      </>
-    );
-  }
+  //       <BambooDetailHeader
+  //         bambooId={bamboo.bambooId}
+  //         content={bamboo.content}
+  //         leafCount={bamboo.leafCount}
+  //         likeCount={bamboo.likeCount}
+  //         likeBamboo={likeBamboo}
+  //         removeLikeBamboo={removeLikeBamboo}
+  //         heart={bamboo.heart}
+  //       />
+  //       <TopDiv>
+  //         <FiMessageCircle style={{ margin: '0.5em 0.5em 0.5em 1em' }} />
+  //         <ReplyLabel>댓글 {bamboo.leafCount}개</ReplyLabel>
+  //       </TopDiv>
+
+  //       <ReplyDiv>등록된 댓글이 없습니다</ReplyDiv>
+  //       <BambooReplyBox replyBamboo={replyBamboo} />
+  //     </>
+  //   );
+  // }
 }
 
 export default BambooDetailPage;

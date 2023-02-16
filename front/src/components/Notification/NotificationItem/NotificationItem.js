@@ -11,13 +11,15 @@ import {
   BottomDiv,
   Content,
   BtnUpdate,
+  ContentTitleLabel,
 } from './style';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 
 // showButton true -> 팔로우 버튼 설정?
 function NotificationItem({
-  notificationId,
   title,
+  notificationId,
+  contentCode,
   msg,
   showButton,
   senderUid,
@@ -59,7 +61,7 @@ function NotificationItem({
     return <></>;
   } else {
     // 일기장알림
-    if (title === 1) {
+    if (contentCode === 1 && title !== null) {
       return (
         <>
           <div>
@@ -76,6 +78,34 @@ function NotificationItem({
                 >
                   <Content>{msg}</Content>
                 </BottomDiv>
+                <ContentTitleLabel color={'light'}>{title}</ContentTitleLabel>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    }
+
+    if (contentCode === 1 && title === null) {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel> 일기장 </TitleLabel>
+                </TopDiv>
+                <BottomDiv
+                  onClick={() => {
+                    readPost();
+                    navigate(`/diary/${navigateId}`);
+                  }}
+                >
+                  <Content>{msg}</Content>
+                </BottomDiv>
+                <ContentTitleLabel color={'light-pink'}>
+                  삭제되었습니다.
+                </ContentTitleLabel>
               </BoxNoShadLeaves>
             </ColumnDiv>
           </div>
@@ -83,7 +113,7 @@ function NotificationItem({
       );
     }
     // 일기 알림
-    if (title === 2) {
+    if (contentCode === 2 && title !== null) {
       return (
         <>
           <div>
@@ -100,15 +130,43 @@ function NotificationItem({
                 >
                   <Content>{msg}</Content>
                 </BottomDiv>
+                <ContentTitleLabel color={'light'}>{title}</ContentTitleLabel>
               </BoxNoShadLeaves>
             </ColumnDiv>
           </div>
         </>
       );
     }
+    if (contentCode === 2 && title === null) {
+      return (
+        <>
+          <div>
+            <ColumnDiv>
+              <BoxNoShadLeaves>
+                <TopDiv>
+                  <TitleLabel> 일기 </TitleLabel>
+                </TopDiv>
+                <BottomDiv
+                  onClick={() => {
+                    readPost();
+                    navigate(`/paper/${navigateId}`);
+                  }}
+                >
+                  <Content>{msg}</Content>
+                </BottomDiv>
+                <ContentTitleLabel color={'light-pink'}>
+                  삭제되었습니다.
+                </ContentTitleLabel>
+              </BoxNoShadLeaves>
+            </ColumnDiv>
+          </div>
+        </>
+      );
+    }
+
     // 팔로우알림
     // 현재 로그인한 사용자가 공개유저일때
-    if (title === 6 && !showButton) {
+    if (contentCode === 6 && !showButton) {
       return (
         <>
           <div>
@@ -132,7 +190,7 @@ function NotificationItem({
       );
     }
     // 현재 로그인한 사용자가 비공개유저일때
-    if (title === 6 && showButton) {
+    if (contentCode === 6 && showButton) {
       return (
         <>
           <div>
@@ -163,7 +221,7 @@ function NotificationItem({
       );
     }
     // 대나무알림
-    if (title === 4) {
+    if (contentCode === 4) {
       return (
         <>
           <div>

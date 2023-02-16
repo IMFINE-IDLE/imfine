@@ -20,4 +20,7 @@ const ReplyDiv = styled.div`
   height: inherit;
 `;
 
-export { TopDiv, ReplyLabel, ReplyDiv };
+const BoxComment = styled.div`
+  padding: 1em 1.2em 5em;
+`;
+export { TopDiv, ReplyLabel, ReplyDiv, BoxComment };

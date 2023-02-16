@@ -39,6 +39,7 @@ const BambooImg = styled.img.attrs({
 `;
 
 const Content = styled.h1`
+  line-height: 1.3em;
   color: var(--default-font-color);
   padding: 1.8em;
   text-align: left;
