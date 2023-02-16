@@ -124,7 +124,7 @@ function BambooDetailPage() {
           TextColor={'icon'}
           BackgroundColor={'light'}
           Back={true}
-          Text={'대나무 작성'}
+          Text={' '}
         />
 
         <BambooDetailHeader
@@ -166,7 +166,7 @@ function BambooDetailPage() {
           TextColor={'icon'}
           BackgroundColor={'light'}
           Back={true}
-          Text={'대나무 작성'}
+          Text={''}
         />
 
         <BambooDetailHeader
