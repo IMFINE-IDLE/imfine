@@ -11,6 +11,7 @@ import {
   InputContainer,
   StyledInput,
   BtnUpdate,
+  TextBubble,
 } from './style';
 import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCreateHeader';
 import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropdown';
@@ -21,6 +22,7 @@ import { FiArrowRight } from 'react-icons/fi';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
 import PreviewImage from '../../components/Paper/PreviewImage/PreviewImage';
+import { Clover } from '../../components/common/Clover/Clover';
 import {
   ToggleContainer,
   ToggleText,
@@ -156,12 +158,6 @@ function PaperCreatePage() {
       data.append(`symptoms[${i}].score`, symptomScore[i].score);
     }
 
-    // (key: contents) value : 일기장내용
-    // (key: open) isOpen: 공개/비공개 여부
-    // (key: date) calendar: 날짜
-    // (key: image) image 파일
-    // symptomScore : 증상점수 업로드
-
     try {
       const config = {
         headers: {
@@ -197,6 +193,8 @@ function PaperCreatePage() {
   const handleRemove = (index) => {
     setFiles(files.filter((_, i) => i !== index));
   };
+
+  console.log('diaries', diaries);
   return (
     <>
       <NavBarBasic
@@ -205,90 +203,126 @@ function PaperCreatePage() {
         Text={'일기 작성'}
         TextColor={'icon'}
       />
-      <BoxPaperDetail>
-        <PaperCreateHeader />
-        <DiariesDropdown
-          isdisabled={false}
-          value={diaryId}
-          state={setDiaryId}
-          diaries={diaries}
-        />
-        <DateDropdown
-          selectYear={year}
-          selectMonth={month}
-          selectDay={day}
-          value={form}
-          state={setForm}
-          isdisabled={dateFixed}
-        />
-      </BoxPaperDetail>
-      <TopDiv>
-        <ContentLabel>증상을 체크해주세요.</ContentLabel>
-      </TopDiv>
-      <BoxContent>
-        <SymptomRating
-          symptomList={diary.diaryHasSymptoms}
-          values={scores}
-          state={setScores}
-        />
-      </BoxContent>
-      <RightDiv>
-        <FiArrowRight />
-        <ContentLabel margin="1em 2em 1em 0.3em" onClick={validSymptomCheck}>
-          {' '}
-          증상 추가하러 가기
-        </ContentLabel>
-      </RightDiv>
-      <TopDiv>
-        <ContentLabel>일기 내용을 작성해주세요.</ContentLabel>
-      </TopDiv>
-      <FlexDiv>
-        <TextareaGray
-          width={'90%'}
-          height={'7em'}
-          margin={'1em'}
-          value={value}
-          setValue={setValue}
-        />
-      </FlexDiv>
-      <TopDiv>
-        <ContentLabel>사진 등록하기.</ContentLabel>
-      </TopDiv>
-      <FlexDiv direction="column" margin="0.3em 1.5em">
-        <InputContainer>
-          <StyledInput type="file" multiple onChange={handleSelectImage} />
-          <FlexDiv>
-            {files.map((file, index) => (
-              <PreviewImage
-                key={index}
-                file={file}
-                onRemove={() => handleRemove(index)}
-              />
-            ))}
-          </FlexDiv>
-        </InputContainer>
-      </FlexDiv>
-      <FlexDiv direction="row" justify="flex-start">
-        <ContentLabel> 일기 비공개 설정하기</ContentLabel>
-        <ToggleContainer>
-          <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
-          <ToggleWrapper isOpen={isOpen}>
-            <Toggle
-              id="toggle"
-              type="checkbox"
-              onChange={() => setIsOpen((prev) => !prev)}
-              checked={isOpen}
+      {diaries?.length === 0 ? (
+        <>
+          <BoxPaperDetail>
+            <PaperCreateHeader />
+            <DiariesDropdown
+              isdisabled={true}
+              value={diaryId}
+              state={setDiaryId}
+              diaries={diaries}
             />
-            <ToggleLabel htmlFor="toggle" />
-          </ToggleWrapper>
-        </ToggleContainer>
-      </FlexDiv>
-      <FlexDiv>
-        <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
-          취소하기
-        </BtnUpdate>
-        <BtnUpdate onClick={validCheck}>일기쓰기</BtnUpdate>
-      </FlexDiv>
+            <DateDropdown
+              selectYear={year}
+              selectMonth={month}
+              selectDay={day}
+              value={form}
+              state={setForm}
+              isdisabled={true}
+            />
+          </BoxPaperDetail>
+
+          <FlexDiv direction={'column'} padding={'5em'}>
+            <TextBubble>
+              <p>아직 만들어진 일기장이 없어요</p>
+            </TextBubble>
+            <div>
+              <Clover code={'1'} width={'150'} height={'150'} />
+            </div>
+          </FlexDiv>
+        </>
+      ) : (
+        <>
+          <BoxPaperDetail>
+            <PaperCreateHeader />
+            <DiariesDropdown
+              isdisabled={false}
+              value={diaryId}
+              state={setDiaryId}
+              diaries={diaries}
+            />
+            <DateDropdown
+              selectYear={year}
+              selectMonth={month}
+              selectDay={day}
+              value={form}
+              state={setForm}
+              isdisabled={dateFixed}
+            />
+          </BoxPaperDetail>
+          <TopDiv>
+            <ContentLabel>증상을 체크해주세요.</ContentLabel>
+          </TopDiv>
+          <BoxContent>
+            <SymptomRating
+              symptomList={diary.diaryHasSymptoms}
+              values={scores}
+              state={setScores}
+            />
+          </BoxContent>
+          <RightDiv>
+            <FiArrowRight />
+            <ContentLabel
+              margin="1em 2em 1em 0.3em"
+              onClick={validSymptomCheck}
+            >
+              {' '}
+              증상 추가하러 가기
+            </ContentLabel>
+          </RightDiv>
+          <TopDiv>
+            <ContentLabel>일기 내용을 작성해주세요.</ContentLabel>
+          </TopDiv>
+          <FlexDiv>
+            <TextareaGray
+              width={'90%'}
+              height={'7em'}
+              margin={'1em'}
+              value={value}
+              setValue={setValue}
+            />
+          </FlexDiv>
+          <TopDiv>
+            <ContentLabel>사진 등록하기.</ContentLabel>
+          </TopDiv>
+          <FlexDiv direction="column" margin="0.3em 1.5em">
+            <InputContainer>
+              <StyledInput type="file" multiple onChange={handleSelectImage} />
+              <FlexDiv>
+                {files.map((file, index) => (
+                  <PreviewImage
+                    key={index}
+                    file={file}
+                    onRemove={() => handleRemove(index)}
+                  />
+                ))}
+              </FlexDiv>
+            </InputContainer>
+          </FlexDiv>
+          <FlexDiv direction="row" justify="flex-start">
+            <ContentLabel> 일기 비공개 설정하기</ContentLabel>
+            <ToggleContainer>
+              <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
+              <ToggleWrapper isOpen={isOpen}>
+                <Toggle
+                  id="toggle"
+                  type="checkbox"
+                  onChange={() => setIsOpen((prev) => !prev)}
+                  checked={isOpen}
+                />
+                <ToggleLabel htmlFor="toggle" />
+              </ToggleWrapper>
+            </ToggleContainer>
+          </FlexDiv>
+          <FlexDiv>
+            <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
+              취소하기
+            </BtnUpdate>
+            <BtnUpdate onClick={validCheck}>일기쓰기</BtnUpdate>
+          </FlexDiv>
+        </>
+      )}
     </>
   );
 }
