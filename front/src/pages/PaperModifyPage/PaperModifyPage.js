@@ -239,7 +239,7 @@ function PaperModifyPage() {
       // 업로드성공하면 일기상세화면으로 넘어가야해용
       // 일단 알림
       alert('일기를 성공적으로 수정했습니다');
-      navigate(`/paper/${paperId}`);
+      navigate(-1, { replace: true });
     } catch (err) {
       console.error(err);
     }

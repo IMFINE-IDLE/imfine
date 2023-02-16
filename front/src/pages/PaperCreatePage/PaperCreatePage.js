@@ -173,7 +173,7 @@ function PaperCreatePage() {
       }
       const id = res.data.data;
       alert('일기가 성공적으로 등록되었습니다');
-      navigate(`/paper/${id}`);
+      navigate(`/paper/${id}`, { replace: true });
     } catch (err) {
       console.error('err', err);
     }

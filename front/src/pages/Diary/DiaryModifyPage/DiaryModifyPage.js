@@ -63,7 +63,7 @@ const DiaryModifyPage = () => {
         active: true,
       });
 
-      navigate(`/diary/${diaryId}`);
+      navigate(-1, { replace: true });
     } catch (err) {
       console.error(err);
     }
