@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { Btn } from '../../common/Btn/Btn';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 
 const DiaryPaperSpan = styled.span`
@@ -37,12 +38,16 @@ const DiaryPaperSymptomDiv = styled.button`
   cursor: default;
 `;
 
-// const DiaryPaperSymptomDiv = styled.div`
-//   width: 4em;
-//   height: 4em;
-//   background-color: var(--gray700-color);
-//   font-size: 0.6em;
-//   padding: 0.4em;
-// `;
+const DiaryPaperTitle = styled.button`
+  ${Btn}
+  padding: 0.4em;
+  padding-left: 1.8em;
+  width: auto;
+`;
 
-export { DiaryPaperSpan, DiaryPaperSymptomWrapper, DiaryPaperSymptomDiv };
+export {
+  DiaryPaperSpan,
+  DiaryPaperSymptomWrapper,
+  DiaryPaperSymptomDiv,
+  DiaryPaperTitle,
+};

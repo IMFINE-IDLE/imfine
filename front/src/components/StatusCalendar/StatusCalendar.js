@@ -220,6 +220,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
             <img
               src="/assets/clovers/clover1.svg"
               style={{ width: '2em', height: '2em' }}
+              alt="clover"
             />
             <span style={{ color: 'var(--icon-color)', fontSize: '0.85em' }}>
               이 날짜에 아직 일기가 없어요
