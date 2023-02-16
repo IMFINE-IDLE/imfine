@@ -49,17 +49,24 @@ const PickMenuTab = ({
    * Hooks
    */
   const dispatch = useDispatch();
+
   // 질병/수술 목록과 증상 목록을 서버에서 받아와서 스토어에 저장
   useEffect(() => {
     dispatch(fetchMedicalList());
     dispatch(fetchSymptomList());
   }, []);
 
-  // 메뉴 클릭시 서브메뉴 열기 위한 ref
+  // refs
   const refs = {
+    // 메뉴 클릭시 서브메뉴 열기 위한 ref
     subMenuSection: useRef([]),
     clickedSubMenuSectionIdx: useRef(null),
     clickedMenuId: useRef(null),
+    // 질병/수술 또는 증상 추가시 스크롤 자동이동시키기 위한 ref
+    medicalDivOut: useRef(0),
+    medicalDivIn: useRef(0),
+    symptomDivOut: useRef(0),
+    symptomDivIn: useRef(0),
   };
 
   /*
@@ -126,6 +133,16 @@ const PickMenuTab = ({
     refs.subMenuSection.current = [];
     refs.clickedSubMenuSectionIdx.current = null;
     refs.clickedMenuId.current = null;
+  };
+
+  // 질병/수술 또는 증상 하나 선택할 때마다 범위 넘어가는지 체크
+  const checkOverflow = () => {
+    if (
+      refs.medicalDivOut.current.clientWidth <=
+      refs.medicalDivIn.current.clientWidth
+    )
+      refs.medicalDivOut.current.scrollLeft += 1000;
+    else refs.medicalDivOut.current.scrollLeft -= 1000;
   };
 
   // 탭 하단에 탭 컨텐츠로 표시할 질병/수술 또는 증상 목록들
@@ -200,6 +217,8 @@ const PickMenuTab = ({
             ToggleSymptom={ToggleSymptom}
             paddingPicked={paddingPicked}
             color={title === '증상' ? 'light-pink' : 'main'}
+            ref={refs}
+            checkOverflow={checkOverflow}
           />
         ) : (
           <>
@@ -210,6 +229,8 @@ const PickMenuTab = ({
               canModify={true}
               ToggleSymptom={ToggleSymptom}
               paddingPicked={paddingPicked}
+              ref={refs}
+              checkOverflow={checkOverflow}
             />
             <PickedItemList
               title="증상"
@@ -219,6 +240,8 @@ const PickMenuTab = ({
               canModify={true}
               ToggleSymptom={ToggleSymptom}
               paddingPicked={paddingPicked}
+              ref={refs}
+              checkOverflow={checkOverflow}
             />
           </>
         )}

@@ -14,6 +14,16 @@ const DiaryItemPrivate = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
+const DiaryPrivateLockImg = styled.img.attrs({
+  src: `/assets/icons/lockgray.svg`,
+})`
+  height: 3em;
+  width: 3em;
+  position: absolute;
+  top: calc(50% - 2.5em);
+  left: calc(50% - 1.5em);
+`;
+
 const DiaryItemSpan = styled.span`
   ${({ fontSize, padding, color }) => css`
     color: ${color ? 'var(--' + color + '-color)' : 'var(--gray800-color)'};
@@ -24,4 +34,9 @@ const DiaryItemSpan = styled.span`
   `}
 `;
 
-export { DiaryItemContainer, DiaryItemPrivate, DiaryItemSpan };
+export {
+  DiaryItemContainer,
+  DiaryItemPrivate,
+  DiaryPrivateLockImg,
+  DiaryItemSpan,
+};
