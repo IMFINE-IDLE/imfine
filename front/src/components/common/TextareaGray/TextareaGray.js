@@ -26,6 +26,7 @@ const Textarea = styled.textarea`
   overflow: hidden;
   resize: none;
   display: inline-block;
+  line-height: 1.4em;
 `;
 
 function TextareaGray({
