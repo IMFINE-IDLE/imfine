@@ -7,6 +7,7 @@ import api from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import { DivFindResult, SpanUserId } from './style';
 import FindEmailInput from '../../components/SignUp/FindEmailInput/FindEmailInput';
+import { BtnNext } from '../OnBoardingPage/style';
 
 function FindIdPage() {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ function FindIdPage() {
       ) : (
         <DivFindResult direction={'column'}>
           <SpanUserId>아이디: {userId}</SpanUserId>
-          <BtnSignup
+          <BtnNext
             onClick={() =>
               navigate('/find-password', {
                 state: {
@@ -67,8 +68,8 @@ function FindIdPage() {
             }
           >
             비밀번호 찾기
-          </BtnSignup>
-          <BtnSignup onClick={() => navigate('/login')}>로그인 하기</BtnSignup>
+          </BtnNext>
+          <BtnNext onClick={() => navigate('/login')}>로그인 하기</BtnNext>
         </DivFindResult>
       )}
     </BoxGrad>
