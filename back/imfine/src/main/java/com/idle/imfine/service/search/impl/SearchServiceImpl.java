@@ -162,10 +162,7 @@ public class SearchServiceImpl implements SearchService {
                                     .date(paper.getDate())
                                     .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                                     .open(paper.isOpen())
-                                    .condition(String.valueOf(papersCondition.size() == 0 ? "0" : papersCondition.get(papersCondition.stream()
-                                            .filter(condition -> {
-                                                return condition.getDate() == paper.getDate();
-                                            }).findFirst().orElseGet(Condition::new).getCondition())))
+                                    .condition(common.getDateUserCondition(paper.getDate(), diary.getWriter()))
                                     .image(imageHasPaper.contains(paper.getId()))
                                     .hasNext(papers.hasNext())
                                     .symptomList(
