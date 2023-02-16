@@ -1,6 +1,7 @@
 package com.idle.imfine.data.repository.paper;
 
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.paper.Paper;
 import java.time.LocalDate;
 import java.util.List;
@@ -50,6 +51,9 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
 
     @Query("select p from Paper p join fetch p.paperHasSymptoms where p.id=:paperId")
     Optional<Paper> findByIdFetchPaperSymptom(@Param("paperId") long paperId);
-    @Query("select p from Paper p join fetch  p.comments where p.id=:paperId")
-    Optional<Paper> findByIdFetchAll(long paperId);
+    @Query("select p from Paper p where p.id=:paperId")
+    Optional<Paper> findByIdFetchAll(@Param("paperId") long paperId);
+
+    @Query("select c from Comment c where c.paperId=:paperId")
+    List<Comment> findByIdFetchComments(@Param("paperId") long paperId);
 }
