@@ -53,21 +53,21 @@ public class NotificationServiceImpl implements NotificationService {
         Slice<Notification> all = notificationRepository.findByRecieverIdOrderByCreatedAtDesc(user.getId(), pageable);
 
         for (Notification n : all) {
-            User sender = userRepository.getById(n.getSenderId());
-            User receiver = userRepository.getById(n.getRecieverId());
+            User sender = userRepository.findById(n.getSenderId()).get();
+            User receiver = userRepository.findById(n.getRecieverId()).get();
             String uId = sender.getUid();
             String userName = sender.getName();
             String title = null;
             if (n.getContentsCodeId() == 1) {
-                Diary diary = diaryRepository.getById(n.getContentsId());
+                Diary diary = diaryRepository.findById(n.getContentsId()).get();
                 title = diary.getTitle();
             } else if (n.getContentsCodeId() == 2) {
-                Paper paper = paperRepository.getById(n.getContentsId());
+                Paper paper = paperRepository.findById(n.getContentsId()).get();
                 title = paper.getDiary().getTitle();
             } else if (n.getContentsCodeId() == 3) {
-                Comment comment = commentRepository.getById(n.getContentsId());
+                Comment comment = commentRepository.findById(n.getContentsId()).get();
                 long paperId = comment.getPaperId();
-                Paper paper = paperRepository.getById(paperId);
+                Paper paper = paperRepository.findById(paperId).get();
                 title = paper.getDiary().getTitle();
             }
 
