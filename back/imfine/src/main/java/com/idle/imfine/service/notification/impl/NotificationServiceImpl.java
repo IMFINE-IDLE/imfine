@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,16 +60,26 @@ public class NotificationServiceImpl implements NotificationService {
             String userName = sender.getName();
             String title = null;
             if (n.getContentsCodeId() == 1) {
-                Diary diary = diaryRepository.findById(n.getContentsId()).get();
-                title = diary.getTitle();
+                Optional<Diary> diary = diaryRepository.findById(n.getContentsId());
+                if(diary.isPresent()) {
+                    title = diary.get().getTitle();
+                }
             } else if (n.getContentsCodeId() == 2) {
-                Paper paper = paperRepository.findById(n.getContentsId()).get();
-                title = paper.getDiary().getTitle();
+                Optional<Paper> paper = paperRepository.findById(n.getContentsId());
+                if(paper.isPresent()) {
+                    title = paper.get().getDiary().getTitle();
+                }
+                
             } else if (n.getContentsCodeId() == 3) {
-                Comment comment = commentRepository.findById(n.getContentsId()).get();
-                long paperId = comment.getPaperId();
-                Paper paper = paperRepository.findById(paperId).get();
-                title = paper.getDiary().getTitle();
+                Optional<Comment> comment = commentRepository.findById(n.getContentsId());
+                if(comment.isPresent()) {
+                    long paperId = comment.get().getPaperId();
+
+                    Optional<Paper> paper = paperRepository.findById(paperId);
+                    if(paper.isPresent()) {
+                        title = paper.get().getDiary().getTitle();
+                    }
+                }
             }
 
             if (n.getContentsCodeId() == 6
