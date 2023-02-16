@@ -50,12 +50,18 @@ const PickedItemList = (
   // 질병/수술 또는 증상이 추가, 제거될 때마다 가로스크롤 overflow 여부를 체크
   useEffect(() => {
     if (
+      type === 'medical' &&
       !!medicalDivOut?.current &&
-      !!medicalDivIn?.current &&
+      !!medicalDivIn?.current
+    )
+      checkOverflow?.(type);
+
+    if (
+      type === 'symptom' &&
       !!symptomDivOut?.current &&
       !!symptomDivIn?.current
     )
-      checkOverflow?.();
+      checkOverflow?.(type);
   }, [medicals, symptoms]);
 
   return (

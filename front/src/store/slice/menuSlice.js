@@ -7,7 +7,6 @@ export const fetchSymptomList = createAsyncThunk(
   async () => {
     try {
       const res = await axios.get(api.symptom.getSymptomList());
-      console.log('s test', res.data);
       return res.data.data;
     } catch (err) {
       return err;
@@ -20,7 +19,6 @@ export const fetchMedicalList = createAsyncThunk(
   async () => {
     try {
       const res = await axios.get(api.medical.getMedicalList());
-      console.log('m test', res);
       return res.data.data;
     } catch (err) {
       return err;
