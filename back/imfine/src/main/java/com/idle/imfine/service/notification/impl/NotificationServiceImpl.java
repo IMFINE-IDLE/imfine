@@ -162,7 +162,7 @@ public class NotificationServiceImpl implements NotificationService {
         LOGGER.info("에미터 타임아웃 {} {}", id, lastEventId);
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
-        sendToClient(emitter, id,  "dumy", "EventStream Created. [userId=" + uid + "]");
+        sendToClient(emitter, id, "dumy", "EventStream Created. [userId=" + uid + "]");
         LOGGER.info("EventStream Created {}", id);
 
         if (!lastEventId.isEmpty()) {
