@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import 'moment/locale/ko';
-import { FiHeart, FiMessageCircle } from 'react-icons/fi';
+import { FiHeart, FiMessageCircle, FiBook } from 'react-icons/fi';
 import { Clover } from '../../common/Clover/Clover';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import { BoxLT50R25 } from '../../common/BoxLT50R25/BoxLT50R25';
@@ -10,6 +10,7 @@ import {
   DiaryPaperSpan,
   DiaryPaperSymptomWrapper,
   DiaryPaperSymptomDiv,
+  DiaryPaperTitle,
 } from './style';
 import axios from 'axios';
 import api from '../../../api/api';
@@ -89,15 +90,33 @@ const DiaryPaperItem = ({ paperInfo, setIsPaperChanged }) => {
               </DiaryPaperSymptomWrapper>
             </FlexDiv>
             <FlexDiv
-              padding="0.8em 0"
+              padding="1.2em 0"
               style={{ lineHeight: '1.3em' }}
               justify="start"
             >
               <DiaryPaperSpan>{paperInfo?.content}</DiaryPaperSpan>
             </FlexDiv>
 
-            <FlexDiv justify="end">
-              <div>
+            <FlexDiv justify="space-between">
+              <FlexDiv justify="start">
+                <DiaryPaperTitle
+                  onClick={() => navigate(`/diary/${paperInfo.diaryId}`)}
+                  style={{ fontSize: '0.75em', position: 'relative' }}
+                >
+                  <FiBook
+                    style={{ position: 'absolute', left: '0', top: '0' }}
+                  />
+                  <DiaryPaperSpan>
+                    {paperInfo.title.length > 10
+                      ? paperInfo.title?.substr(0, 10) + '...'
+                      : paperInfo.title}
+                  </DiaryPaperSpan>
+                </DiaryPaperTitle>
+                {paperInfo.open || (
+                  <img src="/assets/icons/lock.svg" alt="lock" />
+                )}
+              </FlexDiv>
+              <FlexDiv width="auto">
                 <FiHeart
                   style={{
                     color: 'var(--red-color)',
@@ -120,7 +139,7 @@ const DiaryPaperItem = ({ paperInfo, setIsPaperChanged }) => {
                 <SpanLikeCmt>{localLikeCount}</SpanLikeCmt>
                 <FiMessageCircle />
                 <SpanLikeCmt>{paperInfo.commentCount}</SpanLikeCmt>
-              </div>
+              </FlexDiv>
             </FlexDiv>
           </BoxLT50R25>
         </FlexDiv>

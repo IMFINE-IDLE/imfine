@@ -52,8 +52,6 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
 
       setData(newData);
       setDataKeys(symptomList);
-      console.log('newData', newData);
-      console.log('sname', symptomList);
     } catch (err) {
       console.error(err);
     }

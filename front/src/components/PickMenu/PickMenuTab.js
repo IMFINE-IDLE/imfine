@@ -135,14 +135,22 @@ const PickMenuTab = ({
     refs.clickedMenuId.current = null;
   };
 
-  // 질병/수술 또는 증상 하나 선택할 때마다 범위 넘어가는지 체크
+  // 질병/수술 또는 증상 하나 선택할 때마다 범위 넘어가면 스크롤
   const checkOverflow = () => {
+    // 질병/수술
     if (
       refs.medicalDivOut.current.clientWidth <=
       refs.medicalDivIn.current.clientWidth
     )
       refs.medicalDivOut.current.scrollLeft += 1000;
     else refs.medicalDivOut.current.scrollLeft -= 1000;
+    // 증상
+    if (
+      refs.symptomDivOut.current.clientWidth <=
+      refs.symptomDivIn.current.clientWidth
+    )
+      refs.symptomDivOut.current.scrollLeft += 1000;
+    else refs.symptomDivOut.current.scrollLeft -= 1000;
   };
 
   // 탭 하단에 탭 컨텐츠로 표시할 질병/수술 또는 증상 목록들

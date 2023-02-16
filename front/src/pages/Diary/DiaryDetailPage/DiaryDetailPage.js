@@ -44,9 +44,9 @@ const DiaryDetailPage = () => {
       setDiaryInfo(res.data.data);
     } catch (err) {
       if (err.response.status === 404) {
-        alert('존재하지 않는 일기입니다');
-        navigate(-1);
+        navigate('/404', { replace: true });
       }
+      console.error(err);
     }
   };
 
@@ -241,16 +241,42 @@ const DiaryDetailPage = () => {
                 src="/assets/icons/chevron-left.svg"
                 alt="prev"
               />
-              <span
-                onClick={() => setIsWeekly((prev) => !prev)}
-                style={{ color: 'var(--icon-color)' }}
-              >
-                {isWeekly ? '주간' : '월간'}
-              </span>
+              <FlexDiv width="auto">
+                <span
+                  onClick={() => setIsWeekly((prev) => !prev)}
+                  style={{
+                    color: isWeekly
+                      ? 'var(--main-color)'
+                      : 'var(--gray700-color)',
+                    fontWeight: isWeekly ? '700' : '400',
+                    cursor: 'pointer',
+                  }}
+                >
+                  주간
+                </span>
+                <span style={{ color: 'var(--icon-color)' }}>
+                  &nbsp;/&nbsp;
+                </span>
+                <span
+                  onClick={() => setIsWeekly((prev) => !prev)}
+                  style={{
+                    color: isWeekly
+                      ? 'var(--gray700-color)'
+                      : 'var(--main-color)',
+                    fontWeight: isWeekly ? '400' : '700',
+                    cursor: 'pointer',
+                  }}
+                >
+                  월간
+                </span>
+              </FlexDiv>
               <img
                 onClick={() => {
                   const unit = isWeekly ? 'weeks' : 'months';
-                  setDate((prev) => moment(prev).add(1, unit).format());
+                  const newDate = moment(date).add(1, unit).format();
+                  if (moment(newDate).isSameOrBefore(moment(), unit)) {
+                    setDate(newDate);
+                  }
                 }}
                 src="/assets/icons/chevron-right.svg"
                 alt="next"
