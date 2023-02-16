@@ -42,7 +42,7 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
       const symptomList = [];
       res.data.data.forEach((val) => {
         const obj = {};
-        obj['name'] = moment(val.date).format('M/D');
+        obj['date'] = moment(val.date).format('M/D');
         val.symptoms.forEach(({ symptomName, score }) => {
           obj[symptomName] = score;
           if (!symptomList.includes(symptomName)) symptomList.push(symptomName);
@@ -61,7 +61,7 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
 
   useEffect(() => {
     fetchGraphData();
-  }, [date]);
+  }, [date, isWeekly]);
 
   return isWeekly ? (
     <ResponsiveContainer width="100%" height="100%">
@@ -77,10 +77,8 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        {/* <XAxis dataKey="name" /> */}
-        <XAxis dataKey="name" interval={0} dx={25} />
-        <YAxis tickCount={6} domain={[0, 10]} tickSize={4} width={16} />
-        {/* <YAxis ticks={[0, 2, 4, 6, 8, 10]} width={20} /> */}
+        <XAxis dataKey="date" interval={0} dx={-7} tick={{ fontSize: 12 }} />
+        <YAxis tickCount={6} domain={[2, 10]} tickSize={4} width={16} />
         <Tooltip />
         <Legend />
         {dataKeys?.map((symptom, idx) => (
@@ -96,7 +94,40 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
       </LineChart>
     </ResponsiveContainer>
   ) : (
-    <></>
+    <ResponsiveContainer width="100%" height="100%">
+      <LineChart
+        width={1000}
+        height={300}
+        data={data}
+        margin={{
+          top: 5,
+          right: 5,
+          left: 5,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis
+          dataKey="date"
+          interval={'preserveEnd'}
+          tick={{ fontSize: 12 }}
+          dx={-2}
+        />
+        <YAxis tickCount={6} domain={[0, 10]} tickSize={4} width={16} />
+        <Tooltip />
+        <Legend />
+        {dataKeys?.map((symptom, idx) => (
+          <Line
+            type="monotone"
+            dataKey={symptom}
+            stroke={`var(--${colors[idx % 9]}-color)`}
+            strokeWidth={2}
+            legendType="circle"
+            key={symptom}
+          />
+        ))}
+      </LineChart>
+    </ResponsiveContainer>
   );
 };
 

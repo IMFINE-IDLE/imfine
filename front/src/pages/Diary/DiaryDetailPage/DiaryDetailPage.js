@@ -227,9 +227,10 @@ const DiaryDetailPage = () => {
           >
             <FlexDiv height="auto" justify="space-around">
               <img
-                onClick={() =>
-                  setDate((prev) => moment(prev).subtract(1, 'weeks').format())
-                }
+                onClick={() => {
+                  const unit = isWeekly ? 'weeks' : 'months';
+                  setDate((prev) => moment(prev).subtract(1, unit).format());
+                }}
                 src="/assets/icons/chevron-left.svg"
                 alt="prev"
               />
@@ -240,9 +241,10 @@ const DiaryDetailPage = () => {
                 {isWeekly ? '주간' : '월간'}
               </span>
               <img
-                onClick={() =>
-                  setDate((prev) => moment(prev).add(1, 'weeks').format())
-                }
+                onClick={() => {
+                  const unit = isWeekly ? 'weeks' : 'months';
+                  setDate((prev) => moment(prev).add(1, unit).format());
+                }}
                 src="/assets/icons/chevron-right.svg"
                 alt="next"
               />
