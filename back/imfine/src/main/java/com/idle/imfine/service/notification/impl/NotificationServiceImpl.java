@@ -162,7 +162,7 @@ public class NotificationServiceImpl implements NotificationService {
         LOGGER.info("에미터 타임아웃 {} {}", id, lastEventId);
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
-        sendToClient(emitter, id, "dummy", "EventStream Created. [userId=" + uid + "]");
+        sendToClient(emitter, id, "dummy", "EventStream Created. [userId=" + uid + "]\n\n");
         LOGGER.info("EventStream Created {}", id);
 
         if (!lastEventId.isEmpty()) {
@@ -201,7 +201,7 @@ public class NotificationServiceImpl implements NotificationService {
         sseEmitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
-                    sendToClient(emitter, key, "sse", "알림이 왔습니다.");
+                    sendToClient(emitter, key, "sse", "알림이 왔습니다.\n\n");
                 }
         );
         LOGGER.info("sseEmitter {}", sseEmitters);
