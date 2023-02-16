@@ -1,20 +1,17 @@
 import axios from 'axios';
 import api from '../api/api';
 
-let isAlreadyFetchingAccessToken = false;
-let subscribers = [];
+let isFetchingAccessToken = false;
+let requests = [];
 /**
  * 토큰을 갱신하고 기존 요청을 처리
  */
-export const resetTokenAndReattemptRequest = async (
-  error,
-  dispatchCallback
-) => {
+export const refreshTokenAndResendRequest = async (error, dispatchCallback) => {
   try {
     console.log('토큰 갱신');
     const { response: errorResponse } = error;
     const retryOriginalRequest = new Promise((resolve, reject) => {
-      addSubscriber(async () => {
+      addRequest(async () => {
         try {
           errorResponse.config.headers['Authorization'] =
             localStorage.getItem('accessToken');
@@ -25,8 +22,8 @@ export const resetTokenAndReattemptRequest = async (
       });
     });
 
-    if (!isAlreadyFetchingAccessToken) {
-      isAlreadyFetchingAccessToken = true;
+    if (!isFetchingAccessToken) {
+      isFetchingAccessToken = true;
       const res = await axios.post(api.user.refresh(), {
         withCredentials: true,
       });
@@ -34,7 +31,7 @@ export const resetTokenAndReattemptRequest = async (
       // console.log('새로운 토큰', newToken);
       localStorage.setItem('accessToken', newToken);
       axios.defaults.headers.common['Authorization'] = newToken;
-      isAlreadyFetchingAccessToken = false;
+      isFetchingAccessToken = false;
       onAccessTokenFetched(newToken);
       return retryOriginalRequest;
     }
@@ -51,16 +48,16 @@ export const resetTokenAndReattemptRequest = async (
 /**
  * 기존 요청들을 처리하기 위해 배열에 담기
  */
-function addSubscriber(callback) {
-  subscribers.push(callback);
+function addRequest(callback) {
+  requests.push(callback);
 }
 
 /**
  * 기존 요청들 처리 및 배열 초기화
  */
 function onAccessTokenFetched(accessToken) {
-  subscribers.forEach((callback) => callback(accessToken));
-  subscribers = [];
+  requests.forEach((callback) => callback(accessToken));
+  requests = [];
 }
 
 /**
