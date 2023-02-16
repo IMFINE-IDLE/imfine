@@ -24,12 +24,16 @@ public interface BambooRepository extends JpaRepository<Bamboo, Long> {
     Slice<Bamboo> findByCreatedAtBetweenOrderByLikeCountDesc(LocalDateTime start, LocalDateTime end, Pageable pageable);
 
     //내가 작성한 글
-    Slice<Bamboo> findByWriter_IdAndCreatedAtBetween(long writerId, LocalDateTime start, LocalDateTime end, Pageable pageable);
+    Slice<Bamboo> findByWriter_IdAndCreatedAtBetweenOrderByCreatedAtDesc(long writerId, LocalDateTime start, LocalDateTime end, Pageable pageable);
 
-    @Query("select b from Bamboo b inner join Heart h on b.id = h.contentsId where h.contentsCodeId = 4 and h.senderId = :writerId and b.createdAt between :start and :end")
+    @Query("select b from Bamboo b inner join Heart h on b.id = h.contentsId "
+            + "where h.contentsCodeId = 4 and h.senderId = :writerId and b.createdAt between :start and :end "
+            + "order by b.createdAt desc ")
     Slice<Bamboo> findByHeart(@Param("writerId") long writerId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 
-    @Query("select b from Bamboo b join Heart h on b.id = h.contentsId where h.contentsCodeId = 4 and h.senderId = :senderId and b.createdAt between :start and :end")
+    @Query("select b from Bamboo b join Heart h on b.id = h.contentsId "
+            + "where h.contentsCodeId = 4 and h.senderId = :senderId and b.createdAt between :start and :end "
+            + "order by b.createdAt desc ")
     List<Bamboo> findByHeartList(@Param("senderId") long senderId, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     List<Bamboo> findByDeleteAtBefore(LocalDateTime now);

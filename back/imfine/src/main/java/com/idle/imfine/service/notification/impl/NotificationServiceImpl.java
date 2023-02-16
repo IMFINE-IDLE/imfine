@@ -4,10 +4,16 @@ package com.idle.imfine.service.notification.impl;
 import com.idle.imfine.data.dto.notification.request.RequestNotificationDetailDto;
 import com.idle.imfine.data.dto.notification.response.ResponseNotification;
 import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
+import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.notification.Notification;
+import com.idle.imfine.data.entity.paper.Paper;
+import com.idle.imfine.data.repository.comment.CommentRepository;
+import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.emitter.EmitterRepository;
 import com.idle.imfine.data.repository.notification.NotificationRepository;
+import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.UserRepository;
 import com.idle.imfine.errors.exception.ConnectionException;
 import com.idle.imfine.service.Common;
@@ -33,6 +39,9 @@ public class NotificationServiceImpl implements NotificationService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     private final EmitterRepository emitterRepository;
+    private final DiaryRepository diaryRepository;
+    private final PaperRepository paperRepository;
+    private final CommentRepository commentRepository;
     private final Common common;
 
     @Override
@@ -48,6 +57,19 @@ public class NotificationServiceImpl implements NotificationService {
             User receiver = userRepository.getById(n.getRecieverId());
             String uId = sender.getUid();
             String userName = sender.getName();
+            String title = null;
+            if (n.getContentsCodeId() == 1) {
+                Diary diary = diaryRepository.getById(n.getContentsId());
+                title = diary.getTitle();
+            } else if (n.getContentsCodeId() == 2) {
+                Paper paper = paperRepository.getById(n.getContentsId());
+                title = paper.getDiary().getTitle();
+            } else if (n.getContentsCodeId() == 3) {
+                Comment comment = commentRepository.getById(n.getContentsId());
+                long paperId = comment.getPaperId();
+                Paper paper = paperRepository.getById(paperId);
+                title = paper.getDiary().getTitle();
+            }
 
             if (n.getContentsCodeId() == 6
                     && common.getFollowRelation(sender, receiver) == 2) {
@@ -56,6 +78,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .senderUid(uId)
                         .contentsCodeId(n.getContentsCodeId())
                         .contentsId(n.getContentsId())
+                        .title(title)
                         .isCheck(n.isCheck())
                         .showButton(true)
                         .hasNext(all.hasNext())
@@ -68,6 +91,7 @@ public class NotificationServiceImpl implements NotificationService {
                         .senderUid(uId)
                         .contentsCodeId(n.getContentsCodeId())
                         .contentsId(n.getContentsId())
+                        .title(title)
                         .isCheck(n.isCheck())
                         .showButton(false)
                         .hasNext(all.hasNext())
@@ -176,9 +200,10 @@ public class NotificationServiceImpl implements NotificationService {
         LOGGER.info("dtoToSend service");
         Long senderId = responseDto.getSenderId();
         Long receiverId = responseDto.getReceiverId();
-        Notification notification = saveNotification(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
-                responseDto.getContentsId(), responseDto.getType());
+
         if (!senderId.equals(receiverId)) {
+            Notification notification = saveNotification(responseDto.getSenderId(), responseDto.getReceiverId(), responseDto.getContentsCodeId(),
+                    responseDto.getContentsId(), responseDto.getType());
             send(notification.getId());
         }
     }

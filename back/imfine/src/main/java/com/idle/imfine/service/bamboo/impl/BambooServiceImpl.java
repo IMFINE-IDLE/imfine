@@ -114,7 +114,7 @@ public class BambooServiceImpl implements BambooService {
         } else if(filter.equals("comment")) {
             all = bambooRepository.findByLeaves(user.getId(), start, end, pageable);
         } else {
-            all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
+            all = bambooRepository.findByWriter_IdAndCreatedAtBetweenOrderByCreatedAtDesc(user.getId(), start, end, pageable);
         }
 
         List<Bamboo> heartBamboos = bambooRepository.findByHeartList(user.getId(), start, end);
