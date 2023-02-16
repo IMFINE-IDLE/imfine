@@ -273,7 +273,10 @@ const DiaryDetailPage = () => {
               <img
                 onClick={() => {
                   const unit = isWeekly ? 'weeks' : 'months';
-                  setDate((prev) => moment(prev).add(1, unit).format());
+                  const newDate = moment(date).add(1, unit).format();
+                  if (moment(newDate).isSameOrBefore(moment(), unit)) {
+                    setDate(newDate);
+                  }
                 }}
                 src="/assets/icons/chevron-right.svg"
                 alt="next"
