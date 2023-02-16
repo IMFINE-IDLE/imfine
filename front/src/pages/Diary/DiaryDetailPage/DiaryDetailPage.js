@@ -13,6 +13,7 @@ import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import { DiaryBoxGrad } from '../DiaryCreateConfirmPage/style';
 import { DiaryInfoContainer, DiaryDateSpan, DiaryReportBtn } from './style';
+import moment from 'moment';
 
 const DiaryDetailPage = () => {
   const { diaryId } = useParams();
@@ -23,7 +24,9 @@ const DiaryDetailPage = () => {
   const [showGraph, setShowGraph] = useState(false);
   // 증상그래프 날짜와 타입(주간/월간)
   const [date, setDate] = useState(new Date());
-  const [type, setType] = useState('week');
+  const [isWeekly, setIsWeekly] = useState(true);
+
+  console.log('date', date);
 
   // 신고하기 버튼 여닫기
   const [reportOpen, setReportOpen] = useState(false);
@@ -84,18 +87,6 @@ const DiaryDetailPage = () => {
     diaryHasSymptoms: diaryInfo?.diaryHasSymptoms,
     open: diaryInfo?.open,
   };
-
-  // 테스트용 더미데이터
-  // const infoToModifyPage = {
-  //   title: 'diaryInfotitle',
-  //   description: 'diaryInfodescription',
-  //   medicals: [{ id: 1, name: '질병명' }],
-  //   diaryHasSymptoms: [
-  //     { id: 1, name: '증상1' },
-  //     { id: 2, name: '증상2' },
-  //   ],
-  //   open: true,
-  // };
 
   if (!diaryInfo) return null;
 
@@ -228,8 +219,35 @@ const DiaryDetailPage = () => {
           </DiaryDateSpan>
         </FlexDiv>
         {showGraph && (
-          <BoxShad radius="25px" height="15em" margin="0 0 1.5em 0">
-            <SymptomGraph diaryId={diaryId} date={date} type={type} />
+          <BoxShad
+            radius="25px"
+            height="16em"
+            margin="0 0 1.5em 0"
+            padding="1em 1em 2em 1em"
+          >
+            <FlexDiv height="auto" justify="space-around">
+              <img
+                onClick={() =>
+                  setDate((prev) => moment(prev).subtract(1, 'weeks').format())
+                }
+                src="/assets/icons/chevron-left.svg"
+                alt="prev"
+              />
+              <span
+                onClick={() => setIsWeekly((prev) => !prev)}
+                style={{ color: 'var(--icon-color)' }}
+              >
+                {isWeekly ? '주간' : '월간'}
+              </span>
+              <img
+                onClick={() =>
+                  setDate((prev) => moment(prev).add(1, 'weeks').format())
+                }
+                src="/assets/icons/chevron-right.svg"
+                alt="next"
+              />
+            </FlexDiv>
+            <SymptomGraph diaryId={diaryId} date={date} isWeekly={isWeekly} />
           </BoxShad>
         )}
 
