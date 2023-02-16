@@ -17,9 +17,7 @@ function PaperDetailPage() {
   const [paperDetail, setPaperDetail] = useState({});
   const fetchPaperDetail = useCallback(async () => {
     try {
-      const res = await axios.get(api.paper.paperDetail(paperId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.get(api.paper.paperDetail(paperId));
       setPaperDetail((prev) => {
         return { ...prev, ...res.data.data };
       });
@@ -36,14 +34,10 @@ function PaperDetailPage() {
   // 댓글 작성
   const createComment = async (commentContent) => {
     try {
-      const res = await axios.post(
-        api.comment.commentCreate(),
-        {
-          paperId,
-          content: commentContent,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
+      const res = await axios.post(api.comment.commentCreate(), {
+        paperId,
+        content: commentContent,
+      });
       console.log(res);
       fetchPaperDetail();
     } catch (err) {
@@ -54,9 +48,7 @@ function PaperDetailPage() {
   // 댓글 삭제
   const deleteComment = async (commentId) => {
     try {
-      const res = await axios.delete(api.comment.commentDelete(commentId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.delete(api.comment.commentDelete(commentId));
       console.log(res);
       fetchPaperDetail();
     } catch (err) {
@@ -67,14 +59,9 @@ function PaperDetailPage() {
   // 댓글 좋아요 등록
   const likeComment = async (paperId) => {
     try {
-      const res = await axios.post(
-        api.comment.commentLike(),
-        {
-          contentId: paperId,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
-      console.log(res);
+      await axios.post(api.comment.commentLike(), {
+        contentId: paperId,
+      });
       // fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
@@ -84,10 +71,7 @@ function PaperDetailPage() {
   // 댓글 좋아요 취소
   const likeCommentDelete = async (commentId) => {
     try {
-      const res = await axios.delete(api.comment.commentLikeDelete(commentId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log(res);
+      await axios.delete(api.comment.commentLikeDelete(commentId));
       // fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
