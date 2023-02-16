@@ -39,7 +39,7 @@ public class PaperController {
     @PostMapping
     public ResponseEntity<Result> postPaper(@ModelAttribute RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
         LOGGER.info("일기 생성 api 도착 userId: {} diaryId: {}", uid, requestPaperPostDto.getDiaryId());
-        if (requestPaperPostDto.getSymptoms() != null && requestPaperPostDto.getImages().size() > 4) {
+        if (requestPaperPostDto.getImages() != null && requestPaperPostDto.getImages().size() > 4) {
             throw new ErrorException(ImageErrorCode.REQUEST_IMAGE_TOO_LARGE);
         }
         long paperId = -1;
