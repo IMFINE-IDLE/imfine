@@ -149,6 +149,7 @@ const DiaryDetailPage = () => {
                     }}
                     src="/assets/icons/more-vertical.svg"
                     alt="more"
+                    style={{ paddingLeft: '0.3em' }}
                   />
                   {reportOpen && (
                     <DiaryReportBtn

@@ -3,7 +3,7 @@ import DiaryItem from '../DiaryItem/DiaryItem';
 
 const DiaryListGrid = ({ diaryList }) => {
   return (
-    <FlexDiv wrap="wrap" gap="1.25em 5%" justify="start">
+    <FlexDiv wrap="wrap" gap="1.25em 5%" justify="start" padding="0 0 5em 0">
       {diaryList?.map(
         ({
           diaryId,

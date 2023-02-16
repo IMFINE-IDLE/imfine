@@ -45,7 +45,7 @@ function DiaryCreateConfirmPage() {
         symptom: symptomList?.map((symptom) => symptom.id),
       });
 
-      navigate(`/diary/${res.data.data}`);
+      navigate(`/diary/${res.data.data}`, { replace: true });
     } catch (err) {
       console.error(err);
     }

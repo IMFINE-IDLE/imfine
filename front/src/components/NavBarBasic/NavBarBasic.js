@@ -41,16 +41,7 @@ function NavBarBasic({
   } else {
     return (
       <NavBar color={BackgroundColor}>
-        <NavItem
-          onClick={() => {
-            if (BackFromPaperDetail) {
-              navigate('/');
-            } else {
-              navigate(-1);
-            }
-          }}
-          justify="left"
-        >
+        <NavItem onClick={() => navigate(-1)} justify="left">
           <BiChevronLeft />
         </NavItem>
         <NavItem>

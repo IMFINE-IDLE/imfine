@@ -3,7 +3,12 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
-import { DiaryItemContainer, DiaryItemPrivate, DiaryItemSpan } from './style';
+import {
+  DiaryItemContainer,
+  DiaryItemPrivate,
+  DiaryPrivateLockImg,
+  DiaryItemSpan,
+} from './style';
 
 const DiaryItem = ({
   diaryId,
@@ -25,7 +30,11 @@ const DiaryItem = ({
         if (open || isMine) navigate(`/diary/${diaryId}`);
       }}
     >
-      {open || <DiaryItemPrivate />}
+      {open || (
+        <DiaryItemPrivate>
+          <DiaryPrivateLockImg />
+        </DiaryItemPrivate>
+      )}
       <BoxNoShad
         radius="20px 20px 0 0"
         color="gray"

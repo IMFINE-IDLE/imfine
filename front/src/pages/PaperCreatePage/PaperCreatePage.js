@@ -168,7 +168,7 @@ function PaperCreatePage() {
       const res = await axios.post(api.paper.paperWrite(), data, config);
       const id = res.data.data;
       alert('일기가 성공적으로 등록되었습니다');
-      navigate(`/paper/${id}`);
+      navigate(`/paper/${id}`, { replace: true });
     } catch (err) {
       console.error('err', err);
       if (err.response.status === 409) {

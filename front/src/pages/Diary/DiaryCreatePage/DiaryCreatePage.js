@@ -15,7 +15,7 @@ const DiaryCreatePage = () => {
   };
 
   const handleSubmit = () => {
-    navigate('/diary/create/confirm', { state: infoToConfirm });
+    navigate('/diary/create/confirm', { state: infoToConfirm, replace: true });
   };
 
   return (
