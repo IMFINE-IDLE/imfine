@@ -81,6 +81,22 @@ export const logOut = createAsyncThunk(
   }
 );
 
+export const withdraw = createAsyncThunk(
+  'user/withdraw',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const resWithdraw = await axios.delete(api.user.withdraw(), {
+        withCredentials: true,
+      });
+      console.log(resWithdraw);
+      return resWithdraw;
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -121,6 +137,13 @@ const userSlice = createSlice({
         state.uid = null;
       })
       .addCase(logOut.rejected, (state, action) => {
+        console.log(action.payload.response.data);
+      })
+      .addCase(withdraw.fulfilled, (state, action) => {
+        state.isLogin = false;
+        state.uid = null;
+      })
+      .addCase(withdraw.rejected, (state, action) => {
         console.log(action.payload.response.data);
       });
   },

@@ -32,6 +32,7 @@ const api = {
       URL + USERS + `/find-password/${uid}/${email}`,
     changeUserPwWithOutLogin: () => URL + USERS + '/find-password',
     changeUserPwWithLogin: () => URL + USERS + '/change-password',
+    withdraw: () => URL + USERS,
     setCondition: () => URL + USERS + '/condition',
     changeName: () => URL + USERS + '/name',
     changeMedical: () => URL + USERS + '/medical',

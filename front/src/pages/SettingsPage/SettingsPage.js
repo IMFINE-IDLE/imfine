@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
-import { logOut } from '../../store/slice/userSlice';
+import { logOut, withdraw } from '../../store/slice/userSlice';
 import {
   ProfileConfigContainer,
   ProfileConfigOptionBtn,
@@ -28,7 +28,15 @@ const SettingsPage = () => {
   };
 
   // 탈퇴 요청
-  const fetchWithdraw = () => {};
+  const fetchWithdraw = async () => {
+    try {
+      const success = await dispatch(withdraw()).unwrap();
+      console.log('success', success);
+      navigate('/login');
+    } catch (rejectWithValue) {
+      console.log(rejectWithValue);
+    }
+  };
 
   return (
     <>
