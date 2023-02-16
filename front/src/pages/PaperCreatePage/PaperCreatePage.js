@@ -301,7 +301,10 @@ function PaperCreatePage() {
             </InputContainer>
           </FlexDiv>
           <FlexDiv direction="row" justify="flex-start">
-            <ContentLabel> 일기 비공개 설정하기</ContentLabel>
+            <ContentLabel margin={'1.5em 1em 1.5em 2em'}>
+              {' '}
+              일기 공개 범위
+            </ContentLabel>
             <ToggleContainer>
               <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
               <ToggleWrapper isOpen={isOpen}>
