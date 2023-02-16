@@ -7,11 +7,12 @@ import Modal from '../../Modal/Modal';
 import { FollowUserBtn, FollowUserContainer, FollowUserWrapper } from './style';
 
 const FollowUser = ({
+  uid,
   cloverCode,
   name,
-  type,
   relation,
-  uid,
+  open,
+  type,
   setTrigger,
   noFollowButton,
   isMine,
@@ -21,9 +22,6 @@ const FollowUser = ({
   const [modalOpen, setModalOpen] = useState(false);
 
   const navigate = useNavigate();
-
-  // 테스트용 더미데이터. 나중에 서버에서 받아올 것
-  const open = false;
 
   // 팔로잉 목록에서 팔로우 요청, 언팔로우 요청 보내기
   const fetchChangeFollowStatus = async () => {

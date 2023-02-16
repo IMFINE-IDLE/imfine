@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import moment from 'moment';
 import api from '../../api/api';
@@ -57,7 +57,7 @@ const CloverModal = ({
       });
 
       // 변경되었으니 달력 재렌더링
-      fetchProfileCalendar(date);
+      fetchProfileCalendar?.(date);
     } catch (e) {
       console.error(e);
     }

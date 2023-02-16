@@ -15,11 +15,12 @@ const FollowList = ({ users, type, setTrigger, noFollowButton }) => {
       <FollowListContainer>
         {users?.map((user) => (
           <FollowUser
+            uid={user.uid}
             cloverCode={user.condition}
             name={user.name}
-            type={type}
             relation={user.relation}
-            uid={user.uid}
+            open={user.open}
+            type={type}
             setTrigger={setTrigger}
             key={user.uid}
             noFollowButton={noFollowButton}

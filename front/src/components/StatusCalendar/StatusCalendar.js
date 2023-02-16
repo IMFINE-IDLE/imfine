@@ -13,7 +13,8 @@ import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 import { BoxShad } from '../common/BoxShad/BoxShad';
 import { Clover } from '../common/Clover/Clover';
 import { CalendarStatusModifyBtn } from './style';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   /*
@@ -28,7 +29,8 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   const [isPaperChanged, setIsPaperChanged] = useState(false);
 
   // 클로버 상태 변경 관련 state
-  const [cloverOfDayClicked, setCloverOfDayClicked] = useState('-1');
+  const { cloverCode } = useSelector((state) => state.user);
+  const [cloverOfDayClicked, setCloverOfDayClicked] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -48,7 +50,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
       const res = await axios.get(api.profile.getMonthCondition(params));
 
       setMonthCondition({ ...res.data.data });
-      setCloverOfDayClicked(res.data.data?.[moment(date).format('D')]);
+      // setCloverOfDayClicked(res.data.data?.[moment(date).format('D')] || '-1');
     } catch (err) {
       console.error(err);
     }
@@ -78,20 +80,34 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
     }
   };
 
-  // 달력 정보는 유저가 변경될 때마다 새로 불러온다.
-  useEffect(() => {
-    fetchProfileCalendar(date);
-  }, [isMine]);
-
   // 특정일의 컨디션 정보는 날짜를 새로 선택할 때마다 업데이트한다.
   useEffect(() => {
     setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
   }, [date]);
 
+  // 달력 정보는 유저가 변경될 때마다 새로 불러온다.
+  useEffect(() => {
+    fetchProfileCalendar(date);
+  }, [isMine]);
+
   // 개별 날짜 일기 정보는 날짜가 바뀌거나 개별 일기 상태가 바뀌거나 유저가 변경되면 새로 불러온다.
   useEffect(() => {
     fetchGetDiaryPaperItem(diaryId, date);
   }, [date, isPaperChanged, isMine]);
+
+  // useEffect(() => {
+  //   fetchProfileCalendar(date);
+  //   fetchGetDiaryPaperItem(diaryId, date);
+  // }, [isMine]);
+
+  // useEffect(() => {
+  //   setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
+  //   fetchGetDiaryPaperItem(diaryId, date);
+  // }, [date]);
+
+  // useEffect(() => {
+  //   fetchGetDiaryPaperItem(diaryId, date);
+  // }, [isPaperChanged]);
 
   if (!monthCondition) return null;
 
