@@ -20,7 +20,6 @@ import {
   Circle,
   TextBubble,
 } from './style';
-
 function PaperFeedPage() {
   const [paperList, setPaperList] = useState([]);
   const [page, setPage] = useState(0);
@@ -43,6 +42,13 @@ function PaperFeedPage() {
     element && observerRef.current.observe(element);
   };
 
+  // SSE이벤트처리
+  //const event = useSelector((state) => state.event.isNew);
+  const userId = useSelector((state) => {
+    return state.user.uid;
+  });
+  const dispatch = useDispatch();
+
   // 일기 피드 조회
   const fetchPaperFeed = async (pagination) => {
     try {
@@ -60,16 +66,6 @@ function PaperFeedPage() {
     if (hasNext) fetchPaperFeed(page);
   }, [page, hasNext]);
 
-  // SSE이벤트처리
-  //const event = useSelector((state) => state.event.isNew);
-  const userId = useSelector((state) => {
-    return state.user.uid;
-  });
-  const dispatch = useDispatch();
-
-  const [isNew, setIsNew] = useState(false);
-  console.log('isNew', isNew);
-
   useEffect(() => {
     let eventSource = new EventSourcePolyfill(
       `https://i8a809.p.ssafy.io/api/sse?uid=${userId}`,
@@ -81,7 +77,6 @@ function PaperFeedPage() {
       console.log(1);
       dispatch(updateNotification({ isNew: true }));
       console.log(2);
-      setIsNew(true);
     });
 
     eventSource.addEventListener('dumy', function (event) {
@@ -92,7 +87,6 @@ function PaperFeedPage() {
     eventSource.addEventListener('error', function (event) {
       console.log('error message: ' + event.data);
     });
-    dispatch();
   }, []);
 
   return (

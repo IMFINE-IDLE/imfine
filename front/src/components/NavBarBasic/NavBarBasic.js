@@ -17,11 +17,9 @@ function NavBarBasic({
     return state.user.uid;
   });
 
-  const isNew = useSelector((state) => {
-    return state.event.value.isNew;
-  });
+  const event = useSelector((state) => state.event.value.isNew);
 
-  console.log('event changed', isNew);
+  console.log('event changed', event);
   // 작성예시 :
   // <NavBarBasic Back={true} Text={'일기장 작성하기'} BackgroundColor={'icon'} TextColor={'gray'} />
 
@@ -46,7 +44,7 @@ function NavBarBasic({
         <NavItem justify="center">
           <Title display="none">{Text}</Title>
         </NavItem>
-        {!NoRightItem && <NavBarRightItem isNew={isNew} />}
+        {!NoRightItem && <NavBarRightItem isNew={event} />}
       </NavBar>
     );
   } else {
@@ -58,7 +56,7 @@ function NavBarBasic({
         <NavItem>
           <Title color={TextColor}>{Text}</Title>
         </NavItem>
-        {!NoRightItem && <NavBarRightItem isNew={isNew} />}
+        {!NoRightItem && <NavBarRightItem isNew={event} />}
       </NavBar>
     );
   }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateNotification } from '../../store/slice/eventSlice';
 import axios from 'axios';
 import api from '../../api/api';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -32,6 +33,7 @@ function NotificationPage() {
   const userId = useSelector((state) => {
     return state.user.uid;
   });
+  const dispatch = useDispatch();
   // 알림 리스트 GET
   const fetchNotificationsDetail = async (pagination) => {
     try {
@@ -53,6 +55,7 @@ function NotificationPage() {
 
   useEffect(() => {
     fetchNotificationsDetail(page);
+    dispatch(updateNotification({ isNew: false }));
   }, [page]);
 
   useEffect(() => {
