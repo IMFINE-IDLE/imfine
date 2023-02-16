@@ -57,6 +57,7 @@ const BtnUpdate = styled.button`
   width: 20em;
   margin-top: 1em;
   margin-left: 1em;
+  margin-bottom: 1em;
   margin-right: 1em;
   display: inline-block;
 `;

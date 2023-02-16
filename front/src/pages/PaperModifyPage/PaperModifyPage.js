@@ -287,7 +287,7 @@ function PaperModifyPage() {
         <DateDropdown isdisabled={true} value={form} />
       </BoxPaperDetail>
       <TopDiv>
-        <ContentLabel>증상을 체크해주세요.</ContentLabel>
+        <ContentLabel>증상을 체크해주세요</ContentLabel>
       </TopDiv>
       <BoxContent>
         <ModifyBoxSymptom
@@ -304,7 +304,7 @@ function PaperModifyPage() {
         </ContentLabel>
       </RightDiv>
       <TopDiv>
-        <ContentLabel>일기 내용을 작성해주세요.</ContentLabel>
+        <ContentLabel>일기 내용을 작성해주세요</ContentLabel>
       </TopDiv>
       <FlexDiv>
         <TextareaGray
@@ -316,9 +316,9 @@ function PaperModifyPage() {
         />
       </FlexDiv>
       <TopDiv>
-        <ContentLabel>사진 등록하기.</ContentLabel>
+        <ContentLabel>사진 등록하기</ContentLabel>
       </TopDiv>
-      <FlexDiv direction="column" margin="0.3em 1.5em">
+      <FlexDiv direction="column">
         <InputContainer>
           <StyledInput type="file" multiple onChange={handleSelectImage} />
           <FlexDiv>
@@ -333,7 +333,7 @@ function PaperModifyPage() {
         </InputContainer>
       </FlexDiv>
       <FlexDiv direction="row" justify="flex-start">
-        <ContentLabel> 일기 비공개 설정하기</ContentLabel>
+        <ContentLabel>일기 공개 범위</ContentLabel>
         <ToggleContainer>
           <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
           <ToggleWrapper isOpen={isOpen}>
