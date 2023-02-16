@@ -39,7 +39,11 @@ const DiaryAddSymptomPage = () => {
 
       // 이전페이지가 어디었느냐(from)에 따라 navigate 다르게 처리
       if (from === 'diary') {
-        navigate(`/diary/${diaryId}/modify`, { state: infoToDiaryModify });
+        // navigate(`/diary/${diaryId}/modify`, {
+        navigate(-1, {
+          state: infoToDiaryModify,
+          replace: true,
+        });
       }
       // 이전페이지가 paper(일기쓰기.일기수정페이지)였다면 그냥 이전페이지로 보내버리기
       if (from === 'paper') {

@@ -89,6 +89,8 @@ const PickMenuTab = ({
     let idx = prevList.findIndex((item) => item.id === itemId);
     // addOnly가 true일 경우 추가만 가능
     if (addOnly) {
+      // 증상 추가 요청할 때는 id(fk)가 아니라 symptomId랑 비교해야 함
+      let idx = prevList.findIndex((item) => item.symptomId === itemId);
       if (idx === -1) {
         prevList.push({ id: itemId, name: itemName });
       }
