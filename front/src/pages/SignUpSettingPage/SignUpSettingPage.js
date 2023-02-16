@@ -2,10 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
-import PickSymptom from '../../components/PickSymptom/PickSymptom';
 import ToggleAccountOpen from '../../components/ToggleAccountOpen/ToggleAccountOpen';
-import { BtnSignup } from '../SignUpPage/style';
 import { BoxSymptom, BoxTopArea, Title, TitleSmall } from './style';
 import api from '../../api/api';
 import PickMenuTab from '../../components/PickMenu/PickMenuTab';
@@ -21,8 +18,7 @@ function SignUpSettingPage() {
       medicalList: [],
     };
     try {
-      const res = await axios.put(api.user.setInitialProfile(), data);
-      console.log(res.data);
+      await axios.put(api.user.setInitialProfile(), data);
     } catch (err) {
       console.log(err);
     }
@@ -47,9 +43,9 @@ function SignUpSettingPage() {
             setMedicals={setMedicalList}
             onSubmitBtnClick={() => {
               setInitialProfile();
-              navigate('/home');
+              navigate('/onboarding');
             }}
-            submitBtnText={'건강해지러 가기!'}
+            submitBtnText={'선택완료'}
           />
         </BoxSymptom>
       </BoxTopArea>

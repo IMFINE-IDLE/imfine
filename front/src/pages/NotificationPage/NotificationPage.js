@@ -6,6 +6,8 @@ import { EventSourcePolyfill } from 'event-source-polyfill';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import NotificationItem from '../../components/Notification/NotificationItem/NotificationItem';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
+import { Clover } from '../../components/common/Clover/Clover';
+import { BoxNoPaperFeed, BoxInner, TextBubble, BigCircle } from './style';
 function NotificationPage() {
   const [notifications, setNotifications] = useState([]);
   const [page, setPage] = useState(0);
@@ -85,37 +87,50 @@ function NotificationPage() {
   const unReadItems = notifications.filter((index) => !index.check);
   console.log('unread count', unReadItems.length);
 
-  if (unReadItems.length === 0) {
-    return (
-      <>
-        <NavBarBasic Back={true} Text="" BackgroundColor={'undefined'} />
-        <FlexDiv>새로운 알림이 없어요</FlexDiv>
-      </>
-    );
-  }
   return (
     <>
-      <NavBarBasic Back={true} Text="" BackgroundColor={'undefined'} />
-      <div>
-        {notifications.map((item) => {
-          return (
-            <>
-              <NotificationItem
-                key={item.notificationId}
-                notificationId={item.notificationId}
-                title={item.contentsCodeId}
-                msg={item.msg}
-                showButton={item.showButton}
-                senderUid={item.senderUid}
-                navigateId={item.contentsId}
-                check={item.check}
-              />
-              <div ref={observer} />
-              {isLoading && <p>로딩중...</p>}
-            </>
-          );
-        })}
-      </div>
+      <NavBarBasic
+        Back={true}
+        TextColor="icon"
+        Text="알림 확인하기"
+        BackgroundColor={'undefined'}
+      />
+      {unReadItems?.length === 0 ? (
+        <BoxNoPaperFeed>
+          <BoxInner>
+            <TextBubble>
+              <p>새로운 알림이 없어요!</p>
+            </TextBubble>
+            <div>
+              <Clover code={'1'} width={'150'} height={'150'} />
+            </div>
+          </BoxInner>
+          <BigCircle />
+        </BoxNoPaperFeed>
+      ) : (
+        <>
+          <div>
+            {notifications.map((item) => {
+              return (
+                <>
+                  <NotificationItem
+                    key={item.notificationId}
+                    notificationId={item.notificationId}
+                    title={item.contentsCodeId}
+                    msg={item.msg}
+                    showButton={item.showButton}
+                    senderUid={item.senderUid}
+                    navigateId={item.contentsId}
+                    check={item.check}
+                  />
+                  <div ref={observer} />
+                  {isLoading && <p>로딩중...</p>}
+                </>
+              );
+            })}
+          </div>
+        </>
+      )}
     </>
   );
 }

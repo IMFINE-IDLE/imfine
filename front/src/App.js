@@ -33,7 +33,8 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { updateCode, logOutWithError } from './store/slice/userSlice';
 import schedule from 'node-schedule';
-import { resetTokenAndReattemptRequest } from './utils/userUtils';
+import { refreshTokenAndResendRequest } from './utils/userUtils';
+import OnboardingPage from './pages/OnBoardingPage/OnboardingPage';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -57,6 +58,7 @@ function App() {
         cloverCode: '-1',
       })
     );
+    localStorage.setItem('accessToken', null);
   };
 
   // 토큰 갱신 및 기존 요청 재요청
@@ -70,10 +72,15 @@ function App() {
       const originalRequest = error.config;
       // 토큰 갱신
       if (errorResponse.data.error === 'EXPIRED_TOKEN') {
-        return await resetTokenAndReattemptRequest(
+        return await refreshTokenAndResendRequest(
           error,
           logoutwithErrorCallBack
         );
+      } else if (errorResponse.data.error.includes('TOKEN')) {
+        // 기타 에러일경우 로그아웃 처리
+        logoutwithErrorCallBack();
+      } else if (errorResponse.data.error.includes('TOKEN')) {
+        logoutwithErrorCallBack();
       }
       return Promise.reject(error);
     }
@@ -101,6 +108,30 @@ function App() {
         }
       />
       <Route
+        path="/signup"
+        element={
+          <PublicRoute>
+            <SignUpPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/signup/setting"
+        element={
+          <PrivateRoute>
+            <SignUpSettingPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/onboarding"
+        element={
+          <PrivateRoute>
+            <OnboardingPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/login"
         element={
           <PublicRoute>
@@ -117,22 +148,7 @@ function App() {
         }
       />
       <Route path="/find-password" element={<FindPwPage />} />
-      <Route
-        path="/signup"
-        element={
-          <PublicRoute>
-            <SignUpPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/signup/setting"
-        element={
-          <PrivateRoute>
-            <SignUpSettingPage />
-          </PrivateRoute>
-        }
-      />
+
       <Route
         path="/home"
         element={
