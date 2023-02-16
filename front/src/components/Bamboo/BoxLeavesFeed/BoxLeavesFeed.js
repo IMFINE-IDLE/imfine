@@ -41,7 +41,7 @@ function BoxLeavesFeed({
               }}
             />
             <LikeLabel>{likeCount}</LikeLabel>
-            <LeavesBtnReport />
+            <LeavesBtnReport LeafId={leafId} />
           </TopDiv>
           <BottomDiv>
             <ImgLeaves />
