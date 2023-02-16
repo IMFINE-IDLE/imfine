@@ -71,8 +71,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
             + "join fetch d.writer "
             + "join fetch d.medicalCode "
             + "join Subscribe s on s.diary=d "
-            + "where d.writer=:user")
-    List<Diary> findAllByWriterAndSubscribe(@Param("user") User user);
+            + "where s.userId=:userId")
+    List<Diary> findAllByWriterAndSubscribe(@Param("userId") long userId);
 
     @Query("select distinct d from Diary d "
             + "join fetch Paper p on p.diary=d  "
