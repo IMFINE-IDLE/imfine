@@ -32,6 +32,7 @@ const PickedText = styled.span`
     color: var(--icon-color);
     font-weight: 700;
     cursor: ${textPointer ? 'pointer' : 'default'};
+    padding-left: 1em;
   `}
 `;
 
