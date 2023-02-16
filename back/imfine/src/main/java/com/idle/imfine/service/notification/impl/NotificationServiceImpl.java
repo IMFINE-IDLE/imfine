@@ -162,24 +162,24 @@ public class NotificationServiceImpl implements NotificationService {
         LOGGER.info("에미터 타임아웃 {} {}", id, lastEventId);
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
-        sendToClient(emitter, id, "dummy", "EventStream Created. [userId=" + uid + "]");
+        sendToClient(emitter, id, "EventStream Created. [userId=" + uid + "]");
         LOGGER.info("EventStream Created {}", id);
 
         if (!lastEventId.isEmpty()) {
             Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByMemberId(String.valueOf(uid));
             events.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> sendToClient(emitter, entry.getKey(), "sse", entry.getValue()));
+                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
         }
         return emitter;
     }
 
-    private void sendToClient(SseEmitter emitter, String id, String name, Object data) {
+    private void sendToClient(SseEmitter emitter, String id, Object data) {
         LOGGER.info("sendToClient!!");
         try {
             emitter.send(SseEmitter.event()
                     .id(id)
-                    .name(name)
+                    .name("sse")
                     .data(data));
             LOGGER.info("sendToClient 성공");
         } catch (IOException exception) {
@@ -201,7 +201,7 @@ public class NotificationServiceImpl implements NotificationService {
         sseEmitters.forEach(
                 (key, emitter) -> {
                     emitterRepository.saveEventCache(key, notification);
-                    sendToClient(emitter, key, "sse", "알림이 왔습니다.");
+                    sendToClient(emitter, key, "알림이 왔습니다.");
                 }
         );
         LOGGER.info("sseEmitter {}", sseEmitters);
