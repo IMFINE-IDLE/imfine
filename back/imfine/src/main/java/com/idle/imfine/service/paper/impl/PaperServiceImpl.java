@@ -402,9 +402,7 @@ public class PaperServiceImpl implements PaperService {
                             .likeCount(comment.getLikeCount())
                             .declarationCount(comment.getDeclarationCount())
                             .content(comment.getContent())
-                            .myHeart(myHeartComment.stream().anyMatch(
-                                    heartComment -> heartComment.getId() == comment.getId()
-                            ))
+                            .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 3, comment.getId()))
                             .createdAt(common.convertDateAllType(comment.getCreatedAt()))
                             .userStatus(comment.getWriter().getId() == user.getId() ? 0 : 1)
                             .condition(common.getDateUserCondition(comment.getCreatedAt().toLocalDate(), writer))
