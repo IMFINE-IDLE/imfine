@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../api/api';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItemDetail from '../../components/Paper/PaperItemDetail/PaperItemDetail';
@@ -12,6 +12,7 @@ import { useCallback } from 'react';
 import BtnToTop from '../../components/Paper/BtnToTop/BtnToTop';
 
 function PaperDetailPage() {
+  const navigate = useNavigate();
   const { paperId } = useParams();
   const [paperDetail, setPaperDetail] = useState({});
   const fetchPaperDetail = useCallback(async () => {
@@ -23,9 +24,10 @@ function PaperDetailPage() {
         return { ...prev, ...res.data.data };
       });
     } catch (err) {
-      console.log(err.response.data);
+      alert(err.response.data.message);
+      navigate(-1);
     }
-  }, [paperId]);
+  }, [paperId, navigate]);
 
   useEffect(() => {
     fetchPaperDetail();
