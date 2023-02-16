@@ -77,13 +77,13 @@ const PickMenu = forwardRef(
     };
 
     return (
-      <FlexDiv wrap="wrap" padding="0 1em">
+      <FlexDiv wrap="wrap" padding="0 1.5em">
         {dataListModified?.map((dataList, idx) => (
           <PickMenuRowContainer
             ref={(el) => (subMenuSection.current[idx] = el)}
             key={idx}
           >
-            <FlexDiv justify="space-bewteen" gap="1.25em" padding="0 0 1em 0">
+            <FlexDiv justify="space-bewteen" gap="1.5em" padding="0 0 1em 0">
               {dataList.map(({ id, name, image }) => (
                 <IconSymptom
                   type={type}
