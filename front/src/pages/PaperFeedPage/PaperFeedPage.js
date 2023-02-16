@@ -69,7 +69,9 @@ function PaperFeedPage() {
   useEffect(() => {
     let eventSource = new EventSourcePolyfill(
       `https://i8a809.p.ssafy.io/api/sse?uid=${userId}`,
-      { headers: { Authorization: localStorage.getItem('accessToken') } }
+      {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      }
     );
 
     eventSource.addEventListener('sse', function (event) {
