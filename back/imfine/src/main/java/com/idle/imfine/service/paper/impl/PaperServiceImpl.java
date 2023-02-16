@@ -326,6 +326,7 @@ public class PaperServiceImpl implements PaperService {
                                     .title(diary.getTitle())
                                     .content(paper.getContent())
                                     .paperId(paper.getId())
+                                    .medicalName(diary.getMedicalCode().getName())
                                     .uid(diary.getWriter().getUid())
                                     .commentCount(paper.getCommentCount())
                                     .likeCount(paper.getLikeCount())

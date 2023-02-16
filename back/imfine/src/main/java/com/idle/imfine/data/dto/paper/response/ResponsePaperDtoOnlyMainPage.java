@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 public class ResponsePaperDtoOnlyMainPage {
     private long diaryId;
     private String title;
+    private String medicalName;
     private long paperId;
     private String uid;
     private String name;
