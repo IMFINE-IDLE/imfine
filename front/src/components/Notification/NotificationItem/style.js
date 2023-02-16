@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { Btn } from '../../common/Btn/Btn';
+import { BtnSymptom } from '../../PickSymptom/style';
+
 const ColumnDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -44,6 +46,15 @@ const BtnUpdate = styled.button`
   margin-right: 1em;
   display: inline-block;
 `;
+
+const ContentTitleLabel = styled(BtnSymptom)`
+  display: inline-block;
+  width: auto;
+  background-color: ${(props) =>
+    'var(--' + props.color + '-color)' || 'var(--gray-color)'};
+  padding: 1em;
+  font-weight: 700;
+`;
 export {
   ColumnDiv,
   BoxNoShadLeaves,
@@ -52,4 +63,5 @@ export {
   BottomDiv,
   Content,
   BtnUpdate,
+  ContentTitleLabel,
 };
