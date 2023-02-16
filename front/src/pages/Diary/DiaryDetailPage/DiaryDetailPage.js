@@ -44,9 +44,9 @@ const DiaryDetailPage = () => {
       setDiaryInfo(res.data.data);
     } catch (err) {
       if (err.response.status === 404) {
-        alert('존재하지 않는 일기입니다');
-        navigate(-1);
+        navigate('/404', { replace: true });
       }
+      console.error(err);
     }
   };
 
