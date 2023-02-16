@@ -93,7 +93,7 @@ public class EmailServiceImpl implements EmailService {
             MimeMessage message = createMessage(requestDto.getEmail(), confirm);
             emailSender.send(message);
             LOGGER.info("[sendEmail] 인증 메일 전송을 성공했습니다.");
-            redisUtil.setDataExpire(email, confirm, 60 * 3L);
+            redisUtil.setDataExpire(email, confirm, 60 * 3);
             LOGGER.info("[sendEmail] 인증 번호를 캐시에 저장했습니다.");
         } catch(Exception e){
             LOGGER.info("[sendEmail] 인증 메일 전송을 실패했습니다.");
