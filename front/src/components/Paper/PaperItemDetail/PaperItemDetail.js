@@ -48,9 +48,7 @@ function PaperItemDetail({ paperId, paper }) {
   // 일기 삭제 함수
   const deletePaper = async (paperId) => {
     try {
-      const res = await axios.delete(api.paper.paperDetail(paperId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      await axios.delete(api.paper.paperDetail(paperId));
       navigate('/home');
     } catch (err) {
       console.log(err.response.data.message);
@@ -98,11 +96,8 @@ function PaperItemDetail({ paperId, paper }) {
                     src={musicURL}
                     controls
                     controlsList="nodownload noplaybackrate"
-                    // onPlay={handlePlay}
-                    // onPause={handlePause}
                   />
                 )}
-                {/* {isPlaying ? <p>Playing...</p> : <p>Paused</p>} */}
               </BoxTopAudio>
             </div>
             {userStatus !== 0 && (

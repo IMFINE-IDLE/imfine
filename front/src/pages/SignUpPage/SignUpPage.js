@@ -4,9 +4,12 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
 import { isEmailValid } from '../../utils/userUtils';
-import BtnEmailCheck from '../../components/SignUp/BtnEmailCheck/BtnEmailCheck';
-import BtnEmailCodeCheck from '../../components/SignUp/BtnEmailCodeCheck/BtnEmailCodeCheck';
-import VerfifyEmailTimer from '../../components/SignUp/VerifyEmailTimer/VerifyEmailTimer';
+import InputId from '../../components/SignUp/InputId/InputId';
+import InputName from '../../components/SignUp/InputName/InputName';
+import InputEmail from '../../components/SignUp/InputEmail/InputEmail';
+import InputEmailCode from '../../components/SignUp/InputEmailCode/InputEmailCode';
+import InputPassword from '../../components/SignUp/InputPassword/InputPassword';
+import InputPasswordConfirm from '../../components/SignUp/InputPasswordConfirm/InputPasswordConfirm';
 import CheckTermsOfService from '../../components/SignUp/CheckTermsOfService/CheckTermsOfService';
 import { signUp } from '../../store/slice/userSlice';
 import {
@@ -14,13 +17,7 @@ import {
   TitleSignUp,
   CloverImg,
   BoxInnerSignup,
-  Label,
-  InfoSpan,
-  InputSignUp,
   BtnSignup,
-  ErrorMsg,
-  DivEmail,
-  GuideMsg,
 } from './style';
 
 function SignUpPage() {
@@ -94,7 +91,7 @@ function SignUpPage() {
           // 12자 이하일 경우 (유효할 경우에만) 아이디 중복체크
           const asyncCheckId = async () => {
             try {
-              const res = await axios.get(api.user.checkId(currInput.id));
+              await axios.get(api.user.checkId(currInput.id));
               setErrMsg((prev) => {
                 return { ...prev, idErrorMsg: '' };
               });
@@ -130,9 +127,7 @@ function SignUpPage() {
           // 10자 이하일 경우 (유효할 경우에만) 닉네임 중복체크
           const asyncCheckName = async () => {
             try {
-              const resName = await axios.get(
-                api.user.checkName(currInput.name)
-              );
+              await axios.get(api.user.checkName(currInput.name));
               setErrMsg((prev) => {
                 return { ...prev, nameErrorMsg: '' };
               });
@@ -150,19 +145,11 @@ function SignUpPage() {
       // 3. 이메일 유효성 검사
       if (currInput.email) {
         checkStage(3);
-        // const isEmailValid = (email) => {
-        //   const emailRegex =
-        //     /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{1,})$/i;
-
-        //   return emailRegex.test(email);
-        // };
         if (isEmailValid(currInput.email)) {
           // 유효한 경우에만 이메일 중복체크
           const asyncCheckEmail = async () => {
             try {
-              const resEmail = await axios.get(
-                api.user.checkEmail(currInput.email)
-              );
+              await axios.get(api.user.checkEmail(currInput.email));
               setErrMsg((prev) => {
                 return { ...prev, emailErrorMsg: '' };
               });
@@ -254,8 +241,7 @@ function SignUpPage() {
       // }
       setTimeLeft(179); // 타이머 세팅
       const data = { email: emailState };
-      const res = await axios.post(api.user.verifyEmail(emailState), data);
-      // console.log(res.data);
+      await axios.post(api.user.verifyEmail(emailState), data);
     } catch (err) {
       console.log(err);
     }
@@ -288,7 +274,6 @@ function SignUpPage() {
 
   // 전체 유효 여부 확인
   const noErr = Object.values(errorMsg).every((x) => x === '' || x === null);
-  // console.log(noErr);
   if (
     noErr &&
     id.length > 0 &&
@@ -302,7 +287,6 @@ function SignUpPage() {
     password === confirmPassword &&
     checkedTerms
   ) {
-    // console.log('TRUE');
     if (!isValid) setIsValid(true);
   } else {
     if (isValid) setIsValid(false);
@@ -318,9 +302,8 @@ function SignUpPage() {
       confirmPassword: confirmPassword,
     };
     try {
-      const success = await dispatch(signUp(userData)).unwrap();
+      await dispatch(signUp(userData)).unwrap();
       navigate('/signup/setting');
-      // console.log(success);
     } catch (rejectWithValue) {
       console.log(rejectWithValue);
       alert(rejectWithValue.response.data.message);
@@ -335,120 +318,41 @@ function SignUpPage() {
       </BoxTopSignUp>
       <BoxInnerSignup>
         <form action="">
-          <Label htmlFor="idInput">아이디</Label>
-          <InfoSpan>&nbsp;최대 12자</InfoSpan>
-          <InputSignUp
-            value={id}
-            id="idInput"
-            type="text"
-            // required
-            autoFocus
-            // maxLength="12"
-            onChange={(e) => inputEvent({ id: e.target.value })}
-            style={idErrorMsg ? { border: '1px solid var(--red-color)' } : null}
+          <InputId id={id} inputEvent={inputEvent} idErrorMsg={idErrorMsg} />
+          <InputName
+            name={name}
+            inputEvent={inputEvent}
+            nameErrorMsg={nameErrorMsg}
           />
-          {idErrorMsg && <ErrorMsg>{idErrorMsg}</ErrorMsg>}
-
-          <Label htmlFor="nameInput">닉네임</Label>
-          <InfoSpan>&nbsp;최대 10자</InfoSpan>
-          <InputSignUp
-            value={name}
-            id="nameInput"
-            type="text"
-            // required
-            // maxLength="10"
-            onChange={(e) => inputEvent({ name: e.target.value })}
-            style={
-              nameErrorMsg ? { border: '1px solid var(--red-color)' } : null
-            }
+          <InputEmail
+            email={email}
+            emailErrorMsg={emailErrorMsg}
+            inputEvent={inputEvent}
+            doneEmailVerify={doneEmailVerify}
+            emailVerify={emailVerify}
+            setEmailVerify={setEmailVerify}
+            sendVerifyEmail={sendVerifyEmail}
           />
-          {nameErrorMsg && <ErrorMsg>{nameErrorMsg}</ErrorMsg>}
-
-          <Label htmlFor="emailInput">이메일</Label>
-          <DivEmail>
-            <InputSignUp
-              value={email}
-              id="emailInput"
-              type="email"
-              // required
-              onChange={(e) => inputEvent({ email: e.target.value })}
-              style={
-                emailErrorMsg ? { border: '1px solid var(--red-color)' } : null
-              }
-              readOnly={doneEmailVerify ? true : false}
+          {emailVerify === 'emailSent' && !doneEmailVerify && (
+            <InputEmailCode
+              emailCode={emailCode}
+              inputEvent={inputEvent}
+              emailVerifyErrorMsg={emailVerifyErrorMsg}
+              timeLeft={timeLeft}
+              setTimeLeft={setTimeLeft}
+              confirmVerifyEmailCode={confirmVerifyEmailCode}
             />
-            {!doneEmailVerify && (
-              <BtnEmailCheck
-                email={email}
-                emailVerify={emailVerify}
-                setEmailVerify={setEmailVerify}
-                sendVerifyEmail={sendVerifyEmail}
-              />
-            )}
-          </DivEmail>
-          {emailErrorMsg && <ErrorMsg>{emailErrorMsg}</ErrorMsg>}
-
-          {emailVerify === 'emailSent' && !doneEmailVerify ? (
-            <>
-              <Label htmlFor="emailCodeInput">인증코드 입력</Label>
-              <GuideMsg>이메일로 전송된 인증코드를 입력해주세요.</GuideMsg>
-              <DivEmail>
-                <InputSignUp
-                  value={emailCode}
-                  id="emailCodeInput"
-                  type="text"
-                  autoComplete="off"
-                  // required
-                  onChange={(e) => inputEvent({ emailCode: e.target.value })}
-                  style={
-                    emailVerifyErrorMsg
-                      ? { border: '1px solid var(--red-color)' }
-                      : null
-                  }
-                />
-                <VerfifyEmailTimer
-                  timeLeft={timeLeft}
-                  setTimeLeft={setTimeLeft}
-                />
-                <BtnEmailCodeCheck
-                  emailCode={emailCode}
-                  confirmVerifyEmailCode={confirmVerifyEmailCode}
-                />
-              </DivEmail>
-              {emailVerifyErrorMsg && (
-                <ErrorMsg>{emailVerifyErrorMsg}</ErrorMsg>
-              )}
-            </>
-          ) : null}
-
-          <Label htmlFor="passwordInput">비밀번호</Label>
-          <InputSignUp
-            value={password}
-            id="passwordInput"
-            type="password"
-            autoComplete="off"
-            // required
-            onChange={(e) => inputEvent({ password: e.target.value })}
-            style={pwErrorMsg ? { border: '1px solid var(--red-color)' } : null}
+          )}
+          <InputPassword
+            password={password}
+            inputEvent={inputEvent}
+            pwErrorMsg={pwErrorMsg}
           />
-          {pwErrorMsg && <ErrorMsg>{pwErrorMsg}</ErrorMsg>}
-
-          <Label htmlFor="confirmPasswordInput">비밀번호 확인</Label>
-          <InputSignUp
-            value={confirmPassword}
-            id="confirmPasswordInput"
-            type="password"
-            autoComplete="off"
-            // required
-            onChange={(e) => inputEvent({ confirmPassword: e.target.value })}
-            style={
-              confirmPwErrorMsg
-                ? { border: '1px solid var(--red-color)' }
-                : null
-            }
+          <InputPasswordConfirm
+            confirmPassword={confirmPassword}
+            inputEvent={inputEvent}
+            confirmPwErrorMsg={confirmPwErrorMsg}
           />
-          {confirmPwErrorMsg && <ErrorMsg>{confirmPwErrorMsg}</ErrorMsg>}
-
           <CheckTermsOfService
             checkedTerms={checkedTerms}
             setCheckedTerms={setCheckedTerms}

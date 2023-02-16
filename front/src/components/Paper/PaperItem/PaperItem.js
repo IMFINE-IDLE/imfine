@@ -102,9 +102,6 @@ function PaperItem({ paper }) {
             />
           ) : null}
         </BoxContent>
-        {/* {images.map((image) => {
-        return <img src={`${URL}/${image}`} alt="" />;
-      })} */}
         <BoxBottom>
           <div>
             <DiaryTitle title={title} shownOnMainFeed />
