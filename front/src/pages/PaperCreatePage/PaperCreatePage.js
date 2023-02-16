@@ -173,7 +173,6 @@ function PaperCreatePage() {
       console.error('err', err);
       if (err.response.status === 409) {
         alert('이미 작성된 날짜입니다.');
-        navigate(-1);
       }
     }
   };
@@ -251,7 +250,7 @@ function PaperCreatePage() {
             />
           </BoxPaperDetail>
           <TopDiv>
-            <ContentLabel>증상을 체크해주세요.</ContentLabel>
+            <ContentLabel>증상을 체크해주세요</ContentLabel>
           </TopDiv>
           <BoxContent>
             <SymptomRating
@@ -271,7 +270,7 @@ function PaperCreatePage() {
             </ContentLabel>
           </RightDiv>
           <TopDiv>
-            <ContentLabel>일기 내용을 작성해주세요.</ContentLabel>
+            <ContentLabel>일기 내용을 작성해주세요</ContentLabel>
           </TopDiv>
           <FlexDiv>
             <TextareaGray
@@ -283,9 +282,9 @@ function PaperCreatePage() {
             />
           </FlexDiv>
           <TopDiv>
-            <ContentLabel>사진 등록하기.</ContentLabel>
+            <ContentLabel>사진 등록하기</ContentLabel>
           </TopDiv>
-          <FlexDiv direction="column" margin="0.3em 1.5em">
+          <FlexDiv direction="column">
             <InputContainer>
               <StyledInput type="file" multiple onChange={handleSelectImage} />
               <FlexDiv>

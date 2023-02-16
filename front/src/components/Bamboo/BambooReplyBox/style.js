@@ -17,5 +17,13 @@ const BoxCommentCreate = styled.div`
     margin-right: 1em;
   }
 `;
+const FormInput = styled.form`
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  width: 100%;
+  border-radius: 50px;
+  padding: 0.5em 1em 0.5em 0.5em;
+`;
 
-export { BoxCommentCreate };
+export { BoxCommentCreate, FormInput };

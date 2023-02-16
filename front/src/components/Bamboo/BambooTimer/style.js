@@ -14,33 +14,33 @@ const BoxTimer = styled.div`
 const BasicBambooImg = styled.img.attrs({
   src: '/assets/images/BasicBamboo.png',
 })`
-  height: 1.5em;
-  margin-top: 1.5em;
-  margin-right: 0.2em;
-  flex-basis: 4em;
-  flex-shrink: 1;
-  min-width: 0;
+  height: 60%;
+  width: 100%;
+  margin-top: 1.2em;
+  margin-right: 0;
+  flex-basis: 0;
+  flex-shrink: 0;
 `;
 
 const LBBambooImg = styled.img.attrs({
   src: '/assets/images/LBBamboo.png',
 })`
-  height: 3em;
-  margin-top: 1.5em;
-  margin-right: 0.4em;
-  flex-basis: 4em;
-  flex-shrink: 1;
-  min-width: 0;
+  height: 120%;
+  width: 100%;
+  margin-top: 1.2em;
+  margin-right: 0.3em;
+  flex-basis: 0;
+  flex-shrink: 0;
 `;
 
 const LTBambooImg = styled.img.attrs({
   src: '/assets/images/LTBamboo.png',
 })`
-  height: 3em;
-  margin-right: 0.2em;
-  flex-basis: 4em;
-  flex-shrink: 1;
-  min-width: 0;
+  height: 120%;
+  width: 100%;
+  margin-right: 0.1em;
+  flex-basis: 0;
+  flex-shrink: 0;
 `;
 
 export { BoxTimer, BasicBambooImg, LTBambooImg, LBBambooImg };
