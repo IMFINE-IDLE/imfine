@@ -20,12 +20,17 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
     'main',
     'light-pink',
     'light',
-    'pink',
-    'icon',
+    'clover4',
     'dark',
-    'red',
-    'gray700',
-    'gray800',
+    'clover5',
+    'clover8',
+    'clover6',
+    'clover2',
+    'clover7',
+    'light-blue',
+    'clover3',
+    'pink',
+    'clover9',
   ];
 
   // 증상 정보 불러오기
@@ -83,7 +88,7 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
           <Line
             type="monotone"
             dataKey={symptom}
-            stroke={`var(--${colors[idx % 9]}-color)`}
+            stroke={`var(--${colors[idx % 14]}-color)`}
             strokeWidth={2}
             legendType="circle"
             key={symptom}
@@ -118,7 +123,7 @@ const SymptomGraph = ({ diaryId, date, isWeekly }) => {
           <Line
             type="monotone"
             dataKey={symptom}
-            stroke={`var(--${colors[idx % 9]}-color)`}
+            stroke={`var(--${colors[idx % 14]}-color)`}
             strokeWidth={2}
             legendType="circle"
             key={symptom}

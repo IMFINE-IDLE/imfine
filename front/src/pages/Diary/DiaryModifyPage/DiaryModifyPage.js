@@ -28,7 +28,7 @@ const DiaryModifyPage = () => {
    * Hooks
    */
   const { diaryId } = useParams();
-  const { title, description, medicals, diaryHasSymptoms, open } =
+  const { title, description, medicals, diaryHasSymptoms, open, symptomAdded } =
     useLocation().state;
   // 증상 추가 화면 재활용을 위한 값 추가
   const from = 'diary';
@@ -63,6 +63,9 @@ const DiaryModifyPage = () => {
         active: true,
       });
 
+      // 증상 추가 페이지에 다녀왔다면 페이지 두 개분을 replace
+      if (symptomAdded) navigate(-2, { replace: true });
+      // 증상 추가 외 나머지 수정이면 그냥 이전으로 돌아가기
       navigate(-1, { replace: true });
     } catch (err) {
       console.error(err);
