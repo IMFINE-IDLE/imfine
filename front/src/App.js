@@ -33,7 +33,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { updateCode, logOutWithError } from './store/slice/userSlice';
 import schedule from 'node-schedule';
-import { resetTokenAndReattemptRequest } from './utils/userUtils';
+import { refreshTokenAndResendRequest } from './utils/userUtils';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -71,11 +71,12 @@ function App() {
       const originalRequest = error.config;
       // 토큰 갱신
       if (errorResponse.data.error === 'EXPIRED_TOKEN') {
-        return await resetTokenAndReattemptRequest(
+        return await refreshTokenAndResendRequest(
           error,
           logoutwithErrorCallBack
         );
       } else if (errorResponse.data.error.includes('TOKEN')) {
+        // 기타 에러일경우 로그아웃 처리
         logoutwithErrorCallBack();
       }
       return Promise.reject(error);
