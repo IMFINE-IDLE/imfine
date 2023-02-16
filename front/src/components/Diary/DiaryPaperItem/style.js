@@ -31,7 +31,7 @@ const DiaryPaperSymptomDiv = styled.button`
   font-weight: 700;
   width: auto;
   border-radius: 20px;
-  background-color: var(--light-color);
+  background-color: var(--light-pink-color);
   padding: 0.3em 0.7em;
   margin-right: 0.7em;
   cursor: default;

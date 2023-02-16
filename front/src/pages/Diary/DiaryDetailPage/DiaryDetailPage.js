@@ -26,8 +26,6 @@ const DiaryDetailPage = () => {
   const [date, setDate] = useState(new Date());
   const [isWeekly, setIsWeekly] = useState(true);
 
-  console.log('date', date);
-
   // 신고하기 버튼 여닫기
   const [reportOpen, setReportOpen] = useState(false);
 
@@ -96,7 +94,12 @@ const DiaryDetailPage = () => {
       <DiaryBoxGrad radius="0">
         <DiaryInfoContainer radius="25px">
           <FlexDiv justify="space-between">
-            <DiaryTitle title={diaryInfo.title} />
+            <FlexDiv justify="start">
+              <DiaryTitle title={diaryInfo.title} />
+              {diaryInfo.open || (
+                <img src="/assets/icons/lock.svg" alt="lock" />
+              )}
+            </FlexDiv>
             <FlexDiv width="4em" justify="end">
               {isMine ? (
                 <img
