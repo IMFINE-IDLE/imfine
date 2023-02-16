@@ -63,10 +63,10 @@ const PickMenuTab = ({
     clickedSubMenuSectionIdx: useRef(null),
     clickedMenuId: useRef(null),
     // 질병/수술 또는 증상 추가시 스크롤 자동이동시키기 위한 ref
-    medicalDivOut: useRef(0),
-    medicalDivIn: useRef(0),
-    symptomDivOut: useRef(0),
-    symptomDivIn: useRef(0),
+    medicalDivOut: useRef(null),
+    medicalDivIn: useRef(null),
+    symptomDivOut: useRef(null),
+    symptomDivIn: useRef(null),
   };
 
   /*
@@ -138,13 +138,16 @@ const PickMenuTab = ({
   // 질병/수술 또는 증상 하나 선택할 때마다 범위 넘어가면 스크롤
   const checkOverflow = () => {
     // 질병/수술
+
     if (
       refs.medicalDivOut.current.clientWidth <=
       refs.medicalDivIn.current.clientWidth
     )
       refs.medicalDivOut.current.scrollLeft += 1000;
     else refs.medicalDivOut.current.scrollLeft -= 1000;
+
     // 증상
+
     if (
       refs.symptomDivOut.current.clientWidth <=
       refs.symptomDivIn.current.clientWidth
