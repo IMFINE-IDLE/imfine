@@ -74,14 +74,22 @@ function PaperFeedPage() {
       }
     );
 
+    // eventSource.onmessage = function (event) {
+    //   if (event.type === 'dummy') {
+    //     console.log('dummydata received');
+    //   } else if (event.type === 'sse') {
+    //     console.log('the real one');
+    //     dispatch(updateNotification({ isNew: true }));
+    //   }
+    // };
     eventSource.addEventListener('sse', function (event) {
-      console.log('received message: ' + event.data);
+      console.log('sse received message: ' + event.data);
       console.log(1);
       dispatch(updateNotification({ isNew: true }));
       console.log(2);
     });
 
-    eventSource.addEventListener('dumy', function (event) {
+    eventSource.addEventListener('dummy', function (event) {
       console.log('dumy received message: ' + event.data);
       //setIsNew(true);
     });
