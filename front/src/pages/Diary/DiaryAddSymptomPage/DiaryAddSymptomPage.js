@@ -35,12 +35,12 @@ const DiaryAddSymptomPage = () => {
         medicals,
         diaryHasSymptoms: pickedSymptoms,
         open,
-        sypmtomAdded: true,
       };
 
       // 이전페이지가 어디었느냐(from)에 따라 navigate 다르게 처리
       if (from === 'diary') {
-        navigate(`/diary/${diaryId}/modify`, {
+        // navigate(`/diary/${diaryId}/modify`, {
+        navigate(-1, {
           state: infoToDiaryModify,
           replace: true,
         });
