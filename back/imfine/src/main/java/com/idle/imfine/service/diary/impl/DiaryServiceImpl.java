@@ -255,8 +255,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .likeCount(paper.getLikeCount())
                 .date(paper.getDate())
                 .createdAt(paper.getCreatedAt().toString())
-                .condition(String.format("%d", conditionRepository.findByUserAndDate(diary.getWriter(), paper.getDate()).orElseGet(
-                        Condition::new).getCondition()))
+                .condition(common.getDateUserCondition(paper.getDate(), paper.getDiary().getWriter()))
                 .open(paper.isOpen())
                 .image(paper.getImages().size() != 0)
                 .symptomList(makePaperSymptoms(paper))
