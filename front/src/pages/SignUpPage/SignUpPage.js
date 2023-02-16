@@ -243,6 +243,15 @@ function SignUpPage() {
   // 이메일 인증 코드 전송
   const sendVerifyEmail = async (emailState) => {
     try {
+      // 재전송인 경우 alert
+      if (emailVerify === 'emailSent') {
+        alert('이메일이 재전송되었습니다.');
+        // 코드창 초기화
+        inputEvent({ emailCode: '' });
+      }
+      // else {
+      //   alert('이메일이 전송되었습니다.');
+      // }
       setTimeLeft(179); // 타이머 세팅
       const data = { email: emailState };
       const res = await axios.post(api.user.verifyEmail(emailState), data);
