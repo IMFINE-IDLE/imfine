@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { FiImage } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getTimeDifference } from '../../../utils/paperUtils';
@@ -34,7 +35,7 @@ function PaperItem({ paper }) {
     likeCount,
     commentCount,
     createdAt,
-    images,
+    image,
     symptomList,
     myHeart,
   } = paper;
@@ -90,7 +91,15 @@ function PaperItem({ paper }) {
             )}
           </BoxRight>
         </BoxTop>
-        <BoxContent>{content}</BoxContent>
+        <BoxContent>
+          {content}
+          {image ? (
+            <FiImage
+              size=".9rem"
+              style={{ margin: '-0.1em 0 0 0.3em', color: '#A9D7D0' }}
+            />
+          ) : null}
+        </BoxContent>
         {/* {images.map((image) => {
         return <img src={`${URL}/${image}`} alt="" />;
       })} */}
