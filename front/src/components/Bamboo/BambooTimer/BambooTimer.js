@@ -3,7 +3,7 @@ import { BoxTimer, BasicBambooImg, LTBambooImg, LBBambooImg } from './style';
 function BambooTimer({ remainHour }) {
   if (remainHour <= 24 && remainHour > 20) {
     return (
-      <BoxTimer justify={'space-between'}>
+      <BoxTimer>
         <BasicBambooImg />
         <LTBambooImg />
         <LBBambooImg />
@@ -14,7 +14,7 @@ function BambooTimer({ remainHour }) {
     );
   } else if (remainHour <= 20 && remainHour > 16) {
     return (
-      <BoxTimer justify={'flex-start'}>
+      <BoxTimer>
         <BasicBambooImg />
         <LTBambooImg />
         <LBBambooImg />
