@@ -134,6 +134,7 @@ const userSlice = createSlice({
       .addCase(logOut.fulfilled, (state, action) => {
         state.isLogin = false;
         state.uid = null;
+        state.cloverCode = '-1';
       })
       .addCase(logOut.rejected, (state, action) => {
         console.log(action.payload.response.data);
