@@ -86,8 +86,8 @@ const PickMenuTab = ({
         prevList.push({ id: itemId, name: itemName });
       }
     }
-    // addOnly가 false일 때, pickOnlyOne이 true이면 하나만 선택 가능
-    else if (pickOnlyOne) {
+    // 일기장 생성시 질병/수술은 하나만 선택 가능
+    else if (pickOnlyOne && type === 'medical') {
       if (prevList.length === 0) {
         if (idx === -1) {
           prevList.push({ id: itemId, name: itemName });
