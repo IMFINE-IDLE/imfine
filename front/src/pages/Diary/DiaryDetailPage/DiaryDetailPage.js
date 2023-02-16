@@ -9,6 +9,7 @@ import PickedItemList from '../../../components/PickedItemList/PickedItemList';
 import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
 import { ReactComponent as BookmarkSvg } from './bookmark.svg';
+import { FiTrash2 } from 'react-icons/fi';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import { DiaryBoxGrad } from '../DiaryCreateConfirmPage/style';
@@ -68,6 +69,16 @@ const DiaryDetailPage = () => {
     }
   };
 
+  // 일기장 삭제 요청
+  const fetchDeleteDiary = async () => {
+    try {
+      await axios.delete(api.diary.deleteDiary(diaryId));
+      navigate(-1);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchGetDiaryInfo();
   }, []);
@@ -105,16 +116,22 @@ const DiaryDetailPage = () => {
             </FlexDiv>
             <FlexDiv width="4em" justify="end">
               {isMine ? (
-                <img
-                  src="/assets/icons/edit.svg"
-                  alt="edit"
-                  style={{ padding: '0.8125em 0', cursor: 'pointer' }}
-                  onClick={() =>
-                    navigate(`/diary/${diaryId}/modify`, {
-                      state: infoToModifyPage,
-                    })
-                  }
-                />
+                <>
+                  <img
+                    src="/assets/icons/edit.svg"
+                    alt="edit"
+                    style={{ padding: '0.8125em 0', cursor: 'pointer' }}
+                    onClick={() =>
+                      navigate(`/diary/${diaryId}/modify`, {
+                        state: infoToModifyPage,
+                      })
+                    }
+                  />
+                  <FiTrash2
+                    onClick={fetchDeleteDiary}
+                    style={{ marginLeft: '0.5em' }}
+                  />
+                </>
               ) : (
                 <FlexDiv justify="end" style={{ position: 'relative' }}>
                   <BookmarkSvg
