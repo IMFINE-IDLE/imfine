@@ -93,7 +93,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<ResponseDiaryListDto> showDiarySearchList(String query, String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);
-        Slice<Diary> diaries = diaryRepository.findByTitleContainingIgnoreCaseAndOpenTrue(query, pageable);
+        Slice<Diary> diaries = diaryRepository.findByTitleContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(query, pageable);
         Set<Long> subscribeDiaryIds = subscribeRepository.getDiaryIdsByDiaries(diaries.getContent(), user.getId());
 
         return getResponseDiaryList(user, diaries, subscribeDiaryIds);
@@ -124,7 +124,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseMainPage showPaperSearchList(String query, String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);
-        Slice<Paper> papers = paperRepository.findByContentContainingIgnoreCaseAndOpenTrue(query, pageable);
+        Slice<Paper> papers = paperRepository.findByContentContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(query, pageable);
         List<Paper> paperList = papers.getContent();
         Set<Long> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
                 paperList);

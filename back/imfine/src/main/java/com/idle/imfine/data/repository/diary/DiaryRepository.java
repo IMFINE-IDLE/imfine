@@ -21,7 +21,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     List<Diary> findAllByWriter(User writer);
 
-    Slice<Diary> findByTitleContainingIgnoreCaseAndOpenTrue(String query, Pageable pageable);
+    Slice<Diary> findByTitleContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(String query, Pageable pageable);
 
     @Query("select distinct d from Diary d "
             + "join d.writer "
