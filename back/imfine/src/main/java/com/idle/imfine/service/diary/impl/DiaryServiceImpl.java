@@ -160,9 +160,20 @@ public class DiaryServiceImpl implements DiaryService {
     public List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(RequestSymptomChartDto requestDto) {
         LOGGER.info("[DiaryServiceImpl.getDiarySymptomsAll] 일기장 증상 차트 조회");
         LocalDate date = common.convertDateType(requestDto.getDate());
-        int minusDays = date.getDayOfWeek().getValue();
-        LocalDate startDate = date.minusDays(minusDays);
-        LocalDate endDate = startDate.plusDays(6);
+        int minusDays;
+        int findDateCount;
+        LocalDate startDate;
+        LocalDate endDate;
+        if (requestDto.getFilter().equals("week")) {
+            findDateCount = 6;
+            minusDays = date.getDayOfWeek().getValue();
+
+        } else {
+            findDateCount = date.lengthOfMonth() - 1;
+            minusDays = date.getDayOfMonth() - 1;
+        }
+        startDate = date.minusDays(minusDays);
+        endDate = startDate.plusDays(findDateCount);
 
         LOGGER.info("[DiaryServiceImpl.getDiarySymptomsAll]일기장 증상 차트 조회 시작일 {} .. 종료일 .. {}", startDate, endDate);
         Diary diary = diaryRepository.findById(requestDto.getDiaryId())
@@ -182,7 +193,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         Map<String, List<ResponseSymptomScoreDto>> responsePureDto = new HashMap<>();
         LocalDate crtDate = startDate;
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < findDateCount + 1; i++) {
             responsePureDto.put(crtDate.toString(),new ArrayList<>());
             crtDate = crtDate.plusDays(1);
         }
@@ -201,7 +212,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         crtDate = startDate;
         List<ResponseSymptomChartRecordDto> responseDto = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < findDateCount + 1; i++) {
             String dateString = crtDate.toString();
             responseDto.add(ResponseSymptomChartRecordDto.builder()
                                 .date(dateString)
