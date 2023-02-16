@@ -1,4 +1,3 @@
-import { FiImage } from 'react-icons/fi';
 import styled from 'styled-components';
 import { BoxLT50 } from '../../common/BoxLT50/BoxLT50';
 import { BtnSymptom } from '../../PickSymptom/style';
@@ -61,11 +60,13 @@ const BoxSymptomList = styled.div`
   } */
 `;
 
-const Symptom = styled(BtnSymptom)`
+const IconSymptom = styled(BtnSymptom)`
   display: inline-block;
   width: auto;
-  background-color: var(--light-color);
+  background-color: ${(props) =>
+    props.medical ? 'var(--light-color)' : 'var(--light-pink-color)'};
   padding: 0.2em 0.5em;
+  font-weight: ${(props) => (props.medical ? '700' : null)};
 `;
 
 const BoxContent = styled.div`
@@ -90,20 +91,14 @@ const SpanDate = styled.span`
   vertical-align: middle;
 `;
 
-const IconImg = styled(FiImage)`
-  vertical-align: middle;
-  margin: -0.1em 0 0 0.2em;
-`;
-
 export {
   BoxPaper,
   BoxTop,
   BoxLeft,
   BoxRight,
   BoxSymptomList,
-  Symptom,
+  IconSymptom,
   BoxContent,
   BoxBottom,
   SpanDate,
-  IconImg,
 };

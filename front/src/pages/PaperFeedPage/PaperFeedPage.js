@@ -1,13 +1,16 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
+import { FiChevronsUp } from 'react-icons/fi';
 import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import { Clover } from '../../components/common/Clover/Clover';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
+import BtnToTop from '../../components/Paper/BtnToTop/BtnToTop';
 import PaperList from '../../components/Paper/PaperList/PaperList';
 import TabBar from '../../components/TabBar/TabBar';
 import {
   BigCircle,
+  BoxBtnToTop,
   BoxInner,
   BoxNoPaperFeed,
   BoxPaperFeed,
@@ -51,8 +54,8 @@ function PaperFeedPage() {
   };
 
   useEffect(() => {
-    fetchPaperFeed(page);
-  }, [page]);
+    if (hasNext) fetchPaperFeed(page);
+  }, [page, hasNext]);
 
   return (
     <>
@@ -72,18 +75,16 @@ function PaperFeedPage() {
           <BtnFloat />
         </BoxNoPaperFeed>
       ) : (
-        <>
-          <BoxPaperFeed>
-            <PaperList paperList={paperList} />
-            <BtnFloat />
-            <Circle small />
-            <Circle />
-            <div ref={observer} />
-            {isLoading && <p>로딩중...</p>}
-          </BoxPaperFeed>
-        </>
+        <BoxPaperFeed>
+          <PaperList paperList={paperList} />
+          <BtnFloat />
+          <Circle small />
+          <Circle />
+          <div ref={observer} />
+          {isLoading && <p>로딩중...</p>}
+          <BtnToTop />
+        </BoxPaperFeed>
       )}
-
       <TabBar />
     </>
   );

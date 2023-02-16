@@ -4,7 +4,7 @@ import { SpeechBubble } from '../../components/Modal/style';
 
 const BoxPaperFeed = styled.div`
   position: relative;
-  padding: 0 1em 10em;
+  padding: 0 1em 7em;
   overflow: hidden;
 `;
 

@@ -11,12 +11,12 @@ import {
   BoxBottom,
   BoxPaper,
   BoxTop,
-  Symptom,
   BoxRight,
   BoxLeft,
   BoxContent,
   SpanDate,
   BoxSymptomList,
+  IconSymptom,
 } from './style';
 
 function PaperItem({ paper }) {
@@ -38,6 +38,7 @@ function PaperItem({ paper }) {
     image,
     symptomList,
     myHeart,
+    medicalName,
   } = paper;
 
   // 내 게시글인지 여부
@@ -72,11 +73,12 @@ function PaperItem({ paper }) {
                 <p style={{ fontWeight: '700' }}>{name}</p>
               </div>
               <BoxSymptomList>
-                {symptomList?.map((symptom) => {
+                <IconSymptom medical>{medicalName}</IconSymptom>
+                {symptomList?.map(({ symptomId, symptomName, score }) => {
                   return (
-                    <Symptom key={symptom?.symptomId}>
-                      {symptom?.symptomName} {symptom?.score}
-                    </Symptom>
+                    <IconSymptom key={symptomId}>
+                      {symptomName} {score}
+                    </IconSymptom>
                   );
                 })}
               </BoxSymptomList>
@@ -100,9 +102,6 @@ function PaperItem({ paper }) {
             />
           ) : null}
         </BoxContent>
-        {/* {images.map((image) => {
-        return <img src={`${URL}/${image}`} alt="" />;
-      })} */}
         <BoxBottom>
           <div>
             <DiaryTitle title={title} shownOnMainFeed />
