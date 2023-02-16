@@ -361,7 +361,7 @@ public class PaperServiceImpl implements PaperService {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
         Diary paperDiary = paper.getDiary();
-        if (!paper.isOpen() && user.getId() != paper.getDiary().getId()) {
+        if (!paper.isOpen() && user.getId() != paper.getDiary().getWriter().getId()) {
             throw new ErrorException(PaperErrorCode.PAPER_NOT_AUTHORIZED);
         }
 

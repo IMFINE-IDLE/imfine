@@ -116,7 +116,7 @@ public class DiaryServiceImpl implements DiaryService {
         // 다이어리 찾기
         Diary foundDiary = diaryRepository.findDiaryByIdFetchDetail(diaryId)
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
-        if (!foundDiary.isOpen() && user.getId() != foundDiary.getId()) {
+        if (!foundDiary.isOpen() && user.getId() != foundDiary.getWriter().getId()) {
             throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
         }
         // 심텀들 찾기
