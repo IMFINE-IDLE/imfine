@@ -169,7 +169,10 @@ public class NotificationServiceImpl implements NotificationService {
             emitterRepository.deleteById(id);
         });
         LOGGER.info("에미터 타임아웃 {} {}", id, lastEventId);
-        emitter.onTimeout(() -> emitterRepository.deleteById(id));
+        emitter.onTimeout(() -> {
+            emitterRepository.deleteById(id);
+            emitter.complete();
+        });
 
         sendToClient(emitter, id, "dummy", "EventStream Created. [userId=" + uid + "]");
         LOGGER.info("EventStream Created {}", id);
