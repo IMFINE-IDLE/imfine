@@ -178,7 +178,10 @@ public class NotificationServiceImpl implements NotificationService {
             Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByMemberId(String.valueOf(uid));
             events.entrySet().stream()
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
-                    .forEach(entry -> sendToClient(emitter, entry.getKey(), "sse", entry.getValue()));
+                    .forEach(entry -> {
+                        LOGGER.info("emitter key {}", entry.getKey());
+                        sendToClient(emitter, entry.getKey(), "sse", entry.getValue());
+                    });
         }
         return emitter;
     }
