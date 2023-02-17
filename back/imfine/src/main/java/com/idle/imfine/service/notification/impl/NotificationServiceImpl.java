@@ -195,7 +195,6 @@ public class NotificationServiceImpl implements NotificationService {
                     .data(data));
             LOGGER.info("sendToClient 성공");
         } catch (IOException exception) {
-            exception.printStackTrace();
             emitterRepository.deleteById(id);
             throw new ConnectionException("연결 오류!");
         }
