@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateNotification } from '../../store/slice/eventSlice';
 import axios from 'axios';
 import api from '../../api/api';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -32,6 +33,7 @@ function NotificationPage() {
   const userId = useSelector((state) => {
     return state.user.uid;
   });
+  const dispatch = useDispatch();
   // 알림 리스트 GET
   const fetchNotificationsDetail = async (pagination) => {
     try {
@@ -53,37 +55,34 @@ function NotificationPage() {
 
   useEffect(() => {
     fetchNotificationsDetail(page);
+    dispatch(updateNotification({ isNew: false }));
   }, [page]);
 
   useEffect(() => {
-    let eventSource = new EventSourcePolyfill(
-      `https://i8a809.p.ssafy.io/api/sse?uid=${userId}`,
-      { withCredentials: true, heartbeatTimeout: 120000 }
-    );
-    console.log('event url', eventSource);
-
-    eventSource.onopen = (event) => {
-      console.log(event.target.readyState);
-      console.log('connection opened');
-    };
-
-    eventSource.onmessage = (event) => {
-      console.log('result', event.data);
-    };
-
-    eventSource.onerror = (event) => {
-      console.log(event.target.readyState);
-      if (event.target.readyState === EventSource.CLOSED) {
-        console.log('eventsource closed (' + event.target.readyState + ')');
-      }
-      eventSource.close();
-    };
-
-    // 기존 예제 코드
-    eventSource.addEventListener('sse', (e) => {
-      const { data: receivedConnectData } = e;
-      console.log('connect event', receivedConnectData);
-    });
+    // let eventSource = new EventSourcePolyfill(
+    //   `https://i8a809.p.ssafy.io/api/sse?uid=${userId}`,
+    //   { withCredentials: true, heartbeatTimeout: 120000 }
+    // );
+    // console.log('event url', eventSource);
+    // eventSource.onopen = (event) => {
+    //   console.log(event.target.readyState);
+    //   console.log('connection opened');
+    // };
+    // eventSource.onmessage = (event) => {
+    //   console.log('result', event.data);
+    // };
+    // eventSource.onerror = (event) => {
+    //   console.log(event.target.readyState);
+    //   if (event.target.readyState === EventSource.CLOSED) {
+    //     console.log('eventsource closed (' + event.target.readyState + ')');
+    //   }
+    //   eventSource.close();
+    // };
+    // // 기존 예제 코드
+    // eventSource.addEventListener('sse', (e) => {
+    //   const { data: receivedConnectData } = e;
+    //   console.log('connect event', receivedConnectData);
+    // });
   }, []);
 
   const unReadItems = notifications.filter((index) => !index.check);
