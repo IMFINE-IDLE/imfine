@@ -23,8 +23,8 @@ public class SymptomServiceImpl implements SymptomService {
     public List<ResponseSymptomViewDto> getSymptomList(int symptomCode) {
         return symptomRepository.findBySymptomCodeId(symptomCode).stream().map(
                 symptom -> ResponseSymptomViewDto.builder()
-                        .symptomId(symptom.getId())
-                        .symptomName(symptom.getName())
+                        .id(symptom.getId())
+                        .name(symptom.getName())
                         .build()
         ).collect(Collectors.toList());
     }

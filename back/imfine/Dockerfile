@@ -1,6 +1,9 @@
-FROM adoptopenjdk/openjdk11
-ENV APP_HOME=/usr/app/
-WORKDIR $APP_HOME
-COPY build/libs/*.jar application.jar
+FROM openjdk:11-jdk-slim
+
+ARG JAR_FILE=build/libs/*SNAPSHOT.jar
+
+COPY ${JAR_FILE} app.jar
+
 EXPOSE 8080
-CMD ["java", "-jar", "application.jar"]
+
+CMD ["java", "-jar", "-Duser.timezone=Asia/Seoul", "app.jar"]

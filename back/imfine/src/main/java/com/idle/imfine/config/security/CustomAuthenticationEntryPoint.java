@@ -40,14 +40,14 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         else if (exception.equals(TokenErrorCode.TOKEN_NOT_FOUND.name())) {
             setResponse(response, TokenErrorCode.TOKEN_NOT_FOUND);
         }
+        else if (exception.equals(TokenErrorCode.WRONG_TYPE_TOKEN.name())) {
+            setResponse(response, TokenErrorCode.WRONG_TYPE_TOKEN);
+        }
         else if (exception.equals(TokenErrorCode.EXPIRED_TOKEN.name())) {
             setResponse(response, TokenErrorCode.EXPIRED_TOKEN);
         }
         else if (exception.equals(TokenErrorCode.UNSUPPORTED_TOKEN.name())) {
             setResponse(response, TokenErrorCode.UNSUPPORTED_TOKEN);
-        }
-        else if (exception.equals(TokenErrorCode.WRONG_TYPE_TOKEN.name())) {
-            setResponse(response, TokenErrorCode.WRONG_TYPE_TOKEN);
         }
         else {
             setResponse(response, TokenErrorCode.ACCESS_DENIED);
@@ -57,13 +57,13 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     //한글 출력을 위해 getWriter() 사용
     private void setResponse(HttpServletResponse response, ErrorCode errorCode)
             throws IOException {
+        LOGGER.warn("[ErrorResponse] {}: {} 에러 발생", errorCode.getHttpStatus(), errorCode.name());
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setStatus(errorCode.getHttpStatus().value());
 
         response.getWriter().write(objectMapper.writeValueAsString(
                 ErrorResponse.builder()
                         .success(false)
-                        .status(errorCode.getHttpStatus().value())
                         .error(errorCode.name())
                         .message(errorCode.getMessage())
                         .build()
