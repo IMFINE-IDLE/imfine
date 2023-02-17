@@ -374,13 +374,3 @@ docker-compose up -d # 백그라운드로 실행
 
 [API 설계서 (최종)](https://www.notion.so/API-f717e7ca7cb4499faa9d4f76e59e0050) 
 
-proxy_pass [http://localhost:8080/api/sse](http://localhost:8080/api/sse);
-proxy_http_version 1.1; #변경
-proxy_set_header Connection 'keep-alive'; # 변경
-chunked_transfer_encoding off;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Host $host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_read_timeout 35s;
-proxy_buffering off;
