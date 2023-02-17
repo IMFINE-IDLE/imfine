@@ -1,12 +1,12 @@
 import { Route, Routes } from 'react-router-dom';
 // import styled from 'styled-components';
 import LoginPage from './pages/LoginPage/LoginPage';
-import LogOutPage from './pages/LogOutPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import PaperFeedPage from './pages/PaperFeedPage/PaperFeedPage';
 import SearchPage from './pages/SearchPage/SearchPage';
 import DiaryFeedPage from './pages/Diary/DiaryFeedPage/DiaryFeedPage';
+import DiaryFilterPage from './pages/Diary/DiaryFilterPage/DiaryFilterPage';
 import DiaryDetailPage from './pages/Diary/DiaryDetailPage/DiaryDetailPage';
 import DiaryCreatePage from './pages/Diary/DiaryCreatePage/DiaryCreatePage';
 import DiaryCreateConfirmPage from './pages/Diary/DiaryCreateConfirmPage/DiaryCreateConfirmPage';
@@ -22,8 +22,7 @@ import NotificationPage from './pages/NotificationPage/NotificationPage';
 import ProfilePage from './pages/Profile/ProfilePage/ProfilePage';
 import ProfileFollowsPage from './pages/Profile/ProfileFollowsPage/ProfileFollowsPage';
 import ProfileConfigPage from './pages/Profile/ProfileConfigPage/ProfileConfigPage';
-import ChangeName from './pages/Profile/ChangeName/ChangeName';
-import ChangeSymptom from './pages/Profile/ChangeSymptom/ChangeSymptom';
+import ProfileMedicals from './pages/Profile/ProfileMedicals/ProfileMedicals';
 import ReportPage from './pages/Report/ReportPage/ReportPage';
 import { PrivateRoute, PublicRoute } from './Route/Route';
 import SignUpSettingPage from './pages/SignUpSettingPage/SignUpSettingPage';
@@ -32,7 +31,11 @@ import FindIdPage from './pages/FindIdPage/FindIdPage';
 import FindPwPage from './pages/FindPwPage/FindPwPage';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { logOut, tokenRefresh } from './store/slice/userSlice';
+import { updateCode, logOutWithError } from './store/slice/userSlice';
+import schedule from 'node-schedule';
+import { refreshTokenAndResendRequest } from './utils/userUtils';
+import OnboardingPage from './pages/OnBoardingPage/OnboardingPage';
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 
 // 뷰포트 사이즈 결정 필요
 // const Wrapper = styled.div`
@@ -47,29 +50,52 @@ import { logOut, tokenRefresh } from './store/slice/userSlice';
 
 function App() {
   const dispatch = useDispatch();
-  // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
-  const accessToken = localStorage.getItem('accessToken');
-  if (accessToken !== 'null') {
-    axios.defaults.headers.common['Authorization'] = accessToken;
-    axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        console.log(error.response);
-        if (error.response.data.error === 'EXPIRED_TOKEN') {
-          dispatch(tokenRefresh());
-        }
-        if (
-          error.response.data.error === 'INVALID_REFRESH_TOKEN' ||
-          error.response.data.error === 'WRONG_TYPE_TOKEN'
-        ) {
-          console.log('들어옴');
-          dispatch(logOut());
-        }
-        return Promise.reject(error);
-      }
+
+  const logoutwithErrorCallBack = () => {
+    dispatch(
+      logOutWithError({
+        isLogin: false,
+        uid: null,
+        cloverCode: '-1',
+      })
     );
-  }
-  axios.defaults.withCredentials = true;
+    localStorage.setItem('accessToken', null);
+  };
+
+  // 토큰 갱신 및 기존 요청 재요청
+  axios.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async (error) => {
+      console.log(error.response);
+      const { response: errorResponse } = error;
+      const originalRequest = error.config;
+      // 토큰 갱신
+      if (errorResponse.data.error === 'EXPIRED_TOKEN') {
+        return await refreshTokenAndResendRequest(
+          error,
+          logoutwithErrorCallBack
+        );
+      } else if (errorResponse.data.error.includes('TOKEN')) {
+        // 기타 에러일경우 로그아웃 처리
+        logoutwithErrorCallBack();
+      } else if (errorResponse.data.error.includes('TOKEN')) {
+        logoutwithErrorCallBack();
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  // 매일 자정에 클로버 컨디션 코드 -1로 초기화
+  const rule = new schedule.RecurrenceRule();
+  rule.dayOfWeek = [new schedule.Range(0, 6)];
+  rule.hour = 0;
+  rule.minute = 0;
+  rule.tz = 'Asia/Seoul';
+  schedule.scheduleJob(rule, function () {
+    dispatch(updateCode('-1'));
+  });
 
   return (
     // <Wrapper>
@@ -79,38 +105,6 @@ function App() {
         element={
           <PrivateRoute>
             <PaperFeedPage />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/login"
-        element={
-          <PublicRoute>
-            <LoginPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/find-id"
-        element={
-          <PublicRoute>
-            <FindIdPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/find-password"
-        element={
-          <PublicRoute>
-            <FindPwPage />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/logout"
-        element={
-          <PrivateRoute>
-            <LogOutPage />
           </PrivateRoute>
         }
       />
@@ -130,6 +124,32 @@ function App() {
           </PrivateRoute>
         }
       />
+      <Route
+        path="/onboarding"
+        element={
+          <PrivateRoute>
+            <OnboardingPage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <LoginPage />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/find-id"
+        element={
+          <PublicRoute>
+            <FindIdPage />
+          </PublicRoute>
+        }
+      />
+      <Route path="/find-password" element={<FindPwPage />} />
+
       <Route
         path="/home"
         element={
@@ -161,6 +181,14 @@ function App() {
           element={
             <PrivateRoute>
               <DiaryFeedPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="filter"
+          element={
+            <PrivateRoute>
+              <DiaryFilterPage />
             </PrivateRoute>
           }
         />
@@ -293,18 +321,10 @@ function App() {
           }
         />
         <Route
-          path="change-name"
+          path="medicals"
           element={
             <PrivateRoute>
-              <ChangeName />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="change-symptom"
-          element={
-            <PrivateRoute>
-              <ChangeSymptom />
+              <ProfileMedicals />
             </PrivateRoute>
           }
         />
@@ -325,6 +345,7 @@ function App() {
           </PrivateRoute>
         }
       ></Route>
+      <Route path="/*" element={<NotFoundPage />} />
     </Routes>
     // </Wrapper>
   );

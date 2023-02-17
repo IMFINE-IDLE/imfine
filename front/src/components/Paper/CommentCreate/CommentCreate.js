@@ -7,7 +7,7 @@ function CommentCreate({ createComment }) {
 
   const handleCreateComment = (e) => {
     e.preventDefault();
-    if (inputValue.length > 1) {
+    if (inputValue.length > 0) {
       createComment(inputValue);
       setInputValue('');
     } else {

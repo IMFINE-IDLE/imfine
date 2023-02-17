@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import api from '../../../api/api';
+import { getPaperDate, getTimeDifference } from '../../../utils/paperUtils';
 import Modal from '../../Modal/Modal';
 import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
@@ -18,6 +18,7 @@ import {
   BoxBottomDetail,
   BoxPaperDetail,
   BoxTopAudio,
+  SpanPaperDate,
 } from './style';
 
 function PaperItemDetail({ paperId, paper }) {
@@ -36,6 +37,7 @@ function PaperItemDetail({ paperId, paper }) {
     likeCount,
     commentCount,
     createdAt,
+    date,
     musicURL,
   } = paper;
 
@@ -46,9 +48,7 @@ function PaperItemDetail({ paperId, paper }) {
   // 일기 삭제 함수
   const deletePaper = async (paperId) => {
     try {
-      const res = await axios.delete(api.paper.paperDetail(paperId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      await axios.delete(api.paper.paperDetail(paperId));
       navigate('/home');
     } catch (err) {
       console.log(err.response.data.message);
@@ -60,34 +60,13 @@ function PaperItemDetail({ paperId, paper }) {
   // 일기 신고 모달
   const [paperReportModalOpen, setPaperReportModalOpen] = useState(false);
 
-  // 게시글 시간 표시 함수
-  function getTimeDifference(timeString) {
-    let currentTime = new Date();
-    let providedTime = new Date(createdAt);
-    let milli = currentTime.getTime() - providedTime.getTime();
-    let timeGap = parseInt(milli / 60000);
-    // console.log(paperId, timeGap);
-
-    if (timeGap < 60) {
-      return `${timeGap}분전`;
-    } else if (timeGap >= 60 && timeGap < 60 * 24) {
-      return `${parseInt(timeGap / 60)}시간전`;
-    } else if (timeGap >= 60 * 24) {
-      if (currentTime.getFullYear() - providedTime.getFullYear()) {
-        return `${providedTime.getFullYear()}년 ${
-          providedTime.getMonth() + 1
-        }월 ${providedTime.getDate()}일`;
-      } else {
-        return `${providedTime.getMonth() + 1}월 ${providedTime.getDate()}일`;
-      }
-    }
-  }
-
-  // console.log(diaryId);
-
   return (
     <>
-      <BoxPaperDetail color="light" radius="0 0 50px 50px" padding="1.5em">
+      <BoxPaperDetail
+        color="light"
+        radius="0 0 50px 50px"
+        padding="0 1.5em 1.5em"
+      >
         <BoxTop>
           <BoxLeft>
             <img
@@ -109,6 +88,7 @@ function PaperItemDetail({ paperId, paper }) {
               </div>
               <div>
                 <DiaryTitle title={title} diaryId={diaryId} />
+                <SpanPaperDate>{getPaperDate(date)}</SpanPaperDate>
               </div>
               <BoxTopAudio>
                 {musicURL && (
@@ -116,19 +96,18 @@ function PaperItemDetail({ paperId, paper }) {
                     src={musicURL}
                     controls
                     controlsList="nodownload noplaybackrate"
-                    // onPlay={handlePlay}
-                    // onPause={handlePause}
                   />
                 )}
-                {/* {isPlaying ? <p>Playing...</p> : <p>Paused</p>} */}
               </BoxTopAudio>
             </div>
-            <BtnReport
-              paperId={paperId}
-              apiFunc={() => {
-                setPaperReportModalOpen(true);
-              }}
-            />
+            {userStatus !== 0 && (
+              <BtnReport
+                paperId={paperId}
+                apiFunc={() => {
+                  setPaperReportModalOpen(true);
+                }}
+              />
+            )}
           </BoxRight>
         </BoxTop>
         <BoxContent>
@@ -146,7 +125,9 @@ function PaperItemDetail({ paperId, paper }) {
               <>
                 <FiEdit
                   onClick={() => {
-                    navigate(`/paper/modify/${paperId}`);
+                    navigate(`/paper/modify/${paperId}`, {
+                      state: { diaryId: `${diaryId}` },
+                    });
                   }}
                 />
                 <FiTrash2

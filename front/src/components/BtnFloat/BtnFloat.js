@@ -4,14 +4,26 @@ import { FiEdit3 } from 'react-icons/fi';
 
 function BtnFloat() {
   const [isClicked, setIsClicked] = useState(false);
-
+  const currentDate = new Date();
+  const infoToPaperCreate = {
+    year: currentDate.getFullYear(),
+    month: (currentDate.getMonth() + 1).toLocaleString('en-US', {
+      minimumIntegerDigits: 2,
+      useGrouping: false,
+    }),
+    day: currentDate.getDate().toString().padStart(2, '0'),
+  };
+  console.log('info', infoToPaperCreate);
   return (
     <>
       <BoxBtnFloat>
         {isClicked && (
           <>
             <BtnLink
-              to="/paper/create"
+              to={{
+                pathname: '/paper/create',
+              }}
+              state={{ info: infoToPaperCreate, dateFixed: false }}
               color={'light'}
               margin={'0'}
               padding={'1em 0.8em'}

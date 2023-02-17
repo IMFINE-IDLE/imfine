@@ -22,9 +22,9 @@ function ModifyBoxSymptom({ symptomList, values, state }) {
                 count={5}
                 size={25}
                 onChange={(newScore) =>
-                  state(values.map((v, i) => (i === index ? newScore : v)))
+                  state(values.map((v, i) => (i === index ? newScore * 2 : v)))
                 }
-                value={v}
+                value={parseFloat(v / 2)}
                 activeColor="#A9D7D0"
                 isHalf={true}
                 edit={true}

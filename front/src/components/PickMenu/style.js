@@ -20,6 +20,7 @@ const PickMenuTabLeft = styled(BoxRT25)`
     text-align: center;
     color: ${fontColor || 'var(--gray800-color)'};
     font-weight: 700;
+    cursor: pointer;
   `}
 `;
 
@@ -34,10 +35,12 @@ const PickMenuTabRight = styled(BoxRT25)`
     text-align: center;
     color: ${fontColor || 'var(--gray800-color)'};
     font-weight: 700;
+    cursor: pointer;
   `}
 `;
 const PickMenuRowContainer = styled.section`
   padding-bottom: 1em;
+  width: 100%;
 `;
 
 const PickMenuSubListContainer = styled(BoxRT50LB50)`
@@ -47,6 +50,7 @@ const PickMenuSubListContainer = styled(BoxRT50LB50)`
 const PickMenuDetailMenu = styled.span`
   width: 45%;
   font-size: 0.8em;
+  cursor: pointer;
 `;
 
 // const TabBtn = styled.button`

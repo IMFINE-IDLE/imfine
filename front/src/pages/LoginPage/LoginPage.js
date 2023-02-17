@@ -20,13 +20,20 @@ function Login() {
   const [uid, setUid] = useInput('');
   const [password, setPassword] = useInput('');
   const logInByData = async () => {
+    if (uid.length < 1) {
+      alert('아이디를 입력해주세요.');
+      return;
+    }
+    if (password.length < 1) {
+      alert('비밀번호를 입력해주세요.');
+      return;
+    }
     const userData = {
       uid,
       password,
     };
     try {
-      const success = await dispatch(logIn(userData)).unwrap();
-      // console.log(success);
+      await dispatch(logIn(userData)).unwrap();
       navigate('/');
     } catch (rejectWithValue) {
       console.log(rejectWithValue);
@@ -84,7 +91,15 @@ function Login() {
               아이디 찾기
             </SpanOption>
             |
-            <SpanOption onClick={() => navigate('/find-password')}>
+            <SpanOption
+              onClick={() =>
+                navigate('/find-password', {
+                  state: {
+                    changeFromSettings: false,
+                  },
+                })
+              }
+            >
               비밀번호 찾기
             </SpanOption>
             |

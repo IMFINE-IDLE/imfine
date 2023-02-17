@@ -1,40 +1,81 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import BtnLogOut from '../../components/BtnLogOut/BtnLogOut';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Modal from '../../components/Modal/Modal';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
+import { logOut, withdraw } from '../../store/slice/userSlice';
 import {
   ProfileConfigContainer,
   ProfileConfigOptionBtn,
 } from '../Profile/ProfileConfigPage/style';
 
 const SettingsPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [logOutModalOpen, setLogOutModalOpen] = useState(false);
+  const [withDrawModalOpen, setWithDrawModalOpen] = useState(false);
+
+  // 로그아웃
+  const logOutByData = async () => {
+    try {
+      const success = await dispatch(logOut()).unwrap();
+      console.log(success);
+    } catch (rejectWithValue) {
+      console.log(rejectWithValue);
+      // alert(rejectWithValue);
+      navigate('/login');
+    }
+  };
 
   // 탈퇴 요청
-  const fetchWithdraw = () => {};
+  const fetchWithdraw = async () => {
+    try {
+      const success = await dispatch(withdraw()).unwrap();
+      console.log('success', success);
+      navigate('/login');
+    } catch (rejectWithValue) {
+      console.log(rejectWithValue);
+    }
+  };
 
   return (
     <>
       <NavBarBasic Back={true} Text="계정 설정" BackgroundColor={'main'} />
 
       <ProfileConfigContainer radius="0" height="calc(100vh - 71px)">
-        <ProfileConfigOptionBtn onClick={() => navigate(`/change-password`)}>
+        <ProfileConfigOptionBtn
+          onClick={() =>
+            navigate(`/find-password`, {
+              state: {
+                changeFromSettings: true,
+              },
+            })
+          }
+        >
           <span>비밀번호 변경하기</span>
         </ProfileConfigOptionBtn>
-        <ProfileConfigOptionBtn>
-          <BtnLogOut />
+        <ProfileConfigOptionBtn
+          onClick={() => {
+            setLogOutModalOpen(true);
+          }}
+        >
+          <span>로그아웃</span>
         </ProfileConfigOptionBtn>
-        <ProfileConfigOptionBtn onClick={() => setModalOpen(true)}>
+        <ProfileConfigOptionBtn onClick={() => setWithDrawModalOpen(true)}>
           <span>탈퇴하기</span>
         </ProfileConfigOptionBtn>
       </ProfileConfigContainer>
-
-      {modalOpen && (
+      {logOutModalOpen && (
+        <Modal
+          type={'로그아웃'}
+          setModalOpen={setLogOutModalOpen}
+          apiFunc={logOutByData}
+        />
+      )}
+      {withDrawModalOpen && (
         <Modal
           type={'탈퇴'}
-          setModalOpen={setModalOpen}
+          setModalOpen={setWithDrawModalOpen}
           apiFunc={fetchWithdraw}
         />
       )}

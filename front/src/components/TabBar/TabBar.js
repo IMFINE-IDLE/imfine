@@ -13,23 +13,34 @@ import {
   TabCenter,
   MainClover,
 } from './style';
+import { useLocation, useParams } from 'react-router-dom';
 
 const TabBar = () => {
-  const { cloverCode } = useSelector((state) => state.userInfo.cloverCode);
-  const uid = localStorage.getItem('uid');
+  const { uid, cloverCode } = useSelector((state) => state.user);
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
+  // 내 프로필에서는 하단탭바 모달 안 뜨도록 함(달력에서 컨디션 변경)
+  const { pathname } = useLocation();
+  const uidParams = useParams().uid;
+  let openCloverModal = true;
+  if (pathname.startsWith('/profile') && uid === uidParams)
+    openCloverModal = false;
+
   return (
     <div>
-      {cloversOpen && (
-        <CloverModal
-          currentClover={currentClover}
-          setCurrentClover={setCurrentClover}
-          setCloversOpen={setCloversOpen}
-          center={false}
-          date={new Date()}
-        />
+      {openCloverModal ? (
+        cloversOpen && (
+          <CloverModal
+            currentClover={currentClover}
+            setCurrentClover={setCurrentClover}
+            setCloversOpen={setCloversOpen}
+            center={false}
+            date={new Date()}
+          />
+        )
+      ) : (
+        <></>
       )}
 
       <TabContainer>
@@ -40,7 +51,7 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <Tab>
-          <TabNavLink to="/diary">
+          <TabNavLink to="/diary" state={{ filter: false }}>
             <ActiveBar />
             <DiaryTabSvg stroke="currentColor" />
           </TabNavLink>
@@ -48,7 +59,7 @@ const TabBar = () => {
         <TabCenter>
           <MainClover
             onClick={() => setCloversOpen((prev) => !prev)}
-            code={currentClover}
+            code={cloverCode}
             width="6.25em"
             height="6.25em"
             pointer={true}

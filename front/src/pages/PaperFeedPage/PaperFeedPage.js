@@ -1,25 +1,30 @@
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
+import { FiChevronsUp } from 'react-icons/fi';
+import { EventSourcePolyfill } from 'event-source-polyfill';
 import api from '../../api/api';
 import BtnFloat from '../../components/BtnFloat/BtnFloat';
 import { Clover } from '../../components/common/Clover/Clover';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
+import BtnToTop from '../../components/Paper/BtnToTop/BtnToTop';
 import PaperList from '../../components/Paper/PaperList/PaperList';
 import TabBar from '../../components/TabBar/TabBar';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateNotification } from '../../store/slice/eventSlice';
 import {
   BigCircle,
+  BoxBtnToTop,
   BoxInner,
   BoxNoPaperFeed,
   BoxPaperFeed,
   Circle,
   TextBubble,
 } from './style';
-
 function PaperFeedPage() {
   const [paperList, setPaperList] = useState([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasNext, setHasNext] = useState(false);
+  const [hasNext, setHasNext] = useState(true);
   const observerRef = useRef();
   const observer = (element) => {
     if (isLoading) return;
@@ -30,33 +35,69 @@ function PaperFeedPage() {
       const first = entries[0];
       if (first.isIntersecting && hasNext) {
         setPage((prev) => prev + 1);
+        setIsLoading(true);
       }
     });
 
     element && observerRef.current.observe(element);
   };
 
+  // SSE이벤트처리
+  //const event = useSelector((state) => state.event.isNew);
+  const userId = useSelector((state) => {
+    return state.user.uid;
+  });
+  const dispatch = useDispatch();
+
   // 일기 피드 조회
   const fetchPaperFeed = async (pagination) => {
     try {
-      const res = await axios.get(api.paper.paperFeed(pagination), {
-        // headers: {
-        //   Authorization: accessToken,
-        // },
-        // headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log(res.data);
+      const res = await axios.get(api.paper.paperFeed(pagination));
+      // console.log(res.data);
       setIsLoading(false);
       setPaperList((prev) => prev.concat(res.data.data.list));
-      setHasNext(res.data.data.hasNext);
+      setHasNext((prev) => (prev = res.data.data.hasNext));
     } catch (err) {
       console.log(err.response);
     }
   };
 
   useEffect(() => {
-    fetchPaperFeed(page);
-  }, [page]);
+    if (hasNext) fetchPaperFeed(page);
+  }, [page, hasNext]);
+
+  useEffect(() => {
+    let eventSource = new EventSourcePolyfill(
+      `https://i8a809.p.ssafy.io/api/sse?uid=${userId}`,
+      {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      }
+    );
+
+    // eventSource.onmessage = function (event) {
+    //   if (event.type === 'dummy') {
+    //     console.log('dummydata received');
+    //   } else if (event.type === 'sse') {
+    //     console.log('the real one');
+    //     dispatch(updateNotification({ isNew: true }));
+    //   }
+    // };
+    eventSource.addEventListener('sse', function (event) {
+      console.log('sse received message: ' + event.data);
+      console.log(1);
+      dispatch(updateNotification({ isNew: true }));
+      console.log(2);
+    });
+
+    eventSource.addEventListener('dummy', function (event) {
+      console.log('dumy received message: ' + event.data);
+      //setIsNew(true);
+    });
+
+    eventSource.addEventListener('error', function (event) {
+      console.log('error message: ' + event.data);
+    });
+  }, []);
 
   return (
     <>
@@ -76,18 +117,16 @@ function PaperFeedPage() {
           <BtnFloat />
         </BoxNoPaperFeed>
       ) : (
-        <>
-          <BoxPaperFeed>
-            <PaperList paperList={paperList} />
-            <BtnFloat />
-            <Circle small />
-            <Circle />
-          </BoxPaperFeed>
+        <BoxPaperFeed>
+          <PaperList paperList={paperList} />
+          <BtnFloat />
+          <Circle small />
+          <Circle />
           <div ref={observer} />
           {isLoading && <p>로딩중...</p>}
-        </>
+          <BtnToTop />
+        </BoxPaperFeed>
       )}
-
       <TabBar />
     </>
   );

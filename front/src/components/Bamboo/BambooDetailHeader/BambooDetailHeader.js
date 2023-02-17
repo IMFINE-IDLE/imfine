@@ -15,7 +15,7 @@ import {
   BottomDiv,
 } from './style';
 import BambooBtnReport from '../BambooBtnReport/BambooBtnReport';
-import { BsFillHeartFill } from 'react-icons/bs';
+import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 function BambooDetailHeader({
   bambooId,
   content,
@@ -27,12 +27,15 @@ function BambooDetailHeader({
 }) {
   const fillHeart = heart ? 'var(--red-color)' : 'none';
   console.log('booleanstatus', heart);
+  console.log('bambooid', bambooId);
   return (
     <BoxHeader>
       <TopDiv>
         <BambooBtnReport bambooId={bambooId} />
       </TopDiv>
-      <Content>{content}</Content>
+      <FlexDiv>
+        <Content>{content}</Content>
+      </FlexDiv>
       <BottomDiv>
         <BambooImg />
         <LabelOuter>

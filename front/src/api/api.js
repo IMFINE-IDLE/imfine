@@ -13,6 +13,7 @@ const NOTIFICATION = '/notification';
 const SYMPTOM = '/symptom';
 const MEDICAL = '/medical';
 const SEARCH = '/search';
+const FOLLOW = '/follow';
 
 const api = {
   user: {
@@ -27,8 +28,17 @@ const api = {
     refresh: () => URL + USERS + '/refresh',
     setInitialProfile: () => URL + USERS + '/profile',
     findUserId: (email) => URL + USERS + `/find-id/${email}`,
+    checkUserIdEmail: (uid, email) =>
+      URL + USERS + `/find-password/${uid}/${email}`,
+    changeUserPwWithOutLogin: () => URL + USERS + '/find-password',
+    changeUserPwWithLogin: () => URL + USERS + '/change-password',
+    withdraw: () => URL + USERS,
     setCondition: () => URL + USERS + '/condition',
+    changeName: () => URL + USERS + '/name',
+    changeMedical: () => URL + USERS + '/medical',
     updateOpenStatus: () => URL + USERS + '/open',
+    getCloverCode: (params) =>
+      URL + USERS + `/${params.uid}/condition/${params.date}`,
   },
   paper: {
     paperFeed: (page) => URL + PAPER + `/list?page=${page}&tab=date`,
@@ -54,11 +64,12 @@ const api = {
     deleteSearchHistory: (keywordId) => URL + SEARCH + `/mylist/${keywordId}`,
   },
   profile: {
-    getUserInfo: (params) => URL + USERS + `/${params}`,
-    getFollowingList: (params) => URL + USERS + `/${params}/following`,
-    getFollowerList: (params) => URL + USERS + `/${params}/follower`,
+    getUserInfo: (uid) => URL + USERS + `/${uid}`,
+    getFollowingList: (uid) => URL + USERS + `/${uid}/following`,
+    getFollowerList: (uid) => URL + USERS + `/${uid}/follower`,
     follow: () => URL + USERS + '/follow',
-    unfollow: (params) => URL + USERS + `/follow/${params}`,
+    unfollow: (uid) => URL + USERS + `/follow/${uid}`,
+    deleteFollower: (uid) => URL + USERS + `/follow/block/${uid}`,
     getMonthCondition: (params) =>
       URL + USERS + `/${params.uid}/condition/month/${params.date}`,
     getUserPaperItem: (params) =>
@@ -80,15 +91,20 @@ const api = {
   },
   diary: {
     postDiary: () => URL + DIARY,
+    deleteDiary: (diaryId) => URL + DIARY + `/${diaryId}`,
     getDiaryList: () => URL + DIARY + '/list',
-    getDiaryInfo: (params) => URL + DIARY + `/${params}`,
+    getDiaryInfo: (diaryId) => URL + DIARY + `/${diaryId}`,
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
-    deleteDiarySubscribe: (params) => URL + DIARY + `/${params}/subscribe`,
+    deleteDiarySubscribe: (diaryId) => URL + DIARY + `/${diaryId}/subscribe`,
     getDiaries: () => URL + DIARY + '/list/paper-post',
     getDiaryPaperItem: (params) =>
       URL + DIARY + `/${params.diaryId}/paper/${params.date}`,
-    getUserDiaryList: (params) => URL + DIARY + `/my-write/${params}`,
-    getUserSubscribeDiaryList: (params) => URL + DIARY + `/subscribe/${params}`,
+    getUserDiaryList: (uid) => URL + DIARY + `/my-write/${uid}`,
+    getUserSubscribeDiaryList: (uid) => URL + DIARY + `/subscribe/${uid}`,
+    postNewDiarySymptom: () => URL + DIARY + '/symptom',
+    deleteDiarySymptom: (id) => URL + DIARY + `/symptom/${id}`,
+    getGraphSymptoms: (params) =>
+      URL + DIARY + `/${params.diaryId}/symptoms/${params.date}/${params.type}`,
   },
   symptom: {
     getSymptomList: () => URL + SYMPTOM + '/list',
@@ -100,7 +116,7 @@ const api = {
   },
   notifications: {
     getEvent: () => URL + NOTIFICATION + '/subscribe',
-    getNotifications: () => URL + NOTIFICATION + '/list',
+    getNotifications: (page) => URL + NOTIFICATION + `/list?page=${page}`,
     readNotification: () => URL + NOTIFICATION + '/check',
   },
   report: {
@@ -109,6 +125,10 @@ const api = {
     reportDiary: () => URL + REPORT + DIARY,
     reportPaper: () => URL + REPORT + PAPER,
     reportComment: () => URL + REPORT + COMMENT,
+  },
+  follow: {
+    allowFollow: () => URL + USERS + FOLLOW + '/allow',
+    declineFollow: (userId) => URL + FOLLOW + `/decline/${userId}`,
   },
 };
 

@@ -20,56 +20,82 @@ import {
   DiaryCreateTextarea,
   SubmitBtn,
 } from '../DiaryCreateConfirmPage/style';
+import axios from 'axios';
+import api from '../../../api/api';
 
 const DiaryModifyPage = () => {
   /*
    * Hooks
    */
-  // 임시. 나중에 앞 페이지에서 받아올 것
-  const [diaryInfo, setDiaryInfo] = useState({
-    title: '기존 일기장 제목',
-    description: '기존 일기장 설명',
-  });
-  const medicals = [{ id: 1, name: '질병명' }];
-  const symptoms = [
-    { id: 1, name: '증상1' },
-    { id: 2, name: '증상2' },
-  ];
-  const [isOpen, setIsOpen] = useState(true);
-  // 임시
-
   const { diaryId } = useParams();
-  // const { title, description, medicals, diaryHasSymptoms, open } =
-  //   useLocation().state;
-  // const [diaryInfo, setDiaryInfo] = useState({
-  //   title,
-  //   description,
-  // });
-  // const [symptoms, setSymptoms] = useState(diaryHasSymptoms);
-  // const [isOpen, setIsOpen] = useState(open);
+  const { title, description, medicals, diaryHasSymptoms, open } =
+    useLocation().state;
+  // 증상 추가 화면 재활용을 위한 값 추가
+  const from = 'diary';
 
+  // 수정사항 반영을 위한 state
+  const [diaryInfo, setDiaryInfo] = useState({
+    title,
+    description,
+  });
+  const [symptoms, setSymptoms] = useState(diaryHasSymptoms);
+  const [isOpen, setIsOpen] = useState(open);
+
+  // 삭제 확인 모달용 state
   const [diaryDeleteModalOpen, setdiaryDeleteModalOpen] = useState(false);
   const [symptomDeleteModalOpen, setSymptomDeleteModalOpen] = useState(false);
   const [symptomToDelete, setSymptomToDelete] = useState(null);
+
   const navigate = useNavigate();
 
   /*
    * Functions
    */
   // 일기장 수정 요청
-  const fetchUpdateDiary = () => {};
+  const fetchUpdateDiary = async () => {
+    try {
+      await axios.put(api.diary.postDiary(), {
+        diaryId: diaryId,
+        title: diaryInfo.title,
+        description: diaryInfo.description,
+        image: '1',
+        open: isOpen,
+        active: true,
+      });
+
+      navigate(-1, { replace: true });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // 일기장 삭제 요청
-  const fetchDeleteDiary = () => {};
+  const fetchDeleteDiary = async () => {
+    try {
+      await axios.delete(api.diary.getDiaryInfo(diaryId));
+
+      navigate('/diary', { state: { filter: false } });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // 증상 기록 삭제 요청
-  const fetchDeleteSymptomRecord = () => {
+  const fetchDeleteSymptomRecord = async () => {
     // symptomToDelete 에 저장된 증상을 지운다
+    try {
+      await axios.delete(api.diary.deleteDiarySymptom(symptomToDelete.id));
+      setSymptoms(
+        symptoms.filter((symptom) => symptom.id !== symptomToDelete.id)
+      );
+      setSymptomDeleteModalOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // 입력값을 diaryInfo state에 저장
   const handleDiaryInfoChange = (e) => {
-    console.log(e.target.name);
     setDiaryInfo({
       ...diaryInfo,
       [e.target.name]: e.target.value,
@@ -78,8 +104,8 @@ const DiaryModifyPage = () => {
 
   // 증상 삭제 클릭시 확인 모달 띄우기
   const handleDeleteAllRecord = (id, name) => {
-    setSymptomDeleteModalOpen(true);
     setSymptomToDelete({ id, name });
+    setSymptomDeleteModalOpen(true);
   };
 
   return (
@@ -87,12 +113,7 @@ const DiaryModifyPage = () => {
       <NavBarBasic Back={true} Text="일기장 수정" BackgroundColor={'main'} />
 
       <DiaryBoxGrad radius="0" padding="2em">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            fetchUpdateDiary();
-          }}
-        >
+        <form>
           <DiaryCreateTitleText>
             일기장 제목을 입력해주세요
           </DiaryCreateTitleText>
@@ -130,8 +151,24 @@ const DiaryModifyPage = () => {
             />
             <FlexDiv justify="end">
               <span
-                onClick={() => navigate(`/diary/${diaryId}/modify/symptom`)}
-                style={{ fontColor: 'var(--icon-color)', fontSize: '0.9em' }}
+                onClick={() =>
+                  navigate(`/diary/${diaryId}/modify/symptom`, {
+                    state: {
+                      medicals,
+                      symptoms,
+                      diaryId,
+                      title,
+                      description,
+                      open,
+                      from,
+                    },
+                  })
+                }
+                style={{
+                  fontColor: 'var(--icon-color)',
+                  fontSize: '0.9em',
+                  cursor: 'pointer',
+                }}
               >
                 증상 추가하러 가기{' '}
               </span>
@@ -165,7 +202,10 @@ const DiaryModifyPage = () => {
               radius="20px"
               height="3.5em"
               margin="4em 0 0 0"
-              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                fetchUpdateDiary();
+              }}
             >
               수정 완료
             </SubmitBtn>

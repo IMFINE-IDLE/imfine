@@ -35,7 +35,8 @@ const ImgLeaves = styled.img.attrs({
 `;
 
 const Content = styled.div`
-  padding: 1em 0 1em 0;
+  padding: 1em 0.5em 0.5em 0.5em;
+  line-height: 1.3em;
   color: var(--icon-color);
 `;
 

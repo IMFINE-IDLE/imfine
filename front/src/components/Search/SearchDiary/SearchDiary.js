@@ -1,5 +1,6 @@
 import React from 'react';
 import DiaryListGrid from '../../Diary/DiaryListGrid/DiaryListGrid';
+import SearchNoResult from '../SearchNoResult/SearchNoResult';
 
 function SearchDiary({ diaryList }) {
   return (
@@ -7,7 +8,7 @@ function SearchDiary({ diaryList }) {
       {diaryList?.length > 0 ? (
         <DiaryListGrid diaryList={diaryList} />
       ) : (
-        <span>검색 결과를 찾을 수 없습니다.</span>
+        <SearchNoResult />
       )}
     </>
   );

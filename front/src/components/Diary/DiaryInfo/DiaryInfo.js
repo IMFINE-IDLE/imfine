@@ -8,11 +8,19 @@ import { DiaryFeedBtn, DiaryFeedFilterSvg } from './style';
 const DiaryInfo = ({ filtered, medicals, symptoms }) => {
   const navigate = useNavigate();
 
+  const infoToFilter = {
+    medicals,
+    symptoms,
+  };
+
   return (
     <>
       <BoxNoShad color="light" radius="0" style={{ paddingBottom: '6.7em' }}>
-        <FlexDiv onClick={() => navigate('/diary/filter')}>
-          <DiaryFeedFilterSvg />
+        <FlexDiv>
+          <DiaryFeedFilterSvg
+            onClick={() => navigate('/diary/filter', { state: infoToFilter })}
+            style={{ cursor: 'pointer' }}
+          />
           {filtered ? (
             <FlexDiv direction="column" padding="0 0 0 1.2em">
               <PickedItemList
@@ -28,7 +36,12 @@ const DiaryInfo = ({ filtered, medicals, symptoms }) => {
               />
             </FlexDiv>
           ) : (
-            <DiaryFeedBtn color="gray">질병/수술 혹은 증상 선택</DiaryFeedBtn>
+            <DiaryFeedBtn
+              onClick={() => navigate('/diary/filter', { state: infoToFilter })}
+              color="gray"
+            >
+              질병/수술 혹은 증상 선택
+            </DiaryFeedBtn>
           )}
         </FlexDiv>
       </BoxNoShad>

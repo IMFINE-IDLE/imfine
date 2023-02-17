@@ -4,8 +4,9 @@ import { BoxImages } from './style';
 function PaperImages({ images, setShowFullImage, setClickedImgSrc }) {
   return (
     <BoxImages>
-      {images?.map((image) => (
+      {images?.map((image, idx) => (
         <img
+          key={idx}
           src={`	
             https://i8a809.p.ssafy.io/images/${image}`}
           alt=""

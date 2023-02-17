@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import BambooHeader from '../../components/Bamboo/BambooHeader/BambooHeader';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
-
+import { useNavigate } from 'react-router-dom';
 import { DivTextArea, BtnUpdate } from './style';
 
 function BambooCreatePage() {
+  const navigate = useNavigate();
   const [value, setValue] = useState('');
 
   const fetchPost = async () => {
@@ -24,6 +25,7 @@ function BambooCreatePage() {
           },
         }
       );
+      navigate(-1);
     } catch (err) {
       console.log('Err', err);
     }
@@ -38,6 +40,7 @@ function BambooCreatePage() {
         Text={'대나무 작성'}
       />
       <BambooHeader
+        bottomValue={'3em'}
         title={'대나무숲 외치기'}
         subTitle={'비밀대나무는'}
         secondSubTitle={'24시간 뒤에 사라져요.'}
@@ -49,6 +52,7 @@ function BambooCreatePage() {
           margin={'1em'}
           value={value}
           setValue={setValue}
+          maxLength={300}
         />
       </DivTextArea>
       <DivTextArea>

@@ -8,13 +8,13 @@ import './style.css';
 
 import api from '../../api/api';
 import CloverModal from '../CloverModal/CloverModal';
+import DiaryPaperItem from '../Diary/DiaryPaperItem/DiaryPaperItem';
 import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 import { BoxShad } from '../common/BoxShad/BoxShad';
 import { Clover } from '../common/Clover/Clover';
 import { CalendarStatusModifyBtn } from './style';
-import DiaryPaperItem from '../Diary/DiaryPaperItem/DiaryPaperItem';
 import { useNavigate } from 'react-router-dom';
-import { axiosInstance } from '../../api/axiosInstance';
+import { useSelector } from 'react-redux';
 
 const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   /*
@@ -24,13 +24,14 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   // 달력 관련 state
   const [date, setDate] = useState(new Date());
   const [monthCondition, setMonthCondition] = useState(null);
+  // 개별 날짜의 일기 정보 관련 state
+  const [paperInfo, setPaperInfo] = useState(null);
+  const [isPaperChanged, setIsPaperChanged] = useState(false);
 
   // 클로버 상태 변경 관련 state
-  const [cloverOfDayClicked, setCloverOfDayClicked] = useState('-1');
+  const { cloverCode } = useSelector((state) => state.user);
+  const [cloverOfDayClicked, setCloverOfDayClicked] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
-
-  // 개별 날짜의 일기 정보
-  const [paperInfo, setPaperInfo] = useState(null);
 
   const navigate = useNavigate();
 
@@ -46,12 +47,10 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
         date: moment(date).format('YYYY-MM'),
       };
 
-      const res = await axios.get(api.profile.getMonthCondition(params), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.get(api.profile.getMonthCondition(params));
 
       setMonthCondition({ ...res.data.data });
-      setCloverOfDayClicked(res.data.data[moment(date).format('D')]);
+      // setCloverOfDayClicked(res.data.data?.[moment(date).format('D')] || '-1');
     } catch (err) {
       console.error(err);
     }
@@ -61,54 +60,59 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
   const fetchGetDiaryPaperItem = async (diaryId, date) => {
     try {
       if (isProfile) {
-        const params = { uid, date: moment(date).format('YYYY-MM-DD') };
+        const params = { uid: uid, date: moment(date).format('YYYY-MM-DD') };
 
-        const res = await axiosInstance.get(
-          api.profile.getUserPaperItem(params)
-        );
+        const res = await axios.get(api.profile.getUserPaperItem(params));
 
         await setPaperInfo(res.data.data);
-        console.log('p res', res.data.data);
-        console.log('p', paperInfo);
       } else {
         const params = {
-          diaryId,
+          diaryId: diaryId,
           date: moment(date).format('YYYY-MM-DD'),
         };
 
-        const res = await axiosInstance.get(
-          api.diary.getDiaryPaperItem(params)
-        );
+        const res = await axios.get(api.diary.getDiaryPaperItem(params));
 
         await setPaperInfo(res.data.data);
-        console.log('diarypaper res', res.data.data);
       }
     } catch (err) {
       console.error(err);
     }
   };
 
+  // 특정일의 컨디션 정보는 날짜를 새로 선택할 때마다 업데이트한다.
   useEffect(() => {
-    fetchProfileCalendar(date);
-  }, []);
-
-  // 날짜를 새로 선택할 때마다 개별 일기 정보를 불러오기
-  useEffect(() => {
-    fetchGetDiaryPaperItem(diaryId, date);
+    setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
   }, [date]);
 
-  // 날짜 선택했을 때 날짜와 클로버 상태 업데이트
-  const onClickDay = async (date, event) => {
-    setDate(date);
-    const cloverOfDayClicked = monthCondition[moment(date).format('D')] || '-1';
-    setCloverOfDayClicked(cloverOfDayClicked);
-    // fetchGetDiaryPaperItem(diaryId, date);
-  };
+  // 달력 정보는 유저가 변경될 때마다 새로 불러온다.
+  useEffect(() => {
+    fetchProfileCalendar(date);
+  }, [isMine]);
+
+  // 개별 날짜 일기 정보는 날짜가 바뀌거나 개별 일기 상태가 바뀌거나 유저가 변경되면 새로 불러온다.
+  useEffect(() => {
+    fetchGetDiaryPaperItem(diaryId, date);
+  }, [date, isPaperChanged, isMine]);
+
+  // useEffect(() => {
+  //   fetchProfileCalendar(date);
+  //   fetchGetDiaryPaperItem(diaryId, date);
+  // }, [isMine]);
+
+  // useEffect(() => {
+  //   setCloverOfDayClicked(monthCondition?.[moment(date).format('D')] || '-1');
+  //   fetchGetDiaryPaperItem(diaryId, date);
+  // }, [date]);
+
+  // useEffect(() => {
+  //   fetchGetDiaryPaperItem(diaryId, date);
+  // }, [isPaperChanged]);
 
   if (!monthCondition) return null;
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', width: '100%' }}>
       <FlexDiv direction="column">
         <BoxShad height="auto">
           <Calendar
@@ -127,7 +131,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
               // 월 이동시 해당월 데이터 받아오기
               fetchProfileCalendar(activeStartDate);
             }}
-            onClickDay={() => onClickDay(date)} // 특정 날짜 선택했을 때 일기 불러올 함수
+            onClickDay={() => setDate(date)}
             tileContent={({ date }) => {
               return (
                 <Clover
@@ -135,7 +139,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
                   code={
                     moment(date).isAfter(new Date())
                       ? 'blank'
-                      : monthCondition[moment(date).format('D') || '-1']
+                      : monthCondition?.[moment(date).format('D') || '-1']
                   }
                   width="2.7em"
                   height="2.7em"
@@ -162,7 +166,7 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
             <CalendarStatusModifyBtn
               color="light"
               height="auto"
-              margin="1em 0.5em"
+              margin="1em 0.5em 0 0.5em"
               onClick={() => {
                 if (date <= new Date()) setCloversOpen((prev) => !prev);
               }}
@@ -173,15 +177,16 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
             </CalendarStatusModifyBtn>
             <CalendarStatusModifyBtn
               height="auto"
-              margin="1em 0.5em"
+              margin="1em 0.5em 0 0.5em"
               onClick={() => {
                 const infoToPaperCreate = {
-                  year: '2023',
-                  month: '01',
-                  day: '01',
+                  year: moment(date).format('YYYY'),
+                  month: moment(date).format('MM'),
+                  day: moment(date).format('DD'),
                 };
+                // 해당 날짜 일기 작성하기
                 navigate('/paper/create', {
-                  state: { ...infoToPaperCreate, diaryId },
+                  state: { info: infoToPaperCreate },
                 });
               }}
             >
@@ -192,12 +197,35 @@ const StatusCalendar = ({ uid, diaryId, isProfile, isMine }) => {
           </FlexDiv>
         )}
 
-        {isProfile ? (
+        {isProfile ? ( // 프로필일 때
           paperInfo?.map((paper) => (
-            <DiaryPaperItem paperInfo={paper} key={paper.id} />
+            <DiaryPaperItem
+              paperInfo={paper}
+              key={paper.id}
+              setIsPaperChanged={setIsPaperChanged}
+            />
           ))
+        ) : // 일기장일 때
+        paperInfo ? (
+          <DiaryPaperItem
+            paperInfo={paperInfo}
+            setIsPaperChanged={setIsPaperChanged}
+          />
         ) : (
-          <DiaryPaperItem paperInfo={paperInfo} />
+          <></>
+        )}
+
+        {Boolean(paperInfo === null || paperInfo.length === 0) && (
+          <FlexDiv padding="1.5em 0 2em 0">
+            <img
+              src="/assets/clovers/clover1.svg"
+              style={{ width: '2em', height: '2em' }}
+              alt="clover"
+            />
+            <span style={{ color: 'var(--icon-color)', fontSize: '0.85em' }}>
+              이 날짜에 아직 일기가 없어요
+            </span>
+          </FlexDiv>
         )}
       </FlexDiv>
     </div>

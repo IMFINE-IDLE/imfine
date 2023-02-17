@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavBar, NavItem, Logo, Title, Search, Bell } from './style';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { BiChevronLeft, BiSearch, BiBell } from 'react-icons/bi';
 import NavBarRightItem from './NavBarRightItem';
-function NavBarBasic({ BackgroundColor, TextColor, Back, Text, NoRightItem }) {
+import { EventSourcePolyfill } from 'event-source-polyfill';
+function NavBarBasic({
+  BackgroundColor,
+  TextColor,
+  Back,
+  Text,
+  NoRightItem,
+  BackFromPaperDetail,
+}) {
+  const userId = useSelector((state) => {
+    return state.user.uid;
+  });
+
+  const event = useSelector((state) => state.event.value.isNew);
+
+  console.log('event changed', event);
   // 작성예시 :
   // <NavBarBasic Back={true} Text={'일기장 작성하기'} BackgroundColor={'icon'} TextColor={'gray'} />
 
@@ -28,24 +44,19 @@ function NavBarBasic({ BackgroundColor, TextColor, Back, Text, NoRightItem }) {
         <NavItem justify="center">
           <Title display="none">{Text}</Title>
         </NavItem>
-        {!NoRightItem && <NavBarRightItem />}
+        {!NoRightItem && <NavBarRightItem isNew={event} />}
       </NavBar>
     );
   } else {
     return (
       <NavBar color={BackgroundColor}>
-        <NavItem
-          onClick={() => {
-            navigate(-1);
-          }}
-          justify="left"
-        >
+        <NavItem onClick={() => navigate(-1)} justify="left">
           <BiChevronLeft />
         </NavItem>
         <NavItem>
           <Title color={TextColor}>{Text}</Title>
         </NavItem>
-        {!NoRightItem && <NavBarRightItem />}
+        {!NoRightItem && <NavBarRightItem isNew={event} />}
       </NavBar>
     );
   }

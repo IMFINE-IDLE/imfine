@@ -11,16 +11,18 @@ import {
   InputContainer,
   StyledInput,
   BtnUpdate,
+  TextBubble,
 } from './style';
 import PaperCreateHeader from '../../components/Paper/PaperCreateHeader/PaperCreateHeader';
 import DiariesDropdown from '../../components/Paper/DiariesDropdown/DiariesDropdown';
 import DateDropdown from '../../components/Paper/DateDropdown/DateDropdown';
 import SymptomRating from '../../components/Paper/BoxSymptom/BoxSymptom';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import TextareaGray from '../../components/common/TextareaGray/TextareaGray';
 import { FlexDiv } from '../../components/common/FlexDiv/FlexDiv';
 import PreviewImage from '../../components/Paper/PreviewImage/PreviewImage';
+import { Clover } from '../../components/common/Clover/Clover';
 import {
   ToggleContainer,
   ToggleText,
@@ -30,6 +32,9 @@ import {
 } from '../../components/PickSymptom/style';
 function PaperCreatePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const dateFixed = location.state.dateFixed;
+  const { year, month, day } = location.state.info;
   // 이미지 업로드 개수 3개까지 MAX
   const now = new Date();
   const [diaries, setDiaries] = useState([]); // dropdown에 나올 일기장 선택값들 저장
@@ -48,6 +53,8 @@ function PaperCreatePage() {
   const [symptoms, setSymptoms] = useState([]); // 증상받아오기
   const [scores, setScores] = useState([]); // 증상점수저장하는 State
 
+  // 증상 수정 페이지에 넘길 정보
+  const [infoToModifyPage, setInfoToModifyPage] = useState({});
   // API 처리부분
   // 사용자가 작성한 다이어리 정보 받아오기
   const getDiaries = async () => {
@@ -56,7 +63,6 @@ function PaperCreatePage() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
       setDiaries(res.data.data);
-      console.log('내가만든다이어리', res.data.data);
     } catch (res) {
       console.log('err', res.data);
     }
@@ -68,8 +74,25 @@ function PaperCreatePage() {
       const res = await axios.get(api.diary.getDiaryInfo(diaryId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
-      console.log('일기장 상세정보', res.data.data);
       setDiary(res.data.data);
+      if (res.data.data) {
+        setSymptoms(
+          res.data.data.diaryHasSymptoms.map((item) => ({
+            symptomId: item.symptomId,
+            name: item.name,
+          }))
+        );
+        setScores(Array(res.data.data.diaryHasSymptoms.length).fill(0));
+      }
+      setInfoToModifyPage({
+        medicals: res.data.data.medicals,
+        symptoms: res.data.data.diaryHasSymptoms,
+        diaryId: diaryId,
+        title: res.data.data.title,
+        description: res.data.data.description,
+        open: res.data.data.open,
+        from: 'paper',
+      });
     } catch (res) {
       console.log('err', res.data);
     }
@@ -77,33 +100,38 @@ function PaperCreatePage() {
 
   useEffect(() => {
     getDiaries();
-    if (diaryId != '') {
+    if (diaryId !== '') {
       getDiaryInfos();
     }
   }, [diaryId]);
 
-  // 일기장 선택될때마다 해당 일기장의 Symptom 정보끌고오기
   useEffect(() => {
-    if (diary) {
-      console.log('diaryInfo', diary.diaryHasSymptoms);
-      setSymptoms(
-        diary.diaryHasSymptoms.map((item) => ({
-          symptomId: item.symptomId,
-          name: item.name,
-        }))
-      );
-      setScores(Array(diary.diaryHasSymptoms.length).fill(0));
-    }
-    //setSymptomScore(diary.diaryHasSymptoms.symptomId);
-  }, [diary]);
-  console.log('증상값 모음', scores);
-  console.log('setSymptoms', symptoms);
+    setForm({
+      year: year,
+      month: month,
+      day: day,
+    });
+  }, []);
 
-  useEffect(() => {
-    if (symptoms) {
+  // 일기 작성 업로드 체크
+  const validCheck = (e) => {
+    if (symptoms.length !== 0) {
+      handleUploadImage();
+    } else {
+      alert('일기장을 먼저 선택해주세요');
     }
-  }, [symptoms]);
+  };
 
+  // 증상 추가 업로드 체크
+  const validSymptomCheck = (e) => {
+    if (symptoms.length !== 0) {
+      navigate(`/diary/${diaryId}/modify/symptom`, {
+        state: infoToModifyPage,
+      });
+    } else {
+      alert('일기장을 먼저 선택해주세요');
+    }
+  };
   // 이미지 서버에 업로드 시키기
   // multipart 업로드
   const handleUploadImage = async () => {
@@ -127,14 +155,8 @@ function PaperCreatePage() {
 
     for (let i = 0; i < symptomScore.length; i++) {
       data.append(`symptoms[${i}].symptomId`, symptomScore[i].symptomId);
-      data.append(`symptoms[${i}].symptomId`, symptomScore[i].score);
+      data.append(`symptoms[${i}].score`, symptomScore[i].score);
     }
-
-    // (key: contents) value : 일기장내용
-    // (key: open) isOpen: 공개/비공개 여부
-    // (key: date) calendar: 날짜
-    // (key: image) image 파일
-    // symptomScore : 증상점수 업로드
 
     try {
       const config = {
@@ -144,13 +166,14 @@ function PaperCreatePage() {
       };
 
       const res = await axios.post(api.paper.paperWrite(), data, config);
-      console.log('upload success', res);
-
-      // 업로드성공하면 일기상세화면으로 넘어가야해용
-      // 일단 알림
-      alert('업로드성공..');
+      const id = res.data.data;
+      alert('일기가 성공적으로 등록되었습니다');
+      navigate(`/paper/${id}`, { replace: true });
     } catch (err) {
-      console.error(err);
+      console.error('err', err);
+      if (err.response.status === 409) {
+        alert('이미 작성된 날짜입니다.');
+      }
     }
   };
 
@@ -168,6 +191,8 @@ function PaperCreatePage() {
   const handleRemove = (index) => {
     setFiles(files.filter((_, i) => i !== index));
   };
+
+  console.log('diaries', diaries);
   return (
     <>
       <NavBarBasic
@@ -176,86 +201,130 @@ function PaperCreatePage() {
         Text={'일기 작성'}
         TextColor={'icon'}
       />
-      <BoxPaperDetail>
-        <PaperCreateHeader />
-        <DiariesDropdown
-          isdisabled={false}
-          value={diaryId}
-          state={setDiaryId}
-          diaries={diaries}
-        />
-        <DateDropdown value={form} state={setForm} />
-      </BoxPaperDetail>
-      <TopDiv>
-        <ContentLabel>증상을 체크해주세요.</ContentLabel>
-      </TopDiv>
-      <BoxContent>
-        <SymptomRating
-          symptomList={diary.diaryHasSymptoms}
-          values={scores}
-          state={setScores}
-        />
-      </BoxContent>
-      <RightDiv>
-        <FiArrowRight />
-        <ContentLabel
-          margin="1em 2em 1em 0.3em"
-          onClick={() => navigate('/paper/symptom')}
-        >
-          {' '}
-          증상 추가하러 가기
-        </ContentLabel>
-      </RightDiv>
-      <TopDiv>
-        <ContentLabel>일기 내용을 작성해주세요.</ContentLabel>
-      </TopDiv>
-      <FlexDiv>
-        <TextareaGray
-          width={'90%'}
-          height={'7em'}
-          margin={'1em'}
-          value={value}
-          setValue={setValue}
-        />
-      </FlexDiv>
-      <TopDiv>
-        <ContentLabel>사진 등록하기.</ContentLabel>
-      </TopDiv>
-      <FlexDiv direction="column" margin="0.3em 1.5em">
-        <InputContainer>
-          <StyledInput type="file" multiple onChange={handleSelectImage} />
-          <FlexDiv>
-            {files.map((file, index) => (
-              <PreviewImage
-                key={index}
-                file={file}
-                onRemove={() => handleRemove(index)}
-              />
-            ))}
-          </FlexDiv>
-        </InputContainer>
-      </FlexDiv>
-      <FlexDiv direction="row" justify="flex-start">
-        <ContentLabel> 일기 비공개 설정하기</ContentLabel>
-        <ToggleContainer>
-          <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
-          <ToggleWrapper isOpen={isOpen}>
-            <Toggle
-              id="toggle"
-              type="checkbox"
-              onChange={() => setIsOpen((prev) => !prev)}
-              checked={isOpen}
+      {diaries?.length === 0 ? (
+        <>
+          <BoxPaperDetail>
+            <PaperCreateHeader />
+            <DiariesDropdown
+              isdisabled={true}
+              value={diaryId}
+              state={setDiaryId}
+              diaries={diaries}
             />
-            <ToggleLabel htmlFor="toggle" />
-          </ToggleWrapper>
-        </ToggleContainer>
-      </FlexDiv>
-      <FlexDiv>
-        <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
-          취소하기
-        </BtnUpdate>
-        <BtnUpdate onClick={handleUploadImage}>일기쓰기</BtnUpdate>
-      </FlexDiv>
+            <DateDropdown
+              selectYear={year}
+              selectMonth={month}
+              selectDay={day}
+              value={form}
+              state={setForm}
+              isdisabled={true}
+            />
+          </BoxPaperDetail>
+
+          <FlexDiv direction={'column'} padding={'5em'}>
+            <TextBubble>
+              <p>아직 만들어진 일기장이 없어요</p>
+            </TextBubble>
+            <div>
+              <Clover code={'1'} width={'150'} height={'150'} />
+            </div>
+          </FlexDiv>
+        </>
+      ) : (
+        <>
+          <BoxPaperDetail>
+            <PaperCreateHeader />
+            <DiariesDropdown
+              isdisabled={false}
+              value={diaryId}
+              state={setDiaryId}
+              diaries={diaries}
+            />
+            <DateDropdown
+              selectYear={year}
+              selectMonth={month}
+              selectDay={day}
+              value={form}
+              state={setForm}
+              isdisabled={dateFixed}
+            />
+          </BoxPaperDetail>
+          <TopDiv>
+            <ContentLabel>증상을 체크해주세요</ContentLabel>
+          </TopDiv>
+          <BoxContent>
+            <SymptomRating
+              symptomList={diary.diaryHasSymptoms}
+              values={scores}
+              state={setScores}
+            />
+          </BoxContent>
+          <RightDiv>
+            <FiArrowRight />
+            <ContentLabel
+              margin="1em 2em 1em 0.3em"
+              onClick={validSymptomCheck}
+            >
+              {' '}
+              증상 추가하러 가기
+            </ContentLabel>
+          </RightDiv>
+          <TopDiv>
+            <ContentLabel>일기 내용을 작성해주세요</ContentLabel>
+          </TopDiv>
+          <FlexDiv>
+            <TextareaGray
+              width={'90%'}
+              height={'7em'}
+              margin={'1em'}
+              value={value}
+              setValue={setValue}
+              maxLength={250}
+            />
+          </FlexDiv>
+          <TopDiv>
+            <ContentLabel>사진 등록하기</ContentLabel>
+          </TopDiv>
+          <FlexDiv direction="column">
+            <InputContainer>
+              <StyledInput type="file" multiple onChange={handleSelectImage} />
+              <FlexDiv>
+                {files.map((file, index) => (
+                  <PreviewImage
+                    key={index}
+                    file={file}
+                    onRemove={() => handleRemove(index)}
+                  />
+                ))}
+              </FlexDiv>
+            </InputContainer>
+          </FlexDiv>
+          <FlexDiv direction="row" justify="flex-start">
+            <ContentLabel margin={'1.5em 1em 1.5em 2em'}>
+              {' '}
+              일기 공개 범위
+            </ContentLabel>
+            <ToggleContainer>
+              <ToggleText>{isOpen ? '공개' : '비공개'}</ToggleText>
+              <ToggleWrapper isOpen={isOpen}>
+                <Toggle
+                  id="toggle"
+                  type="checkbox"
+                  onChange={() => setIsOpen((prev) => !prev)}
+                  checked={isOpen}
+                />
+                <ToggleLabel htmlFor="toggle" />
+              </ToggleWrapper>
+            </ToggleContainer>
+          </FlexDiv>
+          <FlexDiv>
+            <BtnUpdate color={'gray'} onClick={() => navigate(-1)}>
+              취소하기
+            </BtnUpdate>
+            <BtnUpdate onClick={validCheck}>일기쓰기</BtnUpdate>
+          </FlexDiv>
+        </>
+      )}
     </>
   );
 }

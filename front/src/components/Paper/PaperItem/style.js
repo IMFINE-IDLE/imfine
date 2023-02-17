@@ -9,6 +9,7 @@ const BoxPaper = styled(BoxLT50)`
   cursor: pointer;
   z-index: 1;
   height: auto;
+  overflow: hidden;
 `;
 
 const BoxTop = styled.div`
@@ -50,14 +51,26 @@ const BoxRight = styled.div`
   flex: 1;
 `;
 
-const Symptom = styled(BtnSymptom)`
-  display: inline;
+const BoxSymptomList = styled.div`
+  /* overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  } */
+`;
+
+const IconSymptom = styled(BtnSymptom)`
+  display: inline-block;
   width: auto;
-  background-color: var(--light-color);
+  background-color: ${(props) =>
+    props.medical ? 'var(--light-color)' : 'var(--light-pink-color)'};
+  padding: 0.2em 0.5em;
+  font-weight: ${(props) => (props.medical ? '700' : null)};
 `;
 
 const BoxContent = styled.div`
-  padding: 0.3em 0 1em;
+  padding: 0.5em 0.3em 0.7em;
   line-height: 1.5em;
   color: var(--icon-color);
 `;
@@ -72,8 +85,10 @@ const BoxBottom = styled.div`
 const SpanDate = styled.span`
   font-weight: 400;
   color: var(--icon-color);
-  font-size: 14px;
+  font-size: 13px;
   margin-left: 0.2em;
+  line-height: 1rem;
+  vertical-align: middle;
 `;
 
 export {
@@ -81,7 +96,8 @@ export {
   BoxTop,
   BoxLeft,
   BoxRight,
-  Symptom,
+  BoxSymptomList,
+  IconSymptom,
   BoxContent,
   BoxBottom,
   SpanDate,

@@ -2,7 +2,14 @@ import { formToJSON } from 'axios';
 import React, { useState, useEffect } from 'react';
 import { BottomDiv, SelectContainer, Options } from './style';
 
-function DateDropdown({ isdisabled, value, state }) {
+function DateDropdown({
+  selectYear,
+  selectMonth,
+  selectDay,
+  isdisabled,
+  value,
+  state,
+}) {
   const now = new Date();
   let years = [];
   for (let y = now.getFullYear(); y >= 1930; y -= 1) {

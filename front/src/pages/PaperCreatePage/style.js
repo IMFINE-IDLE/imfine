@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { BoxNoShad } from '../../components/common/BoxNoShad/BoxNoShad';
 import { Btn } from '../../components/common/Btn/Btn';
+import { SpeechBubble } from '../../components/Modal/style';
 const BoxPaperDetail = styled(BoxNoShad)`
   min-height: 100px;
   border-radius: 0px 0px 50px 50px;
@@ -58,8 +59,21 @@ const BtnUpdate = styled.button`
   margin-top: 1em;
   margin-left: 1em;
   margin-right: 1em;
+  margin-bottom: 1em;
   display: inline-block;
 `;
+const TextBubble = styled(SpeechBubble)`
+  margin: 0;
+  width: 100%;
+  font-size: 14px;
+  flex-direction: column;
+  border-radius: 50px;
+  line-height: 1.5rem;
+  color: var(--icon-color);
+  font-weight: 700;
+  padding: 1em 2em;
+`;
+
 export {
   BoxPaperDetail,
   BoxContent,
@@ -69,4 +83,5 @@ export {
   InputContainer,
   StyledInput,
   BtnUpdate,
+  TextBubble,
 };

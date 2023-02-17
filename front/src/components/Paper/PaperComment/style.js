@@ -16,15 +16,43 @@ const BoxUser = styled.div`
   align-items: center;
 `;
 
-const SpanUser = styled.span`
+const DivUser = styled.div`
+  position: relative;
   font-weight: 700;
   margin-right: 0.3em;
+  cursor: pointer;
+  span {
+    visibility: hidden;
+    width: 5em;
+    font-weight: 500;
+    background-color: white;
+    color: var(--main-color);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    left: 2.2em;
+    bottom: 1.5em;
+    margin-left: -2.5em;
+    position: absolute;
+  }
+  :hover span {
+    visibility: visible;
+  }
 `;
 
 const BoxBtns = styled.div`
+  position: absolute;
+  right: 1em;
   display: flex;
   align-items: center;
   color: var(--gray800-color);
+`;
+
+const BtnCommentHeart = styled.div`
+  position: absolute;
+  right: 2em;
+  display: inline-block;
+  width: 50px;
 `;
 
 const BoxContent = styled.div`
@@ -33,4 +61,12 @@ const BoxContent = styled.div`
   line-height: 1.2rem;
 `;
 
-export { BoxCommentItem, BoxTop, BoxUser, SpanUser, BoxBtns, BoxContent };
+export {
+  BoxCommentItem,
+  BoxTop,
+  BoxUser,
+  DivUser,
+  BoxBtns,
+  BtnCommentHeart,
+  BoxContent,
+};

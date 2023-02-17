@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { FiImage } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { getTimeDifference } from '../../../utils/paperUtils';
 import Modal from '../../Modal/Modal';
 import BtnReport from '../BtnReport/BtnReport';
 import DiaryTitle from '../DiaryTitle/DiaryTitle';
@@ -9,11 +11,12 @@ import {
   BoxBottom,
   BoxPaper,
   BoxTop,
-  Symptom,
   BoxRight,
   BoxLeft,
   BoxContent,
   SpanDate,
+  BoxSymptomList,
+  IconSymptom,
 } from './style';
 
 function PaperItem({ paper }) {
@@ -32,33 +35,11 @@ function PaperItem({ paper }) {
     likeCount,
     commentCount,
     createdAt,
-    images,
+    image,
     symptomList,
     myHeart,
+    medicalName,
   } = paper;
-
-  // 게시글 시간 표시 함수
-  function getTimeDifference(timeString) {
-    let currentTime = new Date();
-    let providedTime = new Date(createdAt);
-    let milli = currentTime.getTime() - providedTime.getTime();
-    let timeGap = parseInt(milli / 60000);
-    // console.log(paperId, timeGap);
-
-    if (timeGap < 60) {
-      return `${timeGap}분전`;
-    } else if (timeGap >= 60 && timeGap < 60 * 24) {
-      return `${parseInt(timeGap / 60)}시간전`;
-    } else if (timeGap >= 60 * 24) {
-      if (currentTime.getFullYear() - providedTime.getFullYear()) {
-        return `${providedTime.getFullYear()}년 ${
-          providedTime.getMonth() + 1
-        }월 ${providedTime.getDate()}일`;
-      } else {
-        return `${providedTime.getMonth() + 1}월 ${providedTime.getDate()}일`;
-      }
-    }
-  }
 
   // 내 게시글인지 여부
   const isMine = Boolean(uid === userId);
@@ -91,15 +72,16 @@ function PaperItem({ paper }) {
               <div style={{ padding: '.5em .3em' }}>
                 <p style={{ fontWeight: '700' }}>{name}</p>
               </div>
-              <div>
-                {symptomList?.map((symptom) => {
+              <BoxSymptomList>
+                <IconSymptom medical>{medicalName}</IconSymptom>
+                {symptomList?.map(({ symptomId, symptomName, score }) => {
                   return (
-                    <Symptom key={symptom?.symptomId}>
-                      {symptom?.symptomName} {symptom?.score}
-                    </Symptom>
+                    <IconSymptom key={symptomId}>
+                      {symptomName} {score}
+                    </IconSymptom>
                   );
                 })}
-              </div>
+              </BoxSymptomList>
             </div>
             {!isMine && (
               <BtnReport
@@ -111,13 +93,18 @@ function PaperItem({ paper }) {
             )}
           </BoxRight>
         </BoxTop>
-        <BoxContent>{content}</BoxContent>
-        {/* {images.map((image) => {
-        return <img src={`${URL}/${image}`} alt="" />;
-      })} */}
+        <BoxContent>
+          {content}
+          {image ? (
+            <FiImage
+              size=".9rem"
+              style={{ margin: '-0.1em 0 0 0.3em', color: '#A9D7D0' }}
+            />
+          ) : null}
+        </BoxContent>
         <BoxBottom>
           <div>
-            <DiaryTitle title={title} />
+            <DiaryTitle title={title} shownOnMainFeed />
             <SpanDate>{getTimeDifference(createdAt)}</SpanDate>
           </div>
           <LikeComment

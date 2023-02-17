@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../../api/api';
 
@@ -32,7 +32,7 @@ function ReportPage() {
   const location = useLocation();
   const type = location.state.type;
   const contentId = location.state.id;
-
+  const navigate = useNavigate();
   console.log('type', type);
   console.log('contentId', contentId);
   const [reportType, setReportType] = useState(1);
@@ -54,6 +54,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -64,6 +65,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -74,6 +76,7 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -84,16 +87,18 @@ function ReportPage() {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
     } else if (type === 'Leaf') {
       try {
         console.log('urlroute', url);
-        await axios.post(api.report.reportLeaf, {
+        await axios.post(api.report.reportLeaf(), {
           type: reportType,
           contentsId: contentId,
         });
+        navigate(-1);
       } catch (err) {
         console.log('Err', err);
       }
@@ -104,7 +109,7 @@ function ReportPage() {
 
   return (
     <div>
-      <NavBarBasic />
+      <NavBarBasic Back={true} Text={'신고하기'} NoRightItem={true} />
       <BoxInnerReport>
         <Label> 요청 유형을 선택해주세요. </Label>
 

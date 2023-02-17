@@ -1,12 +1,13 @@
 import styled, { css } from 'styled-components';
-import { BoxLT50R25 } from '../../common/BoxLT50R25/BoxLT50R25';
+import { Btn } from '../../common/Btn/Btn';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 
 const DiaryPaperSpan = styled.span`
-  ${({ color, size, bold }) => css`
+  ${({ color, size, bold, isDate }) => css`
     color: ${color ? 'var(--' + color + '-color)' : 'var(--icon-color)'};
     font-size: ${size || '1em'};
     font-weight: ${bold ? '700' : '400'};
+    text-align: ${isDate ? 'center' : 'start'};
   `}
 `;
 
@@ -31,18 +32,22 @@ const DiaryPaperSymptomDiv = styled.button`
   font-weight: 700;
   width: auto;
   border-radius: 20px;
-  background-color: var(--gray700-color);
+  background-color: var(--light-pink-color);
   padding: 0.3em 0.7em;
   margin-right: 0.7em;
   cursor: default;
 `;
 
-// const DiaryPaperSymptomDiv = styled.div`
-//   width: 4em;
-//   height: 4em;
-//   background-color: var(--gray700-color);
-//   font-size: 0.6em;
-//   padding: 0.4em;
-// `;
+const DiaryPaperTitle = styled.button`
+  ${Btn}
+  padding: 0.4em;
+  padding-left: 1.8em;
+  width: auto;
+`;
 
-export { DiaryPaperSpan, DiaryPaperSymptomWrapper, DiaryPaperSymptomDiv };
+export {
+  DiaryPaperSpan,
+  DiaryPaperSymptomWrapper,
+  DiaryPaperSymptomDiv,
+  DiaryPaperTitle,
+};

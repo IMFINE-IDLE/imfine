@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
+import { Btn } from '../../../components/common/Btn/Btn';
 
 const DiaryInfoContainer = styled(BoxShad)`
   display: flex;
@@ -19,4 +20,20 @@ const DiaryDateSpan = styled.span`
   `}
 `;
 
-export { DiaryInfoContainer, DiaryDateSpan };
+const DiaryReportBtn = styled.button`
+  ${Btn}
+  ${({ top }) => css`
+    position: absolute;
+    top: ${top || '45px'};
+    right: 0;
+    width: 6rem;
+    padding: 0em;
+    height: 2.5rem;
+    background-color: var(--light-color);
+    color: var(--icon-color);
+    z-index: 2;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+  `}
+`;
+
+export { DiaryInfoContainer, DiaryDateSpan, DiaryReportBtn };

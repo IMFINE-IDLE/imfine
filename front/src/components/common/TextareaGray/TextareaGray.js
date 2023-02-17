@@ -26,9 +26,18 @@ const Textarea = styled.textarea`
   overflow: hidden;
   resize: none;
   display: inline-block;
+  line-height: 1.4em;
 `;
 
-function TextareaGray({ value, setValue, width, height, margin, padding }) {
+function TextareaGray({
+  maxLength,
+  value,
+  setValue,
+  width,
+  height,
+  margin,
+  padding,
+}) {
   const ref = useRef();
   const onChange = (event) => {
     const v = event.target.value;
@@ -50,6 +59,7 @@ function TextareaGray({ value, setValue, width, height, margin, padding }) {
       value={value}
       onChange={onChange}
       padding={padding}
+      maxLength={maxLength}
     />
   );
 }

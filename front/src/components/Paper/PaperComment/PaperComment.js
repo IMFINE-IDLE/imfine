@@ -10,7 +10,8 @@ import {
   BoxContent,
   BoxTop,
   BoxUser,
-  SpanUser,
+  BtnCommentHeart,
+  DivUser,
 } from './style';
 
 function PaperComment({
@@ -57,8 +58,12 @@ function PaperComment({
               alt=""
               width={'50px'}
               height={'50px'}
+              onClick={() => navigate(`/profile/${uid}`)}
             />
-            <SpanUser>{name}</SpanUser>
+            <DivUser onClick={() => navigate(`/profile/${uid}`)}>
+              <span>프로필 보기</span>
+              {name}
+            </DivUser>
             {Boolean(!userStatus) && (
               <FiTrash2
                 onClick={() => {
@@ -69,7 +74,7 @@ function PaperComment({
             )}
           </BoxUser>
           <BoxBtns>
-            <div style={{ marginRight: '.2em' }}>
+            <BtnCommentHeart>
               <FiHeart
                 style={{
                   color: 'var(--red-color)',
@@ -98,7 +103,7 @@ function PaperComment({
               >
                 {localLikeCount}
               </span>
-            </div>
+            </BtnCommentHeart>
             <BtnReport apiFunc={() => setCommentReportModalOpen(true)} />
           </BoxBtns>
         </BoxTop>

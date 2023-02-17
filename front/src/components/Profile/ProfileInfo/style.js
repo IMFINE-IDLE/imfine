@@ -40,10 +40,27 @@ const ProfileItemSpan = styled.span`
   `}
 `;
 
+const ProfileInfoModifyBtn = styled.button`
+  ${Btn}
+  ${({ top }) => css`
+    position: absolute;
+    top: ${top || '30px'};
+    right: 0;
+    width: 8.5rem;
+    padding: 0em;
+    height: 2.5rem;
+    background-color: var(--gray-color);
+    color: var(--icon-color);
+    z-index: 2;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+  `}
+`;
+
 export {
   ProfileInfoContainer,
   ProfileInfoWrapper,
   ProfileNickNameWrapper,
   ProfileFollowBtn,
   ProfileItemSpan,
+  ProfileInfoModifyBtn,
 };

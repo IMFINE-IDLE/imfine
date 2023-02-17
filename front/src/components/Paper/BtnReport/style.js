@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 import { Btn } from '../../common/Btn/Btn';
 
+const BoxBtnReport = styled.div`
+  cursor: pointer;
+  position: absolute;
+  right: 25px;
+`;
+
 const BtnSmall = styled.button`
   ${Btn}
   position: absolute;
@@ -14,4 +20,4 @@ const BtnSmall = styled.button`
   color: white;
 `;
 
-export { BtnSmall };
+export { BoxBtnReport, BtnSmall };

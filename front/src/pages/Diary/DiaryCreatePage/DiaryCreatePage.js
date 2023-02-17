@@ -15,10 +15,8 @@ const DiaryCreatePage = () => {
   };
 
   const handleSubmit = () => {
-    navigate('/diary/create/confirm', { state: infoToConfirm });
+    navigate('/diary/create/confirm', { state: infoToConfirm, replace: true });
   };
-
-  console.log('medicals picked test', medicalList);
 
   return (
     <>
@@ -27,6 +25,7 @@ const DiaryCreatePage = () => {
       <PickMenuTab
         tabCnt={2}
         title="질병/수술"
+        pickOnlyOne={true}
         medicals={medicalList}
         symptoms={symptomList}
         setMedicals={setMedicalList}
@@ -34,16 +33,6 @@ const DiaryCreatePage = () => {
         onSubmitBtnClick={handleSubmit}
         submitBtnText="선택 완료"
       />
-
-      {/* <SubmitBtn
-        radius="20px"
-        height="3.5em"
-        margin="4em 0 0 0"
-        type="submit"
-        onClick={() => navigate('/diary/create/confirm')}
-      >
-        선택 완료
-      </SubmitBtn> */}
     </>
   );
 };

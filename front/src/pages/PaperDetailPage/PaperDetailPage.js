@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../../api/api';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 import PaperItemDetail from '../../components/Paper/PaperItemDetail/PaperItemDetail';
@@ -9,40 +9,58 @@ import { BoxComment } from './style';
 import { FiMessageCircle } from 'react-icons/fi';
 import CommentCreate from '../../components/Paper/CommentCreate/CommentCreate';
 import { useCallback } from 'react';
+import BtnToTop from '../../components/Paper/BtnToTop/BtnToTop';
+import { useRef } from 'react';
 
 function PaperDetailPage() {
+  const navigate = useNavigate();
   const { paperId } = useParams();
   const [paperDetail, setPaperDetail] = useState({});
+  const commentBoxRef = useRef();
+  const isCommentCreated = useRef(false);
+
+  const scrollToBottom = () => {
+    commentBoxRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+    console.log(commentBoxRef);
+  };
+
   const fetchPaperDetail = useCallback(async () => {
     try {
-      const res = await axios.get(api.paper.paperDetail(paperId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.get(api.paper.paperDetail(paperId));
       setPaperDetail((prev) => {
         return { ...prev, ...res.data.data };
       });
     } catch (err) {
-      console.log(err.response.data);
+      alert(err.response.data.message);
+      navigate(-1);
     }
-  }, [paperId]);
+  }, [paperId, navigate]);
 
   useEffect(() => {
     fetchPaperDetail();
   }, [fetchPaperDetail]);
 
+  useEffect(() => {
+    console.log('come in');
+    if (isCommentCreated.current) {
+      scrollToBottom();
+      isCommentCreated.current = false;
+    }
+  }, [paperDetail]);
+
   // 댓글 작성
   const createComment = async (commentContent) => {
     try {
-      const res = await axios.post(
-        api.comment.commentCreate(),
-        {
-          paperId,
-          content: commentContent,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
+      const res = await axios.post(api.comment.commentCreate(), {
+        paperId,
+        content: commentContent,
+      });
       console.log(res);
       fetchPaperDetail();
+      isCommentCreated.current = true;
     } catch (err) {
       console.log(err.response.data);
     }
@@ -51,9 +69,7 @@ function PaperDetailPage() {
   // 댓글 삭제
   const deleteComment = async (commentId) => {
     try {
-      const res = await axios.delete(api.comment.commentDelete(commentId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
+      const res = await axios.delete(api.comment.commentDelete(commentId));
       console.log(res);
       fetchPaperDetail();
     } catch (err) {
@@ -64,14 +80,9 @@ function PaperDetailPage() {
   // 댓글 좋아요 등록
   const likeComment = async (paperId) => {
     try {
-      const res = await axios.post(
-        api.comment.commentLike(),
-        {
-          contentId: paperId,
-        },
-        { headers: { Authorization: localStorage.getItem('accessToken') } }
-      );
-      console.log(res);
+      await axios.post(api.comment.commentLike(), {
+        contentId: paperId,
+      });
       // fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
@@ -81,10 +92,7 @@ function PaperDetailPage() {
   // 댓글 좋아요 취소
   const likeCommentDelete = async (commentId) => {
     try {
-      const res = await axios.delete(api.comment.commentLikeDelete(commentId), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      console.log(res);
+      await axios.delete(api.comment.commentLikeDelete(commentId));
       // fetchPaperDetail();
     } catch (err) {
       console.log(err.response.data);
@@ -93,9 +101,9 @@ function PaperDetailPage() {
 
   return (
     <>
-      <NavBarBasic Back />
+      <NavBarBasic Back BackgroundColor={'light'} BackFromPaperDetail />
       <PaperItemDetail paper={paperDetail} paperId={paperId} />
-      <BoxComment>
+      <BoxComment ref={commentBoxRef}>
         <FiMessageCircle />
         <span> 댓글 {paperDetail?.comments?.length}개</span>
         {paperDetail?.comments?.map((comment) => (
@@ -107,10 +115,14 @@ function PaperDetailPage() {
             likeCommentDelete={likeCommentDelete}
           />
         ))}
+        {paperDetail?.comments?.length > 0 && <BtnToTop />}
       </BoxComment>
-      <CommentCreate createComment={createComment} />
+      <CommentCreate
+        createComment={createComment}
+        // setWriteComment={setWriteComment}
+      />
     </>
   );
 }
 
-export default PaperDetailPage;
+export default React.memo(PaperDetailPage);

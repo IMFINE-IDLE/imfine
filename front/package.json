@@ -10,6 +10,7 @@
     "axios": "^1.2.3",
     "event-source-polyfill": "^1.0.31",
     "moment": "^2.29.4",
+    "node-schedule": "^2.1.1",
     "react": "^18.2.0",
     "react-calendar": "^4.0.0",
     "react-dom": "^18.2.0",

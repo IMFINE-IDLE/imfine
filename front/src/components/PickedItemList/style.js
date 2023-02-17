@@ -13,7 +13,7 @@ const PickedTitle = styled.span`
 const PickedDivision = styled.span`
   color: var(--gray800-color);
   text-align: center;
-  width: 5%;
+  width: 2%;
 `;
 
 const PickedContentWrapper = styled(FlexDiv)`
@@ -32,6 +32,7 @@ const PickedText = styled.span`
     color: var(--icon-color);
     font-weight: 700;
     cursor: ${textPointer ? 'pointer' : 'default'};
+    padding-left: 1em;
   `}
 `;
 
@@ -49,7 +50,7 @@ const PickedIconBtn = styled.button`
     padding: 0.1em 0.7em;
     cursor: ${pointer ? 'pointer' : 'default'};
     width: auto;
-    margin-right: 0.7em;
+    margin-left: 0.7em;
   `}
 `;
 

@@ -9,12 +9,22 @@ import store, { persistor } from './store';
 import axios from 'axios';
 import { PersistGate } from 'redux-persist/integration/react';
 
-// // axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
+// axios.defaults.baseURL = 'https://i8a809.p.ssafy.io/api';
 axios.defaults.withCredentials = true;
-const accessToken = localStorage.getItem('accessToken');
-if (accessToken !== 'null') {
-  axios.defaults.headers.common['Authorization'] = accessToken;
-}
+
+// 디폴트 헤더 추가
+axios.interceptors.request.use(
+  function (config) {
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken !== 'null') {
+      config.headers['Authorization'] = accessToken;
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
