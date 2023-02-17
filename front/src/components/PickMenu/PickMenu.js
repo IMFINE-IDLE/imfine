@@ -66,6 +66,7 @@ const PickMenu = forwardRef(
           subMenuSection.current[idx].lastElementChild.style.display;
         subMenuSection.current[idx].lastElementChild.style.display =
           currentState === 'block' ? 'none' : 'block';
+        setClickedId(clickedId ? null : id);
       }
 
       // 기존과 다른 메뉴를 클릭하면 기존 subMenu를 닫고
