@@ -13,7 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Builder
 public class ResponseSymptomViewDto {
-    private int symptomId;
-    private String symptomName;
+    private int id;
+    private String name;
     private String image;
 }

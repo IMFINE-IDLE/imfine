@@ -5,8 +5,8 @@ const FollowUserContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5em;
+  align-items: start;
+  margin-bottom: 0.8em;
 `;
 
 const FollowUserWrapper = styled.div`
@@ -16,7 +16,7 @@ const FollowUserWrapper = styled.div`
 
 const FollowUserBtn = styled.button`
   ${Btn}
-  width: 7.5em;
+  width: 6.5em;
   height: 3em;
   padding: 0;
   color: var(--icon-color);

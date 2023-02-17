@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ReactComponent as MainTabSvg } from './icons/home.svg';
 import { ReactComponent as DiaryTabSvg } from './icons/diary.svg';
 import { ReactComponent as BambooTabSvg } from './icons/bamboo.svg';
 import { ReactComponent as ProfileTabSvg } from './icons/profile.svg';
-import CloverModal from './CloverModal';
+import CloverModal from '../CloverModal/CloverModal';
 import {
   TabContainer,
   Tab,
@@ -12,27 +12,35 @@ import {
   ActiveBar,
   TabCenter,
   MainClover,
-  CloverStatusContainer,
 } from './style';
+import { useLocation, useParams } from 'react-router-dom';
 
 const TabBar = () => {
-  const { uid, cloverCode } = useSelector((state) => {
-    return { uid: state.user.uid, cloverCode: state.userInfo.cloverCode };
-  });
-  console.log('state', uid, cloverCode);
+  const { uid, cloverCode } = useSelector((state) => state.user);
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
 
+  // 내 프로필에서는 하단탭바 모달 안 뜨도록 함(달력에서 컨디션 변경)
+  const { pathname } = useLocation();
+  const uidParams = useParams().uid;
+  let openCloverModal = true;
+  if (pathname.startsWith('/profile') && uid === uidParams)
+    openCloverModal = false;
+
   return (
     <div>
-      {cloversOpen && (
-        <CloverStatusContainer width="18.75em" height="11em" radius="25px">
+      {openCloverModal ? (
+        cloversOpen && (
           <CloverModal
             currentClover={currentClover}
             setCurrentClover={setCurrentClover}
             setCloversOpen={setCloversOpen}
+            center={false}
+            date={new Date()}
           />
-        </CloverStatusContainer>
+        )
+      ) : (
+        <></>
       )}
 
       <TabContainer>
@@ -43,7 +51,7 @@ const TabBar = () => {
           </TabNavLink>
         </Tab>
         <Tab>
-          <TabNavLink to="/diary">
+          <TabNavLink to="/diary" state={{ filter: false }}>
             <ActiveBar />
             <DiaryTabSvg stroke="currentColor" />
           </TabNavLink>
@@ -51,7 +59,7 @@ const TabBar = () => {
         <TabCenter>
           <MainClover
             onClick={() => setCloversOpen((prev) => !prev)}
-            code={currentClover}
+            code={cloverCode}
             width="6.25em"
             height="6.25em"
             pointer={true}

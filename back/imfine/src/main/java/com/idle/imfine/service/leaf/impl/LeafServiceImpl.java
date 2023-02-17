@@ -2,6 +2,7 @@ package com.idle.imfine.service.leaf.impl;
 
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
 import com.idle.imfine.data.dto.leaf.request.RequestLeafDto;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import com.idle.imfine.data.entity.Heart;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.bamboo.Bamboo;
@@ -33,12 +34,12 @@ public class LeafServiceImpl implements LeafService {
     private final HeartRepository heartRepository;
 
     @Override
-    public void save(RequestLeafDto requestLeafDto) {
+    public ResponseNotificationPost save(RequestLeafDto requestLeafDto) {
 
         User user = userRepository.getByUid(requestLeafDto.getWriterId());
         Bamboo bamboo = bambooRepository.getById(requestLeafDto.getBambooId());
-
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+
         if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
@@ -51,21 +52,21 @@ public class LeafServiceImpl implements LeafService {
                 .declarationCount(0)
                 .build();
 
-        LOGGER.info("잎 등록 {}", leaf);
         leafRepository.save(leaf);
+        LOGGER.info("잎 등록 service {}", leaf);
         bamboo.setLeafCount(bamboo.getLeafCount() + 1);
-        bambooRepository.save(bamboo);
 
+        return new ResponseNotificationPost(user.getId(), bamboo.getWriter().getId(), 4, bamboo.getId(), 4);
     }
 
     @Override
-    public void likeLeaf(RequestHeartDto requestHeart, String uid) {
+    public ResponseNotificationPost likeLeaf(RequestHeartDto requestHeart, String uid) {
 
         User user = userRepository.getByUid(uid);
         Leaf leaf = leafRepository.getById(requestHeart.getContentId());
         Bamboo bamboo = bambooRepository.getById(leaf.getBamboo().getId());
-
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+
         if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
@@ -79,9 +80,9 @@ public class LeafServiceImpl implements LeafService {
 
             heartRepository.save(heart);
             leaf.setLikeCount(leaf.getLikeCount() + 1);
-            leafRepository.save(leaf);
-
         }
+        LOGGER.info("대나무 잎 좋아요 등록 service {}", requestHeart.getContentId());
+        return new ResponseNotificationPost(user.getId(), leaf.getWriter().getId(), 4, bamboo.getId(), 35);
     }
 
     @Override
@@ -89,8 +90,8 @@ public class LeafServiceImpl implements LeafService {
         User user = userRepository.getByUid(uid);
         Leaf leaf = leafRepository.getById(leafId);
         Bamboo bamboo = bambooRepository.getById(leaf.getBamboo().getId());
-
         LocalDateTime endShowTime = bamboo.getCreatedAt().plusDays(1);
+
         if (LocalDateTime.now().isAfter(endShowTime)) {
             throw new ErrorException(BambooErrorCode.BAMBOO_NOT_FOUND);
         }
@@ -98,7 +99,7 @@ public class LeafServiceImpl implements LeafService {
         if(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 5, leafId)) {
             heartRepository.deleteBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 5, leafId);
             leaf.setLikeCount(leaf.getLikeCount() - 1);
-            leafRepository.save(leaf);
         }
+        LOGGER.info("대나무 잎 좋아요 삭제 service");
     }
 }

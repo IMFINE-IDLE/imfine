@@ -3,8 +3,8 @@ import { BoxGrad } from '../../components/common/BoxGrad/BoxGrad';
 import { Btn } from '../../components/common/Btn/Btn';
 import { InputGray } from '../../components/common/InputGray/InputGray';
 
-const BoxSignUp = styled.div`
-  padding: 2em;
+const BoxTopSignUp = styled.div`
+  padding: 1em 2em 1.5em;
 `;
 
 const TitleSignUp = styled.h1`
@@ -17,18 +17,18 @@ const CloverImg = styled.img.attrs({
   src: '/assets/images/clover.png',
 })`
   width: 100px;
-  margin: 0 0 2em -0.5em;
+  margin-left: -0.5em;
 `;
 
 const BoxInnerSignup = styled(BoxGrad)`
-  padding: 1em 4em 0;
+  padding: 1em 2.3em 0;
   margin: 0;
 `;
 
 const Label = styled.label`
   font-weight: 700;
   display: inline-block;
-  margin-top: 1.5em;
+  margin: 1.5em 0 0.7em;
 `;
 
 const InfoSpan = styled.span`
@@ -37,14 +37,14 @@ const InfoSpan = styled.span`
 `;
 
 const InputSignUp = styled(InputGray)`
-  height: 3em;
+  height: 2.7em;
   padding: 1em;
-  margin-top: 1em;
 `;
 
 const BtnSignup = styled.button`
   ${Btn}
-  margin-top: 2em;
+  margin-top: 1.5em;
+  padding: 1em;
   display: inline-block;
 `;
 
@@ -54,8 +54,22 @@ const ErrorMsg = styled.p`
   margin: 0.5em 0 0;
 `;
 
+const GuideMsg = styled.p`
+  font-size: 12px;
+  color: orange;
+  margin: 0.5em 0 0;
+`;
+
+const DivEmail = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3em;
+  gap: 1em;
+`;
+
 export {
-  BoxSignUp,
+  BoxTopSignUp,
   TitleSignUp,
   CloverImg,
   BoxInnerSignup,
@@ -64,4 +78,6 @@ export {
   InputSignUp,
   BtnSignup,
   ErrorMsg,
+  GuideMsg,
+  DivEmail,
 };

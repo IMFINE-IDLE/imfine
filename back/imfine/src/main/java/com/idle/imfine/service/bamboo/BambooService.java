@@ -4,7 +4,7 @@ import com.idle.imfine.data.dto.bamboo.request.RequestBambooDto;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBamboo;
 import com.idle.imfine.data.dto.bamboo.response.ResponseBambooDetailDto;
 import com.idle.imfine.data.dto.heart.request.RequestHeartDto;
-import com.idle.imfine.data.entity.bamboo.Bamboo;
+import com.idle.imfine.data.dto.notification.response.ResponseNotificationPost;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public interface BambooService {
 
     ResponseBambooDetailDto showBambooDetail(long bambooId, String uid);
 
-    void likeBamboo(RequestHeartDto requestHeartDto, String uid);
+    ResponseNotificationPost likeBamboo(RequestHeartDto requestHeartDto, String uid);
 
     void deleteLikeBamboo(long bambooId, String uid);
 

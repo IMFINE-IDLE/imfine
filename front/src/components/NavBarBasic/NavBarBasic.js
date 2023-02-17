@@ -1,17 +1,41 @@
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavBar, NavItem, Logo, Title, Search, Bell } from './style';
-import { NavLink } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { BiChevronLeft, BiSearch, BiBell } from 'react-icons/bi';
-import React from 'react';
+import NavBarRightItem from './NavBarRightItem';
+import { EventSourcePolyfill } from 'event-source-polyfill';
+function NavBarBasic({
+  BackgroundColor,
+  TextColor,
+  Back,
+  Text,
+  NoRightItem,
+  BackFromPaperDetail,
+}) {
+  const userId = useSelector((state) => {
+    return state.user.uid;
+  });
 
-function NavBarBasic({ Back, Text, path }) {
+  const event = useSelector((state) => state.event.value.isNew);
+
+  console.log('event changed', event);
+  // 작성예시 :
+  // <NavBarBasic Back={true} Text={'일기장 작성하기'} BackgroundColor={'icon'} TextColor={'gray'} />
+
+  // ** [0209] ** 기존 props의 path값은 삭제되었습니다.
+
   // Back: boolean parameter
   // Back == false면 로고있는 네비게이션 바
-  // Back == true면 backbutton 있는 네비게이션 바
-  // <NavBarBasic Back={true} Text={'네비게이션 바 타이틀 값'} />
-  // path는 추후 페이지 연결시 지정하는 경로로 넘겨줄 값
+  // Back == true면 뒤로가기버튼있는 네비게이션 바
+  // Text = 네비게이션 바 타이틀 값
+  // BackgroundColor : 네비게이션 바 배경색상 (default: var(--gray-color))
+  // TextColor : 타이틀이 있는 네비게이션의 경우, props로 컬러변경 (default: var(--icon-color))
+
+  const navigate = useNavigate();
   if (!Back) {
     return (
-      <NavBar>
+      <NavBar color={BackgroundColor}>
         <NavItem justify="left">
           <NavLink to="/">
             <Logo src="/assets/images/logo.svg" alt="logo-img" />
@@ -20,39 +44,19 @@ function NavBarBasic({ Back, Text, path }) {
         <NavItem justify="center">
           <Title display="none">{Text}</Title>
         </NavItem>
-        <NavItem>
-          <NavLink to="/">
-            <BiSearch />
-          </NavLink>
-        </NavItem>
-        <NavItem right="1em">
-          <NavLink to="/">
-            <BiBell />
-          </NavLink>
-        </NavItem>
+        {!NoRightItem && <NavBarRightItem isNew={event} />}
       </NavBar>
     );
   } else {
     return (
-      <NavBar>
-        <NavItem justify="left">
-          <NavLink to="/">
-            <BiChevronLeft />
-          </NavLink>
+      <NavBar color={BackgroundColor}>
+        <NavItem onClick={() => navigate(-1)} justify="left">
+          <BiChevronLeft />
         </NavItem>
         <NavItem>
-          <Title>{Text}</Title>
+          <Title color={TextColor}>{Text}</Title>
         </NavItem>
-        <NavItem>
-          <NavLink to="/">
-            <BiSearch />
-          </NavLink>
-        </NavItem>
-        <NavItem right="1em">
-          <NavLink to="/">
-            <BiBell />
-          </NavLink>
-        </NavItem>
+        {!NoRightItem && <NavBarRightItem isNew={event} />}
       </NavBar>
     );
   }

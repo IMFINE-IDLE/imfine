@@ -1,8 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Btn } from '../../common/Btn/Btn';
 
 const ProfileInfoContainer = styled.div`
-  min-width: 22em;
   width: 100%;
   display: flex;
   align-items: start;
@@ -33,9 +32,28 @@ const ProfileFollowBtn = styled.button`
 `;
 
 const ProfileItemSpan = styled.span`
-  padding-right: 0.5em;
-  font-weight: 700;
-  display: inline-block;
+  ${({ pointer }) => css`
+    padding-right: 0.5em;
+    font-weight: 700;
+    display: inline-block;
+    cursor: ${pointer ? 'pointer' : 'default'};
+  `}
+`;
+
+const ProfileInfoModifyBtn = styled.button`
+  ${Btn}
+  ${({ top }) => css`
+    position: absolute;
+    top: ${top || '30px'};
+    right: 0;
+    width: 8.5rem;
+    padding: 0em;
+    height: 2.5rem;
+    background-color: var(--gray-color);
+    color: var(--icon-color);
+    z-index: 2;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+  `}
 `;
 
 export {
@@ -44,4 +62,5 @@ export {
   ProfileNickNameWrapper,
   ProfileFollowBtn,
   ProfileItemSpan,
+  ProfileInfoModifyBtn,
 };

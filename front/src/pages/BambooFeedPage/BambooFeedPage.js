@@ -1,4 +1,6 @@
-import React from 'react';
+import axios from 'axios';
+import api from '../../api/api';
+import React, { useState, useEffect } from 'react';
 import BambooHeader from '../../components/Bamboo/BambooHeader/BambooHeader';
 import Tabs from '../../components/Tabs/Tabs';
 import TabBar from '../../components/TabBar/TabBar';
@@ -7,48 +9,61 @@ import BoxBamboo from '../../components/Bamboo/BoxBamboo/BoxBamboo';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 
 function BambooFeedPage() {
-  const res = {
-    success: true,
-    status: 200,
-    message: '요청에 성공하였습니다.',
-    data: [
-      {
-        bambooId: 1,
-        content: 'aaa',
-      },
-      {
-        bambooId: 2,
-        content: 'bbb',
-      },
-    ],
+  const [responseAll, setResponseAll] = useState({});
+  const [myresponseAll, setMyResponseAll] = useState({});
+  const [searchFilter, setSearchFilter] = useState('latest');
+  const [mySearchFilter, setMySearchFilter] = useState('write');
+  // 필터링 타입 props로 설정 필요...
+  const fetchBambooFeed = async () => {
+    try {
+      const res = await axios.get(api.bamboo.getBambooFeed(searchFilter), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log('response확인', res.data);
+      setResponseAll(res.data);
+    } catch (err) {
+      console.log('err occured', err);
+    }
   };
-  const myRes = {
-    success: true,
-    status: 200,
-    message: '요청에 성공하였습니다.',
-    data: [
-      {
-        bambooId: 3,
-        content: 'c',
-      },
-      {
-        bambooId: 4,
-        content: 'ddd',
-      },
-    ],
+
+  // 내가 쓴 대나무 관련 글들 get
+  const fetchMyBambooFeed = async () => {
+    try {
+      const res = await axios.get(api.bamboo.getMyBambooFeed(mySearchFilter), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      console.log('response확인', res.data);
+      setMyResponseAll(res.data);
+    } catch (err) {
+      console.log('err occured', err);
+    }
   };
+
+  useEffect(() => {
+    fetchBambooFeed();
+    fetchMyBambooFeed();
+  }, []);
+
   const tabArr = [
-    { idx: 0, tabName: '모두보기', tabContent: <BoxBamboo res={res} /> },
-    { idx: 1, tabName: '나의활동', tabContent: <BoxBamboo res={myRes} /> },
+    {
+      idx: 0,
+      tabName: '모두보기',
+      tabContent: <BoxBamboo res={responseAll} />,
+    },
+    {
+      idx: 1,
+      tabName: '나의활동',
+      tabContent: <BoxBamboo res={myresponseAll} />,
+    },
   ];
   return (
     <>
-      <NavBarBasic />
+      <NavBarBasic BackgroundColor={'light'} />
       <div>
         <BambooHeader
-          title={'대나무메인'}
-          subTitle={'대나무메인페이지입니다.'}
-          secondSubTitle={'둘째줄 설명도이어서 작성하긔'}
+          title={'대나무숲'}
+          subTitle={'어떤 말이든 써보세요.'}
+          secondSubTitle={'하루가 지나면 사라질거에요.'}
         />
         <Tabs tabArr={tabArr} btnWidth={'10em'} btnHeight={'3em'} />
         <BambooBtnFloat />

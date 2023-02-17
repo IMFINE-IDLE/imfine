@@ -8,6 +8,8 @@ const BoxPaper = styled(BoxLT50)`
   margin-bottom: 1.2em;
   cursor: pointer;
   z-index: 1;
+  height: auto;
+  overflow: hidden;
 `;
 
 const BoxTop = styled.div`
@@ -15,7 +17,31 @@ const BoxTop = styled.div`
 `;
 
 const BoxLeft = styled.div`
+  position: relative;
   text-align: center;
+  img {
+    cursor: pointer;
+  }
+  span {
+    visibility: hidden;
+    width: 5em;
+    background-color: var(--gray-color);
+    color: var(--main-color);
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    bottom: 90%;
+    left: 50%;
+    margin-left: -2.5em;
+
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    /* z-index: 1; */
+  }
+
+  :hover span {
+    visibility: visible;
+  }
 `;
 
 const BoxRight = styled.div`
@@ -25,15 +51,27 @@ const BoxRight = styled.div`
   flex: 1;
 `;
 
-const Symptom = styled(BtnSymptom)`
-  display: inline;
+const BoxSymptomList = styled.div`
+  /* overflow-x: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  } */
+`;
+
+const IconSymptom = styled(BtnSymptom)`
+  display: inline-block;
   width: auto;
-  background-color: var(--light-color);
+  background-color: ${(props) =>
+    props.medical ? 'var(--light-color)' : 'var(--light-pink-color)'};
+  padding: 0.2em 0.5em;
+  font-weight: ${(props) => (props.medical ? '700' : null)};
 `;
 
 const BoxContent = styled.div`
-  padding: 1em 0;
-  line-height: 1.2em;
+  padding: 0.5em 0.3em 0.7em;
+  line-height: 1.5em;
   color: var(--icon-color);
 `;
 
@@ -47,8 +85,10 @@ const BoxBottom = styled.div`
 const SpanDate = styled.span`
   font-weight: 400;
   color: var(--icon-color);
-  font-size: 14px;
+  font-size: 13px;
   margin-left: 0.2em;
+  line-height: 1rem;
+  vertical-align: middle;
 `;
 
 export {
@@ -56,7 +96,8 @@ export {
   BoxTop,
   BoxLeft,
   BoxRight,
-  Symptom,
+  BoxSymptomList,
+  IconSymptom,
   BoxContent,
   BoxBottom,
   SpanDate,

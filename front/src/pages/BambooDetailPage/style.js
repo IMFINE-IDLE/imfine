@@ -12,4 +12,15 @@ const ReplyLabel = styled.label`
   margin 0 
 `;
 
-export { TopDiv, ReplyLabel };
+const ReplyDiv = styled.div`
+  margin: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+`;
+
+const BoxComment = styled.div`
+  padding: 1em 1.2em 5em;
+`;
+export { TopDiv, ReplyLabel, ReplyDiv, BoxComment };

@@ -14,18 +14,45 @@ import {
   TopDiv,
   BottomDiv,
 } from './style';
-
-function BambooDetailHeader({ bambooId, content, leafCount, likeCount }) {
+import BambooBtnReport from '../BambooBtnReport/BambooBtnReport';
+import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
+function BambooDetailHeader({
+  bambooId,
+  content,
+  leafCount,
+  likeCount,
+  likeBamboo,
+  removeLikeBamboo,
+  heart,
+}) {
+  const fillHeart = heart ? 'var(--red-color)' : 'none';
+  console.log('booleanstatus', heart);
+  console.log('bambooid', bambooId);
   return (
     <BoxHeader>
       <TopDiv>
-        <FiMoreVertical />
+        <BambooBtnReport bambooId={bambooId} />
       </TopDiv>
-      <Content>{content}</Content>
+      <FlexDiv>
+        <Content>{content}</Content>
+      </FlexDiv>
       <BottomDiv>
         <BambooImg />
         <LabelOuter>
-          <FiHeart />
+          <FiHeart
+            style={{
+              color: 'var(--red-color)',
+              fill: fillHeart,
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (heart) {
+                removeLikeBamboo(bambooId);
+              } else {
+                likeBamboo(bambooId);
+              }
+            }}
+          />
           <LabelStatus>{likeCount}</LabelStatus>
           <FiMessageCircle />
           <LabelStatus>{leafCount}</LabelStatus>

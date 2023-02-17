@@ -1,7 +1,6 @@
 package com.idle.imfine.data.dto.leaf.request;
 
 
-import com.idle.imfine.data.entity.leaf.Leaf;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

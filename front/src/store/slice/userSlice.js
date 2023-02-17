@@ -1,26 +1,25 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import moment from 'moment';
 import api from '../../api/api';
+
+// localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
 
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
     try {
-      const res = await axios.post(api.user.signUp(), userData);
+      const res = await axios.post(api.user.signUp(), userData, {
+        withCredentials: true,
+      });
       console.log(res.data);
-      const { accessToken, refreshToken } = res.data.data;
+      const accessToken = res.data.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
       const saveData = {
         uid: userData.uid,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+        accessToken,
       };
-
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
-      // console.log(accessToken);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
-      setInterval(logOut, JWT_EXPIRATION_TIME);
 
       return saveData;
     } catch (err) {
@@ -33,46 +32,92 @@ export const logIn = createAsyncThunk(
   'user/login',
   async (userData, { rejectWithValue }) => {
     try {
-      const resLogin = await axios.post(api.user.login(), userData);
-      // console.log(resLogin.data.data);
-      const { accessToken, refreshToken } = resLogin.data.data;
+      const res = await axios.post(api.user.login(), userData, {
+        withCredentials: true,
+      });
+      console.log(res);
+      const accessToken = res.data.data.accessToken;
+      localStorage.setItem('accessToken', accessToken);
+      axios.defaults.headers.common['Authorization'] = accessToken;
+
+      // 로그인시 당일 컨디션 불러오기
+      const condition = await axios.get(
+        api.user.getCloverCode({
+          uid: userData.uid,
+          date: moment(new Date()).format('YYYY-MM-DD'),
+        })
+      );
       const saveData = {
         uid: userData.uid,
         accessToken,
-        refreshToken,
+        cloverCode: String(condition.data.data.condition),
       };
-
-      axios.defaults.headers.common['X-AUTH-TOKEN'] = `${accessToken}`;
-      // console.log(accessToken);
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      const JWT_EXPIRATION_TIME = 0.5 * 3600 * 1000;
-      setInterval(logOut, JWT_EXPIRATION_TIME);
 
       return saveData;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err);
     }
   }
 );
 
-export const logOut = createAsyncThunk('user/logOut', async () => {});
+export const logOut = createAsyncThunk(
+  'user/logOut',
+  async (userData, { rejectWithValue }) => {
+    console.log('정상적 상황에서 로그아웃 실행');
+    localStorage.setItem('accessToken', null);
+
+    try {
+      const resLogout = await axios.post(api.user.logout(), {
+        withCredentials: true,
+      });
+      console.log(resLogout);
+      return resLogout;
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err);
+    }
+  }
+);
+
+export const withdraw = createAsyncThunk(
+  'user/withdraw',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const resWithdraw = await axios.delete(api.user.withdraw(), {
+        withCredentials: true,
+      });
+      console.log(resWithdraw);
+      return resWithdraw;
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLogin: false,
-    accessToken: '',
-    refreshToken: '',
-    uid: '',
+    uid: null,
+    cloverCode: '-1',
   },
-  reducers: {},
+  reducers: {
+    updateCode: (state, action) => {
+      state.cloverCode = action.payload;
+    },
+    // 토큰이 비정상적인 에러 상황일 때 실행
+    logOutWithError: (state, action) => {
+      state.isLogin = action.payload.isLogin;
+      state.uid = action.payload.uid;
+      state.cloverCode = action.payload.cloverCode;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signUp.fulfilled, (state, action) => {
         state.isLogin = true;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
         state.uid = action.payload.uid;
       })
       .addCase(signUp.rejected, (state, action) => {
@@ -80,15 +125,29 @@ const userSlice = createSlice({
       })
       .addCase(logIn.fulfilled, (state, action) => {
         state.isLogin = true;
-        state.accessToken = action.payload.accessToken;
-        state.refreshToken = action.payload.refreshToken;
         state.uid = action.payload.uid;
+        state.cloverCode = action.payload.cloverCode;
       })
       .addCase(logIn.rejected, (state, action) => {
+        console.log(action.payload.response.data);
+      })
+      .addCase(logOut.fulfilled, (state, action) => {
+        state.isLogin = false;
+        state.uid = null;
+        state.cloverCode = '-1';
+      })
+      .addCase(logOut.rejected, (state, action) => {
+        console.log(action.payload.response.data);
+      })
+      .addCase(withdraw.fulfilled, (state, action) => {
+        state.isLogin = false;
+        state.uid = null;
+      })
+      .addCase(withdraw.rejected, (state, action) => {
         console.log(action.payload.response.data);
       });
   },
 });
 
-// export const { } = userSlice.actions;
+export const { updateCode, logOutWithError } = userSlice.actions;
 export default userSlice;

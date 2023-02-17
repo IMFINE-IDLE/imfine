@@ -6,6 +6,7 @@ const iconStyle = {
   verticalAlign: 'middle',
   color: 'var(--icon-color)',
   fontSize: '1.3rem',
+  cursor: 'pointer',
 };
 
 const GlobalStyle = createGlobalStyle`
@@ -36,6 +37,18 @@ const GlobalStyle = createGlobalStyle`
     --pink-color: #FC9595;
     --red-color: #D61616;
     --default-font-color: #2D2D2D;
+    --light-blue-color: #95A9DF;
+    --clover2-color: #FFFBA1;
+    --clover3-color: #B1E49F;
+    --clover4-color: #F2C08C;
+    --clover5-color: #F58585;
+    --clover6-color: #CED0D4;
+    --clover7-color: #9CA0C7;
+    --clover8-color: #DDC3E1;
+    --clover9-color: #AFAFAF;
+
+    /* Navigation bar height */
+    --nav-height: 65px;
   }
 
   *, *::before, *::after {
@@ -73,6 +86,15 @@ const GlobalStyle = createGlobalStyle`
 
   abbr {
     text-decoration: none;
+  }
+
+  a,
+  div,
+  span,
+  input,
+  button,
+  textarea {
+    font-family: inherit;
   }
 `;
 

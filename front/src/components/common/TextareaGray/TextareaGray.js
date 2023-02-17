@@ -21,14 +21,23 @@ const Textarea = styled.textarea`
   outline: none;
   padding: ${(props) => props.padding || '1em'};
   min-width: ${(props) => props.width || '16em'};
-  min-height: 20em;
+  min-height: ${(props) => props.height || '20em'};
   margin: ${(props) => props.margin || '0'};
   overflow: hidden;
   resize: none;
   display: inline-block;
+  line-height: 1.4em;
 `;
 
-function TextareaGray({ value, setValue, width, margin, padding }) {
+function TextareaGray({
+  maxLength,
+  value,
+  setValue,
+  width,
+  height,
+  margin,
+  padding,
+}) {
   const ref = useRef();
   const onChange = (event) => {
     const v = event.target.value;
@@ -44,11 +53,13 @@ function TextareaGray({ value, setValue, width, margin, padding }) {
   return (
     <Textarea
       width={width}
+      height={height}
       margin={margin}
       ref={ref}
       value={value}
       onChange={onChange}
       padding={padding}
+      maxLength={maxLength}
     />
   );
 }

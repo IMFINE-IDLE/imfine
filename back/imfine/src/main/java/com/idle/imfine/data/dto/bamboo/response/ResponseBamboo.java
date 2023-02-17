@@ -1,14 +1,12 @@
 package com.idle.imfine.data.dto.bamboo.response;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,16 +15,9 @@ public class ResponseBamboo {
     private long bambooId;
     private String content;
     private long remainTime;
-//    private LocalDateTime createdDate;
     private int likeCount;
     private int leafCount;
-    private boolean isHeart = false;
+    private boolean isHeart;
+    private boolean hasNext;
 
-//    public ResponseBamboo(Bamboo entity) {
-//        this.bambooId = entity.getBambooId();
-//        this.content = entity.getContent();
-//        this.createdDate = entity.getCreateDate();
-//        this.likeCount = entity.getLikeCount();
-//        this.leafCount = entity.getLeafCount();
-//    }
 }
