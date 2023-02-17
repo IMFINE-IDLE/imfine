@@ -166,10 +166,15 @@ public class NotificationServiceImpl implements NotificationService {
         emitter.onCompletion(() -> {
             EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager.unbindResource(entityManagerFactory);
             EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+            LOGGER.info("에미터 컴플리션 안 {}", id);
             emitterRepository.deleteById(id);
         });
         LOGGER.info("에미터 타임아웃 {} {}", id, lastEventId);
-        emitter.onTimeout(() -> emitterRepository.deleteById(id));
+        emitter.onTimeout(() -> {
+            emitter.complete();
+            LOGGER.info("에미터 컴플리트 {}", id);
+            emitterRepository.deleteById(id);
+        });
 
         sendToClient(emitter, id, "dummy", "EventStream Created. [userId=" + uid + "]");
         LOGGER.info("EventStream Created {}", id);
