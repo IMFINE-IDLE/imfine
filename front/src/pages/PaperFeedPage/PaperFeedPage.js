@@ -48,6 +48,7 @@ function PaperFeedPage() {
     return state.user.uid;
   });
   const dispatch = useDispatch();
+  const [isConnected, setIsConnected] = useState(false);
 
   // 일기 피드 조회
   const fetchPaperFeed = async (pagination) => {
@@ -73,31 +74,45 @@ function PaperFeedPage() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       }
     );
+    function handleDummyEvent(event) {
+      if (!isConnected) {
+        setIsConnected(true);
+        return;
+      }
 
-    // eventSource.onmessage = function (event) {
-    //   if (event.type === 'dummy') {
-    //     console.log('dummydata received');
-    //   } else if (event.type === 'sse') {
-    //     console.log('the real one');
-    //     dispatch(updateNotification({ isNew: true }));
-    //   }
-    // };
-    eventSource.addEventListener('sse', function (event) {
+      console.log('dummy received message: ' + event.data);
+    }
+
+    function handleSseEvent(event) {
       console.log('sse received message: ' + event.data);
-      console.log(1);
       dispatch(updateNotification({ isNew: true }));
-      console.log(2);
-    });
+    }
 
-    eventSource.addEventListener('dummy', function (event) {
-      console.log('dumy received message: ' + event.data);
-      //setIsNew(true);
-    });
+    eventSource.addEventListener('dummy', handleDummyEvent);
+    eventSource.addEventListener('sse', handleSseEvent);
+    // before
+    // eventSource.addEventListener('sse', function (event) {
+    //   console.log('sse received message: ' + event.data);
+    //   console.log(1);
+    //   dispatch(updateNotification({ isNew: true }));
+    //   console.log(2);
+    // });
 
-    eventSource.addEventListener('error', function (event) {
-      console.log('error message: ' + event.data);
-    });
-  }, []);
+    // eventSource.addEventListener('dummy', function (event) {
+    //   console.log('dummy received message: ' + event.data);
+    //   //setIsNew(true);
+    // });
+
+    // eventSource.addEventListener('error', function (event) {
+    //   console.log('error message: ' + event.data);
+    // });
+
+    return () => {
+      eventSource.removeEventListener('dummy', handleDummyEvent);
+      eventSource.removeEventListener('sse', handleSseEvent);
+      eventSource.close();
+    };
+  }, [dispatch, isConnected]);
 
   return (
     <>
