@@ -5,6 +5,7 @@ const BoxImg = styled.div`
   ${Btn}
   width: 4em;
   height: 4em;
+  box-shadow: ${(props) => props.clicked && '0 0 10px #A9D7D0'};
 `;
 
 const TextImg = styled.p`
