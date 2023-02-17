@@ -24,6 +24,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
@@ -80,6 +82,6 @@ public class Diary extends BaseCreatedEntity{
     @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
     private List<Paper> papers;
 
-    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY)
     private List<DiaryHasSymptom> diaryHasSymptoms;
 }

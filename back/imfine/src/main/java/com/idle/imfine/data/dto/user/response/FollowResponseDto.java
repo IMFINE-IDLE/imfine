@@ -17,6 +17,7 @@ public class FollowResponseDto implements Comparable<FollowResponseDto> {
     // -> 내가 팔로우 요청한 경우 (상대가 비공개) 2
     // -> 내가 팔로우 안한 경우 3
     private int relation;
+    private boolean open;
 
     @Override
     public int compareTo(FollowResponseDto other) {

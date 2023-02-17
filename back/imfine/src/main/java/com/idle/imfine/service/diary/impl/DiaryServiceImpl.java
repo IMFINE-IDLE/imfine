@@ -84,9 +84,10 @@ public class DiaryServiceImpl implements DiaryService {
                 .medicalCode(medicalCode)
                 .title(saveDiary.getTitle())
                 .description(saveDiary.getDescription())
-                .image("background/" + (int) (Math.random() * 10))
+                .image("background/" + (int) (Math.random() * 10) + ".jpg")
                 .active(true)
                 .writer(user)
+                .open(saveDiary.isOpen())
                 .active(saveDiary.isOpen())
                 .build();
 
@@ -115,7 +116,9 @@ public class DiaryServiceImpl implements DiaryService {
         // 다이어리 찾기
         Diary foundDiary = diaryRepository.findDiaryByIdFetchDetail(diaryId)
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
-
+        if (!foundDiary.isOpen() && user.getId() != foundDiary.getWriter().getId()) {
+            throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
+        }
         // 심텀들 찾기
         List<DiaryHasSymptom> diaryHasSymptoms = diaryHasSymptomRepository.findDiaryHasSymptomByDiary(foundDiary);
         List<ResponseSymptomDto> responseSymptomDtos = new ArrayList<>();
@@ -145,6 +148,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .description(foundDiary.getDescription())
                 .name(foundDiary.getWriter().getName())
                 .medicals(medicals)
+                .isOpen(foundDiary.isOpen())
                 .beginDate(
                         foundDiary.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .endedDate(foundDiary.getEndedAt() != null ? foundDiary.getEndedAt()
@@ -158,20 +162,31 @@ public class DiaryServiceImpl implements DiaryService {
     public List<ResponseSymptomChartRecordDto> getDiarySymptomsAll(RequestSymptomChartDto requestDto) {
         LOGGER.info("[DiaryServiceImpl.getDiarySymptomsAll] 일기장 증상 차트 조회");
         LocalDate date = common.convertDateType(requestDto.getDate());
-        int minusDays = date.getDayOfWeek().getValue();
-        LocalDate startDate = date.minusDays(minusDays);
-        LocalDate endDate = startDate.plusDays(6);
+        int minusDays;
+        int findDateCount;
+        LocalDate startDate;
+        LocalDate endDate;
+        if (requestDto.getFilter().equals("week")) {
+            findDateCount = 6;
+            minusDays = date.getDayOfWeek().getValue();
+
+        } else {
+            findDateCount = date.lengthOfMonth() - 1;
+            minusDays = date.getDayOfMonth() - 1;
+        }
+        startDate = date.minusDays(minusDays);
+        endDate = startDate.plusDays(findDateCount);
 
         LOGGER.info("[DiaryServiceImpl.getDiarySymptomsAll]일기장 증상 차트 조회 시작일 {} .. 종료일 .. {}", startDate, endDate);
         Diary diary = diaryRepository.findById(requestDto.getDiaryId())
             .orElseThrow(() -> new ErrorException(DiaryErrorCode.DIARY_NOT_FOUND));
 
 
-        List<Symptom> symptomByDiary = diaryHasSymptomRepository.getAllByDiaryIdSymptomMap(
+        List<DiaryHasSymptom> symptomByDiary = diaryHasSymptomRepository.getAllByDiaryIdSymptomMap(
                 diary);
         Map<Integer, String> symptomIdByName = new HashMap<>();
         symptomByDiary.forEach(
-                symptom -> symptomIdByName.put(symptom.getId(), symptom.getName())
+                symptom -> symptomIdByName.put(symptom.getSymptom().getId(), symptom.getSymptom().getName())
         );
 
         List<PaperHasSymptom> paperHasSymptoms = paperHasSymptomRepository.findPaperHasSymptomByPaperIn(
@@ -180,7 +195,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         Map<String, List<ResponseSymptomScoreDto>> responsePureDto = new HashMap<>();
         LocalDate crtDate = startDate;
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < findDateCount + 1; i++) {
             responsePureDto.put(crtDate.toString(),new ArrayList<>());
             crtDate = crtDate.plusDays(1);
         }
@@ -199,7 +214,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         crtDate = startDate;
         List<ResponseSymptomChartRecordDto> responseDto = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < findDateCount + 1; i++) {
             String dateString = crtDate.toString();
             responseDto.add(ResponseSymptomChartRecordDto.builder()
                                 .date(dateString)
@@ -240,8 +255,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .likeCount(paper.getLikeCount())
                 .date(paper.getDate())
                 .createdAt(paper.getCreatedAt().toString())
-                .condition(String.format("%d", conditionRepository.findByUserAndDate(diary.getWriter(), paper.getDate()).orElseGet(
-                        Condition::new).getCondition()))
+                .condition(common.getDateUserCondition(paper.getDate(), paper.getDiary().getWriter()))
                 .open(paper.isOpen())
                 .image(paper.getImages().size() != 0)
                 .symptomList(makePaperSymptoms(paper))
@@ -289,15 +303,17 @@ public class DiaryServiceImpl implements DiaryService {
     public void deleteSubscribe(RequestDiarySubscribeDto requestDiarySubscribeDto) {
         LOGGER.info("[DiaryServiceImpl.deleteSubscribe]일기장 구독 삭제");
         Diary diary = diaryRepository.getById(requestDiarySubscribeDto.getDiaryId());
-        long userId = userRepository.getByUid(requestDiarySubscribeDto.getUid()).getId();
+        User user = common.getUserByUid(requestDiarySubscribeDto.getUid());
 
-        if (!subscribeRepository.existsByDiaryAndUserId(diary, userId)) {
+        if (!subscribeRepository.existsByDiaryAndUserId(diary, user.getId())) {
             throw new ErrorException(SubscribeErrorCode.SUBSCRIBE_NOT_FOUND);
         }
 
         diary.setSubscribeCount(diary.getSubscribeCount() - 1);
         diaryRepository.save(diary);
-        subscribeRepository.deleteByDiaryAndUserId(diary, userId);
+        LOGGER.info("[DiaryServiceImpl.deleteSubscribe]일기장 구독 >>> ");
+
+        subscribeRepository.deleteSubscribeByDiaryAndUserId(diary, user.getId());
         LOGGER.info("[DiaryServiceImpl.deleteSubscribe]일기장 구독 삭제 종료");
     }
 
@@ -342,6 +358,7 @@ public class DiaryServiceImpl implements DiaryService {
                         .diaryId(diary.getId())
                         .title(diary.getTitle())
                         .medicalName(diary.getMedicalCode().getName())
+                        .uid(diary.getWriter().getUid())
                         .name(diary.getWriter().getName())
                         .image(diary.getImage())
                         .subscribeCount(diary.getSubscribeCount())
@@ -392,19 +409,25 @@ public class DiaryServiceImpl implements DiaryService {
 
         List<Paper> diaryPapers = diaryRepository.findPaperByDiaryFetchPaper(diary);
 
+
+        LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제 {}", diaryPapers);
         if (diaryPapers.size() != 0) {
             List<Comment> comments = diaryRepository.findDiaryComments(diary);
             if (!comments.isEmpty()) {
                 diaryRepository.deleteComments(comments);
                 diaryRepository.deleteCommentsHeart(comments);
             }
+            LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제1");
             diaryRepository.deletePaperHasSymptom(diaryPapers);
-            diaryRepository.deletePapersHeart(diaryPapers);
+            LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제2");
+            diaryRepository.deletePapersHeart(diaryPapers.stream().map(Paper::getId).collect(
+                    Collectors.toList()));
+            LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제3");
             diaryRepository.deletePapers(diary);
         }
 
         LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 하위 엔티티 삭제");
-
+        diaryRepository.deleteDiaryHasSymptomByDiary(diary);
         diaryRepository.delete(diary);
         LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 삭제 종료");
     }
@@ -495,13 +518,10 @@ public class DiaryServiceImpl implements DiaryService {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
         int relation = common.getFollowRelation(user, other);
-        if (relation > 1 && !other.isOpen()) {
-            throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
-        }
-        List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(other);
+        List<Diary> diaries = diaryRepository.findAllByWriterAndSubscribe(other.getId());
 
         LOGGER.info("[DiaryServiceImpl.getDiarySubscribe]내가 구독한 일기장 조회 종료");
-        return getResponseDiaryListDtos(relation, diaries);
+        return getResponseDiaryListDtos(diaries);
     }
 
 
@@ -512,25 +532,23 @@ public class DiaryServiceImpl implements DiaryService {
         User user = common.getUserByUid(uid);
         User other = common.getUserByUid(otherUid);
         int relation = common.getFollowRelation(user, other);
-        if (relation > 1 && !other.isOpen()) {
-            throw new ErrorException(DiaryErrorCode.DIARY_NOT_AUTHORIZED);
-        }
-        List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(user);
+        List<Diary> diaries = diaryRepository.findByDiaryFetchMedicalCode(other);
 
         LOGGER.info("[DiaryServiceImpl.getDiaryMyWrite] 종료");
-        return getResponseDiaryListDtos(relation, diaries);
+        return getResponseDiaryListDtos(diaries);
     }
-    private List<ResponseDiaryListDto> getResponseDiaryListDtos(int relation, List<Diary> diaries) {
+    private List<ResponseDiaryListDto> getResponseDiaryListDtos(List<Diary> diaries) {
         return diaries.stream()
-                .filter(diary -> diary.isOpen() || relation == 0)
                 .map(
                     diary -> ResponseDiaryListDto.builder()
+                            .uid(diary.getWriter().getUid())
                             .diaryId(diary.getId())
                             .title(diary.getTitle())
                             .medicalName(diary.getMedicalCode().getName())
                             .name(diary.getWriter().getName())
                             .paperCount(diary.getPaperCount())
                             .subscribeCount(diary.getSubscribeCount())
+                            .open(diary.isOpen())
                             .image(diary.getImage())
                             .build()
         ).collect(Collectors.toList());

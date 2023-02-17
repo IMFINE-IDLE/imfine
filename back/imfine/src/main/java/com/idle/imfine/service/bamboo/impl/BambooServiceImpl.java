@@ -109,12 +109,12 @@ public class BambooServiceImpl implements BambooService {
 
         Slice<Bamboo> all = null;
 
-        if(filter.equals("write")) {
-            all = bambooRepository.findByWriter_IdAndCreatedAtBetween(user.getId(), start, end, pageable);
+        if(filter.equals("like")) {
+            all = bambooRepository.findByHeart(user.getId(), start, end, pageable);
         } else if(filter.equals("comment")) {
             all = bambooRepository.findByLeaves(user.getId(), start, end, pageable);
-        } else if(filter.equals("like")) {
-            all = bambooRepository.findByHeart(user.getId(), start, end, pageable);
+        } else {
+            all = bambooRepository.findByWriter_IdAndCreatedAtBetweenOrderByCreatedAtDesc(user.getId(), start, end, pageable);
         }
 
         List<Bamboo> heartBamboos = bambooRepository.findByHeartList(user.getId(), start, end);

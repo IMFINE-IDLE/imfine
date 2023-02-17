@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.Random;
 
 @Component
@@ -34,6 +35,8 @@ public class SentimentAnalysis {
     private String AWS_ACCESS_KEY;
     @Value("${aws.secret-key}")
     private String AWS_SECRET_KEY;
+    private final Random RANDOM = new SecureRandom();
+
 
     @Async
     public void analyzeText(Paper paper) {
@@ -57,7 +60,6 @@ public class SentimentAnalysis {
         LOGGER.info("[analyzeText] 감정 분석 완료 > {}", result);
 
         Sentiment sentiment = Sentiment.valueOf(result);
-        LOGGER.info(sentiment.name(), sentiment.getValue(), sentiment.getName());
 
         LOGGER.info("[analyzeText] 분석된 감정을 일기에 저장 시작");
         paper.setSentiment(sentiment.getValue());
@@ -72,8 +74,7 @@ public class SentimentAnalysis {
         String sentiment = arr[value].getName();
         String path = S3_BUCKET_PATH + "/music/" + sentiment + "/";
 
-        Random rand = new Random();
-        String filename = rand.nextInt(10) + ".mp3";
+        String filename = RANDOM.nextInt(10) + ".mp3";
 
         String fullPath = path + filename;
 

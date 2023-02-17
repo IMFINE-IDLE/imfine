@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class LeafController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BambooController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LeafController.class);
     private final LeafService leafService;
     private final NotificationService notificationService;
     private final ResponseService responseService;

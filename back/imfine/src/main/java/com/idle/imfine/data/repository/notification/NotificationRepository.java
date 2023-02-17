@@ -7,7 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    Slice<Notification> findByRecieverId(Long receiverId, Pageable pageable);
+    Slice<Notification> findByRecieverIdOrderByCreatedAtDesc(Long receiverId, Pageable pageable);
     Notification getByRecieverIdAndSenderIdAndType(Long receiverId, Long senderId, int type);
     Notification getByIdAndRecieverId(Long id, Long receiverId);
 }

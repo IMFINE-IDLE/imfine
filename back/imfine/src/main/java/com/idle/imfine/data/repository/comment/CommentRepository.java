@@ -14,7 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findCommentByHeartAndPaperIn(@Param("paperId") long paperId,
             @Param("codeId") int codeId, @Param("user") User user);
 
-    @Query("SELECT c from Comment c join fetch c.writer where c.paperId=:paperId")
+    @Query("SELECT c from Comment c join fetch c.writer where c.paperId=:paperId order by c.createdAt asc")
     List<Comment> findCommentsByFetchWriterAndPaperId(@Param("paperId") long paperId);
 
     @Modifying

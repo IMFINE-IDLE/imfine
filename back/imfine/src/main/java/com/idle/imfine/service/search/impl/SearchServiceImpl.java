@@ -93,7 +93,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<ResponseDiaryListDto> showDiarySearchList(String query, String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);
-        Slice<Diary> diaries = diaryRepository.findByTitleContainingIgnoreCaseAndOpenTrue(query, pageable);
+        Slice<Diary> diaries = diaryRepository.findByTitleContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(query, pageable);
         Set<Long> subscribeDiaryIds = subscribeRepository.getDiaryIdsByDiaries(diaries.getContent(), user.getId());
 
         return getResponseDiaryList(user, diaries, subscribeDiaryIds);
@@ -115,6 +115,7 @@ public class SearchServiceImpl implements SearchService {
                     .relation(relation)
                     .condition(condition)
                     .hasNext(users.hasNext())
+                    .open(u.isOpen())
                     .build();
             userList.add(responseDto);
         }
@@ -124,7 +125,7 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public ResponseMainPage showPaperSearchList(String query, String uid, Pageable pageable) {
         User user = common.getUserByUid(uid);
-        Slice<Paper> papers = paperRepository.findByContentContainingIgnoreCaseAndOpenTrue(query, pageable);
+        Slice<Paper> papers = paperRepository.findByContentContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(query, pageable);
         List<Paper> paperList = papers.getContent();
         Set<Long> myHeartPapers = paperRepository.findHeartPaperByUserIdAAndDiaryIn(user.getId(),
                 paperList);
@@ -146,37 +147,38 @@ public class SearchServiceImpl implements SearchService {
         return ResponseMainPage.builder()
                 .hasNext(papers.hasNext())
                 .list(papers.stream().map(
-                        paper -> ResponsePaperDtoOnlyMainPage.builder()
-                                .diaryId(paper.getDiary().getId())
-                                .title(paper.getDiary().getTitle())
-                                .content(paper.getContent())
-                                .paperId(paper.getId())
-                                .uid(paper.getDiary().getWriter().getUid())
-                                .commentCount(paper.getCommentCount())
-                                .likeCount(paper.getLikeCount())
-                                .name(paper.getDiary().getWriter().getName())
-                                .myHeart(myHeartPapers.contains(paper.getId()))
-                                .date(paper.getDate())
-                                .createdAt(common.convertDateAllType(paper.getCreatedAt()))
-                                .open(paper.isOpen())
-                                .condition(String.valueOf(papersCondition.size() == 0 ? "0" : papersCondition.get(papersCondition.stream()
-                                        .filter(condition -> {
-                                            return condition.getDate() == paper.getDate();
-                                        }).findFirst().orElseGet(Condition::new).getCondition())))
-                                .image(imageHasPaper.contains(paper.getId()))
-                                .hasNext(papers.hasNext())
-                                .symptomList(
-                                        map.containsKey(paper.getId()) ? map.get(paper.getId()).stream().map(
-                                                paperHasSymptom ->
-                                                        ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
-                                                                .symptomId(paperHasSymptom.getSymptomId())
-                                                                .symptomName(symptomIdByName.get(paperHasSymptom.getSymptomId()).getName())
-                                                                .score(paperHasSymptom.getScore())
-                                                                .build()
+                        paper -> {
+                            Diary diary = paper.getDiary();
+                            return ResponsePaperDtoOnlyMainPage.builder()
+                                    .diaryId(diary.getId())
+                                    .title(diary.getTitle())
+                                    .content(paper.getContent())
+                                    .paperId(paper.getId())
+                                    .medicalName(diary.getMedicalCode().getName())
+                                    .uid(diary.getWriter().getUid())
+                                    .commentCount(paper.getCommentCount())
+                                    .likeCount(paper.getLikeCount())
+                                    .name(paper.getDiary().getWriter().getName())
+                                    .myHeart(myHeartPapers.contains(paper.getId()))
+                                    .date(paper.getDate())
+                                    .createdAt(common.convertDateAllType(paper.getCreatedAt()))
+                                    .open(paper.isOpen())
+                                    .condition(common.getDateUserCondition(paper.getDate(), diary.getWriter()))
+                                    .image(imageHasPaper.contains(paper.getId()))
+                                    .hasNext(papers.hasNext())
+                                    .symptomList(
+                                            map.containsKey(paper.getId()) ? map.get(paper.getId()).stream().map(
+                                                    paperHasSymptom ->
+                                                            ResponsePaperSymptomRecordDtoOnlyMainPage.builder()
+                                                                    .symptomId(paperHasSymptom.getSymptomId())
+                                                                    .symptomName(symptomIdByName.get(paperHasSymptom.getSymptomId()).getName())
+                                                                    .score(paperHasSymptom.getScore())
+                                                                    .build()
 
-                                        ).collect(Collectors.toList()) :
-                                                new ArrayList<>())
-                                .build()
+                                            ).collect(Collectors.toList()) :
+                                                    new ArrayList<>())
+                                    .build();
+                        }
                 ).collect(Collectors.toList()))
                 .build();
     }

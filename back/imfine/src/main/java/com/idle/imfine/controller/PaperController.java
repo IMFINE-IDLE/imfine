@@ -9,6 +9,8 @@ import com.idle.imfine.data.dto.paper.request.RequestPaperPutDto;
 import com.idle.imfine.data.dto.paper.response.ResponseMainPage;
 import com.idle.imfine.data.dto.paper.response.ResponseModifyPaperDto;
 import com.idle.imfine.data.dto.paper.response.ResponsePaperDetailDto;
+import com.idle.imfine.errors.code.ImageErrorCode;
+import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.notification.NotificationService;
 import com.idle.imfine.service.paper.PaperService;
@@ -37,12 +39,16 @@ public class PaperController {
     @PostMapping
     public ResponseEntity<Result> postPaper(@ModelAttribute RequestPaperPostDto requestPaperPostDto, @LoginUser String uid){
         LOGGER.info("일기 생성 api 도착 userId: {} diaryId: {}", uid, requestPaperPostDto.getDiaryId());
-        try {
-            paperService.save(requestPaperPostDto, uid);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        if (requestPaperPostDto.getImages() != null && requestPaperPostDto.getImages().size() > 4) {
+            throw new ErrorException(ImageErrorCode.REQUEST_IMAGE_TOO_LARGE);
         }
-        return ResponseEntity.ok().body(responseService.getSuccessResult());
+        long paperId = -1;
+        try {
+            paperId = paperService.save(requestPaperPostDto, uid);
+        } catch (IOException e) {
+            throw new ErrorException(ImageErrorCode.IMAGE_SAVE_CONFLICT);
+        }
+        return ResponseEntity.ok().body(responseService.getSingleResult(paperId));
     }
 
     @GetMapping("/{paper-id}")
@@ -76,8 +82,7 @@ public class PaperController {
             List<String> removeImages = paperService.modifyPaper(requestPaperPutDto, uid);
             fileStore.deleteImages(removeImages);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("이미지 삭제과정에서 에러가 발생했습니다.");
+            throw new ErrorException(ImageErrorCode.IMAGE_SAVE_CONFLICT);
         }
         return ResponseEntity.ok().body(responseService.getSuccessResult());
     }

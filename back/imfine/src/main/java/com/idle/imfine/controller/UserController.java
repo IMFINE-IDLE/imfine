@@ -82,14 +82,14 @@ public class UserController {
     }
 
     @PostMapping("/check/email/send")
-    public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequestDto requestDto) {
+    public ResponseEntity<Result> sendEmail(@RequestBody SendEmailRequestDto requestDto) {
         emailService.sendEmail(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
     }
 
     @PostMapping("/check/email/confirm")
-    public ResponseEntity<?> confirmEmail(@RequestBody ConfirmEmailRequestDto requestDto) {
+    public ResponseEntity<Result> confirmEmail(@RequestBody ConfirmEmailRequestDto requestDto) {
         emailService.confirmEmail(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());
@@ -174,7 +174,7 @@ public class UserController {
     }
 
     @PutMapping("/find-password")
-    public ResponseEntity<Result> changePassword(@RequestBody ChangePasswordRequestDto requestDto) {
+    public ResponseEntity<Result> findPassword(@RequestBody FindPasswordRequestDto requestDto) {
         userService.changePassword(requestDto);
         return ResponseEntity.ok()
                 .body(responseService.getSuccessResult());

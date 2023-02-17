@@ -1,8 +1,5 @@
 package com.idle.imfine.data.dto.user.response;
 
-import com.idle.imfine.data.dto.leaf.response.ResponseLeafDto;
-import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +16,7 @@ public class SearchUserListResponseDto {
     private String uid;
     private String name;
     private int relation;
+    private boolean open;
     private boolean hasNext;
     private int condition;
 }

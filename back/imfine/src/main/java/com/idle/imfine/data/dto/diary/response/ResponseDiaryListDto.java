@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 public class ResponseDiaryListDto {
     private long diaryId;
     private int paperCount;
+    private long paperId;
+    private String uid;
     private int subscribeCount;
     private String medicalName;
     private String image;

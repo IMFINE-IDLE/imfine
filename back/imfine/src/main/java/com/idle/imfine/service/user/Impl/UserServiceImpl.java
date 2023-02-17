@@ -1,6 +1,7 @@
 package com.idle.imfine.service.user.Impl;
 
 import com.idle.imfine.config.security.JwtTokenProvider;
+import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
@@ -30,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -239,10 +241,14 @@ public class UserServiceImpl implements UserService {
         int relation = common.getFollowRelation(user, other);
 
         List<UserHasMedical> medicalCodeList = userHasMedicalRepository.findAllByUser(other);
-        List<String> medicalList = new ArrayList<>();
+        List<ResponseMedicalListDto> medicalList = new ArrayList<>();
 
         for (UserHasMedical userHasMedical : medicalCodeList) {
-            medicalList.add(userHasMedical.getMedicalCode().getName());
+            ResponseMedicalListDto medical = ResponseMedicalListDto.builder()
+                    .id(userHasMedical.getMedicalCode().getId())
+                    .name(userHasMedical.getMedicalCode().getName())
+                    .build();
+            medicalList.add(medical);
         }
 
         return SearchUserInfoResponseDto.builder()
@@ -292,11 +298,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto) {
         User user = common.getUserByUid(uid);
 
-        LOGGER.info("일단 전부 삭제....");
+        LOGGER.info("[modifyUserMedicalList] 전부 삭제 시작");
         userHasMedicalRepository.deleteAllByUser(user);
+        LOGGER.info("[modifyUserMedicalList] 전부 삭제 완료");
+
 
         for (Integer code : requestDto.getMedicalList()) {
             MedicalCode medicalCode = medicalCodeRepository.findById(code)
@@ -311,7 +320,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(ChangePasswordRequestDto requestDto) {
+    public void changePassword(FindPasswordRequestDto requestDto) {
         User user = common.getUserByUid(requestDto.getUid());
         LOGGER.info("[changePassword] 비밀번호 변경 시작");
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
@@ -333,16 +342,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public void checkIdAndEmail(String uid, String email) {
         LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 시작");
-        userRepository.findByUidAndEmail(uid, email)
-                .orElseThrow(() -> new ErrorException(UserErrorCode.USER_NOT_FOUND));
+        if (!userRepository.existsByUidAndEmail(uid, email)) {
+            LOGGER.info("[checkIdAndEmail] 회원 uid & email 불일치");
+            throw new ErrorException(UserErrorCode.USER_NOT_FOUND);
+        }
         LOGGER.info("[checkIdAndEmail] 회원 uid & email 일치 검사 성공");
     }
 
     @Override
     public void changePassword(String uid, ChangePasswordRequestDto requestDto) {
+        LOGGER.info("[changePassword] 회원 정보 요청");
         User user = common.getUserByUid(uid);
+
+        LOGGER.info("[changePassword] 비밀번호 비교 수행");
+        if (!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())) {
+            LOGGER.info("[changePassword] 비밀번호 불일치");
+            throw new ErrorException(UserErrorCode.USER_WRONG_PASSWORD);
+        }
+        LOGGER.info("[changePassword] 비밀번호 일치");
+
+
         LOGGER.info("[changePassword] 비밀번호 변경 시작");
-        user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setPassword(passwordEncoder.encode(requestDto.getNewPassword()));
         userRepository.save(user);
         LOGGER.info("[changePassword] 비밀번호 변경 완료");
     }

@@ -48,7 +48,7 @@ public class BambooController {
     @GetMapping("/detail/{bamboo-id}")
     public ResponseEntity<Result> getBambooDetail(@PathVariable("bamboo-id") long bambooId, @LoginUser String uid) {
         LOGGER.info("getBamboodetail api에 들어옴  {}", bambooId);
-        ResponseBambooDetailDto responseBambooDetailDto = bambooService.showBambooDetail(bambooId, uid);
+        var responseBambooDetailDto = bambooService.showBambooDetail(bambooId, uid);
         return ResponseEntity.ok()
                 .body(responseService.getSingleResult(responseBambooDetailDto));
     }

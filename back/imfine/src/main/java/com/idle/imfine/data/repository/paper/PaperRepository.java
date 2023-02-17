@@ -1,6 +1,7 @@
 package com.idle.imfine.data.repository.paper;
 
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.paper.Paper;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,18 +35,25 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             + "FROM Paper p "
             + "JOIN Diary d "
             + "ON p.diary.id=d.id "
-            + "WHERE d.writer.id=:userId "
-            + "OR d.writer.id IN (SELECT f.id FROM Follow f WHERE f.followingUser.id=:userId) "
-            + "OR d.id IN (SELECT s.diary.id FROM Subscribe s WHERE s.userId=:userId) ")
+            + "WHERE (d.writer.id=:userId "
+            + "OR d.writer.id IN (SELECT f.followedUser.id FROM Follow f WHERE f.followingUser.id=:userId) "
+            + "OR d.id IN (SELECT s.diary.id FROM Subscribe s WHERE s.userId=:userId) ) "
+            + "AND ( (p.open=true "
+            + "AND d.open=true )"
+            + "OR d.writer=:userId) "
+            + "order by p.createdAt desc ")
     Slice<Paper> getMainPagePaperByHs(@Param("userId") long userId, Pageable pageable);
 
     @Query("select p.id from Paper p join Heart h on h.contentsId=p.id where p in :papers and h.senderId=:userId and h.contentsCodeId=2")
     Set<Long> findHeartPaperByUserIdAAndDiaryIn(@Param("userId") long userId,
             @Param("papers") List<Paper> papers);
-    Slice<Paper> findByContentContainingIgnoreCaseAndOpenTrue(String query, Pageable pageable);
+    Slice<Paper> findByContentContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(String query, Pageable pageable);
 
     @Query("select p from Paper p join fetch p.paperHasSymptoms where p.id=:paperId")
     Optional<Paper> findByIdFetchPaperSymptom(@Param("paperId") long paperId);
-    @Query("select p from Paper p join fetch  p.comments where p.id=:paperId")
-    Optional<Paper> findByIdFetchAll(long paperId);
+    @Query("select p from Paper p where p.id=:paperId")
+    Optional<Paper> findByIdFetchAll(@Param("paperId") long paperId);
+
+    @Query("select c from Comment c where c.paperId=:paperId")
+    List<Comment> findByIdFetchComments(@Param("paperId") long paperId);
 }
