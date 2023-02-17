@@ -116,8 +116,9 @@ function NotificationPage() {
                 <>
                   <NotificationItem
                     key={item.notificationId}
+                    title={item.title}
                     notificationId={item.notificationId}
-                    title={item.contentsCodeId}
+                    contentCode={item.contentsCodeId}
                     msg={item.msg}
                     showButton={item.showButton}
                     senderUid={item.senderUid}

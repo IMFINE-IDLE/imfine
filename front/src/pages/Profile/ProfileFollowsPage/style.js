@@ -26,8 +26,20 @@ const ProfileFollowListWrapper = styled.div`
   }
 `;
 
+const ProfileFollowActiveBar = styled.div`
+  width: 4.8em;
+  height: 0.3em;
+  background-color: var(--main-color);
+  position: absolute;
+  top: 1.3em;
+  right: ${(props) => props.left && '0'};
+  left: ${(props) => props.left || '-0.5em'};
+  border-radius: 0 0 0.2em 0.2em;
+`;
+
 export {
   ProfileFollowContainer,
   ProfileFollowListContainer,
   ProfileFollowListWrapper,
+  ProfileFollowActiveBar,
 };

@@ -313,6 +313,7 @@ function PaperModifyPage() {
           margin={'1em'}
           value={value}
           setValue={setValue}
+          maxLength={250}
         />
       </FlexDiv>
       <TopDiv>

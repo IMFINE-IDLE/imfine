@@ -8,7 +8,7 @@ const BoxBambooOuter = styled.div`
 `;
 
 const BoxShadBamboo = styled(BoxShad)`
-  height: 9em;
+  height: 100%;
   padding: 1em;
   border-radius: 25px;
   margin: 2em 0;
@@ -20,8 +20,9 @@ const BoxShadBamboo = styled(BoxShad)`
 const TextContent = styled.label`
   position: relative;
   font-weight: 400;
+  line-height: 1.3em;
   font-size: 1em;
-  margin: ${(props) => props.margin || '2em 1em 1em 1em'};
+  margin: ${(props) => props.margin || '2em 1em 0em 1em'};
 `;
 
 const LabelOuter = styled.div`
@@ -34,6 +35,7 @@ const LabelOuter = styled.div`
 const LabelStatus = styled.label`
   font-weight: 400;
   font-size: 1em;
+
   padding: ${(props) => props.margin || '1em'};
 `;
 

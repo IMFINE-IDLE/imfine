@@ -10,11 +10,23 @@ import { FiMessageCircle } from 'react-icons/fi';
 import CommentCreate from '../../components/Paper/CommentCreate/CommentCreate';
 import { useCallback } from 'react';
 import BtnToTop from '../../components/Paper/BtnToTop/BtnToTop';
+import { useRef } from 'react';
 
 function PaperDetailPage() {
   const navigate = useNavigate();
   const { paperId } = useParams();
   const [paperDetail, setPaperDetail] = useState({});
+  const commentBoxRef = useRef();
+  const isCommentCreated = useRef(false);
+
+  const scrollToBottom = () => {
+    commentBoxRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+    console.log(commentBoxRef);
+  };
+
   const fetchPaperDetail = useCallback(async () => {
     try {
       const res = await axios.get(api.paper.paperDetail(paperId));
@@ -31,6 +43,14 @@ function PaperDetailPage() {
     fetchPaperDetail();
   }, [fetchPaperDetail]);
 
+  useEffect(() => {
+    console.log('come in');
+    if (isCommentCreated.current) {
+      scrollToBottom();
+      isCommentCreated.current = false;
+    }
+  }, [paperDetail]);
+
   // 댓글 작성
   const createComment = async (commentContent) => {
     try {
@@ -40,6 +60,7 @@ function PaperDetailPage() {
       });
       console.log(res);
       fetchPaperDetail();
+      isCommentCreated.current = true;
     } catch (err) {
       console.log(err.response.data);
     }
@@ -82,7 +103,7 @@ function PaperDetailPage() {
     <>
       <NavBarBasic Back BackgroundColor={'light'} BackFromPaperDetail />
       <PaperItemDetail paper={paperDetail} paperId={paperId} />
-      <BoxComment>
+      <BoxComment ref={commentBoxRef}>
         <FiMessageCircle />
         <span> 댓글 {paperDetail?.comments?.length}개</span>
         {paperDetail?.comments?.map((comment) => (
@@ -96,9 +117,12 @@ function PaperDetailPage() {
         ))}
         {paperDetail?.comments?.length > 0 && <BtnToTop />}
       </BoxComment>
-      <CommentCreate createComment={createComment} />
+      <CommentCreate
+        createComment={createComment}
+        // setWriteComment={setWriteComment}
+      />
     </>
   );
 }
 
-export default PaperDetailPage;
+export default React.memo(PaperDetailPage);

@@ -9,6 +9,7 @@ import PickedItemList from '../../../components/PickedItemList/PickedItemList';
 import SymptomGraph from '../../../components/SymptomGraph/SymptomGraph';
 import StatusCalendar from '../../../components/StatusCalendar/StatusCalendar';
 import { ReactComponent as BookmarkSvg } from './bookmark.svg';
+import { FiTrash2 } from 'react-icons/fi';
 import { BoxShad } from '../../../components/common/BoxShad/BoxShad';
 import { FlexDiv } from '../../../components/common/FlexDiv/FlexDiv';
 import { DiaryBoxGrad } from '../DiaryCreateConfirmPage/style';
@@ -43,8 +44,10 @@ const DiaryDetailPage = () => {
 
       setDiaryInfo(res.data.data);
     } catch (err) {
-      alert(err.response.data.message);
-      navigate(-1);
+      if (err.response.status === 404) {
+        navigate('/404', { replace: true });
+      }
+      console.error(err);
     }
   };
 
@@ -61,6 +64,16 @@ const DiaryDetailPage = () => {
           diaryId,
         });
       }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 일기장 삭제 요청
+  const fetchDeleteDiary = async () => {
+    try {
+      await axios.delete(api.diary.deleteDiary(diaryId));
+      navigate(-1);
     } catch (err) {
       console.error(err);
     }
@@ -103,16 +116,22 @@ const DiaryDetailPage = () => {
             </FlexDiv>
             <FlexDiv width="4em" justify="end">
               {isMine ? (
-                <img
-                  src="/assets/icons/edit.svg"
-                  alt="edit"
-                  style={{ padding: '0.8125em 0', cursor: 'pointer' }}
-                  onClick={() =>
-                    navigate(`/diary/${diaryId}/modify`, {
-                      state: infoToModifyPage,
-                    })
-                  }
-                />
+                <>
+                  <img
+                    src="/assets/icons/edit.svg"
+                    alt="edit"
+                    style={{ padding: '0.8125em 0', cursor: 'pointer' }}
+                    onClick={() =>
+                      navigate(`/diary/${diaryId}/modify`, {
+                        state: infoToModifyPage,
+                      })
+                    }
+                  />
+                  <FiTrash2
+                    onClick={fetchDeleteDiary}
+                    style={{ marginLeft: '0.5em' }}
+                  />
+                </>
               ) : (
                 <FlexDiv justify="end" style={{ position: 'relative' }}>
                   <BookmarkSvg
@@ -239,16 +258,42 @@ const DiaryDetailPage = () => {
                 src="/assets/icons/chevron-left.svg"
                 alt="prev"
               />
-              <span
-                onClick={() => setIsWeekly((prev) => !prev)}
-                style={{ color: 'var(--icon-color)' }}
-              >
-                {isWeekly ? '주간' : '월간'}
-              </span>
+              <FlexDiv width="auto">
+                <span
+                  onClick={() => setIsWeekly((prev) => !prev)}
+                  style={{
+                    color: isWeekly
+                      ? 'var(--main-color)'
+                      : 'var(--gray700-color)',
+                    fontWeight: isWeekly ? '700' : '400',
+                    cursor: 'pointer',
+                  }}
+                >
+                  주간
+                </span>
+                <span style={{ color: 'var(--icon-color)' }}>
+                  &nbsp;/&nbsp;
+                </span>
+                <span
+                  onClick={() => setIsWeekly((prev) => !prev)}
+                  style={{
+                    color: isWeekly
+                      ? 'var(--gray700-color)'
+                      : 'var(--main-color)',
+                    fontWeight: isWeekly ? '400' : '700',
+                    cursor: 'pointer',
+                  }}
+                >
+                  월간
+                </span>
+              </FlexDiv>
               <img
                 onClick={() => {
                   const unit = isWeekly ? 'weeks' : 'months';
-                  setDate((prev) => moment(prev).add(1, unit).format());
+                  const newDate = moment(date).add(1, unit).format();
+                  if (moment(newDate).isSameOrBefore(moment(), unit)) {
+                    setDate(newDate);
+                  }
                 }}
                 src="/assets/icons/chevron-right.svg"
                 alt="next"

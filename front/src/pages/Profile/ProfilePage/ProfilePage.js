@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import api from '../../../api/api';
@@ -20,6 +20,8 @@ function ProfilePage() {
     fetchUserInfo();
   }, [isMine]);
 
+  const navigate = useNavigate();
+
   // userInfo 가져오기
   const fetchUserInfo = async () => {
     try {
@@ -27,6 +29,9 @@ function ProfilePage() {
 
       await setUserInfo(response.data.data);
     } catch (err) {
+      if (err.response.status === 404) {
+        navigate('/404', { replace: true });
+      }
       console.error(err);
     }
   };

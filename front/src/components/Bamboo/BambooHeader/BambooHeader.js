@@ -36,7 +36,7 @@ function BambooHeader({
               direction={'column'}
               justify={'flex-start'}
               align={'flex-start'}
-              padding={'0.3em 0 0 1.3em'}
+              padding={'0.8em 0 0 1.5em'}
             >
               <Content padding={''}>{subTitle}</Content>
               <Content>{secondSubTitle}</Content>

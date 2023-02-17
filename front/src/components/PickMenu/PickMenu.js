@@ -29,10 +29,13 @@ const PickMenu = forwardRef(
       dataListModified.push(dataList.slice(0 + 4 * i, 4 + 4 * i));
     }
 
-    // // 메뉴 클릭시 서브메뉴 열기 위한 ref
+    const [detailList, setDetailList] = useState(null);
+
+    // 메뉴 클릭시 서브메뉴 열기 위한 ref
     const { subMenuSection, clickedSubMenuSectionIdx, clickedMenuId } = ref;
 
-    const [detailList, setDetailList] = useState(null);
+    // 메뉴 클릭시 대분류에 클릭여부 표시하기 위한 state
+    const [clickedId, setClickedId] = useState(null);
 
     // 질병/수술 또는 증상 세부목록 가져오기
     const fetchDetailList = async (id) => {
@@ -46,6 +49,11 @@ const PickMenu = forwardRef(
 
     // 메뉴 하나 클릭했을 때
     const handleMenuClick = (e, idx, id) => {
+      e.preventDefault();
+
+      // 클릭한 메뉴의 idx를 clickedIdx에 저장
+      setClickedId(id);
+
       // 최초 클릭시 클릭된 메뉴의 id와 행의 idx를 저장하고 subMenu 영역 열기
       if (!clickedMenuId.current) {
         clickedMenuId.current = id;
@@ -64,7 +72,6 @@ const PickMenu = forwardRef(
       // 클릭된 메뉴의 id와 행의 idx를 저장하고 새 subMenu를 열기
       else if (clickedMenuId.current !== id) {
         const currentIdx = clickedSubMenuSectionIdx.current;
-        console.log('curi', currentIdx);
         subMenuSection.current[currentIdx].lastElementChild.style.display =
           'none';
         clickedMenuId.current = id;
@@ -77,13 +84,13 @@ const PickMenu = forwardRef(
     };
 
     return (
-      <FlexDiv wrap="wrap" padding="0 1em">
+      <FlexDiv wrap="wrap" padding="0 1.5em">
         {dataListModified?.map((dataList, idx) => (
           <PickMenuRowContainer
             ref={(el) => (subMenuSection.current[idx] = el)}
             key={idx}
           >
-            <FlexDiv justify="space-bewteen" gap="1.25em" padding="0 0 1em 0">
+            <FlexDiv justify="space-between" align="start" padding="0 0 1em 0">
               {dataList.map(({ id, name, image }) => (
                 <IconSymptom
                   type={type}
@@ -92,6 +99,7 @@ const PickMenu = forwardRef(
                   name={name}
                   image={image}
                   handleMenuClick={(e) => handleMenuClick(e, idx, id)}
+                  clicked={Boolean(id === clickedId)}
                 />
               ))}
             </FlexDiv>

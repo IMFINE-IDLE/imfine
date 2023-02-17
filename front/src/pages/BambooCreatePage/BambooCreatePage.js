@@ -52,6 +52,7 @@ function BambooCreatePage() {
           margin={'1em'}
           value={value}
           setValue={setValue}
+          maxLength={300}
         />
       </DivTextArea>
       <DivTextArea>

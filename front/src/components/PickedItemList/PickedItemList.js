@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import { FlexDiv } from '../common/FlexDiv/FlexDiv';
 import {
   PickedTitle,
@@ -49,7 +49,19 @@ const PickedItemList = (
 
   // 질병/수술 또는 증상이 추가, 제거될 때마다 가로스크롤 overflow 여부를 체크
   useEffect(() => {
-    checkOverflow();
+    if (
+      type === 'medical' &&
+      !!medicalDivOut?.current &&
+      !!medicalDivIn?.current
+    )
+      checkOverflow?.(type);
+
+    if (
+      type === 'symptom' &&
+      !!symptomDivOut?.current &&
+      !!symptomDivIn?.current
+    )
+      checkOverflow?.(type);
   }, [medicals, symptoms]);
 
   return (

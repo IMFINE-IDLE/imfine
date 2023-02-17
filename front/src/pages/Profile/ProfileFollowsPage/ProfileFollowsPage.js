@@ -11,6 +11,7 @@ import {
   ProfileFollowContainer,
   ProfileFollowListContainer,
   ProfileFollowListWrapper,
+  ProfileFollowActiveBar,
 } from './style';
 
 const ProfileFollowsPage = () => {
@@ -64,26 +65,35 @@ const ProfileFollowsPage = () => {
             )}
           </FlexDiv>
           <FlexDiv padding="1.2em">
-            <FlexDiv justify="end" onClick={() => setFollowType('팔로잉')}>
-              <ProfileItemSpan pointer={true}>팔로잉</ProfileItemSpan>
-              <ProfileItemSpan pointer={true}>
-                {followingCnt >= 1000
-                  ? parseInt(followingCnt / 1000) + 'k'
-                  : followingCnt}
-              </ProfileItemSpan>
+            <FlexDiv style={{ position: 'relative' }}>
+              <FlexDiv justify="end" onClick={() => setFollowType('팔로잉')}>
+                <ProfileItemSpan pointer={true}>팔로잉</ProfileItemSpan>
+                <ProfileItemSpan pointer={true}>
+                  {followingCnt >= 1000
+                    ? parseInt(followingCnt / 1000) + 'k'
+                    : followingCnt}
+                </ProfileItemSpan>
+              </FlexDiv>
+              {followType === '팔로잉' && (
+                <ProfileFollowActiveBar left={true} />
+              )}
             </FlexDiv>
+
             <ProfileItemSpan></ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
             <ProfileItemSpan></ProfileItemSpan>
 
-            <FlexDiv justify="start" onClick={() => setFollowType('팔로워')}>
-              <ProfileItemSpan pointer={true}>팔로워</ProfileItemSpan>
-              <ProfileItemSpan pointer={true}>
-                {followerCnt >= 1000
-                  ? parseInt(followerCnt / 1000) + 'k'
-                  : followerCnt}
-              </ProfileItemSpan>
+            <FlexDiv style={{ position: 'relative' }}>
+              <FlexDiv justify="start" onClick={() => setFollowType('팔로워')}>
+                <ProfileItemSpan pointer={true}>팔로워</ProfileItemSpan>
+                <ProfileItemSpan pointer={true}>
+                  {followerCnt >= 1000
+                    ? parseInt(followerCnt / 1000) + 'k'
+                    : followerCnt}
+                </ProfileItemSpan>
+              </FlexDiv>
+              {followType === '팔로워' && <ProfileFollowActiveBar />}
             </FlexDiv>
           </FlexDiv>
         </FlexDiv>

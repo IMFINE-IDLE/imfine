@@ -63,10 +63,10 @@ const PickMenuTab = ({
     clickedSubMenuSectionIdx: useRef(null),
     clickedMenuId: useRef(null),
     // 질병/수술 또는 증상 추가시 스크롤 자동이동시키기 위한 ref
-    medicalDivOut: useRef(0),
-    medicalDivIn: useRef(0),
-    symptomDivOut: useRef(0),
-    symptomDivIn: useRef(0),
+    medicalDivOut: useRef(null),
+    medicalDivIn: useRef(null),
+    symptomDivOut: useRef(null),
+    symptomDivIn: useRef(null),
   };
 
   /*
@@ -89,6 +89,8 @@ const PickMenuTab = ({
     let idx = prevList.findIndex((item) => item.id === itemId);
     // addOnly가 true일 경우 추가만 가능
     if (addOnly) {
+      // 증상 추가 요청할 때는 id(fk)가 아니라 symptomId랑 비교해야 함
+      let idx = prevList.findIndex((item) => item.symptomId === itemId);
       if (idx === -1) {
         prevList.push({ id: itemId, name: itemName });
       }
@@ -135,14 +137,27 @@ const PickMenuTab = ({
     refs.clickedMenuId.current = null;
   };
 
-  // 질병/수술 또는 증상 하나 선택할 때마다 범위 넘어가는지 체크
-  const checkOverflow = () => {
-    if (
-      refs.medicalDivOut.current.clientWidth <=
-      refs.medicalDivIn.current.clientWidth
-    )
-      refs.medicalDivOut.current.scrollLeft += 1000;
-    else refs.medicalDivOut.current.scrollLeft -= 1000;
+  // 질병/수술 또는 증상 하나 선택할 때마다 범위 넘어가면 스크롤
+  const checkOverflow = (type) => {
+    // 질병/수술
+    if (type === 'medical') {
+      if (
+        refs.medicalDivOut.current.clientWidth <=
+        refs.medicalDivIn.current.clientWidth
+      )
+        refs.medicalDivOut.current.scrollLeft += 1000;
+      else refs.medicalDivOut.current.scrollLeft -= 1000;
+    }
+
+    // 증상
+    if (type === 'symptom') {
+      if (
+        refs.symptomDivOut.current.clientWidth <=
+        refs.symptomDivIn.current.clientWidth
+      )
+        refs.symptomDivOut.current.scrollLeft += 1000;
+      else refs.symptomDivOut.current.scrollLeft -= 1000;
+    }
   };
 
   // 탭 하단에 탭 컨텐츠로 표시할 질병/수술 또는 증상 목록들

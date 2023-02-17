@@ -91,6 +91,7 @@ const api = {
   },
   diary: {
     postDiary: () => URL + DIARY,
+    deleteDiary: (diaryId) => URL + DIARY + `/${diaryId}`,
     getDiaryList: () => URL + DIARY + '/list',
     getDiaryInfo: (diaryId) => URL + DIARY + `/${diaryId}`,
     setDiarySubscribe: () => URL + DIARY + '/subscribe',
