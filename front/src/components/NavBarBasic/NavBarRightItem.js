@@ -17,7 +17,7 @@ function NavBarRightItem({ isNew }) {
             <NavLink to="/noti">
               <BiBell
                 style={{
-                  color: 'var(--red-color)',
+                  color: 'var(--main-color)',
                 }}
               />
             </NavLink>
