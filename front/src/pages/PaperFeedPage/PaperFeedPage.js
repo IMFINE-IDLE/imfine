@@ -96,7 +96,6 @@ function PaperFeedPage() {
 
     eventSource.addEventListener('error', function (event) {
       console.log('error message: ' + event.data);
-      eventSource.close();
     });
   }, []);
 
