@@ -159,7 +159,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     public SseEmitter subscribe(String uid, String lastEventId) {
         LOGGER.info("SseEmitter subscribe");
-        String id = uid + "_" + System.currentTimeMillis();
+        String id = uid;
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
         LOGGER.info("에미터 커플리션 {} {}", id, lastEventId);
