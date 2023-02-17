@@ -1,12 +1,11 @@
 package com.idle.imfine.data.entity.bamboo;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.leaf.Leaf;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,16 +19,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Bamboo extends BaseCreatedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,16 +42,12 @@ public class Bamboo extends BaseCreatedEntity {
     private int declarationCount;
     @Column(nullable = false)
     private int leafCount;
-    @Column
-    @CreatedDate
+    @Column(nullable = false)
     private LocalDateTime deleteAt;
     @ManyToOne
     @JoinColumn(name="writer_id")
     private User writer;
     @OneToMany(mappedBy = "bamboo", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Leaf> leaves = new ArrayList<>();
+    private List<Leaf> leaves;
 
-    public void declarationAdd() {
-        this.declarationCount += 1;
-    }
 }

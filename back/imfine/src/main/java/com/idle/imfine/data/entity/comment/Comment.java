@@ -2,6 +2,7 @@ package com.idle.imfine.data.entity.comment;
 
 import com.idle.imfine.data.entity.BaseCreatedEntity;
 import com.idle.imfine.data.entity.User;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,6 +16,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @Setter
@@ -29,6 +32,7 @@ public class Comment extends BaseCreatedEntity {
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User writer;
 
     @JoinColumn

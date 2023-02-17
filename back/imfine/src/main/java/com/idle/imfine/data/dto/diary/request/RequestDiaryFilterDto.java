@@ -16,6 +16,7 @@ import lombok.ToString;
 @Builder
 public class RequestDiaryFilterDto {
     private String tab;
+    private String uid;
     private List<Integer> medicalId;
     private List<Integer> symptomId;
 }

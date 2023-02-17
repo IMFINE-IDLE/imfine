@@ -18,13 +18,7 @@ public class ResponseBambooDetailDto {
     private LocalDateTime createdDate;
     private int likeCount;
     private int leafCount;
-    private boolean isHeart = false;
+    private boolean isHeart;
     private List<ResponseLeafDto> leaf;
-//    public ResponseBambooDetail setLeaf(List<ResponseLeaf> leaf) {
-//        this.leaf = leaf;
-//        return this;
-//    }
 
-//    public ResponseBambooDetail() {
-//    }
 }

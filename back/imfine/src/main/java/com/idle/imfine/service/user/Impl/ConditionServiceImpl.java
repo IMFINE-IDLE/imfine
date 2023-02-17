@@ -31,9 +31,11 @@ public class ConditionServiceImpl implements ConditionService {
     @Override
     public void createCondition(String uid, ConditionRequestDto requestDto) {
         User user = common.getUserByUid(uid);
+        LOGGER.info("[createCondition] 유저 조회 완료");
         LocalDate date = common.convertDateType(requestDto.getDate());
 
         if (conditionRepository.existsByUserAndDate(user, date)) {
+            LOGGER.info("[createCondition] 이미 컨디션을 설정했습니다.");
             throw new ErrorException(ConditionErrorCode.CONDITION_ALREADY_EXIST);
         }
 
@@ -44,11 +46,13 @@ public class ConditionServiceImpl implements ConditionService {
                 .build();
 
         conditionRepository.save(condition);
+        LOGGER.info("[createCondition] 컨디션을 저장했습니다.");
     }
 
     @Override
     public void modifyCondition(String uid, ConditionRequestDto requestDto) {
         User user = common.getUserByUid(uid);
+        LOGGER.info("[modifyCondition] 유저 조회 완료.");
         LocalDate date = common.convertDateType(requestDto.getDate());
 
         Condition condition = conditionRepository.findByUserAndDate(user, date)
@@ -56,15 +60,19 @@ public class ConditionServiceImpl implements ConditionService {
 
         condition.setCondition(requestDto.getCondition());
         conditionRepository.save(condition);
+        LOGGER.info("[modifyCondition] 컨디션 수정 완료.");
     }
 
     @Override
     public ConditionResponseDto getConditionByDay(String uid, String day) {
         User user = common.getUserByUid(uid);
+        LOGGER.info("[getConditionByDay] 유저 조회 완료.");
         LocalDate date = common.convertDateType(day);
 
         Condition condition = conditionRepository.findByUserAndDate(user, date)
                 .orElse(null);
+
+        LOGGER.info("[getConditionByDay] 컨디션 조회 완료.");
 
         return ConditionResponseDto.builder()
                 .condition(condition != null ? condition.getCondition() : -1)
@@ -74,11 +82,12 @@ public class ConditionServiceImpl implements ConditionService {
     @Override
     public Map<String, String> getAllCondtionByMonth(String uid, String month) {
         User user = common.getUserByUid(uid);
+        LOGGER.info("[getAllCondtionByMonth] 유저 조회 완료.");
+
         LocalDate startDate = common.convertDateType(month + "-01");
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
 
         Map<String, String> responseDto = new HashMap<>();
-
         List<Condition> conditions = conditionRepository.findAllByUserAndDateBetween(user, startDate, endDate);
 
         for (Condition condition : conditions) {
@@ -86,6 +95,7 @@ public class ConditionServiceImpl implements ConditionService {
             String con = String.valueOf(condition.getCondition());
             responseDto.put(day, con);
         }
+        LOGGER.info("[getAllCondtionByMonth] {} ~ {} 컨디션 목록 조회 완료.", startDate, endDate);
 
         return responseDto;
     }

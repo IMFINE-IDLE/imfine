@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ResponseMedicalListDto {
-     private int medicalId;
-     private String medicalName;
+     private int id;
+     private String name;
 }
