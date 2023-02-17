@@ -66,39 +66,6 @@ function PaperFeedPage() {
     if (hasNext) fetchPaperFeed(page);
   }, [page, hasNext]);
 
-  useEffect(() => {
-    let eventSource = new EventSourcePolyfill(
-      `https://i8a809.p.ssafy.io/api/sse?uid=${userId}`,
-      {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      }
-    );
-
-    // eventSource.onmessage = function (event) {
-    //   if (event.type === 'dummy') {
-    //     console.log('dummydata received');
-    //   } else if (event.type === 'sse') {
-    //     console.log('the real one');
-    //     dispatch(updateNotification({ isNew: true }));
-    //   }
-    // };
-    eventSource.addEventListener('sse', function (event) {
-      console.log('sse received message: ' + event.data);
-      console.log(1);
-      dispatch(updateNotification({ isNew: true }));
-      console.log(2);
-    });
-
-    eventSource.addEventListener('dummy', function (event) {
-      console.log('dumy received message: ' + event.data);
-      //setIsNew(true);
-    });
-
-    eventSource.addEventListener('error', function (event) {
-      console.log('error message: ' + event.data);
-    });
-  }, []);
-
   return (
     <>
       <NavBarBasic />
@@ -123,7 +90,6 @@ function PaperFeedPage() {
           <Circle small />
           <Circle />
           <div ref={observer} />
-          {isLoading && <p>로딩중...</p>}
           <BtnToTop />
         </BoxPaperFeed>
       )}
