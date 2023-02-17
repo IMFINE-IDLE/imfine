@@ -23,13 +23,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
+import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RequiredArgsConstructor
@@ -44,6 +48,7 @@ public class NotificationServiceImpl implements NotificationService {
     private final PaperRepository paperRepository;
     private final CommentRepository commentRepository;
     private final Common common;
+    private final EntityManagerFactory entityManagerFactory;
 
     @Override
     @Transactional
@@ -158,7 +163,11 @@ public class NotificationServiceImpl implements NotificationService {
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
         LOGGER.info("에미터 커플리션 {} {}", id, lastEventId);
-        emitter.onCompletion(() -> emitterRepository.deleteById(id));
+        emitter.onCompletion(() -> {
+            EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager.unbindResource(entityManagerFactory);
+            EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+            emitterRepository.deleteById(id);
+        });
         LOGGER.info("에미터 타임아웃 {} {}", id, lastEventId);
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
 
