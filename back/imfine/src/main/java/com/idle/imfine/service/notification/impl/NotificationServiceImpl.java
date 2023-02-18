@@ -159,7 +159,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     public SseEmitter subscribe(String uid, String lastEventId) {
         LOGGER.info("SseEmitter subscribe");
-        String id = uid;
+        String id = uid + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
         LOGGER.info("에미터 커플리션 {} {}", id, lastEventId);
@@ -201,6 +201,7 @@ public class NotificationServiceImpl implements NotificationService {
             LOGGER.info("sendToClient 성공");
         } catch (IOException exception) {
             emitterRepository.deleteById(id);
+            emitter.complete();
             throw new ConnectionException("연결 오류!");
         }
     }
