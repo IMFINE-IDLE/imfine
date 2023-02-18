@@ -251,11 +251,14 @@ public class UserServiceImpl implements UserService {
             medicalList.add(medical);
         }
 
+        int followingCount = Math.toIntExact(followRepository.countFollowings(other));
+        int followerCount = Math.toIntExact(followRepository.countFollowers(other));
+
         return SearchUserInfoResponseDto.builder()
                 .name(other.getName())
                 .open(other.isOpen())
-                .followingCount(other.getFollowingCount())
-                .followerCount(other.getFollowerCount())
+                .followingCount(followingCount)
+                .followerCount(followerCount)
                 .medicalList(medicalList)
                 .condition(condition)
                 .relation(relation)

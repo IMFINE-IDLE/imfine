@@ -27,4 +27,10 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     void deleteByFollowingUserAndFollowedUser(User followingUser, User followedUser);
 
+    @Query("select count(f) from Follow f where f.followedUser = :followedUser")
+    Long countFollowers(@Param("followedUser") User user);
+
+    @Query("select count(f) from Follow f where f.followingUser = :followingUser")
+    Long countFollowings(@Param("followingUser") User user);
+
 }
