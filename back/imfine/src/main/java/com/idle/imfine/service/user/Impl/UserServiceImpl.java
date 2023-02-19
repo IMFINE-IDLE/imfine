@@ -219,6 +219,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void withdrawal(String uid) {
         LOGGER.info("[withdrawal] 회뤈탈퇴 시도");
         User user = common.getUserByUid(uid);
