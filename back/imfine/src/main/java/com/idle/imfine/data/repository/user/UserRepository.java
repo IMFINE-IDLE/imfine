@@ -2,6 +2,7 @@ package com.idle.imfine.data.repository.user;
 
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.entity.bamboo.Bamboo;
 import com.idle.imfine.data.entity.paper.Paper;
 import java.util.Optional;
 import javax.swing.text.html.Option;
@@ -36,4 +37,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("delete from Leaf l where l.writer = :writer")
     void deleteLeavesByWriter(@Param("writer") User writer);
+
+    @Modifying
+    @Query("delete from Bamboo b where b.writer = :writer")
+    void deleteBamboosByWriter(@Param("writer") User writer);
+
+    @Query("select b from Bamboo b where b.writer=:writer")
+    List<Bamboo> findByBamboo(@Param("writer") User writer);
 }
