@@ -19,6 +19,8 @@ import {
   Toggle,
   ToggleLabel,
 } from './style';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateAutoPlay } from '../../../store/slice/userSlice';
 
 const ProfileConfigPage = () => {
   /*
@@ -35,6 +37,11 @@ const ProfileConfigPage = () => {
   const [newName, setNewName] = useState(name);
   const [medicals, setMedicals] = useState(medicalList);
   const [isOpen, setIsOpen] = useState(open);
+  const paperMusicAutoPlay = useSelector(
+    (state) => state.user.paperMusicAutoPlay
+  );
+  const [musicAutoPlay, setMusicAutoPlay] = useState(paperMusicAutoPlay);
+  const dispatch = useDispatch();
 
   // 성공메시지, 에러메시지
   const [nameOKMsg, setNameOKMsg] = useState('');
@@ -118,6 +125,9 @@ const ProfileConfigPage = () => {
 
       // 공개/비공개 설정이 변경되었을 경우 변경요청
       if (open !== isOpen) await fetchUpdateOpenStatus();
+
+      if (musicAutoPlay !== paperMusicAutoPlay)
+        dispatch(updateAutoPlay(musicAutoPlay));
 
       navigate(`/profile/${uid}`);
     } catch (err) {
@@ -228,6 +238,30 @@ const ProfileConfigPage = () => {
                 checked={isOpen}
               />
               <ToggleLabel htmlFor="toggle" />
+            </ToggleWrapper>
+          </ToggleContainer>
+        </ProfileConfigOptionBtn>
+
+        <ProfileConfigOptionBtn
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <span>일기 음악 자동 재생 설정하기</span>
+          <ToggleContainer>
+            <ToggleText>
+              {musicAutoPlay ? '자동 재생 켜기' : '자동 재생 끄기'}
+            </ToggleText>
+            <ToggleWrapper>
+              <Toggle
+                id="toggleAutoPlay"
+                type="checkbox"
+                onChange={() => setMusicAutoPlay((prev) => !prev)}
+                checked={musicAutoPlay}
+              />
+              <ToggleLabel htmlFor="toggleAutoPlay" />
             </ToggleWrapper>
           </ToggleContainer>
         </ProfileConfigOptionBtn>

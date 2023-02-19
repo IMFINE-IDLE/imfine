@@ -3,8 +3,6 @@ import axios from 'axios';
 import moment from 'moment';
 import api from '../../api/api';
 
-// localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
-
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
@@ -96,22 +94,38 @@ export const withdraw = createAsyncThunk(
   }
 );
 
+export const fetchMusicAutoPlay = createAsyncThunk(
+  'user/fetchMusicAutoPlay',
+  async ({ rejectWithValue }) => {
+    try {
+      // await axios.get
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue(err);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLogin: false,
     uid: null,
     cloverCode: '-1',
+    paperMusicAutoPlay: true,
   },
   reducers: {
+    // 토큰이 비정상적인 에러 상황일 때 실행
     updateCode: (state, action) => {
       state.cloverCode = action.payload;
     },
-    // 토큰이 비정상적인 에러 상황일 때 실행
     logOutWithError: (state, action) => {
       state.isLogin = action.payload.isLogin;
       state.uid = action.payload.uid;
       state.cloverCode = action.payload.cloverCode;
+    },
+    updateAutoPlay: (state, action) => {
+      state.paperMusicAutoPlay = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -145,9 +159,16 @@ const userSlice = createSlice({
       })
       .addCase(withdraw.rejected, (state, action) => {
         console.log(action.payload.response.data);
+      })
+      .addCase(fetchMusicAutoPlay.fulfilled, (state, action) => {
+        state.paperMusicAutoPlay = action.payload;
+      })
+      .addCase(fetchMusicAutoPlay.rejected, (state, action) => {
+        console.log(action.payload.response.data);
       });
   },
 });
 
-export const { updateCode, logOutWithError } = userSlice.actions;
+export const { updateCode, logOutWithError, updateAutoPlay } =
+  userSlice.actions;
 export default userSlice;
