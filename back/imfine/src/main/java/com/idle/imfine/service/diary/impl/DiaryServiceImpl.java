@@ -415,7 +415,8 @@ public class DiaryServiceImpl implements DiaryService {
             List<Comment> comments = diaryRepository.findDiaryComments(diary);
             if (!comments.isEmpty()) {
                 diaryRepository.deleteComments(comments);
-                diaryRepository.deleteCommentsHeart(comments);
+                diaryRepository.deleteCommentsHeart(comments.stream().map(Comment::getId).collect(
+                    Collectors.toList()));
             }
             LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제1");
             diaryRepository.deletePaperHasSymptom(diaryPapers);
