@@ -145,6 +145,13 @@ public class UserController {
                 .body(responseService.getSuccessResult());
     }
 
+    @PutMapping("/play")
+    public ResponseEntity<Result> modifyUserPlay(@LoginUser String loginUid, @RequestBody ModifyUserPlayRequestDto requestDto) {
+        userService.modifyUserPlay(loginUid, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
     @PutMapping("/medical")
     public ResponseEntity<Result> modifyUserMedicalList(@LoginUser String loginUid, @RequestBody ModifyUserMedicalListRequestDto requestDto) {
         userService.modifyUserMedicalList(loginUid, requestDto);

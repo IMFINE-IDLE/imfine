@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
                 .name(requestDto.getName())
                 .email(requestDto.getEmail())
                 .open(true)
+                .play(true)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
@@ -321,6 +322,15 @@ public class UserServiceImpl implements UserService {
             }
             LOGGER.info("[modifyUserOpen] 요청 모두 수락 완료");
         }
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void modifyUserPlay(String uid, ModifyUserPlayRequestDto requestDto) {
+        LOGGER.info("[modifyUserPlay] 음악 자동시작 설정");
+        User user = common.getUserByUid(uid);
+        user.setPlay(requestDto.isPlay());
 
         userRepository.save(user);
     }
