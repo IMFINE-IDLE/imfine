@@ -125,4 +125,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Modifying
     @Query("delete from DiaryHasSymptom dhs Where dhs.diary = :diary ")
     void deleteDiaryHasSymptomByDiary(@Param("diary") Diary diary);
+
+    @Modifying
+    @Query("delete from Comment c Where c.writer = :writer ")
+    void deleteCommentsByWriter(@Param("writer") User writer);
 }

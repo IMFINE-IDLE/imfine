@@ -242,6 +242,9 @@ public class UserServiceImpl implements UserService {
         for (Diary d : diaries) {
             diaryService.deleteDiary(d.getId(), user.getUid());
         }
+        diaryRepository.deleteCommentsByWriter(user);
+        userRepository.deleteLeavesByWriter(user);
+
         LOGGER.info("[withdrawal] 회뤈탈퇴 성공");
     }
 
