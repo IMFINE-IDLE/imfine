@@ -101,7 +101,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     @Query("delete from Heart h "
             + "where h.contentsCodeId=3 "
             + "and h.contentsId in :comments ")
-    void deleteCommentsHeart(@Param("comments") List<Comment> comments);
+    void deleteCommentsHeart(@Param("comments") List<Long> comments);
 
     @Modifying
     @Query("delete from Comment c where c in :comments ")
