@@ -9,10 +9,13 @@ import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.FollowWait;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.UserHasMedical;
+import com.idle.imfine.data.entity.bamboo.Bamboo;
 import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.medical.MedicalCode;
 import com.idle.imfine.data.entity.paper.Paper;
+import com.idle.imfine.data.repository.bamboo.BambooRepository;
 import com.idle.imfine.data.repository.diary.DiaryRepository;
+import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
 import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
@@ -60,6 +63,8 @@ public class UserServiceImpl implements UserService {
     private final FollowService followService;
     private final DiaryRepository diaryRepository;
     private final DiaryService diaryService;
+    private final BambooRepository bambooRepository;
+    private final LeafRepository leafRepository;
 
     @Override
     public Map<String, Object> signUp(SignUpRequestDto requestDto) {
@@ -240,7 +245,10 @@ public class UserServiceImpl implements UserService {
 
         List<Diary> diaries = diaryRepository.findAllByWriter(user);
         diaryRepository.deleteCommentsByWriter(user);
+        List<Bamboo> bamboos = userRepository.findByBamboo(user);
+        leafRepository.deleteLeavesBy(bamboos);
         userRepository.deleteLeavesByWriter(user);
+        userRepository.deleteBamboosByWriter(user);
         for (Diary d : diaries) {
             diaryService.deleteDiary(d.getId(), user.getUid());
         }
