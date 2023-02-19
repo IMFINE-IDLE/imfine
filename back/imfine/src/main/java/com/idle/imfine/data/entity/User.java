@@ -50,6 +50,9 @@ public class User extends BaseCreatedEntity implements UserDetails {
     @Column(nullable = false, columnDefinition = "TINYINT(1)")
     private boolean open;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean play;
+
     @ColumnDefault("0")
     @Column(nullable = false)
     private int followingCount;

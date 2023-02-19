@@ -2,6 +2,7 @@ package com.idle.imfine.data.repository.paper;
 
 import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.comment.Comment;
+import com.idle.imfine.data.entity.image.Image;
 import com.idle.imfine.data.entity.paper.Paper;
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Set;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -56,4 +58,11 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
 
     @Query("select c from Comment c where c.paperId=:paperId")
     List<Comment> findByIdFetchComments(@Param("paperId") long paperId);
+
+    @Query("select i from Image i where i.paperId in :paperIds")
+    List<Image> findImagesByPapers(@Param("paperIds") List<Long> diaryPapers);
+
+    @Modifying
+    @Query("Delete from Image i where i.paperId in :paperIds")
+    void deleteImagesByPapers(@Param("paperIds") List<Long> diaryPapers);
 }
