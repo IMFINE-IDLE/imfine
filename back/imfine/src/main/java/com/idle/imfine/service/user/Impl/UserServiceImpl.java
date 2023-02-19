@@ -5,11 +5,16 @@ import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
+import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.FollowWait;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.UserHasMedical;
+import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.medical.MedicalCode;
+import com.idle.imfine.data.entity.paper.Paper;
+import com.idle.imfine.data.repository.diary.DiaryRepository;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
+import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.data.repository.user.FollowWaitRepository;
 import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
@@ -20,6 +25,7 @@ import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.errors.token.TokenNotFoundException;
 import com.idle.imfine.service.Common;
+import com.idle.imfine.service.diary.DiaryService;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -52,6 +58,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final FollowService followService;
+    private final DiaryRepository diaryRepository;
+    private final DiaryService diaryService;
 
     @Override
     public Map<String, Object> signUp(SignUpRequestDto requestDto) {
@@ -229,6 +237,11 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("[withdrawal] 팔로잉들의 팔로워 수 감소 완료");
 
         userRepository.deleteById(user.getId());
+
+        List<Diary> diaries = diaryRepository.findAllByWriter(user);
+        for (Diary d : diaries) {
+            diaryService.deleteDiary(d.getId(), user.getUid());
+        }
         LOGGER.info("[withdrawal] 회뤈탈퇴 성공");
     }
 
