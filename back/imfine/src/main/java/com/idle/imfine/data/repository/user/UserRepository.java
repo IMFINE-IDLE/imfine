@@ -32,4 +32,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Slice<User> findByNameContainingIgnoreCase(String query, Pageable pageable);
     @Query("select p from Paper p where p.diary in :diaries")
     List<Paper> findPapersByDiaries(@Param("diaries") List<Diary> diaries);
+
+    @Modifying
+    @Query("delete from Leaf l where l.writer = :writer")
+    void deleteLeavesByWriter(@Param("writer") User writer);
 }
