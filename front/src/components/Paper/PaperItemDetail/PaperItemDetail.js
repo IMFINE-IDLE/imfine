@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import api from '../../../api/api';
 import { getPaperDate, getTimeDifference } from '../../../utils/paperUtils';
@@ -60,6 +61,11 @@ function PaperItemDetail({ paperId, paper }) {
   // 일기 신고 모달
   const [paperReportModalOpen, setPaperReportModalOpen] = useState(false);
 
+  // 음악 자동 재생 여부
+  const paperMusicAutoPlay = useSelector(
+    (state) => state.user.paperMusicAutoPlay
+  );
+
   return (
     <>
       <BoxPaperDetail
@@ -96,6 +102,7 @@ function PaperItemDetail({ paperId, paper }) {
                     src={musicURL}
                     controls
                     controlsList="nodownload noplaybackrate"
+                    autoPlay={paperMusicAutoPlay}
                   />
                 )}
               </BoxTopAudio>
