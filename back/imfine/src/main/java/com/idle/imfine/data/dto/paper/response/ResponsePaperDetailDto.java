@@ -31,4 +31,5 @@ public class ResponsePaperDetailDto {
     private List<String> images;
     private List<ResponseCommentDto> comments;
     private String musicURL;
+    private boolean play;
 }

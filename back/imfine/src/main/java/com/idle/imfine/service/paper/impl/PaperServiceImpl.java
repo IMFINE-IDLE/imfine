@@ -442,6 +442,7 @@ public class PaperServiceImpl implements PaperService {
                         user.getId(), 2, paper.getId()))
                 .comments(comments)
                 .musicURL(musicURL)
+                .play(user.isPlay())
                 .build();
 
     }
