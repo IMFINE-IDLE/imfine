@@ -236,15 +236,15 @@ public class UserServiceImpl implements UserService {
         }
         LOGGER.info("[withdrawal] 팔로잉들의 팔로워 수 감소 완료");
 
-        userRepository.deleteById(user.getId());
 
         List<Diary> diaries = diaryRepository.findAllByWriter(user);
+        diaryRepository.deleteCommentsByWriter(user);
+        userRepository.deleteLeavesByWriter(user);
         for (Diary d : diaries) {
             diaryService.deleteDiary(d.getId(), user.getUid());
         }
-        diaryRepository.deleteCommentsByWriter(user);
-        userRepository.deleteLeavesByWriter(user);
 
+        userRepository.deleteById(user.getId());
         LOGGER.info("[withdrawal] 회뤈탈퇴 성공");
     }
 
