@@ -17,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -38,6 +40,7 @@ public class Leaf extends BaseCreatedEntity {
 
     @ManyToOne
     @JoinColumn(name="writer_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     User writer;
 
     @ManyToOne
