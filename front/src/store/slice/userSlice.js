@@ -111,9 +111,6 @@ const userSlice = createSlice({
       state.uid = action.payload.uid;
       state.cloverCode = action.payload.cloverCode;
     },
-    updateAutoPlay: (state, action) => {
-      state.paperMusicAutoPlay = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder

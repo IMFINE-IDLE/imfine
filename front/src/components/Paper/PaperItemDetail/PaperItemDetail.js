@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import api from '../../../api/api';
 import { getPaperDate, getTimeDifference } from '../../../utils/paperUtils';
