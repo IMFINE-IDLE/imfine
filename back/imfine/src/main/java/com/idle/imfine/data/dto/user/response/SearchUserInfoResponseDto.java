@@ -12,7 +12,8 @@ import lombok.Getter;
 public class SearchUserInfoResponseDto {
 
     private String name;
-    private Boolean open;
+    private boolean open;
+    private boolean play;
     private Integer followingCount;
     private Integer followerCount;
     private List<ResponseMedicalListDto> medicalList;
