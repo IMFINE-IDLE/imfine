@@ -1,6 +1,7 @@
 package com.idle.imfine.data.repository.paper;
 
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.image.Image;
 import com.idle.imfine.data.entity.paper.Paper;
@@ -19,6 +20,9 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     Optional<Paper> getByDiary_IdAndDate(long diaryId, LocalDate date);
     List<Paper> findAllByDiaryInAndDate(List<Diary> diaries, LocalDate date);
 
+    @Query("select p from Paper p where p.date=:date and p.diary in :diaries and (p.diary.writer=:writer or p.open = true)")
+    List<Paper> findAllByDiaryInAndDateAndOpenTrueJPQL(@Param("diaries") List<Diary> diaries, @Param("date") LocalDate date, @Param("writer") User writer);
+    
     @Query("select p from Paper p join fetch Diary d on p.diary=d where p.id=:paperId")
     Optional<Paper> findPaperByPaperIdJoinDiary(@Param("paperId") long paperId);
 //and p.date between :startDate and :endDate
