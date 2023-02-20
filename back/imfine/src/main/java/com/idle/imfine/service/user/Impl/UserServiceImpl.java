@@ -283,6 +283,7 @@ public class UserServiceImpl implements UserService {
         return SearchUserInfoResponseDto.builder()
                 .name(other.getName())
                 .open(other.isOpen())
+                .play(other.isPlay())
                 .followingCount(followingCount)
                 .followerCount(followerCount)
                 .medicalList(medicalList)
