@@ -39,6 +39,7 @@ const api = {
     updateOpenStatus: () => URL + USERS + '/open',
     getCloverCode: (params) =>
       URL + USERS + `/${params.uid}/condition/${params.date}`,
+    updatePlayStatus: () => URL + USERS + '/play',
   },
   paper: {
     paperFeed: (page) => URL + PAPER + `/list?page=${page}&tab=date`,

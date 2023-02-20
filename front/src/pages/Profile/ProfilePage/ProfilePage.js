@@ -71,6 +71,7 @@ function ProfilePage() {
         relation={userInfo.relation}
         uid={uid}
         fetchUserInfo={fetchUserInfo}
+        play={userInfo.play}
       />
 
       <Tabs tabArr={tabArr} btnWidth="6.25em"></Tabs>

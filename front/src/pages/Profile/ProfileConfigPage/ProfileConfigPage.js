@@ -25,7 +25,7 @@ const ProfileConfigPage = () => {
    * Hooks
    */
   const { uid } = useParams();
-  const { name, medicalList, open, medicalsOpen } = useLocation().state;
+  const { name, medicalList, open, medicalsOpen, play } = useLocation().state;
 
   // 상세내용 보여주기용 state
   const [showChangeName, setShowChangeName] = useState(false);
@@ -35,6 +35,7 @@ const ProfileConfigPage = () => {
   const [newName, setNewName] = useState(name);
   const [medicals, setMedicals] = useState(medicalList);
   const [isOpen, setIsOpen] = useState(open);
+  const [isAutoPlay, setIsAutoPlay] = useState(play);
 
   // 성공메시지, 에러메시지
   const [nameOKMsg, setNameOKMsg] = useState('');
@@ -107,6 +108,17 @@ const ProfileConfigPage = () => {
     }
   };
 
+  // 음악 자동 재생 여부 변경 요청
+  const updatePlayStatus = async () => {
+    const data = { play: isAutoPlay };
+    try {
+      const res = await axios.put(api.user.updatePlayStatus(), data);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   // 변경사항 반영하기 버튼 클릭시
   const handleSubmit = async () => {
     try {
@@ -118,6 +130,9 @@ const ProfileConfigPage = () => {
 
       // 공개/비공개 설정이 변경되었을 경우 변경요청
       if (open !== isOpen) await fetchUpdateOpenStatus();
+
+      // 음악 자동 재생 여부 변경되었을 경우 변경요청
+      if (isAutoPlay !== play) await updatePlayStatus();
 
       navigate(`/profile/${uid}`);
     } catch (err) {
@@ -228,6 +243,28 @@ const ProfileConfigPage = () => {
                 checked={isOpen}
               />
               <ToggleLabel htmlFor="toggle" />
+            </ToggleWrapper>
+          </ToggleContainer>
+        </ProfileConfigOptionBtn>
+
+        <ProfileConfigOptionBtn
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <span>일기 음악 자동 재생 설정하기</span>
+          <ToggleContainer>
+            <ToggleText>{isAutoPlay ? 'ON' : 'OFF'}</ToggleText>
+            <ToggleWrapper>
+              <Toggle
+                id="toggleAutoPlay"
+                type="checkbox"
+                onChange={() => setIsAutoPlay((prev) => !prev)}
+                checked={isAutoPlay}
+              />
+              <ToggleLabel htmlFor="toggleAutoPlay" />
             </ToggleWrapper>
           </ToggleContainer>
         </ProfileConfigOptionBtn>

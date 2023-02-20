@@ -39,6 +39,7 @@ function PaperItemDetail({ paperId, paper }) {
     createdAt,
     date,
     musicURL,
+    play,
   } = paper;
 
   // 이미지 크게 보기 모달
@@ -96,6 +97,7 @@ function PaperItemDetail({ paperId, paper }) {
                     src={musicURL}
                     controls
                     controlsList="nodownload noplaybackrate"
+                    autoPlay={play}
                   />
                 )}
               </BoxTopAudio>

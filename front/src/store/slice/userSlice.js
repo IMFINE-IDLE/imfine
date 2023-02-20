@@ -3,8 +3,6 @@ import axios from 'axios';
 import moment from 'moment';
 import api from '../../api/api';
 
-// localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
-
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
@@ -104,10 +102,10 @@ const userSlice = createSlice({
     cloverCode: '-1',
   },
   reducers: {
+    // 토큰이 비정상적인 에러 상황일 때 실행
     updateCode: (state, action) => {
       state.cloverCode = action.payload;
     },
-    // 토큰이 비정상적인 에러 상황일 때 실행
     logOutWithError: (state, action) => {
       state.isLogin = action.payload.isLogin;
       state.uid = action.payload.uid;
