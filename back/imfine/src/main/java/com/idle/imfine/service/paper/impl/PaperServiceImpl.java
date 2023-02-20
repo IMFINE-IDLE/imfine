@@ -474,8 +474,8 @@ public class PaperServiceImpl implements PaperService {
         User user = common.getUserByUid(uid);
         List<Diary> diaries = diaryRepository.findAllByWriter(user);
 
-        List<Paper> papers = paperRepository.findAllByDiaryInAndDate(diaries,
-                common.convertDateType(date));
+        List<Paper> papers = paperRepository.findAllByDiaryInAndDateAndOpenTrueJPQL(diaries,
+                common.convertDateType(date), user);
         LOGGER.info("[PaperService.getAllPaperByDate] 일기 오늘의 종료");
         return papers.stream().map(
                 paper -> ResponsePaperDto.builder()
