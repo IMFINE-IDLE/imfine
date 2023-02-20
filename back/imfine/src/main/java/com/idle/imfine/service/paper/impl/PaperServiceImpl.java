@@ -468,14 +468,14 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ResponsePaperDto> getAllPaperByDate(String uid, String date) {
+    public List<ResponsePaperDto> getAllPaperByDate(String otherUid, String date, String uid) {
         LOGGER.info("[PaperService.getAllPaperByDate] 일기 오늘의 일기 service");
-
-        User user = common.getUserByUid(uid);
+        User loginUser = common.getUserByUid(uid);
+        User user = common.getUserByUid(otherUid);
         List<Diary> diaries = diaryRepository.findAllByWriter(user);
 
         List<Paper> papers = paperRepository.findAllByDiaryInAndDateAndOpenTrueJPQL(diaries,
-                common.convertDateType(date), user);
+                common.convertDateType(date), loginUser);
         LOGGER.info("[PaperService.getAllPaperByDate] 일기 오늘의 종료");
         return papers.stream().map(
                 paper -> ResponsePaperDto.builder()
