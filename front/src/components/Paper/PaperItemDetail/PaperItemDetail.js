@@ -40,6 +40,7 @@ function PaperItemDetail({ paperId, paper }) {
     createdAt,
     date,
     musicURL,
+    play,
   } = paper;
 
   // 이미지 크게 보기 모달
@@ -60,11 +61,6 @@ function PaperItemDetail({ paperId, paper }) {
   const [paperDeleteModalOpen, setPaperDeleteModalOpen] = useState(false);
   // 일기 신고 모달
   const [paperReportModalOpen, setPaperReportModalOpen] = useState(false);
-
-  // 음악 자동 재생 여부
-  const paperMusicAutoPlay = useSelector(
-    (state) => state.user.paperMusicAutoPlay
-  );
 
   return (
     <>
@@ -102,7 +98,7 @@ function PaperItemDetail({ paperId, paper }) {
                     src={musicURL}
                     controls
                     controlsList="nodownload noplaybackrate"
-                    autoPlay={paperMusicAutoPlay}
+                    autoPlay={play}
                   />
                 )}
               </BoxTopAudio>

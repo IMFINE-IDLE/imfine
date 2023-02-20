@@ -94,25 +94,12 @@ export const withdraw = createAsyncThunk(
   }
 );
 
-export const fetchMusicAutoPlay = createAsyncThunk(
-  'user/fetchMusicAutoPlay',
-  async ({ rejectWithValue }) => {
-    try {
-      // await axios.get
-    } catch (err) {
-      console.log(err);
-      return rejectWithValue(err);
-    }
-  }
-);
-
 const userSlice = createSlice({
   name: 'user',
   initialState: {
     isLogin: false,
     uid: null,
     cloverCode: '-1',
-    paperMusicAutoPlay: true,
   },
   reducers: {
     // 토큰이 비정상적인 에러 상황일 때 실행
@@ -159,16 +146,9 @@ const userSlice = createSlice({
       })
       .addCase(withdraw.rejected, (state, action) => {
         console.log(action.payload.response.data);
-      })
-      .addCase(fetchMusicAutoPlay.fulfilled, (state, action) => {
-        state.paperMusicAutoPlay = action.payload;
-      })
-      .addCase(fetchMusicAutoPlay.rejected, (state, action) => {
-        console.log(action.payload.response.data);
       });
   },
 });
 
-export const { updateCode, logOutWithError, updateAutoPlay } =
-  userSlice.actions;
+export const { updateCode, logOutWithError } = userSlice.actions;
 export default userSlice;
