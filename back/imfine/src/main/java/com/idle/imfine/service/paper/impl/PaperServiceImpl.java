@@ -144,6 +144,7 @@ public class PaperServiceImpl implements PaperService {
             paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
         }
         diary.setPaperCount(diary.getPaperCount() + 1);
+        diaryRepository.save(diary);
         LOGGER.info("[PaperService.save] 일기 저장 종료");
         return savedPaper.getId();
     }
@@ -159,7 +160,7 @@ public class PaperServiceImpl implements PaperService {
 
         Diary paperDiary = foundPaper.getDiary();
         paperDiary.setPaperCount(paperDiary.getPaperCount() - 1);
-
+        diaryRepository.save(paperDiary);
         LOGGER.info("[PaperService.delete] 일기 삭제 service");
         if (!foundPaper.getComments().isEmpty()) {
             LOGGER.info("[PaperService.delete] 일기 댓글관련 삭제1");
