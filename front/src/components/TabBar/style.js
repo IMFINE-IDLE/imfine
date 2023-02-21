@@ -62,6 +62,7 @@ const MainClover = styled(Clover)`
   ${({ width }) => css`
     position: absolute;
     top: -2em;
+    bottom: -0.1em;
     left: calc(50% - ${width} / 2);
   `}
 `;

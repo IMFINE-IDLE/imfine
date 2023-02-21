@@ -1,0 +1,16 @@
+.cloverAnimation {
+  animation: clicked 1s 1;
+}
+
+@keyframes clicked {
+  30% {
+    bottom: -5em;
+    transform-origin: bottom center;
+    transform: scale(1.1, 0.75);
+  }
+  80% {
+    bottom: -0.1em;
+    transform-origin: bottom center;
+    transform: scaleY(1.1);
+  }
+}

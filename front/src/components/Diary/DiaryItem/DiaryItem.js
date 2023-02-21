@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BoxNoShad } from '../../common/BoxNoShad/BoxNoShad';
 import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
+import { ReactComponent as BookmarkSmall } from './bookmark-small.svg';
 import {
   DiaryItemContainer,
   DiaryItemPrivate,
@@ -15,6 +16,7 @@ const DiaryItem = ({
   image,
   medicalName,
   name,
+  mySubscribe,
   paperCount,
   subscribeCount,
   open,
@@ -52,7 +54,7 @@ const DiaryItem = ({
             </DiaryItemSpan>
           </FlexDiv>
           <FlexDiv>
-            <img src="/assets/icons/bookmark-small.svg" alt="subscribe count" />
+            <BookmarkSmall fill={mySubscribe ? 'var(--main-color)' : 'none'} />
             <DiaryItemSpan fontSize="0.7em" padding="0 0.5em">
               {subscribeCount}
             </DiaryItemSpan>
