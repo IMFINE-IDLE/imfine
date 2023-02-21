@@ -143,7 +143,6 @@ public class PaperServiceImpl implements PaperService {
                 );
             paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
         }
-        diary.setPaperCount(diary.getPaperCount() + 1);
         diaryRepository.save(diary);
         LOGGER.info("[PaperService.save] 일기 저장 종료");
         return savedPaper.getId();
