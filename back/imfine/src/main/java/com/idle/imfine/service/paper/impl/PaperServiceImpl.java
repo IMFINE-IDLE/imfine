@@ -132,7 +132,7 @@ public class PaperServiceImpl implements PaperService {
             imageRepository.saveAll(saveImage);
         }
 //        LOGGER.info("[PaperService.save] 증상 저장");
-        if (requestPaperPostDto.getSymptoms().size() != 0) {
+        if (requestPaperPostDto.getSymptoms() != null && requestPaperPostDto.getSymptoms().size() != 0) {
             LOGGER.info("[PaperService.save] 증상 존재, 증상기록 저장");
             Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
                 symptomRecord -> PaperHasSymptom.builder()
