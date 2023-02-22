@@ -430,7 +430,7 @@ public class PaperServiceImpl implements PaperService {
                 .name(writer.getName())
                 .content(paper.getContent())
                 .likeCount(paper.getLikeCount())
-                .commentCount(paper.getCommentCount())
+                .commentCount(paper.getComments().size())
                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                 .date(String.valueOf(paper.getDate()))
                 .condition(common.getDateUserCondition(paper.getDate(), writer))
