@@ -59,10 +59,17 @@ public class NotificationServiceImpl implements NotificationService {
         Slice<Notification> all = notificationRepository.findByRecieverIdOrderByCreatedAtDesc(user.getId(), pageable);
 
         for (Notification n : all) {
-            User sender = userRepository.findById(n.getSenderId()).get();
+            Optional<User> sender = userRepository.findById(n.getSenderId());
+            String uId = null;
+            String userName = null;
+            if (sender.isEmpty()) {
+                continue;
+            }
+            uId = sender.get().getUid();
+            userName = sender.get().getName();
+
             User receiver = userRepository.findById(n.getRecieverId()).get();
-            String uId = sender.getUid();
-            String userName = sender.getName();
+
             String title = null;
             if (n.getContentsCodeId() == 1) {
                 Optional<Diary> diary = diaryRepository.findById(n.getContentsId());
@@ -88,7 +95,7 @@ public class NotificationServiceImpl implements NotificationService {
             }
 
             if (n.getContentsCodeId() == 6
-                    && common.getFollowRelation(sender, receiver) == 2) {
+                    && common.getFollowRelation(sender.get(), receiver) == 2) {
                 ResponseNotification notification = ResponseNotification.builder()
                         .notificationId(n.getId())
                         .senderUid(uId)
