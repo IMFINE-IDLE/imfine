@@ -4,7 +4,9 @@ import BoxBambooFeed from '../BoxBambooFeed/BoxBambooFeed';
 import axios from 'axios';
 import api from '../../../api/api';
 import BtnToTop from '../../Paper/BtnToTop/BtnToTop';
-import { Blank } from './style';
+import { Blank, BoxInner, TextBubble } from './style';
+import { Clover } from '../../common/Clover/Clover';
+
 function BoxMineBamboo() {
   const [bambooList, setBambooList] = useState([]);
   const [page, setPage] = useState(0);
@@ -73,7 +75,7 @@ function BoxMineBamboo() {
     fetchMyBambooFeed(page);
   }, [page]);
 
-  if (bambooList) {
+  if (bambooList.length > 0) {
     return (
       <>
         <FlexDiv direction={'column'}>
@@ -95,7 +97,18 @@ function BoxMineBamboo() {
       </>
     );
   } else {
-    return <FlexDiv direction={'column'}>심어진 대나무가 없어요!</FlexDiv>;
+    return (
+      <FlexDiv direction={'column'}>
+        <BoxInner>
+          <TextBubble>
+            <p>작성한 대나무가 없어요!</p>
+          </TextBubble>
+          <div>
+            <Clover code={'1'} width={'100'} height={'100'} />
+          </div>
+        </BoxInner>
+      </FlexDiv>
+    );
   }
 }
 
