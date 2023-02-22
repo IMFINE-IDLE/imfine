@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { BoxShad } from '../../components/common/BoxShad/BoxShad';
-
+import { BoxShad } from '../../common/BoxShad/BoxShad';
 const BoxBambooOuter = styled.div`
   padding: ${(props) => props.padding || '0px'};
 `;
@@ -69,6 +68,10 @@ const LTBambooImg = styled.img.attrs({
   margin-right: 0.2em;
 `;
 
+const Blank = styled.div`
+  padding: 2.5em;
+  width: 100%;
+`;
 export {
   BoxBambooOuter,
   BoxShadBamboo,
@@ -79,4 +82,5 @@ export {
   BasicBambooImg,
   LTBambooImg,
   LBBambooImg,
+  Blank,
 };

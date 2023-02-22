@@ -5,14 +5,11 @@ import axios from 'axios';
 import api from '../../../api/api';
 import BtnToTop from '../../Paper/BtnToTop/BtnToTop';
 import { Blank } from './style';
-function BoxBamboo() {
-  //console.log(res);
+function BoxMineBamboo() {
   const [bambooList, setBambooList] = useState([]);
-
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
-
   // paging
   const observerRef = useRef();
   const observer = (element) => {
@@ -29,6 +26,19 @@ function BoxBamboo() {
     });
 
     element && observerRef.current.observe(element);
+  };
+  // 내가 쓴 대나무 관련 글들 get
+  const fetchMyBambooFeed = async (pagination) => {
+    try {
+      const res = await axios.get(api.bamboo.getMyBambooFeed(pagination), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      setBambooList((prev) => prev.concat(res.data.data));
+      const data = res.data.data[res.data.data.length - 1];
+      setHasNext((prev) => (prev = data.hasNext));
+    } catch (err) {
+      console.log('err occured', err);
+    }
   };
 
   // 대나무 좋아요 post
@@ -59,22 +69,8 @@ function BoxBamboo() {
     }
   };
 
-  // 대나무 ALL
-  const fetchBambooFeed = async (pagination) => {
-    try {
-      const res = await axios.get(api.bamboo.getBambooFeed(pagination), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      setBambooList((prev) => prev.concat(res.data.data));
-      const data = res.data.data[res.data.data.length - 1];
-      setHasNext((prev) => (prev = data.hasNext));
-    } catch (err) {
-      console.log('err occured', err);
-    }
-  };
-
   useEffect(() => {
-    fetchBambooFeed(page);
+    fetchMyBambooFeed(page);
   }, [page]);
 
   if (bambooList) {
@@ -103,4 +99,4 @@ function BoxBamboo() {
   }
 }
 
-export default BoxBamboo;
+export default BoxMineBamboo;

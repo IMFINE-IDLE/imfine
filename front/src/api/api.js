@@ -79,8 +79,9 @@ const api = {
   bamboo: {
     postBamboo: () => URL + BAMBOO,
     getDetailBamboo: (params) => URL + BAMBOO + `/detail/${params}`,
-    getBambooFeed: (filter) => URL + BAMBOO + `/list?filter=${filter}`,
-    getMyBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
+    getBambooFeed: (page) => URL + BAMBOO + `/list?filter=latest&page=${page}`,
+    getMyBambooFeed: (page) =>
+      URL + BAMBOO + `/myactive?filter=write&page=${page}`,
     getUserBambooFeed: (filter) => URL + BAMBOO + `/myactive?filter=${filter}`,
     postBambooLike: () => URL + BAMBOO + '/like',
     deleteBambooLike: (bambooId) => URL + BAMBOO + `/like/${bambooId}`,
