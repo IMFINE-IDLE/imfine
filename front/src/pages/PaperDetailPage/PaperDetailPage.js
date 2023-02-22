@@ -24,7 +24,7 @@ function PaperDetailPage() {
       behavior: 'smooth',
       block: 'end',
     });
-    console.log(commentBoxRef);
+    // console.log(commentBoxRef);
   };
 
   const fetchPaperDetail = useCallback(async () => {
@@ -44,7 +44,7 @@ function PaperDetailPage() {
   }, [fetchPaperDetail]);
 
   useEffect(() => {
-    console.log('come in');
+    // console.log('come in');
     if (isCommentCreated.current) {
       scrollToBottom();
       isCommentCreated.current = false;
