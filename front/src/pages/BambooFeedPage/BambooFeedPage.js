@@ -6,6 +6,7 @@ import Tabs from '../../components/Tabs/Tabs';
 import TabBar from '../../components/TabBar/TabBar';
 import BambooBtnFloat from '../../components/Bamboo/BambooBtnFloat/BambooBtnFloat';
 import BoxBamboo from '../../components/Bamboo/BoxBamboo/BoxBamboo';
+import BoxMineBamboo from '../../components/Bamboo/BoxMineBamboo/BoxMineBamboo';
 import NavBarBasic from '../../components/NavBarBasic/NavBarBasic';
 
 function BambooFeedPage() {
@@ -48,12 +49,12 @@ function BambooFeedPage() {
     {
       idx: 0,
       tabName: '모두보기',
-      tabContent: <BoxBamboo res={responseAll} />,
+      tabContent: <BoxBamboo />,
     },
     {
       idx: 1,
       tabName: '나의활동',
-      tabContent: <BoxBamboo res={myresponseAll} />,
+      tabContent: <BoxMineBamboo />,
     },
   ];
   return (
