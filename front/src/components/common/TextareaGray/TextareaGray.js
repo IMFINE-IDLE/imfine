@@ -27,6 +27,7 @@ const Textarea = styled.textarea`
   resize: none;
   display: inline-block;
   line-height: 1.4em;
+  placeholder: ${(props) => props.placeholder || ''};
 `;
 
 function TextareaGray({
@@ -37,6 +38,7 @@ function TextareaGray({
   height,
   margin,
   padding,
+  placeholder,
 }) {
   const ref = useRef();
   const onChange = (event) => {
@@ -60,6 +62,7 @@ function TextareaGray({
       onChange={onChange}
       padding={padding}
       maxLength={maxLength}
+      placeholder={placeholder}
     />
   );
 }

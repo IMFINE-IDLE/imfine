@@ -30,4 +30,17 @@ const RateSymptom = styled.div`
   max-width: 7em;
 `;
 
-export { BoxSymptomRating, DivSymptom, LabelSymptom, RateSymptom };
+const ContentLabel = styled.label`
+  font-weight: ${(props) => props.weight || '700'};
+  color: var(--icon-color);
+  margin: ${(props) => props.margin || '1em'};
+  line-height: 1.5em;
+`;
+
+export {
+  BoxSymptomRating,
+  DivSymptom,
+  LabelSymptom,
+  RateSymptom,
+  ContentLabel,
+};

@@ -281,6 +281,9 @@ function PaperCreatePage() {
               value={value}
               setValue={setValue}
               maxLength={250}
+              placeholder={
+                '증상을 추가하면 일기 내용이 날라가요. 주의해주세요!'
+              }
             />
           </FlexDiv>
           <TopDiv>

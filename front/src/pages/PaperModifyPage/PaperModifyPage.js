@@ -30,6 +30,7 @@ import {
 } from '../../components/PickSymptom/style';
 import DiaryInfo from '../../components/Diary/DiaryInfo/DiaryInfo';
 import ModifyPreviewImage from '../../components/Paper/PreviewImage/ModifyPreviewImage';
+import PaperList from '../../components/Paper/PaperList/PaperList';
 function PaperModifyPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -264,6 +265,7 @@ function PaperModifyPage() {
     setFiles(files.filter((_, i) => i !== index));
   };
 
+  console.log('paperList', paperInfo.title);
   return (
     <>
       <NavBarBasic
@@ -310,6 +312,7 @@ function PaperModifyPage() {
           value={value}
           setValue={setValue}
           maxLength={250}
+          placeholder={'증상을 추가하면 일기 내용이 날라가요. 주의해주세요!'}
         />
       </FlexDiv>
       <TopDiv>
