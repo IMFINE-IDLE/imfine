@@ -55,7 +55,7 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             @Param("papers") List<Paper> papers);
     Slice<Paper> findByContentContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(String query, Pageable pageable);
 
-    @Query("select p from Paper p join fetch p.paperHasSymptoms where p.id=:paperId")
+    @Query("select p from Paper p where p.id=:paperId")
     Optional<Paper> findByIdFetchPaperSymptom(@Param("paperId") long paperId);
     @Query("select p from Paper p where p.id=:paperId")
     Optional<Paper> findByIdFetchAll(@Param("paperId") long paperId);

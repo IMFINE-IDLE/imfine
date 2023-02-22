@@ -185,7 +185,7 @@ public class PaperServiceImpl implements PaperService {
         LOGGER.info("[PaperService.modifyPaper] 일기 수정 service");
         common.getUserByUid(uid);
 
-        Paper paper = paperRepository.findByIdFetchPaperSymptom(requestPaperPutDto.getPaperId())
+        Paper paper = paperRepository.findById(requestPaperPutDto.getPaperId())
                 .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
 
         paper.setContent(requestPaperPutDto.getContents());
