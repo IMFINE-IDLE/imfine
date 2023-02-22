@@ -19,9 +19,9 @@ const SettingsPage = () => {
   const logOutByData = async () => {
     try {
       const success = await dispatch(logOut()).unwrap();
-      console.log(success);
+      // console.log(success);
     } catch (rejectWithValue) {
-      console.log(rejectWithValue);
+      // console.log(rejectWithValue);
       // alert(rejectWithValue);
       navigate('/login');
     }

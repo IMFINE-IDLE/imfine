@@ -56,7 +56,7 @@ function App() {
       return response;
     },
     async (error) => {
-      console.log(error.response);
+      // console.log(error.response);
       const { response: errorResponse } = error;
       const originalRequest = error.config;
       // 토큰 갱신
