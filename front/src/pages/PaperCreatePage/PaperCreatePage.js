@@ -115,7 +115,8 @@ function PaperCreatePage() {
 
   // 일기 작성 업로드 체크
   const validCheck = (e) => {
-    if (symptoms.length !== 0) {
+    console.log('diaryid', diaryId);
+    if (diaryId) {
       handleUploadImage();
     } else {
       alert('일기장을 먼저 선택해주세요');
@@ -124,7 +125,7 @@ function PaperCreatePage() {
 
   // 증상 추가 업로드 체크
   const validSymptomCheck = (e) => {
-    if (symptoms.length !== 0) {
+    if (diaryId) {
       navigate(`/diary/${diaryId}/modify/symptom`, {
         state: infoToModifyPage,
       });
