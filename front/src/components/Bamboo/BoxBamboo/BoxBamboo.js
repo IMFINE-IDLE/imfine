@@ -3,7 +3,8 @@ import { FlexDiv } from '../../common/FlexDiv/FlexDiv';
 import BoxBambooFeed from '../BoxBambooFeed/BoxBambooFeed';
 import axios from 'axios';
 import api from '../../../api/api';
-
+import BtnToTop from '../../Paper/BtnToTop/BtnToTop';
+import { Blank } from './style';
 function BoxBamboo() {
   //console.log(res);
   const [bambooList, setBambooList] = useState([]);
@@ -21,7 +22,6 @@ function BoxBamboo() {
 
     observerRef.current = new IntersectionObserver((entries) => {
       const first = entries[0];
-      console.log(first);
       if (first.isIntersecting && hasNext) {
         setPage((prev) => prev + 1);
         setIsLoading(true);
@@ -43,7 +43,6 @@ function BoxBamboo() {
           headers: { Authorization: localStorage.getItem('accessToken') },
         }
       );
-      console.log(res);
     } catch (err) {
       console.log(err.response.data);
     }
@@ -55,7 +54,6 @@ function BoxBamboo() {
       const res = await axios.delete(api.bamboo.deleteBambooLike(bambooId), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
-      console.log(res);
     } catch (err) {
       console.log(err.repsonse.data);
     }
@@ -67,7 +65,6 @@ function BoxBamboo() {
       const res = await axios.get(api.bamboo.getBambooFeed(pagination), {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
-      console.log('response확인', res.data);
       setBambooList((prev) => prev.concat(res.data.data));
       const data = res.data.data[res.data.data.length - 1];
       setHasNext((prev) => (prev = data.hasNext));
@@ -79,8 +76,6 @@ function BoxBamboo() {
   useEffect(() => {
     fetchBambooFeed(page);
   }, [page]);
-
-  console.log('bamboo', bambooList);
 
   if (bambooList) {
     return (
@@ -98,6 +93,8 @@ function BoxBamboo() {
               );
             })}
           <div ref={observer} />
+          <BtnToTop />
+          <Blank />
         </FlexDiv>
       </>
     );
