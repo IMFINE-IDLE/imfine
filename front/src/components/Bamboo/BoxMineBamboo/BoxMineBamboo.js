@@ -4,7 +4,7 @@ import BoxBambooFeed from '../BoxBambooFeed/BoxBambooFeed';
 import axios from 'axios';
 import api from '../../../api/api';
 import BtnToTop from '../../Paper/BtnToTop/BtnToTop';
-import { Blank, BoxInner, TextBubble, BigCircle } from './style';
+import { Blank, BoxInner, TextBubble } from './style';
 import { Clover } from '../../common/Clover/Clover';
 
 function BoxMineBamboo() {
@@ -75,7 +75,6 @@ function BoxMineBamboo() {
     fetchMyBambooFeed(page);
   }, [page]);
 
-  console.log('bambooList', bambooList);
   if (bambooList.length > 0) {
     return (
       <>
