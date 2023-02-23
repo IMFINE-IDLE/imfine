@@ -254,7 +254,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .name(diary.getWriter().getName())
                 .content(paper.getContent())
                 .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, paper.getId()))
-                .commentCount(paper.getCommentCount())
+                .commentCount(paper.getComments().size())
                 .likeCount(paper.getLikeCount())
                 .date(paper.getDate())
                 .createdAt(paper.getCreatedAt().toString())
