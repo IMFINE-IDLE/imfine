@@ -71,8 +71,6 @@ function BoxBamboo() {
         const data = res.data.data[res.data.data.length - 1];
         setHasNext((prev) => (prev = data.hasNext));
       }
-      // const data = res.data.data[res.data.data.length - 1];
-      // setHasNext((prev) => (prev = data.hasNext));
     } catch (err) {
       console.log('err occured', err);
     }
