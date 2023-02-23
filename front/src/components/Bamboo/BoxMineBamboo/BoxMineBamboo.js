@@ -36,8 +36,10 @@ function BoxMineBamboo() {
         headers: { Authorization: localStorage.getItem('accessToken') },
       });
       setBambooList((prev) => prev.concat(res.data.data));
-      const data = res.data.data[res.data.data.length - 1];
-      setHasNext((prev) => (prev = data.hasNext));
+      if (res.data.data.length > 0) {
+        const data = res.data.data[res.data.data.length - 1];
+        setHasNext((prev) => (prev = data.hasNext));
+      }
     } catch (err) {
       console.log('err occured', err);
     }
