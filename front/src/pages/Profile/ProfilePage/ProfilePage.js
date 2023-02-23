@@ -18,6 +18,8 @@ function ProfilePage() {
 
   useEffect(() => {
     fetchUserInfo();
+    // forceUpdate();
+    // window.location.reload();
   }, [isMine]);
 
   const navigate = useNavigate();
@@ -51,7 +53,7 @@ function ProfilePage() {
     {
       idx: 2,
       tabName: '구독중',
-      tabContent: <ProfileSubscribeDiary uid={uid} />,
+      tabContent: <ProfileSubscribeDiary uid={uid} isMine={isMine} />,
     },
   ];
 
