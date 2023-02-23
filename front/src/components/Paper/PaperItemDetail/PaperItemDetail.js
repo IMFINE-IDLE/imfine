@@ -51,7 +51,7 @@ function PaperItemDetail({ paperId, paper }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const handleLoadedMetadata = () => {
     setIsLoaded(true);
-    audioRef.current.volume = 0.35;
+    audioRef.current.volume = 0.15;
   };
 
   // 일기 삭제 함수
