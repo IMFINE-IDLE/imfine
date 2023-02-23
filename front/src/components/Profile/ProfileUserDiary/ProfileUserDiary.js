@@ -18,7 +18,7 @@ const ProfileUserDiary = ({ uid, isMine }) => {
 
   useEffect(() => {
     fetchGetUserDiaryList();
-  }, []);
+  }, [isMine]);
 
   return <DiaryListGrid diaryList={diaryList} />;
 };

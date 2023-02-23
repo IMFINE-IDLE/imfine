@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../../../api/api';
 import DiaryListGrid from '../../Diary/DiaryListGrid/DiaryListGrid';
 
-const ProfileSubscribeDiary = ({ uid }) => {
+const ProfileSubscribeDiary = ({ uid, isMine }) => {
   const [diaryList, setDiaryList] = useState(null);
 
   // 유저가 구독중인 일기장 목록 가져오기
@@ -18,7 +18,7 @@ const ProfileSubscribeDiary = ({ uid }) => {
 
   useEffect(() => {
     fetchGetUserSubscribeDiaryList();
-  }, []);
+  }, [isMine]);
 
   return <DiaryListGrid diaryList={diaryList} />;
 };
