@@ -117,14 +117,6 @@ public class BambooServiceImpl implements BambooService {
             all = bambooRepository.findByWriter_IdAndCreatedAtBetweenOrderByCreatedAtDesc(user.getId(), start, end, pageable);
         }
 
-        if (all.getSize() == 0) {
-            ResponseBamboo responseBamboo = ResponseBamboo.builder()
-                    .hasNext(false)
-                    .build();
-            responseBambooList.add(responseBamboo);
-            return responseBambooList;
-        }
-
         List<Bamboo> heartBamboos = bambooRepository.findByHeartList(user.getId(), start, end);
         for(Bamboo b : all) {
             Duration duration = Duration.between(b.getCreatedAt(), end);
