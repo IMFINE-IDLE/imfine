@@ -22,6 +22,7 @@ import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.Subscribe;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.comment.Comment;
+import com.idle.imfine.data.entity.image.Image;
 import com.idle.imfine.data.entity.medical.MedicalCode;
 import com.idle.imfine.data.entity.paper.Paper;
 import com.idle.imfine.data.entity.paper.PaperHasSymptom;
@@ -42,6 +43,7 @@ import com.idle.imfine.errors.code.DiaryHasSymptomErrorCode;
 import com.idle.imfine.errors.code.SubscribeErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.service.Common;
+import com.idle.imfine.service.FileStore;
 import com.idle.imfine.service.diary.DiaryService;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -73,6 +75,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final ConditionRepository conditionRepository;
     private final HeartRepository heartRepository;
     private final Logger LOGGER = LoggerFactory.getLogger(DiaryService.class);
+    private final FileStore fileStore;
 
     @Override
     @Transactional
@@ -251,7 +254,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .name(diary.getWriter().getName())
                 .content(paper.getContent())
                 .myHeart(heartRepository.existsBySenderIdAndContentsCodeIdAndContentsId(user.getId(), 2, paper.getId()))
-                .commentCount(paper.getCommentCount())
+                .commentCount(paper.getComments().size())
                 .likeCount(paper.getLikeCount())
                 .date(paper.getDate())
                 .createdAt(paper.getCreatedAt().toString())
@@ -413,10 +416,19 @@ public class DiaryServiceImpl implements DiaryService {
         LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제 {}", diaryPapers);
         if (diaryPapers.size() != 0) {
             List<Comment> comments = diaryRepository.findDiaryComments(diary);
+            List<Image> removeImages = paperRepository.findImagesByPapers(diaryPapers
+                .stream().map(Paper::getId).collect(Collectors.toList()));
+            fileStore.deleteImages(
+                removeImages.stream().map(Image::getPath).collect(Collectors.toList()));
+
+            paperRepository.deleteImagesByPapers(diaryPapers
+                .stream().map(Paper::getId).collect(Collectors.toList()));
             if (!comments.isEmpty()) {
                 diaryRepository.deleteComments(comments);
-                diaryRepository.deleteCommentsHeart(comments);
+                diaryRepository.deleteCommentsHeart(comments.stream().map(Comment::getId).collect(
+                    Collectors.toList()));
             }
+
             LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제1");
             diaryRepository.deletePaperHasSymptom(diaryPapers);
             LOGGER.info("[DiaryServiceImpl.deleteDiary]일기장 관련 구독 삭제2");

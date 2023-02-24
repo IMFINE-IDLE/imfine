@@ -1,6 +1,9 @@
 package com.idle.imfine.data.repository.user;
 
+import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.User;
+import com.idle.imfine.data.entity.bamboo.Bamboo;
+import com.idle.imfine.data.entity.paper.Paper;
 import java.util.Optional;
 import javax.swing.text.html.Option;
 import org.springframework.data.domain.Pageable;
@@ -28,5 +31,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUidAndEmail(String uid, String email);
 
     Slice<User> findByNameContainingIgnoreCase(String query, Pageable pageable);
+    @Query("select p from Paper p where p.diary in :diaries")
+    List<Paper> findPapersByDiaries(@Param("diaries") List<Diary> diaries);
 
+    @Modifying
+    @Query("delete from Leaf l where l.writer = :writer")
+    void deleteLeavesByWriter(@Param("writer") User writer);
+
+    @Modifying
+    @Query("delete from Bamboo b where b.writer = :writer")
+    void deleteBamboosByWriter(@Param("writer") User writer);
+
+    @Query("select b from Bamboo b where b.writer=:writer")
+    List<Bamboo> findByBamboo(@Param("writer") User writer);
 }

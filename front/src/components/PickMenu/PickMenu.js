@@ -9,19 +9,11 @@ import {
   PickMenuSubListContainer,
 } from './style';
 
-/* 프롭스 설명
- *
- * (String) type: 'medical', 'symptom' 중 하나.
- * (Any) text: type='text' 일 경우 표시될 내용
- * (Array) medicals: [{id: Number, name: String}] 형식의 배열
- * (Array) symptoms: [{id: Number, name: String}] 형식의 배열
- * (String) color: 아이콘 색깔
- * (Boolean) canModify: true일 경우 수정 가능
- *
- */
-
 const PickMenu = forwardRef(
-  ({ type, dataList, ToggleSymptom, pickOnlyOne }, ref) => {
+  (
+    { type, dataList, ToggleSymptom, pickOnlyOne, clickedId, setClickedId },
+    ref
+  ) => {
     // dataList를 4개씩 잘라서 dataListModified에 넣기
     const dataListModified = [];
     // const rowCnt = Math.floor(dataList.length / 4);
@@ -34,8 +26,8 @@ const PickMenu = forwardRef(
     // 메뉴 클릭시 서브메뉴 열기 위한 ref
     const { subMenuSection, clickedSubMenuSectionIdx, clickedMenuId } = ref;
 
-    // 메뉴 클릭시 대분류에 클릭여부 표시하기 위한 state
-    const [clickedId, setClickedId] = useState(null);
+    // // 메뉴 클릭시 대분류에 클릭여부 표시하기 위한 state
+    // const [clickedId, setClickedId] = useState(null);
 
     // 질병/수술 또는 증상 세부목록 가져오기
     const fetchDetailList = async (id) => {

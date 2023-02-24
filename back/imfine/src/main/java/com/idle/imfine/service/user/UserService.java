@@ -33,6 +33,7 @@ public interface UserService {
     void modifyUserName(String uid, ModifyUserNameRequestDto requestDto);
 
     void modifyUserOpen(String uid, ModifyUserOepnRequestDto requestDto);
+    void modifyUserPlay(String uid, ModifyUserPlayRequestDto requestDto);
 
     void modifyUserMedicalList(String uid, ModifyUserMedicalListRequestDto requestDto);
 

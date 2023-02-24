@@ -13,7 +13,8 @@ function BtnFloat() {
     }),
     day: currentDate.getDate().toString().padStart(2, '0'),
   };
-  console.log('info', infoToPaperCreate);
+  // console.log('info', infoToPaperCreate);
+
   return (
     <>
       <BoxBtnFloat>

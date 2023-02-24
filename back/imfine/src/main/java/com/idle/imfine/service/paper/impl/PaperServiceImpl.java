@@ -132,7 +132,7 @@ public class PaperServiceImpl implements PaperService {
             imageRepository.saveAll(saveImage);
         }
 //        LOGGER.info("[PaperService.save] 증상 저장");
-        if (requestPaperPostDto.getSymptoms().size() != 0) {
+        if (requestPaperPostDto.getSymptoms() != null && requestPaperPostDto.getSymptoms().size() != 0) {
             LOGGER.info("[PaperService.save] 증상 존재, 증상기록 저장");
             Stream<PaperHasSymptom> savePaperSymptom = requestPaperPostDto.getSymptoms().stream().map(
                 symptomRecord -> PaperHasSymptom.builder()
@@ -143,7 +143,7 @@ public class PaperServiceImpl implements PaperService {
                 );
             paperHasSymptomRepository.saveAll(savePaperSymptom.collect(Collectors.toList()));
         }
-        diary.setPaperCount(diary.getPaperCount() + 1);
+        diaryRepository.save(diary);
         LOGGER.info("[PaperService.save] 일기 저장 종료");
         return savedPaper.getId();
     }
@@ -159,7 +159,7 @@ public class PaperServiceImpl implements PaperService {
 
         Diary paperDiary = foundPaper.getDiary();
         paperDiary.setPaperCount(paperDiary.getPaperCount() - 1);
-
+        diaryRepository.save(paperDiary);
         LOGGER.info("[PaperService.delete] 일기 삭제 service");
         if (!foundPaper.getComments().isEmpty()) {
             LOGGER.info("[PaperService.delete] 일기 댓글관련 삭제1");
@@ -185,7 +185,7 @@ public class PaperServiceImpl implements PaperService {
         LOGGER.info("[PaperService.modifyPaper] 일기 수정 service");
         common.getUserByUid(uid);
 
-        Paper paper = paperRepository.findByIdFetchPaperSymptom(requestPaperPutDto.getPaperId())
+        Paper paper = paperRepository.findById(requestPaperPutDto.getPaperId())
                 .orElseThrow(() -> new ErrorException(PaperErrorCode.PAPER_NOT_FOUND));
 
         paper.setContent(requestPaperPutDto.getContents());
@@ -335,7 +335,7 @@ public class PaperServiceImpl implements PaperService {
                                     .paperId(paper.getId())
                                     .medicalName(diary.getMedicalCode().getName())
                                     .uid(diary.getWriter().getUid())
-                                    .commentCount(paper.getCommentCount())
+                                    .commentCount(paper.getComments().size())
                                     .likeCount(paper.getLikeCount())
                                     .name(paper.getDiary().getWriter().getName())
                                     .myHeart(myHeartPapers.contains(paper.getId()))
@@ -430,7 +430,7 @@ public class PaperServiceImpl implements PaperService {
                 .name(writer.getName())
                 .content(paper.getContent())
                 .likeCount(paper.getLikeCount())
-                .commentCount(paper.getCommentCount())
+                .commentCount(paper.getComments().size())
                 .createdAt(common.convertDateAllType(paper.getCreatedAt()))
                 .date(String.valueOf(paper.getDate()))
                 .condition(common.getDateUserCondition(paper.getDate(), writer))
@@ -442,6 +442,7 @@ public class PaperServiceImpl implements PaperService {
                         user.getId(), 2, paper.getId()))
                 .comments(comments)
                 .musicURL(musicURL)
+                .play(user.isPlay())
                 .build();
 
     }
@@ -467,14 +468,14 @@ public class PaperServiceImpl implements PaperService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ResponsePaperDto> getAllPaperByDate(String uid, String date) {
+    public List<ResponsePaperDto> getAllPaperByDate(String otherUid, String date, String uid) {
         LOGGER.info("[PaperService.getAllPaperByDate] 일기 오늘의 일기 service");
-
-        User user = common.getUserByUid(uid);
+        User loginUser = common.getUserByUid(uid);
+        User user = common.getUserByUid(otherUid);
         List<Diary> diaries = diaryRepository.findAllByWriter(user);
 
-        List<Paper> papers = paperRepository.findAllByDiaryInAndDate(diaries,
-                common.convertDateType(date));
+        List<Paper> papers = paperRepository.findAllByDiaryInAndDateAndOpenTrueJPQL(diaries,
+                common.convertDateType(date), loginUser);
         LOGGER.info("[PaperService.getAllPaperByDate] 일기 오늘의 종료");
         return papers.stream().map(
                 paper -> ResponsePaperDto.builder()

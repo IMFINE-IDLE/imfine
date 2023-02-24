@@ -25,6 +25,7 @@ const ProfileInfo = ({
   followerCount,
   relation,
   fetchUserInfo,
+  play,
 }) => {
   // 그날 해당 유저의 컨디션
   const { cloverCode } = useSelector((state) => state.user);
@@ -120,6 +121,7 @@ const ProfileInfo = ({
                               medicalList,
                               open,
                               medicalsOpen: false,
+                              play,
                             },
                           });
                         }}

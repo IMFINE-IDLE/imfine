@@ -5,11 +5,19 @@ import com.idle.imfine.data.dto.medical.response.ResponseMedicalListDto;
 import com.idle.imfine.data.dto.user.request.*;
 import com.idle.imfine.data.dto.user.response.FindIdResponseDto;
 import com.idle.imfine.data.dto.user.response.SearchUserInfoResponseDto;
+import com.idle.imfine.data.entity.Diary;
 import com.idle.imfine.data.entity.FollowWait;
 import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.UserHasMedical;
+import com.idle.imfine.data.entity.bamboo.Bamboo;
+import com.idle.imfine.data.entity.comment.Comment;
 import com.idle.imfine.data.entity.medical.MedicalCode;
+import com.idle.imfine.data.entity.paper.Paper;
+import com.idle.imfine.data.repository.bamboo.BambooRepository;
+import com.idle.imfine.data.repository.diary.DiaryRepository;
+import com.idle.imfine.data.repository.leaf.LeafRepository;
 import com.idle.imfine.data.repository.medical.MedicalCodeRepository;
+import com.idle.imfine.data.repository.paper.PaperRepository;
 import com.idle.imfine.data.repository.user.FollowRepository;
 import com.idle.imfine.data.repository.user.FollowWaitRepository;
 import com.idle.imfine.data.repository.user.UserHasMedicalRepository;
@@ -20,6 +28,7 @@ import com.idle.imfine.errors.code.UserErrorCode;
 import com.idle.imfine.errors.exception.ErrorException;
 import com.idle.imfine.errors.token.TokenNotFoundException;
 import com.idle.imfine.service.Common;
+import com.idle.imfine.service.diary.DiaryService;
 import com.idle.imfine.service.user.FollowService;
 import com.idle.imfine.service.user.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -52,6 +61,10 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final FollowService followService;
+    private final DiaryRepository diaryRepository;
+    private final DiaryService diaryService;
+    private final BambooRepository bambooRepository;
+    private final LeafRepository leafRepository;
 
     @Override
     public Map<String, Object> signUp(SignUpRequestDto requestDto) {
@@ -67,6 +80,7 @@ public class UserServiceImpl implements UserService {
                 .name(requestDto.getName())
                 .email(requestDto.getEmail())
                 .open(true)
+                .play(true)
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build();
 
@@ -211,6 +225,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void withdrawal(String uid) {
         LOGGER.info("[withdrawal] 회뤈탈퇴 시도");
         User user = common.getUserByUid(uid);
@@ -227,6 +242,17 @@ public class UserServiceImpl implements UserService {
             common.decreaseFollowerCount(follower);
         }
         LOGGER.info("[withdrawal] 팔로잉들의 팔로워 수 감소 완료");
+
+
+        List<Diary> diaries = diaryRepository.findAllByWriter(user);
+        diaryRepository.deleteCommentsByWriter(user);
+        List<Bamboo> bamboos = userRepository.findByBamboo(user);
+        leafRepository.deleteLeavesBy(bamboos);
+        userRepository.deleteLeavesByWriter(user);
+        userRepository.deleteBamboosByWriter(user);
+        for (Diary d : diaries) {
+            diaryService.deleteDiary(d.getId(), user.getUid());
+        }
 
         userRepository.deleteById(user.getId());
         LOGGER.info("[withdrawal] 회뤈탈퇴 성공");
@@ -251,11 +277,15 @@ public class UserServiceImpl implements UserService {
             medicalList.add(medical);
         }
 
+        int followingCount = Math.toIntExact(followRepository.countFollowings(other));
+        int followerCount = Math.toIntExact(followRepository.countFollowers(other));
+
         return SearchUserInfoResponseDto.builder()
                 .name(other.getName())
                 .open(other.isOpen())
-                .followingCount(other.getFollowingCount())
-                .followerCount(other.getFollowerCount())
+                .play(other.isPlay())
+                .followingCount(followingCount)
+                .followerCount(followerCount)
                 .medicalList(medicalList)
                 .condition(condition)
                 .relation(relation)
@@ -293,6 +323,15 @@ public class UserServiceImpl implements UserService {
             }
             LOGGER.info("[modifyUserOpen] 요청 모두 수락 완료");
         }
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void modifyUserPlay(String uid, ModifyUserPlayRequestDto requestDto) {
+        LOGGER.info("[modifyUserPlay] 음악 자동시작 설정");
+        User user = common.getUserByUid(uid);
+        user.setPlay(requestDto.isPlay());
 
         userRepository.save(user);
     }

@@ -145,6 +145,13 @@ public class UserController {
                 .body(responseService.getSuccessResult());
     }
 
+    @PutMapping("/play")
+    public ResponseEntity<Result> modifyUserPlay(@LoginUser String loginUid, @RequestBody ModifyUserPlayRequestDto requestDto) {
+        userService.modifyUserPlay(loginUid, requestDto);
+        return ResponseEntity.ok()
+                .body(responseService.getSuccessResult());
+    }
+
     @PutMapping("/medical")
     public ResponseEntity<Result> modifyUserMedicalList(@LoginUser String loginUid, @RequestBody ModifyUserMedicalListRequestDto requestDto) {
         userService.modifyUserMedicalList(loginUid, requestDto);
@@ -194,10 +201,10 @@ public class UserController {
                 .body(responseService.getSingleResult(responseDto)) ;
     }
 
-    @GetMapping("/{uid}/paper/{date}")
-    public ResponseEntity<Result> getAllPaperByDay(@PathVariable String uid, @PathVariable String date) {
+    @GetMapping("/{other-uid}/paper/{date}")
+    public ResponseEntity<Result> getAllPaperByDay(@PathVariable("other-uid") String otherUid, @PathVariable("date") String date, @LoginUser String uid) {
         return ResponseEntity.ok()
-                .body(responseService.getListResult((paperService.getAllPaperByDate(uid, date))));
+                .body(responseService.getListResult((paperService.getAllPaperByDate(otherUid, date, uid))));
     }
 
     @PostMapping("/condition")

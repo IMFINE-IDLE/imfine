@@ -1,7 +1,9 @@
 package com.idle.imfine.data.repository.paper;
 
 import com.idle.imfine.data.entity.Diary;
+import com.idle.imfine.data.entity.User;
 import com.idle.imfine.data.entity.comment.Comment;
+import com.idle.imfine.data.entity.image.Image;
 import com.idle.imfine.data.entity.paper.Paper;
 import java.time.LocalDate;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.Set;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -17,6 +20,9 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
     Optional<Paper> getByDiary_IdAndDate(long diaryId, LocalDate date);
     List<Paper> findAllByDiaryInAndDate(List<Diary> diaries, LocalDate date);
 
+    @Query("select p from Paper p where p.date=:date and p.diary in :diaries and (p.diary.writer=:writer or p.open = true)")
+    List<Paper> findAllByDiaryInAndDateAndOpenTrueJPQL(@Param("diaries") List<Diary> diaries, @Param("date") LocalDate date, @Param("writer") User writer);
+    
     @Query("select p from Paper p join fetch Diary d on p.diary=d where p.id=:paperId")
     Optional<Paper> findPaperByPaperIdJoinDiary(@Param("paperId") long paperId);
 //and p.date between :startDate and :endDate
@@ -49,11 +55,18 @@ public interface PaperRepository extends JpaRepository<Paper, Long> {
             @Param("papers") List<Paper> papers);
     Slice<Paper> findByContentContainingIgnoreCaseAndOpenTrueOrderByCreatedAtDesc(String query, Pageable pageable);
 
-    @Query("select p from Paper p join fetch p.paperHasSymptoms where p.id=:paperId")
+    @Query("select p from Paper p where p.id=:paperId")
     Optional<Paper> findByIdFetchPaperSymptom(@Param("paperId") long paperId);
     @Query("select p from Paper p where p.id=:paperId")
     Optional<Paper> findByIdFetchAll(@Param("paperId") long paperId);
 
     @Query("select c from Comment c where c.paperId=:paperId")
     List<Comment> findByIdFetchComments(@Param("paperId") long paperId);
+
+    @Query("select i from Image i where i.paperId in :paperIds")
+    List<Image> findImagesByPapers(@Param("paperIds") List<Long> diaryPapers);
+
+    @Modifying
+    @Query("Delete from Image i where i.paperId in :paperIds")
+    void deleteImagesByPapers(@Param("paperIds") List<Long> diaryPapers);
 }
