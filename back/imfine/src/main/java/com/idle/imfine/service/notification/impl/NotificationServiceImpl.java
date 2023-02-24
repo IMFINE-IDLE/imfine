@@ -59,10 +59,17 @@ public class NotificationServiceImpl implements NotificationService {
         Slice<Notification> all = notificationRepository.findByRecieverIdOrderByCreatedAtDesc(user.getId(), pageable);
 
         for (Notification n : all) {
-            User sender = userRepository.findById(n.getSenderId()).get();
+            Optional<User> sender = userRepository.findById(n.getSenderId());
+            String uId = null;
+            String userName = null;
+            if (sender.isEmpty()) {
+                continue;
+            }
+            uId = sender.get().getUid();
+            userName = sender.get().getName();
+
             User receiver = userRepository.findById(n.getRecieverId()).get();
-            String uId = sender.getUid();
-            String userName = sender.getName();
+
             String title = null;
             if (n.getContentsCodeId() == 1) {
                 Optional<Diary> diary = diaryRepository.findById(n.getContentsId());
@@ -88,7 +95,7 @@ public class NotificationServiceImpl implements NotificationService {
             }
 
             if (n.getContentsCodeId() == 6
-                    && common.getFollowRelation(sender, receiver) == 2) {
+                    && common.getFollowRelation(sender.get(), receiver) == 2) {
                 ResponseNotification notification = ResponseNotification.builder()
                         .notificationId(n.getId())
                         .senderUid(uId)
@@ -159,7 +166,7 @@ public class NotificationServiceImpl implements NotificationService {
 
     public SseEmitter subscribe(String uid, String lastEventId) {
         LOGGER.info("SseEmitter subscribe");
-        String id = uid;
+        String id = uid + "_" + System.currentTimeMillis();
         SseEmitter emitter = emitterRepository.save(id, new SseEmitter(DEFAULT_TIMEOUT));
 
         LOGGER.info("에미터 커플리션 {} {}", id, lastEventId);
@@ -201,6 +208,7 @@ public class NotificationServiceImpl implements NotificationService {
             LOGGER.info("sendToClient 성공");
         } catch (IOException exception) {
             emitterRepository.deleteById(id);
+            emitter.complete();
             throw new ConnectionException("연결 오류!");
         }
     }
