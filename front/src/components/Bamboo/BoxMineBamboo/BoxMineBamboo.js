@@ -6,14 +6,12 @@ import api from '../../../api/api';
 import BtnToTop from '../../Paper/BtnToTop/BtnToTop';
 import { Blank, BoxInner, TextBubble } from './style';
 import { Clover } from '../../common/Clover/Clover';
-function BoxBamboo() {
-  //console.log(res);
-  const [bambooList, setBambooList] = useState([]);
 
+function BoxMineBamboo() {
+  const [bambooList, setBambooList] = useState([]);
   const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNext, setHasNext] = useState(false);
-
   // paging
   const observerRef = useRef();
   const observer = (element) => {
@@ -30,6 +28,21 @@ function BoxBamboo() {
     });
 
     element && observerRef.current.observe(element);
+  };
+  // 내가 쓴 대나무 관련 글들 get
+  const fetchMyBambooFeed = async (pagination) => {
+    try {
+      const res = await axios.get(api.bamboo.getMyBambooFeed(pagination), {
+        headers: { Authorization: localStorage.getItem('accessToken') },
+      });
+      setBambooList((prev) => prev.concat(res.data.data));
+      if (res.data.data.length > 0) {
+        const data = res.data.data[res.data.data.length - 1];
+        setHasNext((prev) => (prev = data.hasNext));
+      }
+    } catch (err) {
+      console.log('err occured', err);
+    }
   };
 
   // 대나무 좋아요 post
@@ -60,24 +73,8 @@ function BoxBamboo() {
     }
   };
 
-  // 대나무 ALL
-  const fetchBambooFeed = async (pagination) => {
-    try {
-      const res = await axios.get(api.bamboo.getBambooFeed(pagination), {
-        headers: { Authorization: localStorage.getItem('accessToken') },
-      });
-      setBambooList((prev) => prev.concat(res.data.data));
-      if (res.data.data.length > 0) {
-        const data = res.data.data[res.data.data.length - 1];
-        setHasNext((prev) => (prev = data.hasNext));
-      }
-    } catch (err) {
-      console.log('err occured', err);
-    }
-  };
-
   useEffect(() => {
-    fetchBambooFeed(page);
+    fetchMyBambooFeed(page);
   }, [page]);
 
   if (bambooList.length > 0) {
@@ -106,7 +103,7 @@ function BoxBamboo() {
       <FlexDiv direction={'column'}>
         <BoxInner>
           <TextBubble>
-            <p>아직 심어진 대나무가 없어요!</p>
+            <p>작성한 대나무가 없어요!</p>
           </TextBubble>
           <div>
             <Clover code={'1'} width={'100'} height={'100'} />
@@ -117,4 +114,4 @@ function BoxBamboo() {
   }
 }
 
-export default BoxBamboo;
+export default BoxMineBamboo;

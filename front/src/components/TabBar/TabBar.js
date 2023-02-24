@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ReactComponent as MainTabSvg } from './icons/home.svg';
 import { ReactComponent as DiaryTabSvg } from './icons/diary.svg';
@@ -13,12 +14,13 @@ import {
   TabCenter,
   MainClover,
 } from './style';
-import { useLocation, useParams } from 'react-router-dom';
+import './style.css';
 
 const TabBar = () => {
   const { uid, cloverCode } = useSelector((state) => state.user);
   const [currentClover, setCurrentClover] = useState(cloverCode);
   const [cloversOpen, setCloversOpen] = useState(false);
+  const [cloverAnimation, setCloverAnimation] = useState(false);
 
   // 내 프로필에서는 하단탭바 모달 안 뜨도록 함(달력에서 컨디션 변경)
   const { pathname } = useLocation();
@@ -58,7 +60,16 @@ const TabBar = () => {
         </Tab>
         <TabCenter>
           <MainClover
-            onClick={() => setCloversOpen((prev) => !prev)}
+            onClick={() => {
+              setCloversOpen((prev) => !prev);
+              setCloverAnimation(true);
+            }}
+            onAnimationEnd={() => setCloverAnimation(false)}
+            className={
+              cloverAnimation && cloversOpen && openCloverModal
+                ? 'cloverAnimation'
+                : ''
+            }
             code={cloverCode}
             width="6.25em"
             height="6.25em"

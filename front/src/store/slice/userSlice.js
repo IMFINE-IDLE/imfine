@@ -3,8 +3,6 @@ import axios from 'axios';
 import moment from 'moment';
 import api from '../../api/api';
 
-// localStorage, redux store 혼재해서 사용중이라 accessToken 두곳 다 저장
-
 export const signUp = createAsyncThunk(
   'user/signUp',
   async (userData, { rejectWithValue }) => {
@@ -35,7 +33,7 @@ export const logIn = createAsyncThunk(
       const res = await axios.post(api.user.login(), userData, {
         withCredentials: true,
       });
-      console.log(res);
+      // console.log(res);
       const accessToken = res.data.data.accessToken;
       localStorage.setItem('accessToken', accessToken);
       axios.defaults.headers.common['Authorization'] = accessToken;
@@ -55,7 +53,7 @@ export const logIn = createAsyncThunk(
 
       return saveData;
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       return rejectWithValue(err);
     }
   }
@@ -64,17 +62,17 @@ export const logIn = createAsyncThunk(
 export const logOut = createAsyncThunk(
   'user/logOut',
   async (userData, { rejectWithValue }) => {
-    console.log('정상적 상황에서 로그아웃 실행');
+    // console.log('정상적 상황에서 로그아웃 실행');
     localStorage.setItem('accessToken', null);
 
     try {
       const resLogout = await axios.post(api.user.logout(), {
         withCredentials: true,
       });
-      console.log(resLogout);
+      // console.log(resLogout);
       return resLogout;
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       return rejectWithValue(err);
     }
   }
@@ -104,14 +102,14 @@ const userSlice = createSlice({
     cloverCode: '-1',
   },
   reducers: {
-    updateCode: (state, action) => {
-      state.cloverCode = action.payload;
-    },
     // 토큰이 비정상적인 에러 상황일 때 실행
     logOutWithError: (state, action) => {
       state.isLogin = action.payload.isLogin;
       state.uid = action.payload.uid;
       state.cloverCode = action.payload.cloverCode;
+    },
+    updateCode: (state, action) => {
+      state.cloverCode = action.payload;
     },
   },
   extraReducers: (builder) => {

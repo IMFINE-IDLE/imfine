@@ -163,7 +163,7 @@ function PaperModifyPage() {
 
   // 일기 작성 업로드 체크
   const validCheck = (e) => {
-    if (symptoms.length !== 0) {
+    if (diaryId) {
       handleUploadImage();
     } else {
       alert('일기장을 먼저 선택해주세요');
@@ -172,13 +172,9 @@ function PaperModifyPage() {
 
   // 증상 추가 업로드 체크
   const validSymptomCheck = (e) => {
-    if (symptoms.length !== 0) {
-      navigate(`/diary/${diaryId}/modify/symptom`, {
-        state: infoToModifyPage,
-      });
-    } else {
-      alert('일기장을 먼저 선택해주세요');
-    }
+    navigate(`/diary/${diaryId}/modify/symptom`, {
+      state: infoToModifyPage,
+    });
   };
   // 이미지 서버에 업로드 시키기
   // 일기수정하기

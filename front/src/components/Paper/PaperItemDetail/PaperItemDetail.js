@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { useNavigate } from 'react-router';
 import api from '../../../api/api';
@@ -39,11 +39,20 @@ function PaperItemDetail({ paperId, paper }) {
     createdAt,
     date,
     musicURL,
+    play,
   } = paper;
 
   // 이미지 크게 보기 모달
   const [showFullImage, setShowFullImage] = useState(false);
   const [clickedImgSrc, setClickedImgSrc] = useState(false);
+
+  // 음악 기본 볼륨 세팅
+  const audioRef = useRef(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const handleLoadedMetadata = () => {
+    setIsLoaded(true);
+    audioRef.current.volume = 0.15;
+  };
 
   // 일기 삭제 함수
   const deletePaper = async (paperId) => {
@@ -96,6 +105,9 @@ function PaperItemDetail({ paperId, paper }) {
                     src={musicURL}
                     controls
                     controlsList="nodownload noplaybackrate"
+                    autoPlay={play}
+                    ref={audioRef}
+                    onLoadedMetadata={handleLoadedMetadata}
                   />
                 )}
               </BoxTopAudio>

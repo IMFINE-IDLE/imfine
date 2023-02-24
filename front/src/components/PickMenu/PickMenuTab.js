@@ -48,13 +48,21 @@ const PickMenuTab = ({
   /*
    * Hooks
    */
-  const dispatch = useDispatch();
 
   // 질병/수술 목록과 증상 목록을 서버에서 받아와서 스토어에 저장
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchMedicalList());
     dispatch(fetchSymptomList());
   }, []);
+
+  // 스토어에서 질병/수술 목록과 증상 목록 가져오기
+  const { medicalMenuList, symptomMenuList } = useSelector(
+    (state) => state.menu
+  );
+
+  // 메뉴 클릭시 대분류에 클릭여부 표시하기 위한 state
+  const [clickedId, setClickedId] = useState(null);
 
   // refs
   const refs = {
@@ -72,10 +80,6 @@ const PickMenuTab = ({
   /*
    * Functions
    */
-  // 스토어에서 질병/수술 목록과 증상 목록 가져오기
-  const { medicalMenuList, symptomMenuList } = useSelector(
-    (state) => state.menu
-  );
 
   // 단일 질병/수술 또는 증상 클릭시 기존 배열에 없으면 추가 있으면 삭제
   const ToggleSymptom = (type, itemId, itemName) => {
@@ -135,6 +139,9 @@ const PickMenuTab = ({
     refs.subMenuSection.current = [];
     refs.clickedSubMenuSectionIdx.current = null;
     refs.clickedMenuId.current = null;
+
+    // 대분류 클릭 CSS 초기화
+    setClickedId(null);
   };
 
   // 질병/수술 또는 증상 하나 선택할 때마다 범위 넘어가면 스크롤
@@ -174,6 +181,8 @@ const PickMenuTab = ({
                   dataList={symptomMenuList}
                   setPickedSymptoms={setSymptoms}
                   ToggleSymptom={ToggleSymptom}
+                  clickedId={clickedId}
+                  setClickedId={setClickedId}
                   ref={refs}
                 />
               ) : (
@@ -182,6 +191,8 @@ const PickMenuTab = ({
                   dataList={medicalMenuList}
                   setPickedMedicals={setMedicals}
                   ToggleSymptom={ToggleSymptom}
+                  clickedId={clickedId}
+                  setClickedId={setClickedId}
                   ref={refs}
                 />
               ),
@@ -197,6 +208,8 @@ const PickMenuTab = ({
                 dataList={medicalMenuList}
                 setPickedMedicals={setMedicals}
                 ToggleSymptom={ToggleSymptom}
+                clickedId={clickedId}
+                setClickedId={setClickedId}
                 ref={refs}
               />
             ),
@@ -210,6 +223,8 @@ const PickMenuTab = ({
                 dataList={symptomMenuList}
                 setPickedSymptoms={setSymptoms}
                 ToggleSymptom={ToggleSymptom}
+                clickedId={clickedId}
+                setClickedId={setClickedId}
                 ref={refs}
               />
             ),
