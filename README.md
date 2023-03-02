@@ -342,7 +342,7 @@ docker-compose up -d # 백그라운드로 실행
     
     - 필터링 결과 또한 최신순, 인기순으로 정렬하여 확인할 수 있다.
     <p align="center">
-    <img src="https://user-images.githubusercontent.com/87812825/219595923-f6fc9393-90f9-4322-8bd3-560a2d1d0244.gif" width="350" height="657">
+    <img src="https://user-images.githubusercontent.com/87812825/219595923-f6fc9393-90f9-4322-8bd3-560a2d1d0244.gif" width="300" height="570">
     </p>
 
 
@@ -357,14 +357,14 @@ docker-compose up -d # 백그라운드로 실행
     - 프로필 페이지 및 일기장 상세 페이지의 달력에서 일자별로 기록된 컨디션을 볼 수 있다.
     
     <p align="center">
-    <img src="https://user-images.githubusercontent.com/87812825/219596472-d41a0388-4597-4318-b1f6-65b0c3851582.gif" width="350" height="657">
+    <img src="https://user-images.githubusercontent.com/87812825/219596472-d41a0388-4597-4318-b1f6-65b0c3851582.gif" width="300" height="570">
     </p>
 	
 
 - **대나무숲 피드**
     - 24시간이면 사라지는 대나무숲 기능으로, 익명성이 보장된다.
     <p align="center">
-    <img src="https://user-images.githubusercontent.com/72545216/219597103-3570ee12-1e20-4bc6-9a8c-bf02b182a8f7.gif" width="350" height="657">
+    <img src="https://user-images.githubusercontent.com/72545216/219597103-3570ee12-1e20-4bc6-9a8c-bf02b182a8f7.gif" width="300" height="657">
     </p>
 
 - **프로필 페이지**
@@ -381,14 +381,14 @@ docker-compose up -d # 백그라운드로 실행
     
     - 프로필 페이지에서는 달력의 선택한 날짜에 작성된 모든 일기가 하단에 표시된다.
     <p align="center">
-    <img src="https://user-images.githubusercontent.com/87812825/219596894-60ac14f4-1693-42bc-bced-e0ea3374d63f.gif" width="350" height="675">
+    <img src="https://user-images.githubusercontent.com/87812825/219596894-60ac14f4-1693-42bc-bced-e0ea3374d63f.gif" width="300" height="570">
     </p>
 
 - 프로필 수정
     
     - 프로필 수정 페이지에서 닉네임, 관심 질병/증상 정보 또는 계정 공개 여부를 변경할 수 있다.
     <p align="center">
-    <img src="https://user-images.githubusercontent.com/87812825/219597136-1bac9366-4f48-4065-ba0c-07e8f6eb345e.gif" width="320" height="657">
+    <img src="https://user-images.githubusercontent.com/87812825/219597136-1bac9366-4f48-4065-ba0c-07e8f6eb345e.gif" width="300" height="657">
     </p>
 
 	
@@ -408,7 +408,7 @@ docker-compose up -d # 백그라운드로 실행
     - 일기장을 삭제할 수 있다.
     
     <p align="center">
-    <img src="https://user-images.githubusercontent.com/87812825/219597319-e7ca8c96-65fa-4d69-be39-16e2d0bbeb81.gif" width="320" height="650">
+    <img src="https://user-images.githubusercontent.com/87812825/219597319-e7ca8c96-65fa-4d69-be39-16e2d0bbeb81.gif" width="300" height="640">
     </p>
 
 - **일기장 상세**
@@ -424,7 +424,7 @@ docker-compose up -d # 백그라운드로 실행
     - 일기장에 기록된 주간, 월간별 증상 추이 그래프를 확인할 수 있고, 일자별 일기를 확인할 수 있다. 
     
     <p align="center">
-    <img src="https://user-images.githubusercontent.com/100753588/219597726-7ff83e06-625c-4413-a773-2cb03e88c0ba.gif" width="330" height="640">
+    <img src="https://user-images.githubusercontent.com/100753588/219597726-7ff83e06-625c-4413-a773-2cb03e88c0ba.gif" width="320" height="620">
     </p>
 
 - **일기 상세**
